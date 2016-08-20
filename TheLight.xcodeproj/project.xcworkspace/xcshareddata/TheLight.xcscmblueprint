@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "F57CDA18CAC9B304787FD31A9C23206D85B6B83E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "F57CDA18CAC9B304787FD31A9C23206D85B6B83E" : 9223372036854775807,
+    "2E559A5AE803068977A32585F5F44EA221616813" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "DFE875BC-737D-41F2-968F-F3D07BAB06DA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "F57CDA18CAC9B304787FD31A9C23206D85B6B83E" : "iosSQLswift3\/",
+    "2E559A5AE803068977A32585F5F44EA221616813" : "..\/Downloads\/youtube"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "TheLight",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "TheLight.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:purelyswift\/youtube.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2E559A5AE803068977A32585F5F44EA221616813"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/lotpb\/iosSQLswift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F57CDA18CAC9B304787FD31A9C23206D85B6B83E"
+    }
+  ]
+}
