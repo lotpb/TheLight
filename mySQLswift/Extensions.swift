@@ -160,7 +160,7 @@ extension UIView {
 
 //-----------youtube---------
 
-let imageCache = NSMutableDictionary() //Cache()
+let imageCache = NSCache<AnyObject, AnyObject>()
 
 class CustomImageView: UIImageView {
     

@@ -390,7 +390,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
             let date1 = dateFormatter.date(from: dateStr!)
-            print(date1)
             let date2 = Date()
             let calendar = Calendar.current
             if date1 != nil {
@@ -986,8 +985,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let contact = contacts[0]
         if (contact != 0) {
 
-            if let bday = (contact.birthday as NSDateComponents?)?.date as Date! {
-                print(bday)
+            if ((contact.birthday as NSDateComponents?)?.date as Date!) != nil {
                 let dateFormatter = DateFormatter()
                 //dateFormatter.timeZone = TimeZone(name: "UTC")
                 dateFormatter.dateFormat = "MMM-dd-yyyy"

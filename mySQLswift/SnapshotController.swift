@@ -29,6 +29,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var selectedCreate : String!
     var selectedEmail : String!
     var selectedPhone : String!
+    var selectedDate : Date!
     
     var selectedState : String!
     var selectedZip : String!
@@ -764,21 +765,26 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
+                let imageDetailurl = self.imageFile.url
+                let result1 = imageDetailurl!.contains("movie.mp4")
+                if (result1 == true) {
+                    
+                    let videoLauncher = VideoLauncher()
+                    videoLauncher.videoURL = self.imageFile.url
+                    videoLauncher.showVideoPlayer()
+                    
+                } else {
+                
                 self.selectedImage = UIImage(data: imageData!)
                 self.selectedObjectId = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "objectId") as? String
                 self.selectedTitle = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsTitle") as? String
                 self.selectedEmail = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsDetail") as? String
                 self.selectedPhone = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "storyText") as? String
                 self.imageDetailurl = self.imageFile.url
-                
-                let date1 = (self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "createdAt") as? Date)!
-                let date2 = Date()
-                let calendar = Calendar.current
-                let diffDateComponents = calendar.dateComponents([.day], from: date1, to: date2)
-                self.resultDateDiff = String(format: "%d%@" , diffDateComponents.day!," days ago" )
-                self.selectedCreate = self.resultDateDiff
+                self.selectedDate = (self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "createdAt") as? Date)!
                 
                 self.performSegue(withIdentifier: "snapuploadSegue", sender:self)
+                }
             }
         } else if (collectionView.tag == 1) {
             
@@ -882,7 +888,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             VC!.objectId = self.selectedObjectId
             VC!.newsTitle = self.selectedTitle
             VC!.newsDetail = self.selectedEmail
-            VC!.newsDate = self.selectedCreate
+            VC!.newsDate = self.selectedDate
             VC!.newsStory = self.selectedPhone
             VC!.image = self.selectedImage
             VC!.videoURL = self.imageDetailurl

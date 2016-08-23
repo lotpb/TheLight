@@ -29,34 +29,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
     var newsTitle: String?
     var newsDetail: String?
     var newsStory: String?
-    var newsDate: String?
-    
-    //var playerLayer: AVPlayerLayer?
-    var player: AVPlayer?
-    var playerViewController = AVPlayerViewController()
+    var newsDate: Date?
     var videoURL: String?
-    
-    let activityIndicatorView: UIActivityIndicatorView = {
-        let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        aiv.translatesAutoresizingMaskIntoConstraints = false
-        aiv.hidesWhenStopped = true
-        return aiv
-    }()
-    
-    lazy var playButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.alpha = 0.9
-        button.isUserInteractionEnabled = true
-        let image = UIImage(named: "play_button.png")
-        button.tintColor = .white
-        button.setImage(image, for: .normal)
-        button.setTitle(self.videoURL, for: UIControlState.normal)
-        //button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(playVideo))
-        button.addGestureRecognizer(tap)
-        return button
-    }()
     
 
     override func viewDidLoad() {
@@ -77,6 +51,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         let buttons:NSArray = [editItem]
         self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
         
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
+        
         //let playButton = UIButton(type: UIButtonType.custom) as UIButton
 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -85,15 +61,13 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
             self.detailLabel.font = ipadsubtitle
             self.newsTextview.isEditable = true //bug fix
             self.newsTextview.font = ipadtextview
-            self.newsTextview.isEditable = false //bug fix
-            playButton.frame = CGRect(x: self.newsImageview.frame.size.width/2-140, y: self.newsImageview.frame.origin.y+100, width: 50, height: 50)
+            //self.newsTextview.isEditable = false //bug fix
         } else {
             self.titleLabel.font = Font.News.newstitle
             self.detailLabel.font = Font.celllabel1
             self.newsTextview.isEditable = true//bug fix
             self.newsTextview.font = Font.News.newssource
-            self.newsTextview.isEditable = false //bug fix
-            playButton.frame = CGRect(x: self.newsImageview.frame.size.width/2, y: self.newsImageview.frame.height/2, width: 50, height: 50)
+            //self.newsTextview.isEditable = false //bug fix
         }
         
         self.newsImageview.isUserInteractionEnabled = true
@@ -102,8 +76,20 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         
         self.titleLabel.text = self.newsTitle
         self.titleLabel.numberOfLines = 2
+        
+        let date1 = self.newsDate
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        let elapsedTimeInSeconds = NSDate().timeIntervalSince(date1! as Date)
+        let secondInDays: TimeInterval = 60 * 60 * 24
+        if elapsedTimeInSeconds > 7 * secondInDays {
+            dateFormatter.dateFormat = "MMM dd, yyyy"
+        } else if elapsedTimeInSeconds > secondInDays {
+            dateFormatter.dateFormat = "EEEE"
+        }
+        let dateString = dateFormatter.string(from: date1!)
 
-        self.detailLabel.text = String(format: "%@ %@ %@", (self.newsDetail)!, "Uploaded", (self.newsDate)!)
+        self.detailLabel.text = String(format: "%@ %@ %@", (self.newsDetail!), "Uploaded", "\(dateString)")
         self.detailLabel.textColor = .lightGray
         self.detailLabel.sizeToFit()
         
@@ -115,31 +101,18 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         self.newsTextview.isEditable = false
         self.newsTextview.dataDetectorTypes = UIDataDetectorTypes.link
         
-        let imageDetailurl = self.videoURL
-        let result1 = imageDetailurl!.contains("movie.mp4")
-        playButton.isHidden = result1 == false
-        playButton.setTitle(imageDetailurl, for: UIControlState.normal)
-        /*
-         let result1 = self.videoURL?.contains("movie.mp4")
-         if (result1 == true) {
-         /*
-         playButton.alpha = 0.9
-         playButton.isUserInteractionEnabled = true
-         let image : UIImage? = UIImage(named:"play_button.png")
-         playButton.tintColor = .white
-         playButton.setImage(image, for: .normal)
-         //playButton.setTitle(self.imageFile.url, forState: UIControlState.Normal)
-         let tap = UITapGestureRecognizer(target: self, action: #selector(playVideo))
-         playButton.addGestureRecognizer(tap) */
-         
-         self.newsImageview.addSubview(playButton)
-         } */
-        
     }
     
     //fix TextView Scroll first line
     override func viewWillAppear(_ animated: Bool) {
+        
         self.newsTextview.isScrollEnabled = false
+        self.navigationController?.navigationBar.tintColor = .white
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.News.navColor
+        }
     }
     //fix TextView Scroll first line
     override func viewDidAppear(_ animated: Bool) {
@@ -155,43 +128,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         return self.newsImageview
     }
     
-    // MARK: - Video
-    
-    func playVideo(_ sender: UITapGestureRecognizer) {
-        
-        let url = URL(string: self.videoURL!)
-        player = AVPlayer(url: url!)
-        playerViewController.videoGravity = AVLayerVideoGravityResizeAspect
-        playerViewController.showsPlaybackControls = true
-        playerViewController.player = player
-        self.present(playerViewController, animated: true) {
-            self.playerViewController.player?.play()
-            self.activityIndicatorView.startAnimating()
-        }
-    }
-    
-    func prepareForReuse() {
-        //super.prepareForReuse()
-        //playerLayer?.removeFromSuperlayer()
-        player?.pause()
-        activityIndicatorView.stopAnimating()
-    }
-    
-    func setupViews() {
-        
-        newsImageview.addSubview(playButton)
-        //x,y,w,h
-        playButton.centerXAnchor.constraint(equalTo: newsImageview.centerXAnchor).isActive = true
-        playButton.centerYAnchor.constraint(equalTo: newsImageview.centerYAnchor).isActive = true
-        playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        newsImageview.addSubview(activityIndicatorView)
-        //x,y,w,h
-        activityIndicatorView.centerXAnchor.constraint(equalTo: newsImageview.centerXAnchor).isActive = true
-        activityIndicatorView.centerYAnchor.constraint(equalTo: newsImageview.centerYAnchor).isActive = true
-        activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    func setbackButton() {
+    dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Button

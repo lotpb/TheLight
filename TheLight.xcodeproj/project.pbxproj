@@ -1012,7 +1012,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLightShopUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.BigGulp;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";
@@ -1073,7 +1073,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLightShopUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.BigGulp;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";

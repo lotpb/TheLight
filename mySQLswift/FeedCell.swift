@@ -272,28 +272,23 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 videoLauncher.videoURL = self.imageFile.url
                 videoLauncher.showVideoPlayer()
                 
-                //let VideoPlayerView = VideoPlayerView()
-                //VideoPlayerView.videoURL = self.imageFile.url
-                //print(self.imageFile.url)
-                
             } else {
                 self.selectedImage = UIImage(data: imageData! as Data)
-                //UIViewController.performSegue(withIdentifier: "newsdetailSeque", sender: self)
-                
-                /*
-                var currentViewController = UIApplication.shared.keyWindow?.rootViewController
-                //loop over the presented view controllers and until you get the top view controller
-                while currentViewController?.presentedViewController != nil{
-                    currentViewController = currentViewController?.presentedViewController
-                }
-                currentViewController?.performSegue(withIdentifier: "newsdetailSeque", sender: self)
-                */
+                //self.performSegue(withIdentifier: "newsdetailSeque", sender: self)
 
-                
                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-                let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
-                UIApplication.shared.keyWindow?.rootViewController?.present(initialViewController, animated: true, completion: nil)
-                
+                let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
+
+                vc.objectId = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "objectId") as? String
+                vc.newsTitle = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsTitle") as? String
+                vc.newsDetail = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsDetail") as? String
+                vc.newsDate = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "createdAt") as? Date
+                vc.newsStory = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "storyText") as? String
+                vc.image = self.selectedImage
+                vc.videoURL = self.imageFile.url
+
+                let navigationController = UINavigationController(rootViewController: vc)
+                UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true, completion: nil)
             }
         }
     }
@@ -302,17 +297,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         if segue.identifier == "newsdetailSeque"
         {
-            let vc = segue.destination as? NewsDetailController
-            let indexPaths = self.collectionView.indexPathsForSelectedItems!
-            let indexPath = indexPaths[0] as NSIndexPath
-            
-            vc!.objectId = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "objectId") as? String
-            vc!.newsTitle = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsTitle") as? String
-            vc!.newsDetail = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsDetail") as? String
-            vc!.newsDate = String(self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "createAt") as? NSDate)
-            vc!.newsStory = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "storyText") as? String
-            vc!.image = self.selectedImage
-            vc!.videoURL = self.imageFile.url
+
         }
     }
 

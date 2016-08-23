@@ -14,7 +14,10 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     let cellId = "cellId"
     let trendingCellId = "trendingCellId"
     let subscriptionCellId = "subscriptionCellId"
+    //let accountCellId = "cell"
     
+    //var views = [UIView]()
+    //var viewsAreInitialized = false
     let titles = ["Home", "Trending", "Subscriptions", "Account"]
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -23,7 +26,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     var resultsController: UITableViewController!
     
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,7 +40,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         setupMenuBar()
         
         // get rid of black bar underneath navbar
-        //UINavigationBar.appearance().barTintColor = UIColor.rgb(red: 230, green: 32, blue: 31)
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
         
@@ -49,6 +50,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     
     override func viewWillDisappear(_ animated: Bool) {
         //NotificationCenter.default.removeObserver(self)
+        navigationController?.hidesBarsOnSwipe = false //fix statbar hidden
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,7 +72,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         // Dispose of any resources that can be recreated.
     }
     
-    
     func setupCollectionView() {
         
         if let flowLayout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
@@ -78,15 +79,21 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
             flowLayout.minimumLineSpacing = 0
         }
         
-        self.collectionView?.backgroundColor = .white
         self.collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: cellId)
         self.collectionView?.register(TrendingCell.self, forCellWithReuseIdentifier: trendingCellId)
         self.collectionView?.register(SubscriptionCell.self, forCellWithReuseIdentifier: subscriptionCellId)
+        //self.collectionView?.register(AccountCollectionViewController.self, forCellWithReuseIdentifier: accountCellId)
         
         self.collectionView?.contentInset = UIEdgeInsetsMake(50,0,0,0)
         self.collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(50,0,0,0)
-        
+        self.collectionView?.backgroundColor = .clear
+        //added below
+        self.view.addSubview(self.collectionView)
         self.collectionView?.isPagingEnabled = true
+        self.collectionView?.isDirectionalLockEnabled = true
+        self.collectionView?.bounces = false
+        self.collectionView?.showsHorizontalScrollIndicator = false
+        
     }
     
     func setupNavBarButtons() {
@@ -118,6 +125,19 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
             identifier = trendingCellId
         } else if (indexPath as NSIndexPath).item == 2 {
             identifier = subscriptionCellId
+        } else if (indexPath as NSIndexPath).item == 3 {
+            identifier = cellId
+             /*
+             //for title in self.titles {
+             let storyBoard = self.storyboard!
+             let vc = storyBoard.instantiateViewController(withIdentifier: "Account")
+             self.addChildViewController(vc)
+             vc.view.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: (self.view.bounds.height - 44))
+             vc.didMove(toParentViewController: self)
+             self.views.append(vc.view)
+             //}
+             self.viewsAreInitialized = true */
+            
         } else {
             identifier = cellId
         }

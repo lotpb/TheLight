@@ -801,7 +801,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if isReplyClicked == true {
                 VC!.formStatus = "Reply"
                 VC!.textcontentsubject = String(format:"@%@", posttoIndex!)
-                VC!.textcontentpostby = PFUser.current()!.value(forKey: "username") as! String
+                VC!.textcontentpostby = PFUser.current()!.value(forKey: "username") as? String
                 VC!.replyId = String(format:"%@", userIndex!)
             } else {
                 VC!.formStatus = "New"

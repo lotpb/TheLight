@@ -66,12 +66,12 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             
             self.commentTitle!.font = ipadtitle
             self.commentDetail!.font = ipadtitle
-            self.commentSorce!.font = ipadtitle
+            self.commentSorce.font = ipadtitle
             
         } else {
             self.commentTitle!.font = Font.celllabel1
             self.commentDetail!.font = Font.celllabel1
-            self.commentSorce!.font = Font.celllabel1
+            self.commentSorce.font = Font.celllabel1
             
         }
         
@@ -108,6 +108,11 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         self.selectPic.layer.borderWidth = 2.0
         
         self.commentDetail.delegate = self
+        //self.commentDetail.textContainerInset = UIEdgeInsetsMake(0, -4, 0, 0)
+        self.commentDetail.isEditable = true //bug fix
+        //self.commentDetail.isEditable = false //bug fix
+        self.commentDetail.isSelectable = true
+        self.commentDetail.isEditable = false
         self.commentDetail.autocorrectionType = UITextAutocorrectionType.yes
         self.commentDetail.dataDetectorTypes = UIDataDetectorTypes.all
         

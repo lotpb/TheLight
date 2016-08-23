@@ -104,6 +104,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         //Parse
         
         PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
+            if error != nil {
+                 print("Error: \(error) \(error!._userInfo)")
+                return
+            }
         }
         
         self.refreshControl = UIRefreshControl()
@@ -123,16 +127,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.navigationController?.navigationBar.barTintColor = .black
         // refreshYQL
         self.refreshData()
-        
-        //Firebase Crap
-        /*
-        let name = "Pattern~\(title!)",
-        text = "I'd love you to hear about\(name)"
-        // [START custom_event_swift]
-        FIRAnalytics.logEventWithName("share_image", parameters: [
-            "name": name,
-            "full_text": text
-            ]) */
     }
     
     /*
@@ -313,7 +307,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let myLabel25:UILabel = UILabel(frame: CGRect(x: 85, y: 75, width: 60, height: 20))
         myLabel25.numberOfLines = 1
         myLabel25.textAlignment = NSTextAlignment.center
-        //myLabel25.text = String(format: "%d", " \(changeYQL)")
         myLabel25.text = " \(changeYQL![0])"
         myLabel25.font = Font.headtitle
         vw.addSubview(myLabel25)
@@ -371,7 +364,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         vw.addSubview(myLabel4)
         
-        /*
+        /* //Statistic Button
         let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.size.width-100, y: 95, width: 90, height: 30))
         statButton.setTitle("Statistics", for: UIControlState())
         statButton.backgroundColor = Color.MGrayColor
