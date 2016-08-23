@@ -8,7 +8,7 @@
 
 import UIKit
 import Parse
-import Firebase
+//import Firebase
 import FBSDKCoreKit
 import GoogleSignIn
 
@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - Firebase
         
-         FIRApp.configure()
+         //FIRApp.configure()
         
         // MARK: - Parse
         

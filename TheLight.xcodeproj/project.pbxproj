@@ -22,7 +22,6 @@
 		AF0D6B331C4C554300334D03 /* YouTubeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0D6B321C4C554300334D03 /* YouTubeController.swift */; };
 		AF0DACA11C1F43DB00B23CE5 /* BlogEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0DACA01C1F43DB00B23CE5 /* BlogEditController.swift */; };
 		AF0DACA41C1F47A500B23CE5 /* BlogNewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0DACA31C1F47A500B23CE5 /* BlogNewController.swift */; };
-		AF0ECDB81D5DF96800982BA4 /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0ECDB71D5DF96800982BA4 /* VideoLauncher.swift */; };
 		AF1931491D12DCCD00F826B2 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1931481D12DCCD00F826B2 /* YTPlayerView.m */; };
 		AF19314B1D12DDB500F826B2 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = AF19314A1D12DDB500F826B2 /* Assets */; };
 		AF1DE4B11C19CDBC002B24C5 /* LeadDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1DE4B01C19CDBC002B24C5 /* LeadDetail.swift */; };
@@ -33,6 +32,7 @@
 		AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2817CA1C38794F00B2607A /* LeadUserController.swift */; };
 		AF2B37F01D35131E00AB7780 /* FirebaseLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2B37EF1D35131E00AB7780 /* FirebaseLogin.swift */; };
 		AF2D051B1D359A4200AC2A43 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D051A1D359A4200AC2A43 /* News.swift */; };
+		AF2D42E01D6CA9200071115E /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */; };
 		AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */; };
 		AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF46FA831C2313EE00C27445 /* UserViewController.swift */; };
 		AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */; };
@@ -144,7 +144,6 @@
 		AF0D6B321C4C554300334D03 /* YouTubeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeController.swift; sourceTree = "<group>"; };
 		AF0DACA01C1F43DB00B23CE5 /* BlogEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogEditController.swift; sourceTree = "<group>"; };
 		AF0DACA31C1F47A500B23CE5 /* BlogNewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogNewController.swift; sourceTree = "<group>"; };
-		AF0ECDB71D5DF96800982BA4 /* VideoLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoLauncher.swift; path = ../../../Downloads/youtube/youtube/VideoLauncher.swift; sourceTree = "<group>"; };
 		AF1931471D12DCC100F826B2 /* YTPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
 		AF1931481D12DCCD00F826B2 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
 		AF19314A1D12DDB500F826B2 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
@@ -156,6 +155,7 @@
 		AF2817CA1C38794F00B2607A /* LeadUserController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadUserController.swift; sourceTree = "<group>"; };
 		AF2B37EF1D35131E00AB7780 /* FirebaseLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseLogin.swift; sourceTree = "<group>"; };
 		AF2D051A1D359A4200AC2A43 /* News.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
+		AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoLauncher.swift; sourceTree = "<group>"; };
 		AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
 		AF46FA831C2313EE00C27445 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherGetter.swift; sourceTree = "<group>"; };
@@ -449,7 +449,7 @@
 				AFF3C8F11C4F38D500D9B7BD /* NewsDetailController.swift */,
 				AFD754F31C4FFEB200021F97 /* UploadController.swift */,
 				AFBB9B7C1D2D760300618586 /* FeedCell.swift */,
-				AF0ECDB71D5DF96800982BA4 /* VideoLauncher.swift */,
+				AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */,
 				AFBB9B7A1D2D398C00618586 /* MenuBar.swift */,
 				AFE419D31D19EDA200A6F590 /* SettingsLauncher.swift */,
 				AF74E45F1D1BFF58004DE7D6 /* SettingCell.swift */,
@@ -784,6 +784,7 @@
 				AFE263A41C178830007BBB90 /* Blog.swift in Sources */,
 				AFF3C8F21C4F38D500D9B7BD /* NewsDetailController.swift in Sources */,
 				AF0D6B331C4C554300334D03 /* YouTubeController.swift in Sources */,
+				AF2D42E01D6CA9200071115E /* VideoLauncher.swift in Sources */,
 				AF2B37F01D35131E00AB7780 /* FirebaseLogin.swift in Sources */,
 				AF9EE4C71C2771D70057B7DB /* NotificationController.swift in Sources */,
 				AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */,
@@ -818,7 +819,6 @@
 				AF74E4601D1BFF58004DE7D6 /* SettingCell.swift in Sources */,
 				AF5C01E01C4931EE009BB817 /* TrackCell.swift in Sources */,
 				AF5794B31C53EC6B006C456B /* KeychainWrapper.swift in Sources */,
-				AF0ECDB81D5DF96800982BA4 /* VideoLauncher.swift in Sources */,
 				AF8CC3A71C4153AF004147F3 /* NewEditData.swift in Sources */,
 				AF1931491D12DCCD00F826B2 /* YTPlayerView.m in Sources */,
 				AFF5D5561D3AC8E700975055 /* Message.swift in Sources */,
