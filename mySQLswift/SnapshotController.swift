@@ -506,17 +506,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: UICollectionView
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
-        if (collectionView.tag == 0) {
-            return CGSize(width: 150, height: 130)
-        } else if (collectionView.tag == 1) {
-            return CGSize(width: 150, height: 130)
-        } else if (collectionView.tag == 2) {
-            return CGSize(width: 120, height: 130)
-        }
-        return CGSize(width: 90, height: 130)
-    }
-    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -664,6 +653,30 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
         return cell
     }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+        if (collectionView.tag == 0) {
+            return CGSize(width: 150, height: 130)
+        } else if (collectionView.tag == 1) {
+            return CGSize(width: 150, height: 130)
+        } else if (collectionView.tag == 2) {
+            return CGSize(width: 120, height: 130)
+        }
+        return CGSize(width: 90, height: 130)
+    }
+    
+    //---- below Creates Instagram thin Line spacing between cells---
+    @objc(collectionView:layout:minimumLineSpacingForSectionAtIndex:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout , minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        
+        return 1.0
+    }
+    
+    @objc(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout , minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 1.0
+    }
+    //-----------------------------------------------------------
     
     
     // MARK: - Parse

@@ -280,60 +280,72 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     @IBAction func saveData(sender: UIButton) {
         
-        if (self.formStatus == "None") {
+        guard let text = self.subject?.text else { return }
+        
+        if text == "" {
+
+            let alert = UIAlertController(title: "Oops!", message: "No text entered.", preferredStyle: .alert)
+            let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(okayAction)
+            self.present(alert, animated: true, completion: nil)
+        } else {
             
-            let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo:self.objectId!)
-            query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                if error == nil {
-                    updateblog!.setObject(self.msgDate!, forKey:"MsgDate")
-                    updateblog!.setObject(self.postby!, forKey:"PostBy")
-                    updateblog!.setObject(self.rating!, forKey:"Rating")
-                    updateblog!.setObject(self.subject!.text, forKey:"Subject")
-                    updateblog!.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
-                    updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
-                    updateblog!.saveEventually()
-                    
-                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
-                    self.show(vc!, sender: self)
-                    
-                    self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                } else {
-                    self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                }
-            }
             
-        } else if (self.formStatus == "New") {
-            
-            let saveblog:PFObject = PFObject(className:"Blog")
-            saveblog.setObject(self.msgDate!, forKey:"MsgDate")
-            saveblog.setObject(self.postby!, forKey:"PostBy")
-            saveblog.setObject(self.rating!, forKey:"Rating")
-            saveblog.setObject(self.subject!.text, forKey:"Subject")
-            saveblog.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
-            saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
-            saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
-            
-            if self.formStatus == "Reply" {
+            if (self.formStatus == "None") {
+                
                 let query = PFQuery(className:"Blog")
-                query.whereKey("objectId", equalTo:self.replyId!)
-                query.getFirstObjectInBackground {(updateReply: PFObject?, error: Error?) -> Void in
+                query.whereKey("objectId", equalTo:self.objectId!)
+                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
                     if error == nil {
-                        updateReply!.incrementKey("CommentCount")
-                        updateReply!.saveEventually()
+                        updateblog!.setObject(self.msgDate!, forKey:"MsgDate")
+                        updateblog!.setObject(self.postby!, forKey:"PostBy")
+                        updateblog!.setObject(self.rating!, forKey:"Rating")
+                        updateblog!.setObject(self.subject!.text, forKey:"Subject")
+                        updateblog!.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
+                        updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
+                        updateblog!.saveEventually()
+                        
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
+                        self.show(vc!, sender: self)
+                        
+                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                    } else {
+                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
                     }
                 }
-            }
-            
-            saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                if success == true {
-                    
-                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
-                    self.show(vc!, sender: self)
-                    
-                    self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                } else {
-                    self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                
+            } else if (self.formStatus == "New") {
+                
+                let saveblog:PFObject = PFObject(className:"Blog")
+                saveblog.setObject(self.msgDate!, forKey:"MsgDate")
+                saveblog.setObject(self.postby!, forKey:"PostBy")
+                saveblog.setObject(self.rating!, forKey:"Rating")
+                saveblog.setObject(self.subject!.text, forKey:"Subject")
+                saveblog.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
+                saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
+                saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
+                
+                if self.formStatus == "Reply" {
+                    let query = PFQuery(className:"Blog")
+                    query.whereKey("objectId", equalTo:self.replyId!)
+                    query.getFirstObjectInBackground {(updateReply: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateReply!.incrementKey("CommentCount")
+                            updateReply!.saveEventually()
+                        }
+                    }
+                }
+                
+                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    if success == true {
+                        
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
+                        self.show(vc!, sender: self)
+                        
+                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                    } else {
+                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                    }
                 }
             }
         }

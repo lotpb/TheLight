@@ -66,25 +66,22 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     }
     
     func addActivityIndicator() {
+        //fix not centering
+        //activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50)) as UIActivityIndicatorView
         activityIndicator = UIActivityIndicatorView(frame: UIScreen.main.bounds)
+        //activityIndicator?.center = view.center
+        activityIndicator?.hidesWhenStopped = true
         activityIndicator?.activityIndicatorViewStyle = .whiteLarge
-        activityIndicator?.backgroundColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0) //view.backgroundColor
+        activityIndicator?.backgroundColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
         activityIndicator?.startAnimating()
         view.addSubview(activityIndicator!)
     }
     
     func hideActivityIndicator() {
         if activityIndicator != nil {
+            activityIndicator?.stopAnimating()
             activityIndicator?.removeFromSuperview()
-            activityIndicator = nil
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        //navigationController?.navigationBarHidden = false
-        //automaticallyAdjustsScrollViewInsets = false
-        //locationManager.startUpdatingHeading()
-        //locationManager.startUpdatingLocation()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
