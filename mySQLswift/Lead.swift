@@ -230,13 +230,14 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         }
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        myLabel.backgroundColor = Color.Lead.labelColor //UIColor(red: 0.02, green: 0.36, blue: 0.53, alpha: 1.0)
+        myLabel.backgroundColor = Color.Lead.labelColor
+        myLabel.text = "Lead"
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
+        myLabel.layer.contentsGravity = kCAGravityResize
         myLabel.layer.masksToBounds = true
-        myLabel.text = "Lead"
-        myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 25.0
+        myLabel.font = Font.headtitle
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = (indexPath as NSIndexPath).row
         cell.addSubview(myLabel)

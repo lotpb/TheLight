@@ -197,15 +197,17 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         myLabel.backgroundColor = Color.Employ.labelColor
+        myLabel.text = "Employ"
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
+        myLabel.layer.contentsGravity = kCAGravityResize
         myLabel.layer.masksToBounds = true
-        myLabel.text = "Employ"
-        myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 25.0
+        myLabel.font = Font.headtitle
         myLabel.isUserInteractionEnabled = true
+        myLabel.tag = (indexPath as NSIndexPath).row
         cell.addSubview(myLabel)
-        
+
         return cell
     }
     

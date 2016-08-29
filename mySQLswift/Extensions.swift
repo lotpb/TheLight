@@ -10,10 +10,10 @@
 import UIKit
 
     enum Config {
-        static let NewsLead = "Customer News: Company to expand to a new web advertising directive this week."
-        static let NewsCust = "Customer News: Check out or new line of fabulous windows and siding."
-        static let NewsVend = "Business News: Peter Balsamo Appointed to United's Board of Directors."
-        static let NewsEmploy = "Employee News: Health benifits cancelled immediately, ineffect starting today."
+        static let NewsLead = "Company to expand to a new web advertising directive this week."
+        static let NewsCust = "Check out or new line of fabulous windows and siding."
+        static let NewsVend = "Peter Balsamo Appointed to United's Board of Directors."
+        static let NewsEmploy = "Health benifits cancelled immediately, ineffect starting today."
         static let BaseUrl = "http://lotpb.github.io/UnitedWebPage/index.html"
     }
 

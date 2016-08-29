@@ -236,15 +236,17 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         myLabel.backgroundColor = Color.Cust.labelColor
+        myLabel.text = "Cust"
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
+        myLabel.layer.contentsGravity = kCAGravityResize
         myLabel.layer.masksToBounds = true
-        myLabel.text = "Cust"
-        myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 25.0
+        myLabel.font = Font.headtitle
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = (indexPath as NSIndexPath).row
         cell.addSubview(myLabel)
+
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(Customer.imgLoadSegue))
         myLabel.addGestureRecognizer(tap)

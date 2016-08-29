@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class NotificationController: UIViewController {
     
@@ -106,18 +107,39 @@ class NotificationController: UIViewController {
     
     
      func memberNotification() {
-      
-        let localNotification: UILocalNotification = UILocalNotification()
-        localNotification.alertAction = "Membership Status"
-        localNotification.alertBody = "Our system has detected that your membership is inactive."
-        localNotification.fireDate = Date(timeIntervalSinceNow: 15)
-        localNotification.timeZone = TimeZone.current
-        localNotification.category = "status"
-        localNotification.userInfo = ["cause": "inactiveMembership"]
-        localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-        localNotification.soundName = "Tornado.caf"
-        UIApplication.shared.scheduleLocalNotification(localNotification)
         
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "Membership Status"
+            content.subtitle = "米花兒"
+            content.body = "Our system has detected that your membership is inactive."
+            content.badge = UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound(named: "Tornado.caf")
+            content.categoryIdentifier = "status"
+            
+            let imageURL = Bundle.main.url(forResource: "pic", withExtension: "jpg")
+            let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
+            content.attachments = [attachment]
+            content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
+            
+            let localNotification: UILocalNotification = UILocalNotification()
+            localNotification.alertAction = "Membership Status"
+            localNotification.alertBody = "Our system has detected that your membership is inactive."
+            localNotification.fireDate = Date(timeIntervalSinceNow: 15)
+            localNotification.timeZone = TimeZone.current
+            localNotification.category = "status"
+            localNotification.userInfo = ["cause": "inactiveMembership"]
+            localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
+            localNotification.soundName = "Tornado.caf"
+            UIApplication.shared.scheduleLocalNotification(localNotification)
+        }
+  
     }
     
     
@@ -217,3 +239,5 @@ class NotificationController: UIViewController {
     }
     
 }
+
+

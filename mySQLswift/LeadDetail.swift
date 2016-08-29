@@ -202,6 +202,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
 
         photoImage = UIImageView(frame:CGRect(x: self.view.frame.size.width/2+15, y: 60, width: self.view.frame.size.width/2-25, height: 110))
         photoImage!.image = UIImage(named:"IMG_1133.jpg")
+        photoImage!.layer.contentsGravity = kCAGravityResize
         photoImage!.layer.masksToBounds = true
         photoImage!.layer.borderColor = UIColor.lightGray.cgColor
         photoImage!.layer.borderWidth = 1.0
@@ -312,47 +313,38 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            cell.textLabel?.font = celltitle
+            cell.detailTextLabel?.font = cellsubtitle
+        } else {
+            cell.textLabel?.font = celltitle
+            cell.detailTextLabel?.font = cellsubtitle
+        }
+        
+        cell.textLabel?.textColor = .black
+        cell.detailTextLabel?.textColor = .black
+        
         if (tableView == self.listTableView) {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
-            
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-                cell.textLabel!.font = celltitle
-                cell.detailTextLabel!.font = cellsubtitle
-            } else {
-                cell.textLabel!.font = celltitle
-                cell.detailTextLabel!.font = cellsubtitle
-            }
-            
-            cell.textLabel!.text = tableData4.object(at: (indexPath as NSIndexPath).row) as? String
-            cell.textLabel!.textColor = .black
-            cell.detailTextLabel!.text = tableData.object(at: (indexPath as NSIndexPath).row) as? String
-            cell.detailTextLabel!.textColor = .black
 
+            cell.textLabel?.text = tableData4.object(at: (indexPath as NSIndexPath).row) as? String
+            
+            cell.detailTextLabel?.text = tableData.object(at: (indexPath as NSIndexPath).row) as? String
+            
             return cell
             
         } else if (tableView == self.listTableView2) {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
+            cell.textLabel?.text = tableData3.object(at: (indexPath as NSIndexPath).row) as? String
 
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-                cell.textLabel!.font = celltitle
-                cell.detailTextLabel!.font = cellsubtitle
-            } else {
-                cell.textLabel!.font = celltitle
-                cell.detailTextLabel!.font = cellsubtitle
-            }
+            cell.detailTextLabel?.text = tableData2.object(at: (indexPath as NSIndexPath).row) as? String
             
-            cell.textLabel!.text = tableData3.object(at: (indexPath as NSIndexPath).row) as? String
-            cell.textLabel!.textColor = .black
-            cell.detailTextLabel!.text = tableData2.object(at: (indexPath as NSIndexPath).row) as? String
-            cell.detailTextLabel!.textColor = .black
-
             return cell
             
         } else if (tableView == self.newsTableView) {
             
-            var cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 cell?.leadtitleDetail!.font = newstitle
@@ -373,29 +365,31 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             topBorder.borderWidth = width
             cell?.layer.addSublayer(topBorder)
             cell?.layer.masksToBounds = true
-
             
-            if cell == nil {
-                cell = CustomTableCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
-            }
-            
-            cell?.leadtitleDetail.text = self.lnewsTitle
+            cell?.leadtitleDetail.text = "\(self.formController!) News: \(self.lnewsTitle!)"
             cell?.leadtitleDetail.numberOfLines = 0
             cell?.leadtitleDetail.textColor = .black
             
             //--------------------------------------------------------------
      
-            let dateStr = self.date
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            
-            let date1 = dateFormatter.date(from: dateStr!)
-            let date2 = Date()
-            let calendar = Calendar.current
-            if date1 != nil {
-                let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
-                let daysCount = diffDateComponents.day
-                    cell?.leadsubtitleDetail.text = "United News, \(daysCount!) days ago"
+            if (self.formController == "Vendor" || self.formController == "Employee") {
+                
+                cell?.leadsubtitleDetail.text = "Comments"
+                
+            } else {
+                
+                let dateStr = self.date
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                
+                let date1 = dateFormatter.date(from: dateStr!)
+                let date2 = Date()
+                let calendar = Calendar.current
+                if date1 != nil {
+                    let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
+                    let daysCount = diffDateComponents.day
+                    cell?.leadsubtitleDetail.text = "Comments, \(daysCount!) days ago"
+                }
             }
             
             //--------------------------------------------------------------
@@ -406,7 +400,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             
             cell?.leadnewsDetail.text = self.comments
             cell?.leadnewsDetail.numberOfLines = 0
-          //cell.leadnewsDetail.textColor = .darkGrayColor()
+            cell?.leadnewsDetail.textColor = .darkGray
 
             return cell!
             
@@ -624,7 +618,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let alertController = UIAlertController(title:nil, message:nil, preferredStyle: .actionSheet)
         
         let addr = UIAlertAction(title: "Add Contact", style: .default, handler: { (action) -> Void in
-            self.createContact()
+            self.checkContactsAccess()
         })
         let cal = UIAlertAction(title: "Add Calender Event", style: .default, handler: { (action) -> Void in
             self.addEvent()
@@ -796,8 +790,43 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }
     }
     
+    private func checkContactsAccess() {
+        switch CNContactStore.authorizationStatus(for: .contacts) {
+        // Update our UI if the user has granted access to their Contacts
+        case .authorized:
+            self.createContact()
+            
+        // Prompt the user for access to Contacts if there is no definitive answer
+        case .notDetermined :
+            self.requestContactsAccess()
+            
+        // Display a message if the user has denied or restricted access to Contacts
+        case .denied,
+             .restricted:
+            let alert = UIAlertController(title: "Privacy Warning!",
+                                          message: "Permission was not granted for Contacts.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
     
-    func createContact() {
+    private func requestContactsAccess() {
+        
+        let store = CNContactStore()
+
+        store.requestAccess(for: .contacts) {granted, error in
+            if granted {
+                DispatchQueue.main.async {
+                    self.createContact()
+                    return
+                }
+            }
+        }
+    }
+    
+    
+    private func createContact() {
         
         let newContact = CNMutableContact()
         

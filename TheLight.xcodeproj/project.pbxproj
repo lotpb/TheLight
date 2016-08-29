@@ -79,7 +79,6 @@
 		AFE263961C17418B007BBB90 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE2638C1C17418B007BBB90 /* MessageUI.framework */; };
 		AFE263971C17418B007BBB90 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE2638D1C17418B007BBB90 /* MobileCoreServices.framework */; };
 		AFE263991C17418B007BBB90 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE2638F1C17418B007BBB90 /* Security.framework */; };
-		AFE2639A1C17418B007BBB90 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE263901C17418B007BBB90 /* StoreKit.framework */; };
 		AFE2639B1C17418B007BBB90 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE263911C17418B007BBB90 /* SystemConfiguration.framework */; };
 		AFE263A21C176F15007BBB90 /* Lead.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE263A11C176F15007BBB90 /* Lead.swift */; };
 		AFE263A41C178830007BBB90 /* Blog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE263A31C178830007BBB90 /* Blog.swift */; };
@@ -214,7 +213,6 @@
 		AFE2638C1C17418B007BBB90 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		AFE2638D1C17418B007BBB90 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AFE2638F1C17418B007BBB90 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		AFE263901C17418B007BBB90 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		AFE263911C17418B007BBB90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		AFE263A11C176F15007BBB90 /* Lead.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lead.swift; sourceTree = "<group>"; };
 		AFE263A31C178830007BBB90 /* Blog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Blog.swift; sourceTree = "<group>"; };
@@ -269,7 +267,6 @@
 				AFE263961C17418B007BBB90 /* MessageUI.framework in Frameworks */,
 				AFE263971C17418B007BBB90 /* MobileCoreServices.framework in Frameworks */,
 				AFE263991C17418B007BBB90 /* Security.framework in Frameworks */,
-				AFE2639A1C17418B007BBB90 /* StoreKit.framework in Frameworks */,
 				AFE2639B1C17418B007BBB90 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -543,7 +540,6 @@
 				AFE2638C1C17418B007BBB90 /* MessageUI.framework */,
 				AFE2638D1C17418B007BBB90 /* MobileCoreServices.framework */,
 				AFE2638F1C17418B007BBB90 /* Security.framework */,
-				AFE263901C17418B007BBB90 /* StoreKit.framework */,
 				AFE263911C17418B007BBB90 /* SystemConfiguration.framework */,
 				AFE263841C17411D007BBB90 /* iAd.framework */,
 			);
@@ -1012,7 +1008,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.BigGulp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";
@@ -1073,7 +1069,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.BigGulp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";

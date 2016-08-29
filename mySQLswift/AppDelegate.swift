@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import UserNotifications
 //import Firebase
 import FBSDKCoreKit
 import GoogleSignIn
@@ -64,8 +65,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         // MARK: - RegisterUserNotification
         
-        let mySettings = UIUserNotificationSettings(types:[.badge, .sound, .alert], categories: nil)
-        UIApplication.shared.registerUserNotificationSettings(mySettings)
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge], completionHandler: { granted, error in
+                if granted {
+                    print("使用者同意了，每天都能收到來自米花兒的幸福訊息")
+                }
+                else {
+                    print("使用者不同意，不喜歡米花兒，哭哭!")
+                }
+                
+            })
+        } else {
+            let mySettings = UIUserNotificationSettings(types:[.badge, .sound, .alert], categories: nil)
+            UIApplication.shared.registerUserNotificationSettings(mySettings)
+        }
         
         application.applicationIconBadgeNumber = 0
         
@@ -228,6 +241,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
     }
 
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    @available(iOS 10.0, *)
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.badge, .sound, .alert])
+    }
+    
+    @available(iOS 10.0, *)
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler:  @escaping () -> Void) {
+        
+        let content = response.notification.request.content
+        print("title \(content.title)")
+        print("userInfo \(content.userInfo)")
+        print("actionIdentifier \(response.actionIdentifier)")
+        
+        completionHandler()
+    }
 }
 
 // MARK: CLLocationManagerDelegate - Beacons
