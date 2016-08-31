@@ -79,12 +79,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         
         // MARK: - iAd
-        
+        /*
         if (defaults.bool(forKey: "iadKey"))  {
             canDisplayBannerAds = true
         } else {
             canDisplayBannerAds = false
-        }
+        } */
         
         
      // MARK: - Login
@@ -105,7 +105,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
             if error != nil {
-                 print("Error: \(error) \(error!._userInfo)")
+                 print("PFUser Error: \(error) \(error!._userInfo)")
                 return
             }
         }

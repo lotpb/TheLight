@@ -124,9 +124,13 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         if (status == "Edit") {
             parseLookup()
         }
-        
-        profileImageView!.layer.cornerRadius = profileImageView!.frame.size.width/2
-        profileImageView!.layer.masksToBounds = true
+        profileImageView?.image = UIImage(named:"profile-rabbit-toy")
+        profileImageView?.layer.cornerRadius = (profileImageView?.frame.size.width)!/2
+        profileImageView?.layer.borderColor = UIColor.lightGray.cgColor
+        profileImageView?.layer.borderWidth = 0.5
+        profileImageView?.layer.masksToBounds = true
+        profileImageView?.isUserInteractionEnabled = true
+        profileImageView?.contentMode = .scaleAspectFill
         
     }
     

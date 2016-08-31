@@ -450,7 +450,6 @@
 		070597098D1C0079C559E9CE676225C4 /* PFErrorUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = PFErrorUtilities.m; path = Parse/Internal/PFErrorUtilities.m; sourceTree = "<group>"; };
 		0729DD3439CB938CE5599B1A7A33FB1D /* PFOfflineObjectController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = PFOfflineObjectController.m; path = Parse/Internal/Object/Controller/OfflineController/PFOfflineObjectController.m; sourceTree = "<group>"; };
 		085A108A3F201042C075686E9DB8B1A5 /* BFExecutor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = BFExecutor.m; path = Bolts/Common/BFExecutor.m; sourceTree = "<group>"; };
-		08618F331D8DD2046D0B31EFB229E5B5 /* FirebaseStorage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseStorage.framework; path = Frameworks/FirebaseStorage.framework; sourceTree = "<group>"; };
 		08F26EA74772221CE6724711331554C9 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = Frameworks/GoogleSignIn.framework; sourceTree = "<group>"; };
 		094F1CE4645FEEF14B3CCFC345816D48 /* PFCommandResult.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PFCommandResult.h; path = Parse/Internal/PFCommandResult.h; sourceTree = "<group>"; };
 		0A85AA4A413401EBBCCFCD765D1BB5DA /* Pods-TheLight.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-TheLight.modulemap"; sourceTree = "<group>"; };
@@ -654,6 +653,7 @@
 		7938BBFCB215EC1D41CC5263FAC98EB6 /* Parse.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Parse.xcconfig; sourceTree = "<group>"; };
 		79F1F68A51DDD4B1030D2C312D462F7D /* Pods-TheLight.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TheLight.debug.xcconfig"; sourceTree = "<group>"; };
 		7A7421A06561467DAE97D2D89E5F1EE8 /* PFPurchaseController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = PFPurchaseController.m; path = Parse/Internal/Purchase/Controller/PFPurchaseController.m; sourceTree = "<group>"; };
+		7A980B58932898D6CD56817458AF9BA2 /* FirebaseStorage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseStorage.framework; path = Frameworks/frameworks/FirebaseStorage.framework; sourceTree = "<group>"; };
 		7AA6E85D4700B69059A8FE2DF344644D /* PFCurrentUserController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = PFCurrentUserController.m; path = Parse/Internal/User/CurrentUserController/PFCurrentUserController.m; sourceTree = "<group>"; };
 		7C1627C43DA1F461D7E78A7783BFB570 /* PFFileController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PFFileController.h; path = Parse/Internal/File/Controller/PFFileController.h; sourceTree = "<group>"; };
 		7C25E176DF73541D587647D338F48410 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -975,14 +975,6 @@
 			isa = PBXGroup;
 			children = (
 				8194B45FC38C79E287008B5AFE21E07C /* FirebaseAuth.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		3C039F462CD8A6DC826A691D5E4C905E /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				08618F331D8DD2046D0B31EFB229E5B5 /* FirebaseStorage.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1625,6 +1617,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		CC68C1DFCBB72BC2B127DC591AD0FD13 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7A980B58932898D6CD56817458AF9BA2 /* FirebaseStorage.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D0B71E2F89C6C42BCB65758923B4992F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1683,7 +1683,7 @@
 		DDB93EE2CECE998299194362EA5DA20B /* FirebaseStorage */ = {
 			isa = PBXGroup;
 			children = (
-				3C039F462CD8A6DC826A691D5E4C905E /* Frameworks */,
+				CC68C1DFCBB72BC2B127DC591AD0FD13 /* Frameworks */,
 			);
 			path = FirebaseStorage;
 			sourceTree = "<group>";

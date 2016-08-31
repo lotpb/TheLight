@@ -963,19 +963,23 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         do {
 //-------------dupicate Contact-----------
-            
-            //let contactFormatter = CNContactFormatter()
-            //let contactName = contactFormatter.stringFromContact(self.name! as String, style: .fullName)
-            
+
+            let nameStr: String
+            if (formController == "Leads") || (formController == "Customer") {
+                nameStr = "\(self.tbl13!) \(self.name!)"
+            } else {
+                nameStr = "\(self.name!)"
+            }
+
             let predicateForMatchingName = CNContact
-                .predicateForContacts(matchingName: self.name! as String)
+                .predicateForContacts(matchingName: nameStr)
             
             let matchingContacts = try! CNContactStore()
                 .unifiedContacts(matching: predicateForMatchingName, keysToFetch: [])
             
             guard matchingContacts.isEmpty else {
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Contact \(self.name!) Already Exists", message: nil, preferredStyle: .alert)
+                    let alert = UIAlertController(title: "There can only be one\n \(nameStr)", message: "Name already exists", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
