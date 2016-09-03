@@ -938,14 +938,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             //let anniversary = CNLabeledValue(label: "Anniversary", value: anniversaryDate)
             //newContact.dates = [anniversary]
             
-            newContact.note = self.comments!
-            
-            /*
-            if let img = UIImage(named: "contactface"),
-            let imgData = UIImagePNGRepresentation(img){
-            newContact.imageData = imgData
-            } */
-            
             //newContact.departmentName = "Food and Beverages"
             
             /*
@@ -959,6 +951,13 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             
             newContact.socialProfiles = [facebookProfile, twitterProfile]
             */
+            
+            if let img = UIImage(named: "profile-rabbit-toy"),
+                let imgData = UIImagePNGRepresentation(img) {
+                newContact.imageData = imgData
+            }
+            
+            newContact.note = self.comments!
         }
         
         do {

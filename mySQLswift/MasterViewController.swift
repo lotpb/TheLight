@@ -255,14 +255,18 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            return 135.0
+            if (tableView == self.tableView) {
+                return 135.0
+            } else {
+                return 0
+            }
         } else {
             return 0.0
         }
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
+            
         let vw = UIView()
         tableView.tableHeaderView = vw
         
@@ -374,7 +378,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         statButton.layer.borderColor = UIColor.black.cgColor
         statButton.layer.borderWidth = 1.0
         vw.addSubview(statButton) */
-        
         return vw
     }
 

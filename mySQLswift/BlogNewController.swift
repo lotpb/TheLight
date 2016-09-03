@@ -71,9 +71,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.imageBlog!.contentMode = .scaleAspectFill
         
         if ((self.formStatus == "New") || (self.formStatus == "Reply")) {
-
+            
             self.placeholderlabel!.textColor = .lightGray
-
+            
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let dateString = dateFormatter.string(from: (Date()) as Date)
@@ -88,7 +88,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.objectId = self.textcontentobjectId
             self.msgNo = self.textcontentmsgNo
             self.msgDate = self.textcontentdate
-            self.subject!.text = self.textcontentsubject
+            self.subject?.text = self.textcontentsubject
             self.postby = self.textcontentpostby
             self.rating = self.textcontentrating
             if (self.liked == nil || self.liked == 0) {
@@ -97,7 +97,37 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             } else {
                 self.Like!.tintColor = Color.Blog.buttonColor
             }
+            
+//---------------------NSDataDetector-----------------------------
+            
+            let text = self.textcontentsubject!
+            let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
+            let detector = try? NSDataDetector(types: types.rawValue)
+            detector?.enumerateMatches(in: text, options: [], range: NSMakeRange(0, (text as NSString).length)) { (result, flags, _) in
+                
+                let webattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
+                
+                //attributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
+                
+                let emailattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
+                
+                let phoneattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.phonelinkText])
+
+                if result!.resultType == .link {
+                    
+                    if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
+                        self.subject!.attributedText = emailattributedText
+                    } else {
+                        self.subject!.attributedText = webattributedText
+                    }
+                    
+                } else if result?.resultType == .phoneNumber {
+                    
+                    self.subject!.attributedText = phoneattributedText
+                }
+            }
         }
+//--------------------------------------------------
         
         if (self.formStatus == "New") {
             self.placeholderlabel!.text = "Share an idea?"
@@ -276,6 +306,19 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         }
         self.tableView!.reloadData()
     }
+    
+    // MARK: - Notification
+    
+    func newBlogNotification() {
+        let localNotification: UILocalNotification = UILocalNotification()
+        localNotification.alertAction = "Blog Post"
+        localNotification.alertBody = "New Blog Posted by \(self.postby) at TheLight"
+        localNotification.fireDate = Date(timeIntervalSinceNow: 10)
+        localNotification.timeZone = TimeZone.current
+        localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
+        localNotification.soundName = UILocalNotificationDefaultSoundName
+        UIApplication.shared.scheduleLocalNotification(localNotification)
+    }
 
     
     @IBAction func saveData(sender: UIButton) {
@@ -338,6 +381,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 
                 saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
                     if success == true {
+                        self.newBlogNotification()
                         
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
                         self.show(vc!, sender: self)

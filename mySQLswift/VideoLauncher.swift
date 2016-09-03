@@ -11,6 +11,9 @@ import AVFoundation
 
 class VideoPlayerView: UIView {
     
+    
+//---------------------------------------------------------------
+    
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         aiv.translatesAutoresizingMaskIntoConstraints = false

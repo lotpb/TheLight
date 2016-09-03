@@ -104,6 +104,16 @@ class CustomTableCell: UITableViewCell {
     @IBOutlet weak var buttonView: UIView!
     @IBOutlet weak var blog2ImageView: UIImageView!
     
+    /*
+    let linkColor = UIColor(red: 0.203, green: 0.329, blue: 0.835, alpha: 1)
+    let linkActiveColor = UIColor.black
+    
+    blogsubtitleLabel.delegate = self
+    
+    blogsubtitleLabel.linkAttributes = [kCTForegroundColorAttributeName : linkColor]
+    blogsubtitleLabel.activeLinkAttributes = [kCTForegroundColorAttributeName : linkActiveColor]
+    blogsubtitleLabel.enabledTextCheckingTypes = NSTextCheckingResult.CheckingType.Link.rawValue
+    */
 
 }
 

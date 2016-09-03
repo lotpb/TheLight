@@ -22,11 +22,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var _feedheadItems3 : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
     
-    //var messages = [Message]()
-    //var messagesDictionary = [String: Message]()
-    //var users = [User]()
-    //var usersDictionary = [String: User]()
-    
     var buttonView: UIView?
     var likeButton: UIButton?
     var refreshControl: UIRefreshControl!
@@ -153,7 +148,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
         
         cell?.selectionStyle = UITableViewCellSelectionStyle.none
-        
+ 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
             cell?.blogtitleLabel!.font =  Font.Blog.celltitle
@@ -232,7 +227,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }
             cell?.commentLabel?.text = "\(CommentCount!)"
         }
-        
+
         cell?.replyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
         cell?.replyButton .setImage(replyimage, for: .normal)
@@ -270,11 +265,42 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             cell?.replyButton.tintColor = Color.Blog.buttonColor
         }
- 
+        
+//---------------------NSDataDetector-----------------------------
+        
+        let text = _feedItems[indexPath.row].value(forKey:"Subject") as? String
+        let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
+        let detector = try? NSDataDetector(types: types.rawValue)
+        detector?.enumerateMatches(in: text!, options: [], range: NSMakeRange(0, (text! as NSString).length)) { (result, flags, _) in
+            
+            let webattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
+            
+            //webattributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
+            
+            let emailattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
+            
+            let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.phonelinkText])
+            
+            if result!.resultType == .link {
+                
+                if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
+                    cell?.blogsubtitleLabel!.attributedText = emailattributedText
+                } else {
+                    cell?.blogsubtitleLabel!.attributedText = webattributedText
+                }
+                
+            } else if result?.resultType == .phoneNumber {
+                
+                cell?.blogsubtitleLabel!.attributedText = phoneattributedText
+            }
+        }
+    
+//--------------------------------------------------
 
+    
         return cell!
     }
-    
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
@@ -657,7 +683,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func showAlertMessage(message: String!) {
         let alertController = UIAlertController(title: "EasyShare", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }
     
@@ -712,18 +738,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
 }
-/*
-    //Email Address Validation for iOS
-extension String {
-    var isValidEmailAddress: Bool {
-        let types: NSTextCheckingResult.CheckingType = [.link]
-        let linkDetector = try? NSDataDetector(types: types.rawValue)
-        let range = NSRange(location: 0, length: self.characters.count)
-        let result = linkDetector?.firstMatch(in: self, options: .reportCompletion, range: range)
-        let scheme = result?.url?.scheme ?? ""
-        return scheme == "mailto" && result?.range.length == self.characters.count
-    }
-} */
 
     // MARK: - UISearchBar Delegate
 extension Blog: UISearchBarDelegate {

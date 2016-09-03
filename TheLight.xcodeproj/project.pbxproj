@@ -301,7 +301,6 @@
 			children = (
 				AFE6936E1C6A4D7E000BEDCE /* Extensions.swift */,
 				AF0369A41C173DDC00137D7E /* AppDelegate.swift */,
-				AF0369A61C173DDC00137D7E /* MasterViewController.swift */,
 				AFE0CEFB1D3EAB5700D6D3F0 /* Main.storyboard */,
 				AFBCA5851D3F9C4F009EDEFB /* TitleBar.swift */,
 				AF8CC3A91C41B34E004147F3 /* Controllers */,
@@ -413,6 +412,7 @@
 		AF8CC3A91C41B34E004147F3 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				AF0369A61C173DDC00137D7E /* MasterViewController.swift */,
 				AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */,
 				AF0369A81C173DDC00137D7E /* DetailViewController.swift */,
 				AFE263A11C176F15007BBB90 /* Lead.swift */,
