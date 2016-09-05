@@ -231,22 +231,22 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell?.replyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
         cell?.replyButton .setImage(replyimage, for: .normal)
-        cell?.replyButton .addTarget(self, action: #selector(Blog.replyButton), for: UIControlEvents.touchUpInside)
+        cell?.replyButton .addTarget(self, action: #selector(replySetButton), for: UIControlEvents.touchUpInside)
         
         cell?.likeButton.tintColor = .lightGray
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
         cell?.likeButton.setImage(likeimage, for: .normal)
-        cell?.likeButton.addTarget(self, action: #selector(setter: Blog.likeButton), for: UIControlEvents.touchUpInside)
+        cell?.likeButton.addTarget(self, action: #selector(likeSetButton), for: UIControlEvents.touchUpInside)
 
         cell?.flagButton.tintColor = .lightGray
         let reportimage : UIImage? = UIImage(named:"Flag.png")!.withRenderingMode(.alwaysTemplate)
         cell?.flagButton .setImage(reportimage, for: .normal)
-        cell?.flagButton .addTarget(self, action: #selector(Blog.flagButton), for: UIControlEvents.touchUpInside)
+        cell?.flagButton .addTarget(self, action: #selector(flagSetButton), for: UIControlEvents.touchUpInside)
   
         cell?.actionBtn.tintColor = .lightGray
         let actionimage : UIImage? = UIImage(named:"nav_more_icon.png")!.withRenderingMode(.alwaysTemplate)
         cell?.actionBtn .setImage(actionimage, for: .normal)
-        cell?.actionBtn .addTarget(self, action: #selector(Blog.showShare), for: UIControlEvents.touchUpInside)
+        cell?.actionBtn .addTarget(self, action: #selector(showShare), for: UIControlEvents.touchUpInside)
         
         if !(cell?.numLabel.text! == "0") {
             cell?.numLabel.textColor = Color.Blog.buttonColor
@@ -421,7 +421,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.performSegue(withIdentifier: "blognewSegue", sender: self)
     }
     
-    func likeButton(sender:UIButton) {
+    func likeSetButton(sender:UIButton) {
 
         likeButton?.isSelected = true
         sender.tintColor = .red
@@ -438,7 +438,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func replyButton(sender:UIButton) {
+    func replySetButton(sender:UIButton) {
  
         isReplyClicked = true
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
@@ -449,7 +449,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.performSegue(withIdentifier: "blognewSegue", sender: self)
     }
     
-    func flagButton(_ sender:UIButton) {
+    func flagSetButton(_ sender:UIButton) {
     }
     
     

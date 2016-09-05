@@ -310,6 +310,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     // MARK: - Notification
     
     func newBlogNotification() {
+        
         let localNotification: UILocalNotification = UILocalNotification()
         localNotification.alertAction = "Blog Post"
         localNotification.alertBody = "New Blog Posted by \(self.postby) at TheLight"
@@ -320,6 +321,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         UIApplication.shared.scheduleLocalNotification(localNotification)
     }
 
+    // MARK: - Save Data
     
     @IBAction func saveData(sender: UIButton) {
         
@@ -381,6 +383,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 
                 saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
                     if success == true {
+                        
                         self.newBlogNotification()
                         
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")

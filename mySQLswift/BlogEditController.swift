@@ -198,6 +198,34 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             cell?.subtitleLabel!.text = self.subject
             cell?.msgDateLabel.text = dateFormatter.string(from: (date) as Date)
             
+//---------------------NSDataDetector-----------------------------
+            
+            let text = self.subject
+            let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
+            let detector = try? NSDataDetector(types: types.rawValue)
+            detector?.enumerateMatches(in: text!, options: [], range: NSMakeRange(0, (text! as NSString).length)) { (result, flags, _) in
+                
+                let webattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
+                
+                let emailattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
+                
+                let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.phonelinkText])
+                
+                if result!.resultType == .link {
+                    
+                    if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
+                        cell?.subtitleLabel!.attributedText = emailattributedText
+                    } else {
+                        cell?.subtitleLabel!.attributedText = webattributedText
+                    }
+                    
+                } else if result?.resultType == .phoneNumber {
+                    
+                    cell?.subtitleLabel!.attributedText = phoneattributedText
+                }
+            }
+//--------------------------------------------------
+            
             return cell!
         }
         else { //----listViewTable--------------
@@ -282,6 +310,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
+
     
     // MARK: - Button
     
