@@ -32,6 +32,8 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
+        //self.navigationController?.navigationBar.tintColor = .white
+        //self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -51,7 +53,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
-        //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
+      //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
 
         webView.load(URLRequest(url:URL(string:"http://www.cnn.com")!))
         
@@ -83,7 +85,8 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         webView.load(request)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<()>?) {
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (keyPath == "loading") {
             backButton.isEnabled = webView.canGoBack
             forwardButton.isEnabled = webView.canGoForward
@@ -95,7 +98,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         if (keyPath == "title") {
             title = webView.title
         }
-    }
+    } 
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         progressView.setProgress(0.0, animated: false)
@@ -110,7 +113,10 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
         if (navigationAction.navigationType == WKNavigationType.linkActivated && !(navigationAction.request as NSURLRequest).url!.host!.lowercased().hasPrefix("www.drudgereport.com")) {
-            UIApplication.shared.openURL(navigationAction.request.url!)
+            
+          //UIApplication.shared.openURL(navigationAction.request.url!)
+            UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
+            
             decisionHandler(WKNavigationActionPolicy.cancel)
         } else {
             decisionHandler(WKNavigationActionPolicy.allow)

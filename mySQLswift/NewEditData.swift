@@ -308,7 +308,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         return true
     }
     
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
+    private func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
         
         if (action == #selector(NSObject.copy)) {
             return true
@@ -316,7 +316,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         return false
     }
     
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
+    private func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
         
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
@@ -398,7 +398,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             } else { //Save Salesman
                 
                 let saveblog:PFObject = PFObject(className:"Salesman")
-                saveblog.setObject("-1" ?? NSNull(), forKey:"SalesNo")
+                saveblog.setObject("-1" , forKey:"SalesNo")
                 saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Salesman")
                 saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                 //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
@@ -440,7 +440,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                 
                 let saveblog:PFObject = PFObject(className:"Job")
 
-                saveblog.setObject("-1" ?? NSNull(), forKey:"JobNo")
+                saveblog.setObject("-1" , forKey:"JobNo")
                 saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Description")
                 saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                 //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
@@ -467,7 +467,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                 query.whereKey("objectId", equalTo:self.objectId!)
                 query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
                     if error == nil {
-                        updateblog!.setObject(myPrice ?? NSNumber(value:-1), forKey:"Price")
+                        updateblog!.setObject(myPrice , forKey:"Price")
                         updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"ProductNo")
                         updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Products")
                         updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
@@ -485,8 +485,8 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             } else { //Save Products
                 
                 let saveblog:PFObject = PFObject(className:"Product")
-                saveblog.setObject(myPrice ?? NSNumber(value:-1), forKey:"Price")
-                saveblog.setObject("-1" ?? NSNull(), forKey:"ProductNo")
+                saveblog.setObject(myPrice , forKey:"Price")
+                saveblog.setObject("-1" , forKey:"ProductNo")
                 saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Products")
                 saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                 //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
@@ -527,7 +527,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             } else { //Save Advertising
                 
                 let saveblog:PFObject = PFObject(className:"Advertising")
-                saveblog.setObject("-1" ?? NSNull(), forKey:"AdNo")
+                saveblog.setObject("-1" , forKey:"AdNo")
                 saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Advertiser")
                 saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                 //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)

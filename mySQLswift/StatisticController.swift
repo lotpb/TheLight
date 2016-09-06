@@ -205,8 +205,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         if ((indexPath as NSIndexPath).section == 0) {
             
             if ((indexPath as NSIndexPath).row == 0) {
-                //if (changeYQL[0].containsString("-") || changeYQL[0] == nil ) {
-                if (changeYQL[0].contains("-")) {
+                if ((changeYQL[0] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -222,7 +221,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 1) {
                 
-                if (changeYQL[1].contains("-")) {
+                if ((changeYQL[1] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -238,7 +237,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 2) {
                 
-                if (changeYQL[2].contains("-")) {
+                if ((changeYQL[2] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -254,7 +253,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 3) {
                 
-                if (changeYQL[3].contains("-")) {
+                if ((changeYQL[3] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -270,7 +269,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 4) {
                 
-                if (changeYQL[4].contains("-")) {
+                if ((changeYQL[4] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -286,7 +285,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 5) {
                 
-                if (changeYQL[5].contains("-")) {
+                if ((changeYQL[5] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -302,7 +301,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 6) {
                 
-                if (changeYQL[6].contains("-")) {
+                if ((changeYQL[6] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -318,7 +317,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 7) {
                 
-                if (changeYQL[7].contains("-")) {
+                if ((changeYQL[7] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -334,7 +333,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 8) {
                 
-                if (changeYQL[8].contains("-")) {
+                if ((changeYQL[8] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -350,7 +349,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if ((indexPath as NSIndexPath).row == 9) {
                 
-                if (changeYQL[9].contains("-")) {
+                if ((changeYQL[9] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor

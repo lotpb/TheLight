@@ -93,70 +93,27 @@ class TitleBar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UI
 }
 
 class TitleCell: CollectionViewCell {
-    /*
-    let myLabel1: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.backgroundColor = UIColor.white()
-        label.textColor = UIColor.black()
-        label.textAlignment = NSTextAlignment.center
-        label.layer.masksToBounds = true
-        //label.text = String(format: "%@%d", "Leads\n", _feedItems.count)
-        label.font = Font.headtitle
-        label.layer.cornerRadius = 25.0
-        label.isUserInteractionEnabled = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
-    let myLabel2: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.backgroundColor = UIColor.white()
-        label.textColor = UIColor.black()
-        label.textAlignment = NSTextAlignment.center
-        label.layer.masksToBounds = true
-        //label.text = String(format: "%@%d", "Leads\n", _feedItems.count)
-        label.font = Font.headtitle
-        label.layer.cornerRadius = 25.0
-        label.isUserInteractionEnabled = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
     
-    let myLabel3: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.backgroundColor = UIColor.white()
-        label.textColor = UIColor.black()
-        label.textAlignment = NSTextAlignment.center
-        label.layer.masksToBounds = true
-        //label.text = String(format: "%@%d", "Leads\n", _feedItems.count)
-        label.font = Font.headtitle
-        label.layer.cornerRadius = 25.0
-        label.isUserInteractionEnabled = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    override func setupViews() {
+        
+        addSubview(imageView1)
+        addConstraintsWithFormat(format: "H:[v0(28)]", views: imageView1)
+        addConstraintsWithFormat(format: "V:[v0(28)]", views: imageView1)
+        
+        addConstraint(NSLayoutConstraint(item: imageView1, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: imageView1, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
+        
+    }
     
-    let separatorView1: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        return view
-    }()
-    
-    let separatorView2: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        return view
-    }()
-    
-    let separatorView3: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        return view
-    }()
-    */
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     
     let imageView1: UIImageView = {
         let iv = UIImageView()
@@ -176,7 +133,7 @@ class TitleCell: CollectionViewCell {
             imageView1.tintColor = isSelected ? UIColor.white : UIColor.rgb(red: 91, green: 14, blue: 13)
         }
     }
-    
+    /*
     override func setupViews() {
         super.setupViews()
         
@@ -186,6 +143,6 @@ class TitleCell: CollectionViewCell {
         
         addConstraint(NSLayoutConstraint(item: imageView1, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: imageView1, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
-    }
+    } */
     
 }

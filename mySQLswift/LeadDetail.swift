@@ -144,7 +144,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", self.formController!, "Form"), for: UIControlState())
+        titleButton.setTitle(String(format: "%@ %@", "\(self.formController)", "Form"), for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -202,7 +202,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
 
         photoImage = UIImageView(frame:CGRect(x: self.view.frame.size.width/2+15, y: 60, width: self.view.frame.size.width/2-25, height: 110))
         photoImage!.image = UIImage(named:"IMG_1133.jpg")
-        photoImage!.layer.contentsGravity = kCAGravityResize
         photoImage!.layer.masksToBounds = true
         photoImage!.layer.borderColor = UIColor.lightGray.cgColor
         photoImage!.layer.borderWidth = 1.0
@@ -322,12 +321,12 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             cell.textLabel?.font = celltitle
             cell.detailTextLabel?.font = cellsubtitle
         }
-        
         cell.textLabel?.textColor = .black
         cell.detailTextLabel?.textColor = .black
         
+        
         if (tableView == self.listTableView) {
-
+            
             cell.textLabel?.text = tableData4.object(at: (indexPath as NSIndexPath).row) as? String
             
             cell.detailTextLabel?.text = tableData.object(at: (indexPath as NSIndexPath).row) as? String
@@ -337,7 +336,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         } else if (tableView == self.listTableView2) {
             
             cell.textLabel?.text = tableData3.object(at: (indexPath as NSIndexPath).row) as? String
-
+            
             cell.detailTextLabel?.text = tableData2.object(at: (indexPath as NSIndexPath).row) as? String
             
             return cell
@@ -354,7 +353,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             } else {
                 cell?.leadtitleDetail!.font = newstitle
                 cell?.leadsubtitleDetail!.font = newssubtitle
-                cell?.leadreadDetail.font = newsdetail
+                cell?.leadreadDetail!.font = newsdetail
                 cell?.leadnewsDetail!.font = newsdetail
             }
             
@@ -365,30 +364,30 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             topBorder.borderWidth = width
             cell?.layer.addSublayer(topBorder)
             cell?.layer.masksToBounds = true
-            
-            cell?.leadtitleDetail.text = "\(self.formController!) News: \(self.lnewsTitle!)"
-            cell?.leadtitleDetail.numberOfLines = 0
-            cell?.leadtitleDetail.textColor = .black
+
+            cell?.leadtitleDetail!.text = "\(self.formController) News: \(self.lnewsTitle)"
+            cell?.leadtitleDetail!.numberOfLines = 0
+            cell?.leadtitleDetail!.textColor = .black
             
             //--------------------------------------------------------------
-     
+            
             if (self.formController == "Vendor" || self.formController == "Employee") {
                 
                 cell?.leadsubtitleDetail.text = "Comments"
                 
             } else {
                 
-                let dateStr = self.date
+                let dateStr = date!
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd"
                 
-                let date1 = dateFormatter.date(from: dateStr!)
+                let date1 = dateFormatter.date(from: dateStr)
                 let date2 = Date()
                 let calendar = Calendar.current
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day
-                    cell?.leadsubtitleDetail.text = "Comments, \(daysCount!) days ago"
+                    cell?.leadsubtitleDetail.text = "Comments, \(daysCount) days ago"
                 }
             }
             
@@ -401,7 +400,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             cell?.leadnewsDetail.text = self.comments
             cell?.leadnewsDetail.numberOfLines = 0
             cell?.leadnewsDetail.textColor = .darkGray
-
+            
             return cell!
             
         } else {
@@ -618,7 +617,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let alertController = UIAlertController(title:nil, message:nil, preferredStyle: .actionSheet)
         
         let addr = UIAlertAction(title: "Add Contact", style: .default, handler: { (action) -> Void in
-            self.checkContactsAccess()
+            self.createContact()
         })
         let cal = UIAlertAction(title: "Add Calender Event", style: .default, handler: { (action) -> Void in
             self.addEvent()
@@ -666,7 +665,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func callPhone() {
         
-        let phoneNo : NSString?
+        let phoneNo : String?
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             
             if (formController == "Vendors") || (formController == "Employee") {
@@ -679,7 +678,9 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 
                 let application:UIApplication = UIApplication.shared
                 if (application.canOpenURL(phoneCallURL)) {
-                    application.openURL(phoneCallURL)
+                    
+                    application.open(phoneCallURL, options: [:], completionHandler: nil)
+                    //application.openURL(phoneCallURL)
                 }
             } else {
                 
@@ -693,14 +694,19 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func openurl() {
         
-        if (self.tbl26 != NSNull() && self.tbl26 != 0) {
+        if (self.tbl26 != NSNull() && self.tbl26 != "0") {
             
             let Hooks = "http://\(self.tbl26!)"
             let Url = URL(string: Hooks)
             
             if UIApplication.shared.canOpenURL(Url!)
             {
-                UIApplication.shared.openURL(Url!)
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(Url!)
+                } else {
+                    // Fallback on earlier versions
+                }
+
                 
             } else {
                 
@@ -717,7 +723,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     func sendEmail() {
         
         if (formController == "Leads") || (formController == "Customer") {
-            if ((self.tbl15 != NSNull()) && (self.tbl15 != 0)) {
+            if ((self.tbl15 != NSNull()) && (self.tbl15 != "0")) {
                 self.getEmail(t15!)
                 
             } else {
@@ -726,7 +732,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             }
         }
         if (formController == "Vendor") || (formController == "Employee") {
-            if ((self.tbl21 != NSNull()) && (self.tbl21 != 0 )) {
+            if ((self.tbl21 != NSNull()) && (self.tbl21 != "0" )) {
                 self.getEmail(t21!)
                 
             } else {
@@ -790,43 +796,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }
     }
     
-    private func checkContactsAccess() {
-        switch CNContactStore.authorizationStatus(for: .contacts) {
-        // Update our UI if the user has granted access to their Contacts
-        case .authorized:
-            self.createContact()
-            
-        // Prompt the user for access to Contacts if there is no definitive answer
-        case .notDetermined :
-            self.requestContactsAccess()
-            
-        // Display a message if the user has denied or restricted access to Contacts
-        case .denied,
-             .restricted:
-            let alert = UIAlertController(title: "Privacy Warning!",
-                                          message: "Permission was not granted for Contacts.",
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
     
-    private func requestContactsAccess() {
-        
-        let store = CNContactStore()
-
-        store.requestAccess(for: .contacts) {granted, error in
-            if granted {
-                DispatchQueue.main.async {
-                    self.createContact()
-                    return
-                }
-            }
-        }
-    }
-    
-    
-    private func createContact() {
+    func createContact() {
         
         let newContact = CNMutableContact()
         
@@ -941,16 +912,16 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             //newContact.departmentName = "Food and Beverages"
             
             /*
-            let facebookProfile = CNLabeledValue(label: "FaceBook", value:
-            CNSocialProfile(urlString: nil, username: "ios_blog",
-            userIdentifier: nil, service: CNSocialProfileServiceFacebook))
-            
-            let twitterProfile = CNLabeledValue(label: "Twitter", value:
-            CNSocialProfile(urlString: nil, username: "ios_blog",
-            userIdentifier: nil, service: CNSocialProfileServiceTwitter))
-            
-            newContact.socialProfiles = [facebookProfile, twitterProfile]
-            */
+             let facebookProfile = CNLabeledValue(label: "FaceBook", value:
+             CNSocialProfile(urlString: nil, username: "ios_blog",
+             userIdentifier: nil, service: CNSocialProfileServiceFacebook))
+             
+             let twitterProfile = CNLabeledValue(label: "Twitter", value:
+             CNSocialProfile(urlString: nil, username: "ios_blog",
+             userIdentifier: nil, service: CNSocialProfileServiceTwitter))
+             
+             newContact.socialProfiles = [facebookProfile, twitterProfile]
+             */
             
             if let img = UIImage(named: "profile-rabbit-toy"),
                 let imgData = UIImagePNGRepresentation(img) {
@@ -962,14 +933,14 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         do {
 //-------------dupicate Contact-----------
-
+            
             let nameStr: String
             if (formController == "Leads") || (formController == "Customer") {
                 nameStr = "\(self.tbl13!) \(self.name!)"
             } else {
                 nameStr = "\(self.name!)"
             }
-
+            
             let predicateForMatchingName = CNContact
                 .predicateForContacts(matchingName: nameStr)
             
@@ -1005,17 +976,17 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
      // FIXME:
     
     func getBirthday() {
-        
+        /*
         let store = CNContactStore()
         
         //This line retrieves all contacts for the current name and gets the birthday and name properties
         
-        let contacts:[CNContact] = try! store.unifiedContacts(matching: CNContact.predicateForContacts(matchingName: "\(self.name!)"), keysToFetch:[CNContactBirthdayKey, CNContactGivenNameKey, CNContactFamilyNameKey])
+        let contacts:[CNContact] = try! store.unifiedContacts(matching: CNContact.predicateForContacts(matchingName: "\(self.name!)"), keysToFetch:[CNContactBirthdayKey as CNKeyDescriptor, CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
         
         //Get the first contact in the array of contacts (since you're only looking for 1 you don't need to loop through the contacts)
         
-        let contact = contacts[0]
-        if (contact != 0) {
+        var contact = contacts[0]
+        if (contact = 0) {
 
             if ((contact.birthday as NSDateComponents?)?.date as Date!) != nil {
                 let dateFormatter = DateFormatter()
@@ -1028,20 +999,21 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 self.simpleAlert(title: "Info", message: "No Birthdays")
             }
         }
+      */
     }
     
     
     // MARK: - Segue
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "showmapSegue" {
             
             let controller = segue.destination as? MapView
-            controller!.mapaddress = self.address
-            controller!.mapcity = self.city
-            controller!.mapstate = self.state
-            controller!.mapzip = self.zip
+            controller!.mapaddress = self.address! as NSString
+            controller!.mapcity = self.city! as NSString
+            controller!.mapstate = self.state! as NSString
+            controller!.mapzip = self.zip! as NSString
         }
         
         if segue.identifier == "editFormSegue" {
@@ -1075,7 +1047,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                     controller!.frm27 = self.tbl11 //callback
                     controller!.frm28 = self.comments
                     controller!.frm29 = self.photo
-                    controller!.frm30 = self.active
+                    controller!.frm30 = self.active! as NSString
                     controller!.saleNo = self.tbl22
                     controller!.jobNo = self.tbl23
                     controller!.adNo = self.tbl24
@@ -1104,7 +1076,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                     controller!.frm27 = nil //callback
                     controller!.frm28 = self.comments
                     controller!.frm29 = self.photo
-                    controller!.frm30 = self.active
+                    controller!.frm30 = self.active! as NSString
                     controller!.frm31 = nil //start
                     controller!.frm32 = nil //completion
                 }
@@ -1134,7 +1106,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 controller!.frm27 = self.tbl25 //quan
                 controller!.frm28 = self.comments
                 controller!.frm29 = self.photo
-                controller!.frm30 = self.active
+                controller!.frm30 = self.active! as NSString
                 controller!.frm31 = self.tbl21 as? String
                 controller!.frm32 = self.complete
                 controller!.saleNo = self.tbl22
@@ -1168,7 +1140,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 controller!.frm27 = nil
                 controller!.frm28 = self.comments
                 controller!.frm29 = nil
-                controller!.frm30 = self.active
+                controller!.frm30 = self.active! as NSString
 
             } else if (formController == "Employee") {
                 controller!.formController = self.formController
@@ -1194,7 +1166,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 controller!.frm27 = self.tbl24
                 controller!.frm28 = self.comments
                 controller!.frm29 = nil
-                controller!.frm30 = self.active
+                controller!.frm30 = self.active! as NSString
                 
             }
         }

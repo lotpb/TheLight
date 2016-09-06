@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import  UserNotifications
 
 class NotificationDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -21,8 +22,8 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
     var objects = [AnyObject]()
     var refreshControl: UIRefreshControl!
     //let searchController = UISearchController(searchResultsController: nil)
-    var localNotifications = NSArray()
-    var localNotification = UILocalNotification()
+    //var localNotifications = NSArray()
+    //var localNotification = UILocalNotification()
     
     
     override func viewDidLoad() {
@@ -85,9 +86,11 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
     // MARK: - Buttons
     
     func deleteButton(_ sender:UIButton) {
-
+        
         UIApplication.shared.applicationIconBadgeNumber = 0
-        UIApplication.shared.cancelAllLocalNotifications()
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
+        //UIApplication.shared.cancelAllLocalNotifications()
         self.tableView!.reloadData()
     }
     
@@ -127,8 +130,8 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
             cell.detailTextLabel!.text = "You have no pending Notifications :)"
             
         } else {
-            
-            localNotifications = UIApplication.shared.scheduledLocalNotifications!
+            /*
+            localNotifications = UIApplication.shared.scheduledLocalNotifications! as [AnyObject]
             localNotification = localNotifications.object(at: (indexPath as NSIndexPath).row) as! UILocalNotification
             
             //cell.textLabel!.text = "You have no pending Notifications :)"
@@ -136,7 +139,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
             
             cell.textLabel!.text = localNotification.fireDate?.description
             cell.detailTextLabel!.text = localNotification.alertBody
-            cell.detailTextLabel!.numberOfLines = 2
+            cell.detailTextLabel!.numberOfLines = 2 */
         }
         
         return cell

@@ -22,6 +22,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var _feedheadItems3 : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
     
+    //var messages = [Message]()
+    //var messagesDictionary = [String: Message]()
+    //var users = [User]()
+    //var usersDictionary = [String: User]()
+    
     var buttonView: UIView?
     var likeButton: UIButton?
     var refreshControl: UIRefreshControl!
@@ -134,7 +139,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             return filteredString.count
         }
         else {
-            return _feedItems.count ?? 0
+            return _feedItems.count 
             //return messages.count
         }
     }
@@ -146,9 +151,113 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
+        /*
+        cell?.selectionStyle = UITableViewCellSelectionStyle.none
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            
+            cell?.blogtitleLabel!.font =  Font.Blog.celltitle
+            cell?.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
+            cell?.blogmsgDateLabel.font = Font.Blog.celldate
+            cell?.numLabel.font = Font.Blog.cellLabel
+            cell?.commentLabel.font = Font.Blog.cellLabel
+            
+        } else {
+            
+            cell?.blogtitleLabel!.font =  Font.Blog.celltitle
+            cell?.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
+            cell?.blogmsgDateLabel.font = Font.Blog.celldate
+            cell?.numLabel.font = Font.Blog.cellLabel
+            cell?.commentLabel.font = Font.Blog.cellLabel
+        }
+        
+        if cell == nil {
+            cell = CustomTableCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
+        }
+        
+        let message = messages[(indexPath as NSIndexPath).row]
+        //let user = users[0]
+        
+        /*
+        if let profileImageUrl = user.profileImageUrl {
+           cell.blogImageView?.loadImageUsingCacheWithUrlString(profileImageUrl)
+        } */
+        
+        cell?.blogImageView?.layer.cornerRadius = (cell?.blogImageView?.frame.size.width)! / 2
+        cell?.blogImageView?.layer.borderColor = UIColor.lightGray().cgColor
+        cell?.blogImageView?.layer.borderWidth = 0.5
+        cell?.blogImageView?.layer.masksToBounds = true
+        cell?.blogImageView?.isUserInteractionEnabled = true
+        cell?.blogImageView?.contentMode = .scaleAspectFill
+        cell?.blogImageView?.tag = (indexPath as NSIndexPath).row
+        
+        let tap = UITapGestureRecognizer(target: self, action:#selector(Blog.imgLoadSegue))
+        cell?.blogImageView.addGestureRecognizer(tap)
+        
+        cell?.blogtitleLabel.text = message.PostBy
+        cell?.blogsubtitleLabel!.text = message.Subject
+        
+        let dateStr = message.MsgDate
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let date:Date = dateFormatter.date(from: dateStr!)as Date!
+        dateFormatter.dateFormat = "MMM-dd"
+        cell?.blogmsgDateLabel.text = dateFormatter.string(from: date)as String!
+        
+        var Liked:Int? = message.Liked as? Int
+        if Liked == nil {
+            Liked = 0
+        }
+        cell?.numLabel?.text = "\(Liked!)"
+ 
+        var CommentCount:Int? = message.CommentCount as? Int
+        if CommentCount == nil {
+            CommentCount = 0
+        }
+        cell?.commentLabel?.text = "\(CommentCount!)"
+        
+        
+        cell?.replyButton.tintColor = UIColor.lightGray()
+        let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
+        cell?.replyButton .setImage(replyimage, for: UIControlState())
+        cell?.replyButton .addTarget(self, action: #selector(Blog.replyButton), for: UIControlEvents.touchUpInside)
+        
+        cell?.likeButton.tintColor = UIColor.lightGray()
+        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
+        cell?.likeButton .setImage(likeimage, for: UIControlState())
+        cell?.likeButton .addTarget(self, action: #selector(getter: Blog.likeButton), for: UIControlEvents.touchUpInside)
+        
+        cell?.flagButton.tintColor = UIColor.lightGray()
+        let reportimage : UIImage? = UIImage(named:"Flag.png")!.withRenderingMode(.alwaysTemplate)
+        cell?.flagButton .setImage(reportimage, for: UIControlState())
+        cell?.flagButton .addTarget(self, action: #selector(Blog.flagButton), for: UIControlEvents.touchUpInside)
+        
+        cell?.actionBtn.tintColor = UIColor.lightGray()
+        let actionimage : UIImage? = UIImage(named:"nav_more_icon.png")!.withRenderingMode(.alwaysTemplate)
+        cell?.actionBtn .setImage(actionimage, for: UIControlState())
+        cell?.actionBtn .addTarget(self, action: #selector(Blog.showShare), for: UIControlEvents.touchUpInside)
+        
+        if !(cell?.numLabel.text! == "0") {
+            cell?.numLabel.textColor = Color.Blog.buttonColor
+        } else {
+            cell?.numLabel.text! = ""
+        }
+        
+        if !(cell?.commentLabel.text! == "0") {
+            cell?.commentLabel.textColor = UIColor.lightGray()
+        } else {
+            cell?.commentLabel.text! = ""
+        }
+        
+        if (cell?.commentLabel.text! == "") {
+            cell?.replyButton.tintColor = UIColor.lightGray()
+        } else {
+            cell?.replyButton.tintColor = Color.Blog.buttonColor
+        } */
+        
         
         cell?.selectionStyle = UITableViewCellSelectionStyle.none
- 
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
             cell?.blogtitleLabel!.font =  Font.Blog.celltitle
@@ -167,7 +276,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         let query:PFQuery = PFUser.query()!
-        query.whereKey("username",  equalTo:self._feedItems[indexPath.row].value(forKey:"PostBy") as! String)
+        query.whereKey("username",  equalTo:(self._feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as! String)
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
             if error == nil {
@@ -190,7 +299,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let tap = UITapGestureRecognizer(target: self, action:#selector(Blog.imgLoadSegue))
         cell?.blogImageView.addGestureRecognizer(tap)
         
-        let dateStr = _feedItems[indexPath.row].value(forKey: "MsgDate") as? String
+        let dateStr = (_feedItems[indexPath.row] as AnyObject).value(forKey: "MsgDate") as? String
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let date:NSDate = dateFormatter.date(from: dateStr!)as NSDate!
@@ -205,29 +314,29 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
 
         if searchController.isActive {
-            cell?.blogtitleLabel?.text = filteredString[indexPath.row].value(forKey:"PostBy") as? String
-            cell?.blogsubtitleLabel?.text = filteredString[indexPath.row].value(forKey:"Subject") as? String
-            cell?.blogmsgDateLabel?.text = filteredString[indexPath.row].value(forKey:"MsgDate") as? String
-            cell?.numLabel?.text = filteredString[indexPath.row].value(forKey:"Liked") as? String
-            cell?.commentLabel?.text = filteredString[indexPath.row].value(forKey:"CommentCount") as? String
+            cell?.blogtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
+            cell?.blogsubtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
+            cell?.blogmsgDateLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"MsgDate") as? String
+            cell?.numLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Liked") as? String
+            cell?.commentLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? String
         } else {
-            cell?.blogtitleLabel?.text = _feedItems[indexPath.row].value(forKey:"PostBy") as? String
-            cell?.blogsubtitleLabel?.text = _feedItems[indexPath.row].value(forKey:"Subject") as? String
+            cell?.blogtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
+            cell?.blogsubtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
             cell?.blogmsgDateLabel?.text = dateFormatter.string(from: date as Date)as String!
             
-            var Liked:Int? = _feedItems[indexPath.row].value(forKey:"Liked")as? Int
+            var Liked:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Liked")as? Int
             if Liked == nil {
                 Liked = 0
             }
             cell?.numLabel?.text = "\(Liked!)"
             
-            var CommentCount:Int? = _feedItems[indexPath.row].value(forKey:"CommentCount") as? Int
+            var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? Int
             if CommentCount == nil {
                 CommentCount = 0
             }
             cell?.commentLabel?.text = "\(CommentCount!)"
         }
-
+        
         cell?.replyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
         cell?.replyButton .setImage(replyimage, for: .normal)
@@ -268,7 +377,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
 //---------------------NSDataDetector-----------------------------
         
-        let text = _feedItems[indexPath.row].value(forKey:"Subject") as? String
+        let text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
         let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
         let detector = try? NSDataDetector(types: types.rawValue)
         detector?.enumerateMatches(in: text!, options: [], range: NSMakeRange(0, (text! as NSString).length)) { (result, flags, _) in
@@ -294,13 +403,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 cell?.blogsubtitleLabel!.attributedText = phoneattributedText
             }
         }
-    
+        
 //--------------------------------------------------
+ 
 
-    
         return cell!
     }
-
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
@@ -381,7 +490,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo:(self._feedItems.object(at: (indexPath as NSIndexPath).row).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -429,7 +538,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
         
         let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:(_feedItems.object(at: (indexPath?.row)!).value(forKey: "objectId") as? String)!)
+        query.whereKey("objectId", equalTo:((_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
             if error == nil {
                 object!.incrementKey("Liked")
@@ -444,8 +553,8 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
         
-        posttoIndex = _feedItems.object(at: (indexPath?.row)!).value(forKey: "PostBy") as? String
-        userIndex = _feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!).value(forKey: "objectId") as? String
+        posttoIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
+        userIndex = (_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String
         self.performSegue(withIdentifier: "blognewSegue", sender: self)
     }
     
@@ -570,7 +679,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query.order(byDescending: "createdAt")
         query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
-                let temp: NSArray = objects! as NSArray
+                let temp : NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView?.reloadData()
             } else {
@@ -615,7 +724,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
-        let socialText = self._feedItems[(indexPath! as NSIndexPath).row].value(forKey: "Subject") as? String
+        let socialText = (self._feedItems[(indexPath! as NSIndexPath).row] as AnyObject).value(forKey: "Subject") as? String
         
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
             
@@ -683,14 +792,14 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func showAlertMessage(message: String!) {
         let alertController = UIAlertController(title: "EasyShare", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - imgLoadSegue
     
     func imgLoadSegue(sender:UITapGestureRecognizer) {
-        titleLabel = (_feedItems.object(at: (sender.view!.tag)).value(forKey: "PostBy") as? String)!
+        titleLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "PostBy") as? String)!
         self.performSegue(withIdentifier: "bloguserSegue", sender: self)
     }
     
@@ -701,20 +810,20 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.performSegue(withIdentifier: "blogeditSegue", sender: self)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "blogeditSegue" {
             
             let VC = segue.destination as? BlogEditController
             let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-            VC!.objectId = _feedItems[myIndexPath].value(forKey: "objectId") as? String
-            VC!.msgNo = _feedItems[myIndexPath].value(forKey: "MsgNo") as? String
-            VC!.postby = _feedItems[myIndexPath].value(forKey: "PostBy") as? String
-            VC!.subject = _feedItems[myIndexPath].value(forKey: "Subject") as? String
-            VC!.msgDate = _feedItems[myIndexPath].value(forKey: "MsgDate") as? String
-            VC!.rating = _feedItems[myIndexPath].value(forKey: "Rating") as? String
-            VC!.liked = _feedItems[myIndexPath].value(forKey: "Liked") as? Int
-            VC!.replyId = _feedItems[myIndexPath].value(forKey: "ReplyId") as? String
+            VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
+            VC!.msgNo = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgNo") as? String
+            VC!.postby = (_feedItems[myIndexPath] as AnyObject).value(forKey: "PostBy") as? String
+            VC!.subject = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Subject") as? String
+            VC!.msgDate = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgDate") as? String
+            VC!.rating = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Rating") as? String
+            VC!.liked = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Liked") as? Int
+            VC!.replyId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "ReplyId") as? String
         }
         if segue.identifier == "blognewSegue" {
             

@@ -1,20 +1,18 @@
 {
-  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "E2B634667B540ED93C23C5C55AF559EC9D8F5521",
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "F57CDA18CAC9B304787FD31A9C23206D85B6B83E",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "E2B634667B540ED93C23C5C55AF559EC9D8F5521" : 9223372036854775807,
-    "2E559A5AE803068977A32585F5F44EA221616813" : 0,
     "F57CDA18CAC9B304787FD31A9C23206D85B6B83E" : 0,
-    "041669095B4ED5252CA507726C21076BF644C5AF" : 0
+    "041669095B4ED5252CA507726C21076BF644C5AF" : 0,
+    "2E559A5AE803068977A32585F5F44EA221616813" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "588F35ED-7ED6-4E55-ADA2-3F235DEF2532",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "E2B634667B540ED93C23C5C55AF559EC9D8F5521" : "TheLight\/",
-    "2E559A5AE803068977A32585F5F44EA221616813" : "..\/Downloads\/youtube",
     "F57CDA18CAC9B304787FD31A9C23206D85B6B83E" : "iosSQLswift3\/",
-    "041669095B4ED5252CA507726C21076BF644C5AF" : "gameofchats\/"
+    "041669095B4ED5252CA507726C21076BF644C5AF" : "gameofchats\/",
+    "2E559A5AE803068977A32585F5F44EA221616813" : "..\/Downloads\/youtube"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "TheLight",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -29,11 +27,6 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:purelyswift\/youtube.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2E559A5AE803068977A32585F5F44EA221616813"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/lotpb\/TheLight.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E2B634667B540ED93C23C5C55AF559EC9D8F5521"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/lotpb\/iosSQLswift.git",

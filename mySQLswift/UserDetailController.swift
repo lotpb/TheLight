@@ -150,8 +150,8 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             print("")
         }
         
-        emailTitle = defaults.string(forKey: "emailtitleKey")
-        messageBody = defaults.string(forKey: "emailmessageKey")
+        emailTitle = defaults.string(forKey: "emailtitleKey")! as NSString
+        messageBody = defaults.string(forKey: "emailmessageKey")! as NSString
         
         self.emailField!.keyboardType = UIKeyboardType.emailAddress
         self.phoneField!.keyboardType = UIKeyboardType.numbersAndPunctuation
@@ -193,7 +193,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     }
     
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
             self.userimageView!.image = pickedImage
@@ -218,7 +218,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     @IBAction func callPhone(_ sender: AnyObject) {
         
-        let phoneNo : NSString?
+        let phoneNo : String?
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             
             phoneNo = self.phoneField!.text
@@ -226,7 +226,9 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
                 
                 let application:UIApplication = UIApplication.shared
                 if (application.canOpenURL(phoneCallURL)) {
-                    application.openURL(phoneCallURL)
+                    
+                    UIApplication.shared.open(phoneCallURL, options: [:], completionHandler: nil)
+                    //application.openURL(phoneCallURL)
                 }
             } else {
                 
@@ -243,9 +245,9 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     @IBAction func sendEmail(_ sender: AnyObject) {
         
-        if ((self.emailField != NSNull()) && ( self.emailField != 0 )) {
+        if (self.emailField != NSNull()) {
             
-            self.getEmail((emailField?.text)!)
+            self.getEmail((emailField?.text)! as NSString)
             
         } else {
             

@@ -10,15 +10,15 @@ import UIKit
 import Parse
 
 protocol LookupDataDelegate: class {
-    func cityFromController(_ passedData: NSString)
-    func stateFromController(_ passedData: NSString)
-    func zipFromController(_ passedData: NSString)
-    func salesFromController(_ passedData: NSString)
-    func salesNameFromController(_ passedData: NSString)
-    func jobFromController(_ passedData: NSString)
-    func jobNameFromController(_ passedData: NSString)
-    func productFromController(_ passedData: NSString)
-    func productNameFromController(_ passedData: NSString)
+    func cityFromController(_ passedData: String)
+    func stateFromController(_ passedData: String)
+    func zipFromController(_ passedData: String)
+    func salesFromController(_ passedData: String)
+    func salesNameFromController(_ passedData: String)
+    func jobFromController(_ passedData: String)
+    func jobNameFromController(_ passedData: String)
+    func productFromController(_ passedData: String)
+    func productNameFromController(_ passedData: String)
 }
 
 class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
@@ -166,30 +166,30 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         if (tableView == self.tableView) {
             
             if (lookupItem == "City") {
-                cell.textLabel!.text = (zipArray[(indexPath as NSIndexPath).row].value(forKey: "City") as? String)!
+                cell.textLabel!.text = ((zipArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String)!
             } else if (lookupItem == "Salesman") {
-                cell.textLabel!.text = (salesArray[(indexPath as NSIndexPath).row].value(forKey: "Salesman") as? String)!
+                cell.textLabel!.text = ((salesArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String)!
             } else if (lookupItem == "Job") {
-                cell.textLabel!.text = (jobArray[(indexPath as NSIndexPath).row].value(forKey: "Description") as? String)!
+                cell.textLabel!.text = ((jobArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String)!
             } else if (lookupItem == "Product") {
-                cell.textLabel!.text = (adproductArray[(indexPath as NSIndexPath).row].value(forKey: "Products") as? String)!
+                cell.textLabel!.text = ((adproductArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Products") as? String)!
             } else if (lookupItem == "Advertiser") {
-                cell.textLabel!.text = (adproductArray[(indexPath as NSIndexPath).row].value(forKey: "Advertiser") as? String)!
+                cell.textLabel!.text = ((adproductArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Advertiser") as? String)!
             }
             
         } else {
             
             if (lookupItem == "City") {
                 //cell.textLabel!.text = foundUsers[indexPath.row]
-                cell.textLabel!.text = (filteredString[(indexPath as NSIndexPath).row].value(forKey: "City") as? String)!
+                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String)!
             } else if (lookupItem == "Salesman") {
-                cell.textLabel!.text = (filteredString[(indexPath as NSIndexPath).row].value(forKey: "Salesman") as? String)!
+                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String)!
             } else if (lookupItem == "Job") {
-                cell.textLabel!.text = (filteredString[(indexPath as NSIndexPath).row].value(forKey: "Description") as? String)!
+                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String)!
             } else if (lookupItem == "Product") {
-                cell.textLabel!.text = (filteredString[(indexPath as NSIndexPath).row].value(forKey: "Products") as? String)!
+                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Products") as? String)!
             } else if (lookupItem == "Advertiser") {
-                cell.textLabel!.text = (filteredString[(indexPath as NSIndexPath).row].value(forKey: "Advertiser") as? String)!
+                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Advertiser") as? String)!
             }
             
         }
@@ -326,47 +326,47 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
         if (!isFilltered) {
             if (lookupItem == "City") {
-                self.delegate? .cityFromController((zipArray.object(at: indexPath).value(forKey: "City") as? String)!)
-                self.delegate? .stateFromController((zipArray[indexPath].value(forKey: "State") as? String)!)
-                self.delegate? .zipFromController((zipArray[indexPath].value(forKey: "zipCode") as? String)!)
+                self.delegate? .cityFromController(((zipArray.object(at: indexPath) as AnyObject).value(forKey: "City") as? String)!)
+                self.delegate? .stateFromController(((zipArray[indexPath] as AnyObject).value(forKey: "State") as? String)!)
+                self.delegate? .zipFromController(((zipArray[indexPath] as AnyObject).value(forKey: "zipCode") as? String)!)
                 
             } else if (lookupItem == "Salesman") {
-                self.delegate? .salesFromController((salesArray.object(at: indexPath).value(forKey: "SalesNo") as? String)!)
-                self.delegate? .salesNameFromController((salesArray[indexPath].value(forKey: "Salesman") as? String)!)
+                self.delegate? .salesFromController(((salesArray.object(at: indexPath) as AnyObject).value(forKey: "SalesNo") as? String)!)
+                self.delegate? .salesNameFromController(((salesArray[indexPath] as AnyObject).value(forKey: "Salesman") as? String)!)
                 
             } else if (lookupItem == "Job") {
-                self.delegate? .jobFromController((jobArray[indexPath].value(forKey: "JobNo") as? String)!)
-                self.delegate? .jobNameFromController((jobArray.object(at: indexPath).value(forKey: "Description") as? String)!)
+                self.delegate? .jobFromController(((jobArray[indexPath] as AnyObject).value(forKey: "JobNo") as? String)!)
+                self.delegate? .jobNameFromController(((jobArray.object(at: indexPath) as AnyObject).value(forKey: "Description") as? String)!)
                 
             } else if (lookupItem == "Product") {
-                self.delegate? .productFromController((adproductArray[indexPath].value(forKey: "ProductNo") as? String)!)
-                self.delegate? .productNameFromController((adproductArray[indexPath].value(forKey: "Products") as? String)!)
+                self.delegate? .productFromController(((adproductArray[indexPath] as AnyObject).value(forKey: "ProductNo") as? String)!)
+                self.delegate? .productNameFromController(((adproductArray[indexPath] as AnyObject).value(forKey: "Products") as? String)!)
             } else {
-                self.delegate? .productFromController((adproductArray[indexPath].value(forKey: "AdNo") as? String)!)
-                self.delegate? .productNameFromController((adproductArray[indexPath].value(forKey: "Advertiser") as? String)!)
+                self.delegate? .productFromController(((adproductArray[indexPath] as AnyObject).value(forKey: "AdNo") as? String)!)
+                self.delegate? .productNameFromController(((adproductArray[indexPath] as AnyObject).value(forKey: "Advertiser") as? String)!)
             }
             
         } else {
             
             if (lookupItem == "City") {
-                self.delegate? .cityFromController((filteredString.object(at: indexPath).value(forKey: "City") as? String)!)
-                self.delegate? .stateFromController((filteredString[indexPath].value(forKey: "State") as? String)!)
-                self.delegate? .zipFromController((filteredString[indexPath].value(forKey: "zipCode") as? String)!)
+                self.delegate? .cityFromController((((filteredString.object(at: indexPath) as! NSObject).value(forKey: "City") as? String)! as NSString) as String)
+                self.delegate? .stateFromController((((filteredString[indexPath] as! NSObject).value(forKey: "State") as? String)! as NSString) as String)
+                self.delegate? .zipFromController(((filteredString[indexPath] as! NSObject).value(forKey: "zipCode") as? String)!)
                 
             } else if (lookupItem == "Salesman") {
-                self.delegate? .salesFromController((filteredString.object(at: indexPath).value(forKey: "SalesNo") as? String)!)
-                self.delegate? .salesNameFromController((filteredString[indexPath].value(forKey: "Salesman") as? String)!)
+                self.delegate? .salesFromController(((filteredString.object(at: indexPath) as AnyObject).value(forKey: "SalesNo") as? String)!)
+                self.delegate? .salesNameFromController(((filteredString[indexPath] as AnyObject).value(forKey: "Salesman") as? String)!)
                 
             } else if (lookupItem == "Job") {
-                self.delegate? .jobFromController((filteredString[indexPath].value(forKey: "JobNo") as? String)!)
-                self.delegate? .jobNameFromController((filteredString.object(at: indexPath).value(forKey: "Description") as? String)!)
+                self.delegate? .jobFromController(((filteredString[indexPath] as AnyObject).value(forKey: "JobNo") as? String)!)
+                self.delegate? .jobNameFromController(((filteredString.object(at: indexPath) as AnyObject).value(forKey: "Description") as? String)!)
                 
             } else if (lookupItem == "Product") {
-                self.delegate? .productFromController((filteredString[indexPath].value(forKey: "ProductNo") as? String)!)
-                self.delegate? .productNameFromController((filteredString[indexPath].value(forKey: "Products") as? String)!)
+                self.delegate? .productFromController(((filteredString[indexPath] as AnyObject).value(forKey: "ProductNo") as? String)!)
+                self.delegate? .productNameFromController(((filteredString[indexPath] as AnyObject).value(forKey: "Products") as? String)!)
             } else {
-                self.delegate? .productFromController((filteredString[indexPath].value(forKey: "AdNo") as? String)!)
-                self.delegate? .productNameFromController((filteredString[indexPath].value(forKey: "Advertiser") as? String)!)
+                self.delegate? .productFromController(((filteredString[indexPath] as AnyObject).value(forKey: "AdNo") as? String)!)
+                self.delegate? .productNameFromController(((filteredString[indexPath] as AnyObject).value(forKey: "Advertiser") as? String)!)
             }
             
         }

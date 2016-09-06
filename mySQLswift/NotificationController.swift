@@ -73,6 +73,43 @@ class NotificationController: UIViewController {
     
     @IBAction func sendNotification(_ sender:AnyObject) {
         
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            
+            /*
+            content.fireDate = fixedNotificationDate(datePicker.date)
+            
+            switch(frequencySegmentedControl.selectedSegmentIndex){
+            case 0:
+                //notifications.repeatInterval = NSCalendar.Unit.
+                break;
+            case 1:
+                content.repeatInterval = .day
+                break;
+            case 2:
+                content.repeatInterval = .weekday
+                break;
+            case 3:
+                content.repeatInterval = .year
+                break;
+            default:
+                //notifications.repeatInterval = Calendar.init(identifier: 0)
+                break;
+            } */
+            
+            content.title = "Membership Status"
+            content.subtitle = "米花兒"
+            content.body = "Our system has detected that your membership is inactive."
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound(named: "Tornado.caf")
+            content.categoryIdentifier = "status"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
+        
         let notifications:UILocalNotification = UILocalNotification()
         notifications.timeZone = TimeZone.current
         notifications.fireDate = fixedNotificationDate(datePicker.date)
@@ -103,28 +140,52 @@ class NotificationController: UIViewController {
         notifications.soundName = "Tornado.caf"
         UIApplication.shared.scheduleLocalNotification(notifications)
         self.customMessage.text = ""
+        }
     }
     
     
      func memberNotification() {
-        
+      
         if #available(iOS 10.0, *) {
+            
+            let center = UNUserNotificationCenter.current()
+            
+            center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+                if granted {
+                    let content = UNMutableNotificationContent()
+                    content.title = "Hello"
+                    content.body = "Body goes here"
+                    content.sound = UNNotificationSound.default()
+                    
+                    // create a 10-second delay for our alert
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+                    
+                    // the identifier lets you cancel the alert later if needed
+                    let request = UNNotificationRequest(identifier: "MyAlert", content: content, trigger: trigger)
+                    
+                    // schedule the alert to run
+                    center.add(request)
+                }
+            }
+            
+            
+            /*
+            
             let content = UNMutableNotificationContent()
             content.title = "Membership Status"
             content.subtitle = "米花兒"
             content.body = "Our system has detected that your membership is inactive."
-            content.badge = UIApplication.shared.applicationIconBadgeNumber + 1
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
-            content.categoryIdentifier = "status"
-            
-            let imageURL = Bundle.main.url(forResource: "pic", withExtension: "jpg")
-            let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
-            content.attachments = [attachment]
-            content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
+            //content.categoryIdentifier = "status"
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-            let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
+            
+            let center = UNUserNotificationCenter.current()
+            center.add(request)
+
+            //UNUserNotificationCenter.current().add(request, withCompletionHandler: nil) */
             
         } else {
             
@@ -139,11 +200,27 @@ class NotificationController: UIViewController {
             localNotification.soundName = "Tornado.caf"
             UIApplication.shared.scheduleLocalNotification(localNotification)
         }
-  
+        
     }
     
     
     func newBlogNotification() {
+        
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "Blog Post"
+            content.subtitle = "米花兒"
+            content.body = "New Blog Posted at TheLight"
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound(named: "Tornado.caf")
+            content.categoryIdentifier = "status"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "newBlog-id-123", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
+            
         let localNotification: UILocalNotification = UILocalNotification()
         localNotification.alertAction = "Blog Post"
         localNotification.alertBody = "New Blog Posted at TheLight"
@@ -152,9 +229,25 @@ class NotificationController: UIViewController {
         localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
         localNotification.soundName = UILocalNotificationDefaultSoundName
         UIApplication.shared.scheduleLocalNotification(localNotification)
+        }
     }
     
     func HeyYouNotification() {
+        
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "be awesome!"
+            content.subtitle = "米花兒"
+            content.body = "Hey you! Yeah you! Swipe to unlock!"
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound(named: "Tornado.caf")
+            content.categoryIdentifier = "status"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "heyYou-id-123", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
         
         let localNotification: UILocalNotification = UILocalNotification()
         localNotification.alertAction = "be awesome!"
@@ -165,10 +258,26 @@ class NotificationController: UIViewController {
         localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
         localNotification.soundName = "Tornado.caf"
         UIApplication.shared.scheduleLocalNotification(localNotification)
+        }
         
     }
     
     func promoNotification() {
+        
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "TheLight!"
+            content.subtitle = "米花兒"
+            content.body = "Forget Something? Come back and SAVE 15% with Promo Code MYCART"
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound(named: "Tornado.caf")
+            content.categoryIdentifier = "status"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "promo-id-123", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
         
         let localNotification: UILocalNotification = UILocalNotification()
         localNotification.alertAction = "TheLight!"
@@ -179,6 +288,7 @@ class NotificationController: UIViewController {
         localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
         localNotification.soundName = "Tornado.caf"
         UIApplication.shared.scheduleLocalNotification(localNotification)
+        }
         
     }
     
@@ -239,5 +349,3 @@ class NotificationController: UIViewController {
     }
     
 }
-
-

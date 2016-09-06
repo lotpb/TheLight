@@ -121,7 +121,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == self.tableView {
-            return _feedItems.count ?? 0
+            return _feedItems.count 
         }
         return foundUsers.count
         //return filteredString.count
@@ -154,20 +154,20 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if (tableView == self.tableView) {
             
-            cell.employtitleLabel!.text = String(format: "%@ %@ %@", (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "First") as? String)!,
-                (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Last") as? String)!,
-                (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Company") as? String)!)
+            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "First") as? String)!,
+                ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Last") as? String)!,
+                ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Company") as? String)!)
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.employsubtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Title") as? String
+                cell.employsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Title") as? String
             } else {
                 cell.employsubtitleLabel!.text = ""
             }
             
         } else {
 
-            cell.employtitleLabel!.text = String(format: "%@ %@ %@", (filteredString[(indexPath as NSIndexPath).row].value(forKey: "First") as? String)!, (filteredString[(indexPath as NSIndexPath).row].value(forKey: "Last") as? String)!, (filteredString[(indexPath as NSIndexPath).row].value(forKey: "Company") as? String)!)
-            cell.employsubtitleLabel!.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "Title") as? String
+            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "First") as? String)!, ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Last") as? String)!, ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Company") as? String)!)
+            cell.employsubtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Title") as? String
         }
         
         cell.employreplyButton.tintColor = .lightGray
@@ -180,13 +180,13 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         cell.employreplyLabel.text! = ""
         
-        if (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Comments") as? String == nil) || (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Comments") as? String == "") {
+        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == "") {
             cell.employreplyButton!.tintColor = .lightGray
         } else {
             cell.employreplyButton!.tintColor = Color.Employ.buttonColor
         }
         
-        if (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Active") as? Int == 1 ) {
+        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
             cell.employlikeButton!.tintColor = Color.Employ.buttonColor
             cell.employlikeLabel.text! = "Active"
             cell.employlikeLabel.adjustsFontSizeToFitWidth = true
@@ -197,17 +197,15 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         myLabel.backgroundColor = Color.Employ.labelColor
-        myLabel.text = "Employ"
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
-        myLabel.layer.contentsGravity = kCAGravityResize
         myLabel.layer.masksToBounds = true
-        myLabel.layer.cornerRadius = 25.0
+        myLabel.text = "Employ"
         myLabel.font = Font.headtitle
+        myLabel.layer.cornerRadius = 25.0
         myLabel.isUserInteractionEnabled = true
-        myLabel.tag = (indexPath as NSIndexPath).row
         cell.addSubview(myLabel)
-
+        
         return cell
     }
     
@@ -286,7 +284,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Employee")
-            query.whereKey("objectId", equalTo:(self._feedItems.object(at: (indexPath as NSIndexPath).row).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -325,14 +323,14 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return true
     }
     
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
+    private func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
         if (action == #selector(NSObject.copy)) {
             return true
         }
         return false
     }
     
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
+    private func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
     }
@@ -438,7 +436,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "employdetailSegue" {
             
@@ -447,48 +445,48 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let controller = segue.destination as? LeadDetail
             controller!.formController = "Employee"
             let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-            controller?.objectId = _feedItems[indexPath].value(forKey: "objectId") as? String
+            controller?.objectId = (_feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
             
-            var LeadNo:Int? = _feedItems[indexPath].value(forKey: "EmployeeNo") as? Int
+            var LeadNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "EmployeeNo") as? Int
             formatter.numberStyle = .none
             if LeadNo == nil {
                 LeadNo = 0
             }
-            controller?.leadNo =  formatter.string(from: LeadNo!)
+            controller?.leadNo =  formatter.string(from: LeadNo! as NSNumber)
             
-            var Active:Int? = _feedItems[indexPath].value(forKey: "Active")as? Int
+            var Active:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Active")as? Int
             if Active == nil {
                 Active = 0
             }
-            controller?.active = formatter.string(from: Active!)
+            controller?.active = formatter.string(from: Active! as NSNumber)
             
-            controller?.date = _feedItems[indexPath].value(forKey: "Email") as? String
-            controller?.name = String(format: "%@ %@ %@", (_feedItems[indexPath].value(forKey: "First") as? String)!, (_feedItems[indexPath].value(forKey: "Last") as? String)!, (_feedItems[indexPath].value(forKey: "Company") as? String)!)
-            controller?.address = _feedItems[indexPath].value(forKey: "Street") as? String
-            controller?.city = _feedItems[indexPath].value(forKey: "City") as? String
-            controller?.state = _feedItems[indexPath].value(forKey: "State") as? String
-            controller?.zip = _feedItems[indexPath].value(forKey: "Zip") as? String
-            controller?.amount = _feedItems[indexPath].value(forKey: "Title") as? String
-            controller?.tbl11 = _feedItems[indexPath].value(forKey: "HomePhone") as? String
-            controller?.tbl12 = _feedItems[indexPath].value(forKey: "WorkPhone") as? String
-            controller?.tbl13 = _feedItems[indexPath].value(forKey: "CellPhone") as? String
-            controller?.tbl14 = _feedItems[indexPath].value(forKey: "SS") as? String
-            controller?.tbl15 = _feedItems[indexPath].value(forKey: "Middle") as? String
-            controller?.tbl21 = _feedItems[indexPath].value(forKey: "Email") as? String
-            controller?.tbl22 = _feedItems[indexPath].value(forKey: "Department") as? String
-            controller?.tbl23 = _feedItems[indexPath].value(forKey: "Title") as? String
-            controller?.tbl24 = _feedItems[indexPath].value(forKey: "Manager") as? String
-            controller?.tbl25 = _feedItems[indexPath].value(forKey: "Country") as? String
+            controller?.date = (_feedItems[indexPath] as AnyObject).value(forKey: "Email") as? String
+            controller?.name = String(format: "%@ %@ %@", ((_feedItems[indexPath] as AnyObject).value(forKey: "First") as? String)!, ((_feedItems[indexPath] as AnyObject).value(forKey: "Last") as? String)!, ((_feedItems[indexPath] as AnyObject).value(forKey: "Company") as? String)!)
+            controller?.address = (_feedItems[indexPath] as AnyObject).value(forKey: "Street") as? String
+            controller?.city = (_feedItems[indexPath] as AnyObject).value(forKey: "City") as? String
+            controller?.state = (_feedItems[indexPath] as AnyObject).value(forKey: "State") as? String
+            controller?.zip = (_feedItems[indexPath] as AnyObject).value(forKey: "Zip") as? String
+            controller?.amount = (_feedItems[indexPath] as AnyObject).value(forKey: "Title") as? String
+            controller?.tbl11 = (_feedItems[indexPath] as AnyObject).value(forKey: "HomePhone") as? String
+            controller?.tbl12 = (_feedItems[indexPath] as AnyObject).value(forKey: "WorkPhone") as? String
+            controller?.tbl13 = (_feedItems[indexPath] as AnyObject).value(forKey: "CellPhone") as? String
+            controller?.tbl14 = (_feedItems[indexPath] as AnyObject).value(forKey: "SS") as? String
+            controller?.tbl15 = (_feedItems[indexPath] as AnyObject).value(forKey: "Middle") as? NSString
+            controller?.tbl21 = (_feedItems[indexPath] as AnyObject).value(forKey: "Email") as? NSString
+            controller?.tbl22 = (_feedItems[indexPath] as AnyObject).value(forKey: "Department") as? String
+            controller?.tbl23 = (_feedItems[indexPath] as AnyObject).value(forKey: "Title") as? String
+            controller?.tbl24 = (_feedItems[indexPath] as AnyObject).value(forKey: "Manager") as? String
+            controller?.tbl25 = (_feedItems[indexPath] as AnyObject).value(forKey: "Country") as? String
         
-            let dateUpdated = _feedItems[indexPath].value(forKey: "updatedAt") as! Date
+            let dateUpdated = (_feedItems[indexPath] as AnyObject).value(forKey: "updatedAt") as! Date
             let dateFormat = DateFormatter()
             dateFormat.dateFormat = "MMM dd yy"
             controller?.tbl16 = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
             
-            controller?.tbl26 = _feedItems[indexPath].value(forKey: "First") as? String
-            controller?.tbl27 = _feedItems[indexPath].value(forKey: "Company") as? String
-            controller?.custNo = _feedItems[indexPath].value(forKey: "Last") as? String
-            controller?.comments = _feedItems[indexPath].value(forKey: "Comments") as? String
+            controller?.tbl26 = (_feedItems[indexPath] as AnyObject).value(forKey: "First") as? NSString
+            controller?.tbl27 = (_feedItems[indexPath] as AnyObject).value(forKey: "Company") as? String
+            controller?.custNo = (_feedItems[indexPath] as AnyObject).value(forKey: "Last") as? String
+            controller?.comments = (_feedItems[indexPath] as AnyObject).value(forKey: "Comments") as? String
             controller?.l11 = "Home"; controller?.l12 = "Work"
             controller?.l13 = "Mobile"; controller?.l14 = "Social"
             controller?.l15 = "Middle"; controller?.l21 = "Email"

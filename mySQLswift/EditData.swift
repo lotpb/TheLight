@@ -124,13 +124,9 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         if (status == "Edit") {
             parseLookup()
         }
-        profileImageView?.image = UIImage(named:"profile-rabbit-toy")
-        profileImageView?.layer.cornerRadius = (profileImageView?.frame.size.width)!/2
-        profileImageView?.layer.borderColor = UIColor.lightGray.cgColor
-        profileImageView?.layer.borderWidth = 0.5
-        profileImageView?.layer.masksToBounds = true
-        profileImageView?.isUserInteractionEnabled = true
-        profileImageView?.contentMode = .scaleAspectFill
+        
+        profileImageView!.layer.cornerRadius = profileImageView!.frame.size.width/2
+        profileImageView!.layer.masksToBounds = true
         
     }
     
@@ -652,7 +648,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return true
     }
     
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
+    private func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
         
         if (action == #selector(NSObject.copy)) {
             return true
@@ -660,7 +656,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return false
     }
     
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
+    private func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
         
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
@@ -970,7 +966,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "lookupDataSegue" {
             saveFormData()
@@ -1022,7 +1018,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
                     if error == nil {
                         updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
-                        updateblog!.setObject(myActive ?? NSNumber(value:-1), forKey:"Active")
+                        updateblog!.setObject(myActive , forKey:"Active")
                         updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Date")
                         updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
                         updateblog!.setObject(self.last.text ?? NSNull(), forKey:"LastName")
@@ -1055,7 +1051,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 
                 let saveblog:PFObject = PFObject(className:"Leads")
                 saveblog.setObject(self.leadNo ?? NSNumber(value:-1), forKey:"LeadNo")
-                saveblog.setObject(myActive ?? NSNumber(value:1), forKey:"Active")
+                saveblog.setObject(myActive , forKey:"Active")
                 saveblog.setObject(self.date.text ?? NSNull(), forKey:"Date")
                 saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
                 saveblog.setObject(self.last.text ?? NSNull(), forKey:"LastName")
@@ -1129,7 +1125,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     if error == nil {
                         updateblog!.setObject(myCust ?? NSNumber(value:-1), forKey:"CustNo")
                         updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
-                        updateblog!.setObject(myActive ?? NSNumber(value:1), forKey:"Active")
+                        updateblog!.setObject(myActive , forKey:"Active")
                         updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Date")
                         updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
                         updateblog!.setObject(self.last.text ?? NSNull(), forKey:"LastName")
@@ -1168,7 +1164,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 let saveblog:PFObject = PFObject(className:"Customer")
                 saveblog.setObject(myCust ?? NSNumber(value:-1), forKey:"CustNo")
                 saveblog.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
-                saveblog.setObject(myActive ?? NSNumber(value:1), forKey:"Active")
+                saveblog.setObject(myActive , forKey:"Active")
                 saveblog.setObject(self.date.text ?? NSNull(), forKey:"Date")
                 saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
                 saveblog.setObject(self.last.text ?? NSNull(), forKey:"LastName")
@@ -1367,31 +1363,31 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
 }
 
 extension EditData: LookupDataDelegate {
-    func cityFromController(_ passedData: NSString) {
+    func cityFromController(_ passedData: String) {
         self.city.text = passedData as String
     }
-    func stateFromController(_ passedData: NSString) {
+    func stateFromController(_ passedData: String) {
         self.state.text = passedData as String
     }
-    func zipFromController(_ passedData: NSString) {
+    func zipFromController(_ passedData: String) {
         self.zip.text = passedData as String
     }
-    func salesFromController(_ passedData: NSString) {
+    func salesFromController(_ passedData: String) {
         self.saleNo = passedData as String
     }
-    func salesNameFromController(_ passedData: NSString) {
+    func salesNameFromController(_ passedData: String) {
         self.salesman.text = passedData as String
     }
-    func jobFromController(_ passedData: NSString) {
+    func jobFromController(_ passedData: String) {
         self.jobNo = passedData as String
     }
-    func jobNameFromController(_ passedData: NSString) {
+    func jobNameFromController(_ passedData: String) {
         self.jobName.text = passedData as String
     }
-    func productFromController(_ passedData: NSString) {
+    func productFromController(_ passedData: String) {
         self.adNo = passedData as String
     }
-    func productNameFromController(_ passedData: NSString) {
+    func productNameFromController(_ passedData: String) {
         self.adName.text = passedData as String
     }
 }

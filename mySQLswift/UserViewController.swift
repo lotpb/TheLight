@@ -114,7 +114,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return _feedItems.count ?? 0
+        return _feedItems.count 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -142,11 +142,11 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell?.userImageView?.image = UIImage(data: imageData!)
         }
 
-        let dateUpdated = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "createdAt") as! Date
+        let dateUpdated = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as! Date
         let dateFormat = DateFormatter()
         dateFormat.dateFormat = "EEE, MMM d, h:mm a"
         
-        cell?.usertitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "username") as? String
+        cell?.usertitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "username") as? String
         cell?.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
  
         return cell!
@@ -196,12 +196,12 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         return true
     }
     
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
+    private func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
         
         return action == #selector(copy(_:))
     }
     
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
+    private func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
         
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
@@ -215,7 +215,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return _feedItems.count ?? 0
+        return _feedItems.count 
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -227,7 +227,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         title.textColor = .black
         title.textAlignment = NSTextAlignment.center
         title.layer.masksToBounds = true
-        title.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "username") as? String
+        title.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "username") as? String
         title.font = Font.headtitle
         title.adjustsFontSizeToFitWidth = true
         title.clipsToBounds = true
@@ -327,7 +327,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "userdetailSegue" {
             let VC = segue.destination as? UserDetailController
@@ -336,16 +336,16 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
                 
-                let updated:Date = (self._feedItems[indexPath].value(forKey: "createdAt") as? Date)!
+                let updated:Date = ((self._feedItems[indexPath] as AnyObject).value(forKey: "createdAt") as? Date)!
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMM dd, yyyy"
                 let createString = dateFormatter.string(from: updated)
                 
-                VC!.objectId = self._feedItems[indexPath].value(forKey: "objectId") as? String
-                VC!.username = self._feedItems[indexPath].value(forKey: "username") as? String
+                VC!.objectId = (self._feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
+                VC!.username = (self._feedItems[indexPath] as AnyObject).value(forKey: "username") as? String
                 VC!.create = createString
-                VC!.email = self._feedItems[indexPath].value(forKey: "email") as? String
-                VC!.phone = self._feedItems[indexPath].value(forKey: "phone") as? String
+                VC!.email = (self._feedItems[indexPath] as AnyObject).value(forKey: "email") as? String
+                VC!.phone = (self._feedItems[indexPath] as AnyObject).value(forKey: "phone") as? String
                 VC!.userimage = self.selectedImage
                 
             } else if self.formController == "CollectionView" {
@@ -353,16 +353,16 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let indexPaths = self.collectionView!.indexPathsForSelectedItems!
                 let indexPath = indexPaths[0] as IndexPath
                 
-                let updated:Date = (self._feedItems[((indexPath as NSIndexPath).row)].value(forKey: "createdAt") as? Date)!
+                let updated:Date = ((self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "createdAt") as? Date)!
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMM dd, yyyy"
                 let createString = dateFormatter.string(from: updated)
                 
-                VC!.objectId = self._feedItems[((indexPath as NSIndexPath).row)].value(forKey: "objectId") as? String
-                VC!.username = self._feedItems[((indexPath as NSIndexPath).row)].value(forKey: "username") as? String
+                VC!.objectId = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "objectId") as? String
+                VC!.username = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "username") as? String
                 VC!.create = createString
-                VC!.email = self._feedItems[((indexPath as NSIndexPath).row)].value(forKey: "email") as? String
-                VC!.phone = self._feedItems[((indexPath as NSIndexPath).row)].value(forKey: "phone") as? String
+                VC!.email = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "email") as? String
+                VC!.phone = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "phone") as? String
                 VC!.userimage = self.selectedImage
             }
         }

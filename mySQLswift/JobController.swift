@@ -111,7 +111,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == self.tableView {
-            return _feedItems.count ?? 0
+            return _feedItems.count 
         }
         return foundUsers.count
         //return filteredString.count
@@ -138,11 +138,11 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         if (tableView == self.tableView) {
             
-            cell.jobtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Description") as? String
+            cell.jobtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String
             
         } else {
             
-            cell.jobtitleLabel!.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "Description") as? String
+            cell.jobtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String
             
         }
         
@@ -237,7 +237,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Job")
-            query.whereKey("objectId", equalTo:(self._feedItems.object(at: (indexPath as NSIndexPath).row).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -277,7 +277,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         return true
     }
     
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
+    private func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
         
         if (action == #selector(NSObject.copy)) {
             return true
@@ -285,7 +285,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         return false
     }
     
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
+    private func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
         
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
@@ -364,7 +364,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "jobDetailSegue" {
             
@@ -375,10 +375,10 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
             } else {
                 VC!.formStatus = "Edit"
                 let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-                VC!.objectId = _feedItems[myIndexPath].value(forKey: "objectId") as? String
-                VC!.frm11 = _feedItems[myIndexPath].value(forKey: "Active") as? String
-                VC!.frm12 = _feedItems[myIndexPath].value(forKey: "JobNo") as? String
-                VC!.frm13 = _feedItems[myIndexPath].value(forKey: "Description") as? String
+                VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
+                VC!.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
+                VC!.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "JobNo") as? String
+                VC!.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Description") as? String
             }
         }
     }

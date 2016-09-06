@@ -62,11 +62,17 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAllowsArbitraryLoadsInWebContent</key>
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Can we use your bluetooth?</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Can we use your reminder?</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Can we use your calender?</string>
 	<key>NSCameraUsageDescription</key>
@@ -76,7 +82,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Your custom message to describe why you need location always goes here!</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We want to send your location data to the NSA, please allow access to location services.</string>
+	<string>Can we use your location?</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Can we use your microphone?</string>
 	<key>NSPhotoLibraryUsageDescription</key>

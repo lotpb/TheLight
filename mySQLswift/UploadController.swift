@@ -11,6 +11,7 @@ import Parse
 import MobileCoreServices //kUTTypeImage
 import AVKit
 import AVFoundation
+import UserNotifications
 
 class UploadController: UIViewController, UINavigationControllerDelegate,
 UIImagePickerControllerDelegate, UITextViewDelegate {
@@ -161,7 +162,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     }
     
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
         
         self.editImage = true
         let mediaType = info[UIImagePickerControllerMediaType] as! NSString
@@ -203,6 +204,36 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         let stopedPlayerItem: AVPlayerItem = myNotification.object as! AVPlayerItem
         stopedPlayerItem.seek(to: kCMTimeZero)
+    }
+    
+    // MARK: - Notification
+    
+    func newBlogNotification() {
+        
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "News \(self.commentSorce)"
+            content.subtitle = "News \(self.commentSorce)"
+            content.body = "New News Story Posted at TheLight"
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound.default()
+            content.categoryIdentifier = "status"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+            let request = UNNotificationRequest(identifier: "FiveSecond", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
+            
+            let localNotification: UILocalNotification = UILocalNotification()
+            localNotification.alertAction = "Blog Post"
+            localNotification.alertBody = "New Blog Posted by \(self.commentSorce) at TheLight"
+            localNotification.fireDate = Date(timeIntervalSinceNow: 10)
+            localNotification.timeZone = TimeZone.current
+            localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
+            localNotification.soundName = UILocalNotificationDefaultSoundName
+            UIApplication.shared.scheduleLocalNotification(localNotification)
+        }
     }
 
     
@@ -272,6 +303,8 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                     updateuser.saveInBackground { (success: Bool, error: Error?) -> Void in
                         
                         if success {
+                            
+                            self.newBlogNotification()
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
                             

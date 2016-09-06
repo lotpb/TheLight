@@ -88,7 +88,7 @@ class SocialController: UIViewController, UITextViewDelegate {
             
             let activityViewController = UIActivityViewController(activityItems: [self.noteTextview.text], applicationActivities: nil)
             
-            activityViewController.excludedActivityTypes = [UIActivityTypeMail]
+            activityViewController.excludedActivityTypes = [UIActivityType.mail]
             
             self.present(activityViewController, animated: true, completion: nil)
             

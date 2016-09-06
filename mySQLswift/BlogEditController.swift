@@ -233,7 +233,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             var cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell") as! CustomTableCell!
             
             let query:PFQuery = PFUser.query()!
-            query.whereKey("username",  equalTo: self._feedItems1[(indexPath as NSIndexPath).row].value(forKey: "PostBy") as! String)
+            query.whereKey("username",  equalTo: (self._feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "PostBy") as! String)
             query.limit = 1
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
@@ -268,15 +268,15 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 cell?.replydateLabel.font = replylabel
             }
 
-            let date1 = _feedItems1[(indexPath as NSIndexPath).row].value(forKey: "createdAt") as? Date
+            let date1 = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as? Date
             let date2 = Date()
             let calendar = Calendar.current
             let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
             
-            cell?.replytitleLabel!.text = _feedItems1[(indexPath as NSIndexPath).row].value(forKey: "PostBy") as? String
-            cell?.replysubtitleLabel!.text = _feedItems1[(indexPath as NSIndexPath).row].value(forKey: "Subject") as? String
+            cell?.replytitleLabel!.text = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "PostBy") as? String
+            cell?.replysubtitleLabel!.text = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Subject") as? String
             cell?.replydateLabel!.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
-            var Liked:Int? = _feedItems1[(indexPath as NSIndexPath).row].value(forKey: "Liked") as? Int
+            var Liked:Int? = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Liked") as? Int
             if Liked == nil {
                 Liked = 0
             }
@@ -310,7 +310,6 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
-
     
     // MARK: - Button
     
@@ -327,7 +326,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
         
         let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:(_feedItems1.object(at: ((indexPath as NSIndexPath?)?.row)!).value(forKey: "objectId") as? String)!)
+        query.whereKey("objectId", equalTo:((_feedItems1.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
             if error == nil {
                 object!.incrementKey("Liked")
@@ -336,11 +335,16 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func shareButton(sender: UIButton) {
+    func shareButton(sender: AnyObject) {
         
         let activityViewController = UIActivityViewController (
-            activityItems: [self.subject! as NSString],
+            activityItems: [self.subject! as String],
             applicationActivities: nil)
+        
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.sourceView = sender as? UIView
+            popoverController.sourceRect = sender.bounds
+        }
         
         self.present(activityViewController, animated: true, completion: nil)
     }
@@ -377,7 +381,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     func parseData() {
         
         let query1 = PFQuery(className:"Blog")
-        query1.whereKey("ReplyId", equalTo:self.objectId!)
+        query1.whereKey("ReplyId", equalTo:self.objectId)
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
@@ -393,7 +397,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
 
     // MARK: - Navigation
 
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "blogeditSegue" {
             

@@ -89,7 +89,7 @@ import UIKit
         static let Weathertitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
         //buttonFontSize,  labelFontSize, systemFontSize
         
-        static let celltitle = UIFont.preferredFont(forTextStyle: UIFontTextStyleSubheadline)
+        static let celltitle = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
         static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular)
         static let celllabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         static let celllabel2 = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
@@ -176,7 +176,7 @@ class CustomImageView: UIImageView {
         image = nil
         
         //check cache for image first
-        if let imageFromCache = imageCache.object(forKey: urlString) as? UIImage {
+        if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
             self.image = imageFromCache
             return
         }
@@ -197,7 +197,7 @@ class CustomImageView: UIImageView {
                     self.image = imageToCache
                 }
                 
-                imageCache.setObject(imageToCache!, forKey: urlString)
+                imageCache.setObject(imageToCache!, forKey: urlString as AnyObject)
             })
             
         }).resume()

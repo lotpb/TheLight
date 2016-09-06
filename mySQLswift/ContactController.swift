@@ -150,7 +150,10 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
             let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             let settingsAction = UIAlertAction(title: "Settings", style: .default, handler: { (action: UIAlertAction) in
                 let url = URL(string: UIApplicationOpenSettingsURLString)
-                UIApplication.shared.openURL(url!)
+                
+                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+                //UIApplication.shared.openURL(url!)
+                
             })
             showAlert(
                 title: "Permission Denied",

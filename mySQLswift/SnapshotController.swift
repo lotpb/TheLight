@@ -41,14 +41,14 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var selected12 : String!
     var selected13 : String!
     var selected14 : String!
-    var selected15 : String!
+    var selected15 : NSString!
     var selected16 : String!
-    var selected21 : String!
+    var selected21 : NSString!
     var selected22 : String!
     var selected23 : String!
     var selected24 : String!
     var selected25 : String!
-    var selected26 : String!
+    var selected26 : NSString!
     var selected27 : String!
     
     var resultDateDiff : String!
@@ -214,7 +214,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             return result
             }
         } else if ((indexPath as NSIndexPath).section == 7) {
-            let result:CGFloat = 100
+            let result:CGFloat = 110
             switch ((indexPath as NSIndexPath).row % 4)
             {
             case 0:
@@ -223,7 +223,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 return result
             }
         } else if ((indexPath as NSIndexPath).section == 8) {
-            let result:CGFloat = 100
+            let result:CGFloat = 110
             switch ((indexPath as NSIndexPath).row % 4)
             {
             case 0:
@@ -323,18 +323,17 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
             } else if ((indexPath as NSIndexPath).row == 1) {
                 
-                cell.collectionView.backgroundColor = .clear
-                cell.snapdetailLabel?.text = _feedItems.firstObject?.value(forKey: "newsTitle") as? String
-                
-                let date1 = _feedItems.firstObject?.value(forKey: "createdAt") as? Date
+                let date1 = (_feedItems.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day
-                    let newsString : String? = _feedItems.firstObject?.value(forKey: "newsDetail") as? String
+                    let newsString : String? = (_feedItems.firstObject as AnyObject).value(forKey: "newsDetail") as? String
                     if newsString != nil {
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
                     }
                 }
+                cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String
+                cell.collectionView.backgroundColor = .clear
                 
                 return cell
             }
@@ -350,18 +349,17 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 return cell
             } else if ((indexPath as NSIndexPath).row == 1) {
                 
-                cell.collectionView.backgroundColor = .clear
-                cell.snapdetailLabel?.text = _feedItems6.firstObject?.value(forKey: "Subject") as? String
-                
-                let date1 = _feedItems6.firstObject?.value(forKey: "createdAt") as? Date
+                let date1 = (_feedItems6.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day
-                    let newsString : String? = _feedItems6.firstObject?.value(forKey: "PostBy") as? String
+                    let newsString : String? = (_feedItems6.firstObject as AnyObject).value(forKey: "PostBy") as? String
                     if newsString != nil {
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
                     }
                 }
+                cell.snapdetailLabel?.text = (_feedItems6.firstObject as AnyObject).value(forKey: "Subject") as? String
+                cell.collectionView.backgroundColor = .clear
                 
                 return cell
             }
@@ -508,28 +506,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: UICollectionView
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if (collectionView.tag == 0) {
-            return CGSize(width: 150, height: 130)
-        } else if (collectionView.tag == 1) {
-            return CGSize(width: 150, height: 130)
-        } else if (collectionView.tag == 2) {
-            return CGSize(width: 120, height: 130)
-        }
-        return CGSize(width: 90, height: 130)
-    }
-    
-    //---- below Creates Instagram thin Line spacing between cells---
-    @objc(collectionView:layout:minimumLineSpacingForSectionAtIndex:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout , minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        
-        return 1.0
-    }
-    
-    @objc(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout , minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 1.0
-    }
-    //-----------------------------------------------------------
-    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -538,15 +514,15 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section:Int)->Int
     {
         if (collectionView.tag == 0) {
-            return _feedItems.count
+            return _feedItems.count 
         } else if (collectionView.tag == 1) {
-            return _feedItems2.count
+            return _feedItems2.count 
         } else if (collectionView.tag == 2) {
-            return _feedItems3.count
+            return _feedItems3.count 
         } else if (collectionView.tag == 3) {
-            return _feedItems4.count
+            return _feedItems4.count 
         } else if (collectionView.tag == 4) {
-            return _feedItems5.count
+            return _feedItems5.count 
         }
         return 1
     }
@@ -583,7 +559,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.loadingSpinner?.isHidden = true
             }
             
-            myLabel1.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsTitle") as? String
+            myLabel1.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
             cell.addSubview(myLabel1)
             
             imageDetailurl = self.imageFile.url!
@@ -603,13 +579,13 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView?.backgroundColor = .black
+                cell.user2ImageView!.backgroundColor = .black
                 cell.user2ImageView?.image = UIImage(data: imageData!)
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
             }
             
-            myLabel1.text = _feedItems2[(indexPath as NSIndexPath).row].value(forKey: "imageGroup") as? String
+            myLabel1.text = (_feedItems2[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "imageGroup") as? String
             cell.addSubview(myLabel1)
             
             return cell
@@ -629,7 +605,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.loadingSpinner?.isHidden = true
             }
             
-            myLabel1.text = _feedItems3[(indexPath as NSIndexPath).row].value(forKey: "username") as? String
+            myLabel1.text = (_feedItems3[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "username") as? String
             cell.addSubview(myLabel1)
             
             return cell
@@ -649,7 +625,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.loadingSpinner?.isHidden = true
             }
             
-            myLabel1.text = _feedItems4[(indexPath as NSIndexPath).row].value(forKey: "Salesman") as? String
+            myLabel1.text = (_feedItems4[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String
             cell.addSubview(myLabel1)
             
             return cell
@@ -669,7 +645,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.loadingSpinner?.isHidden = true
             }
             
-            myLabel1.text = String(format: "%@ %@ %@ ", (_feedItems5[(indexPath as NSIndexPath).row].value(forKey: "First") as? String)!, (_feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Last") as? String)!, (_feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Company") as? String)!)
+            myLabel1.text = String(format: "%@ %@ %@ ", ((_feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "First") as? String)!, ((_feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Last") as? String)!, ((_feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Company") as? String)!)
             cell.addSubview(myLabel1)
             
             return cell
@@ -678,6 +654,27 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if (collectionView.tag == 0) {
+            return CGSize(width: 150, height: 130)
+        } else if (collectionView.tag == 1) {
+            return CGSize(width: 150, height: 130)
+        } else if (collectionView.tag == 2) {
+            return CGSize(width: 120, height: 130)
+        }
+        return CGSize(width: 90, height: 130)
+    }
+    
+//---- below Creates Instagram thin Line spacing between cells---
+    @objc(collectionView:layout:minimumLineSpacingForSectionAtIndex:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout , minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        
+        return 1.0
+    }
+    
+    @objc(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout , minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+       return 1.0
+    }
+//-----------------------------------------------------------
     
     // MARK: - Parse
     
@@ -789,12 +786,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 } else {
                 
                 self.selectedImage = UIImage(data: imageData!)
-                self.selectedObjectId = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "objectId") as? String
-                self.selectedTitle = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsTitle") as? String
-                self.selectedEmail = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "newsDetail") as? String
-                self.selectedPhone = self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "storyText") as? String
+                self.selectedObjectId = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "objectId") as? String
+                self.selectedTitle = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
+                self.selectedEmail = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsDetail") as? String
+                self.selectedPhone = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "storyText") as? String
                 self.imageDetailurl = self.imageFile.url
-                self.selectedDate = (self._feedItems[(indexPath as NSIndexPath).row].value(forKey: "createdAt") as? Date)!
+                self.selectedDate = ((self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
                 
                 self.performSegue(withIdentifier: "snapuploadSegue", sender:self)
                 }
@@ -806,7 +803,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
                 self.selectedImage = UIImage(data: imageData!)
-                self.selectedTitle = self._feedItems2[(indexPath as NSIndexPath).row].value(forKey: "imageGroup") as? String
+                self.selectedTitle = (self._feedItems2[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "imageGroup") as? String
             self.performSegue(withIdentifier: "snapuploadSegue", sender:self)
             }
             
@@ -817,12 +814,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
                 self.selectedImage = UIImage(data: imageData!)
-                self.selectedObjectId = self._feedItems3[(indexPath as NSIndexPath).row].value(forKey: "objectId") as? String
-                self.selectedName = self._feedItems3[(indexPath as NSIndexPath).row].value(forKey: "username") as? String
-                self.selectedEmail = self._feedItems3[(indexPath as NSIndexPath).row].value(forKey: "email") as? String
-                self.selectedPhone = self._feedItems3[(indexPath as NSIndexPath).row].value(forKey: "phone") as? String
+                self.selectedObjectId = (self._feedItems3[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "objectId") as? String
+                self.selectedName = (self._feedItems3[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "username") as? String
+                self.selectedEmail = (self._feedItems3[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "email") as? String
+                self.selectedPhone = (self._feedItems3[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "phone") as? String
                 
-                let updated:Date = (self._feedItems3[((indexPath as NSIndexPath).row)].value(forKey: "createdAt") as? Date)!
+                let updated:Date = ((self._feedItems3[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "createdAt") as? Date)!
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMM dd, yyyy"
                 let createString = dateFormatter.string(from: updated)
@@ -837,10 +834,10 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
                 self.selectedImage = UIImage(data: imageData!)
-                self.selectedObjectId = self._feedItems4[(indexPath as NSIndexPath).row].value(forKey: "objectId") as? String
-                self.selectedEmail = self._feedItems4[(indexPath as NSIndexPath).row].value(forKey: "SalesNo") as? String
-                self.selectedPhone = self._feedItems4[(indexPath as NSIndexPath).row].value(forKey: "Active") as? String
-                self.selectedTitle = self._feedItems4[(indexPath as NSIndexPath).row].value(forKey: "Salesman") as? String
+                self.selectedObjectId = (self._feedItems4[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "objectId") as? String
+                self.selectedEmail = (self._feedItems4[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "SalesNo") as? String
+                self.selectedPhone = (self._feedItems4[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? String
+                self.selectedTitle = (self._feedItems4[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String
                 
                 self.performSegue(withIdentifier: "snapuploadSegue", sender:self)
             }
@@ -851,36 +848,36 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
                 //self.selectedImage = UIImage(data: imageData!)
-                self.selectedObjectId = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "objectId") as? String
-                self.selectedPhone = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "EmployeeNo") as? String
-                self.selectedCreate = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Email") as? String
+                self.selectedObjectId = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "objectId") as? String
+                self.selectedPhone = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "EmployeeNo") as? String
+                self.selectedCreate = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Email") as? String
                 
-                self.selectedName = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "SalesNo") as? String
+                self.selectedName = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "SalesNo") as? String
                 
-                self.selectedTitle = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Last") as? String
-                self.selectedEmail = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Street") as? String
-                self.imageDetailurl = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "City") as? String
-                self.selectedState = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "State") as? String
-                self.selectedZip = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Zip") as? String
+                self.selectedTitle = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Last") as? String
+                self.selectedEmail = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Street") as? String
+                self.imageDetailurl = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
+                self.selectedState = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "State") as? String
+                self.selectedZip = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Zip") as? String
                 
-                self.selectedAmount = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Title") as? String
-                self.selected11 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "HomePhone") as? String
-                self.selected12 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "WorkPhone") as? String
-                self.selected13 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "CellPhone") as? String
-                self.selected14 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "SS") as? String
-                self.selected15 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Middle") as? String
+                self.selectedAmount = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Title") as? String
+                self.selected11 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "HomePhone") as? String
+                self.selected12 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "WorkPhone") as? String
+                self.selected13 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "CellPhone") as? String
+                self.selected14 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "SS") as? String
+                self.selected15 = ((self._feedItems5[(indexPath as NSIndexPath).row]) as AnyObject).value(forKey: "Middle") as? NSString
                 
-                self.selected21 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Email") as? String
-                self.selected22 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Department") as? String
-                self.selected23 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Title") as? String
-                self.selected24 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Manager") as? String
-                self.selected25 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Country") as? String
+                self.selected21 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Email") as? NSString
+                self.selected22 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Department") as? String
+                self.selected23 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Title") as? String
+                self.selected24 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Manager") as? String
+                self.selected25 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Country") as? String
                 
-                self.selected16 = String(self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "updatedAt") as? Date)
-                self.selected26 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "First") as? String
-                self.selected27 = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Company") as? String
-                self.selectedComments = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Comments") as? String
-                self.selectedActive = self._feedItems5[(indexPath as NSIndexPath).row].value(forKey: "Active") as? String
+                self.selected16 = String(describing:(self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "updatedAt") as? Date)
+                self.selected26 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "First") as? NSString
+                self.selected27 = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Company") as? String
+                self.selectedComments = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String
+                self.selectedActive = (self._feedItems5[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? String
                 
                 self.performSegue(withIdentifier: "snapemployeeSegue", sender:self)
             }
@@ -893,7 +890,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "snapuploadSegue" {
             

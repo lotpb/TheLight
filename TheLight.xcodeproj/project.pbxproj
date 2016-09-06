@@ -38,7 +38,6 @@
 		AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */; };
 		AF4C1A281CEFF85300F8B038 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A271CEFF85300F8B038 /* Weather.swift */; };
 		AF56DFC31C28947400CD7EB9 /* SnapshotController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */; };
-		AF5794B31C53EC6B006C456B /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5794B21C53EC6B006C456B /* KeychainWrapper.swift */; };
 		AF5C01DE1C493199009BB817 /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01DD1C493199009BB817 /* MusicController.swift */; };
 		AF5C01E01C4931EE009BB817 /* TrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01DF1C4931EE009BB817 /* TrackCell.swift */; };
 		AF5C01E21C493204009BB817 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01E11C493204009BB817 /* Track.swift */; };
@@ -160,11 +159,11 @@
 		AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherGetter.swift; sourceTree = "<group>"; };
 		AF4C1A271CEFF85300F8B038 /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotController.swift; sourceTree = "<group>"; };
-		AF5794B21C53EC6B006C456B /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
 		AF5C01DD1C493199009BB817 /* MusicController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
 		AF5C01DF1C4931EE009BB817 /* TrackCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackCell.swift; sourceTree = "<group>"; };
 		AF5C01E11C493204009BB817 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		AF5C01E31C49320E009BB817 /* Download.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
+		AF69A34C1D7B1BF9002BE793 /* TheLight.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TheLight.entitlements; sourceTree = SOURCE_ROOT; };
 		AF6C691A1C455BAE00CD6A36 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		AF6E27031C3AC52200612C25 /* EditData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditData.swift; sourceTree = "<group>"; };
 		AF7383EA1C302DD00049407C /* NotificationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationDetailController.swift; sourceTree = "<group>"; };
@@ -203,7 +202,6 @@
 		AFD1A30E1C1E32A500580F10 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		AFD754F11C4FCBF200021F97 /* ContactController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactController.swift; sourceTree = "<group>"; };
 		AFD754F31C4FFEB200021F97 /* UploadController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadController.swift; sourceTree = "<group>"; };
-		AFDD06981D7B61500040FEA7 /* TheLight.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TheLight.entitlements; sourceTree = SOURCE_ROOT; };
 		AFDFCBB81C3EA4EA00F02E7B /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AFE0CEFC1D3EAB5700D6D3F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AFE263841C17411D007BBB90 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
@@ -214,6 +212,7 @@
 		AFE2638C1C17418B007BBB90 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		AFE2638D1C17418B007BBB90 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AFE2638F1C17418B007BBB90 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		AFE263901C17418B007BBB90 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		AFE263911C17418B007BBB90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		AFE263A11C176F15007BBB90 /* Lead.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lead.swift; sourceTree = "<group>"; };
 		AFE263A31C178830007BBB90 /* Blog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Blog.swift; sourceTree = "<group>"; };
@@ -300,7 +299,7 @@
 		AF0369A31C173DDC00137D7E /* TheLight */ = {
 			isa = PBXGroup;
 			children = (
-				AFDD06981D7B61500040FEA7 /* TheLight.entitlements */,
+				AF69A34C1D7B1BF9002BE793 /* TheLight.entitlements */,
 				AFE6936E1C6A4D7E000BEDCE /* Extensions.swift */,
 				AF0369A41C173DDC00137D7E /* AppDelegate.swift */,
 				AFE0CEFB1D3EAB5700D6D3F0 /* Main.storyboard */,
@@ -542,6 +541,7 @@
 				AFE2638C1C17418B007BBB90 /* MessageUI.framework */,
 				AFE2638D1C17418B007BBB90 /* MobileCoreServices.framework */,
 				AFE2638F1C17418B007BBB90 /* Security.framework */,
+				AFE263901C17418B007BBB90 /* StoreKit.framework */,
 				AFE263911C17418B007BBB90 /* SystemConfiguration.framework */,
 				AFE263841C17411D007BBB90 /* iAd.framework */,
 			);
@@ -574,7 +574,6 @@
 				AFF5D5591D3AD96400975055 /* User.swift */,
 				AFF5D5551D3AC8E700975055 /* Message.swift */,
 				AF0D6B301C4AC5E900334D03 /* YQL.swift */,
-				AF5794B21C53EC6B006C456B /* KeychainWrapper.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -653,7 +652,7 @@
 								enabled = 1;
 							};
 							com.apple.Keychain = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -819,7 +818,6 @@
 				AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */,
 				AF74E4601D1BFF58004DE7D6 /* SettingCell.swift in Sources */,
 				AF5C01E01C4931EE009BB817 /* TrackCell.swift in Sources */,
-				AF5794B31C53EC6B006C456B /* KeychainWrapper.swift in Sources */,
 				AF8CC3A71C4153AF004147F3 /* NewEditData.swift in Sources */,
 				AF1931491D12DCCD00F826B2 /* YTPlayerView.m in Sources */,
 				AFF5D5561D3AC8E700975055 /* Message.swift in Sources */,
@@ -912,7 +910,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -953,7 +951,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -970,7 +968,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_OPTIMIZATION_PROFILE_FILE = "$(SRCROOT)/OptimizationProfiles/$(PROJECT_NAME).profdata";
 				CLANG_USE_OPTIMIZATION_PROFILE = NO;
-				CODE_SIGN_ENTITLEMENTS = TheLight.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = YX8KSFWQDW;
@@ -979,7 +976,7 @@
 					"$(PROJECT_DIR)/mySQLswift",
 				);
 				INFOPLIST_FILE = mySQLswift/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_CFLAGS = (
 					"$(inherited)",
@@ -1032,7 +1029,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_OPTIMIZATION_PROFILE_FILE = "$(SRCROOT)/OptimizationProfiles/$(PROJECT_NAME).profdata";
 				CLANG_USE_OPTIMIZATION_PROFILE = NO;
-				CODE_SIGN_ENTITLEMENTS = TheLight.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = YX8KSFWQDW;
@@ -1041,7 +1037,7 @@
 					"$(PROJECT_DIR)/mySQLswift",
 				);
 				INFOPLIST_FILE = mySQLswift/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_CFLAGS = (
 					"$(inherited)",

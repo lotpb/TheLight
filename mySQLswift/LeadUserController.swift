@@ -122,7 +122,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == self.tableView {
-            return _feedItems.count ?? 0
+            return _feedItems.count 
         }
         //return foundUsers.count
         return 1
@@ -160,10 +160,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         let dateFormatter = DateFormatter()
         
         if (self.formController == "Blog") {
-            dateStr = (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "MsgDate") as? String)!
+            dateStr = ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "MsgDate") as? String)!
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         } else {
-            dateStr = (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Date") as? String)!
+            dateStr = ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String)!
             dateFormatter.dateFormat = "yyyy-MM-dd"
         }
     
@@ -172,10 +172,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         
         if (self.formController == "Blog") {
             
-            cell.blogtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "PostBy") as? String
-            cell.blogsubtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Subject") as? String
+            cell.blogtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "PostBy") as? String
+            cell.blogsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Subject") as? String
             cell.blogmsgDateLabel!.text = dateFormatter.string(from: date)as String!
-            var CommentCount:Int? = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "CommentCount")as? Int
+            var CommentCount:Int? = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "CommentCount")as? Int
             if CommentCount == nil {
                 CommentCount = 0
             }
@@ -185,15 +185,14 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             
             let formatter = NumberFormatter()
             formatter.numberStyle = .currency
-            cell.blogtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "LastName") as? String
-            cell.blogsubtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "City") as? String
+            cell.blogtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
+            cell.blogsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
             cell.blogmsgDateLabel!.text = dateFormatter.string(from: date)as String!
-            var CommentCount:Int? = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Amount")as? Int
+            var CommentCount:Int? = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Amount")as? Int
             if CommentCount == nil {
                 CommentCount = 0
             }
-            cell.commentLabel?.text = formatter.string(from: CommentCount!)
-        }
+            cell.commentLabel?.text = formatter.string(from: CommentCount! as NSNumber)        }
         
         cell.actionBtn.tintColor = .lightGray
         let imagebutton : UIImage? = UIImage(named:"Upload50.png")!.withRenderingMode(.alwaysTemplate)
@@ -379,7 +378,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         return true
     }
     
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
+    private func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
         
         if (action == #selector(NSObject.copy)) {
             return true
@@ -387,7 +386,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         return false
     }
     
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
+    private func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
         
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
@@ -530,7 +529,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
     }
     

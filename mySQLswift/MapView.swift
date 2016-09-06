@@ -178,10 +178,10 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     // MARK: - Routes
     
     func showRoute(_ response: MKDirectionsResponse) {
-        
+        /*
         let temp:MKRoute = response.routes.first! as MKRoute
         self.route = temp
-        self.travelTime.text = NSString(format:"Time: %0.1f minutes", route.expectedTravelTime/60) as String
+        self.travelTime.text = String(format:"Time: %0.1f minutes", route.expectedTravelTime/60) as String
         self.travelDistance.text = String(format:"Distance: %0.1f Miles", route.distance/1609.344) as String
         self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
         
@@ -189,12 +189,11 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         for i in 0 ..< self.route.steps.count {
             
             let step:MKRouteStep = self.route.steps[i] as MKRouteStep
-            let newStep:NSString = step.instructions
-            let distStep:NSString = String(format:"%0.2f miles", step.distance/1609.344) as String
+            let newStep:NSString = (step.instructions as? NSString)!
+            let distStep:NSString = String(format:"%0.2f miles", step.distance/1609.344) as NSString
             self.allSteps = self.allSteps!.appending( "\(i+1). ")
-            self.allSteps = self.allSteps!.appending(newStep as String)
-            self.allSteps = self.allSteps!.appending("  ")
-            self.allSteps = self.allSteps!.appending(distStep as String)
+            self.allSteps = self.allSteps!.appending(newStep as NSString) as (String)
+            self.allSteps = self.allSteps!.appending(distStep as NSString)
             self.allSteps = self.allSteps!.appending("\n\n")
             self.steps.text = self.allSteps as! String
         }
@@ -206,6 +205,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
          let polylineBoundingRect =  MKMapRectUnion(mapView.visibleMapRect, route.polyline.boundingMapRect)
          mapView.setVisibleMapRect(polylineBoundingRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
          } */
+ */
     }
     
     // MARK: - Map Annotation

@@ -61,7 +61,7 @@ class WeatherGetter {
       if let networkError = error {
         // Case 1: Error
         // An error occurred while trying to get data from the server.
-        self.delegate.didNotGetWeather(networkError)
+        self.delegate.didNotGetWeather(networkError as NSError)
       }
       else {
         print("Success")

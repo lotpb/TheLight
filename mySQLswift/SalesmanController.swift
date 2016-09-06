@@ -11,20 +11,20 @@ import Parse
 
 class SalesmanController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    let searchScope = ["salesman","salesNo","active"]
+    
     
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var collectionView: UICollectionView!
     let cellId = "cellId"
     let titles = ["Home", "Trending", "Subscriptions", "Account"]
-    
+    let searchScope = ["salesman","salesNo","active"]
     var isFormStat = false
     var selectedImage: UIImage?
     
     var _feedItems : NSMutableArray = NSMutableArray()
     var _feedheadItems : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
- 
+    
     var pasteBoard = UIPasteboard.general
     var refreshControl: UIRefreshControl!
     
@@ -48,7 +48,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
         self.automaticallyAdjustsScrollViewInsets = false
-
+        
         foundUsers = []
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -64,7 +64,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         parseData()
         setupCollectionView()
         setupMenuBar()
-
+        
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.Table.navColor
         refreshControl.tintColor = .white
@@ -92,7 +92,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
-//-----------------------------------------------------------------
+    //-----------------------------------------------------------------
     
     func setupCollectionView() {
         
@@ -122,14 +122,14 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         /*
-        let identifier: String
-        if (indexPath as NSIndexPath).item == 1 {
-            //identifier = trendingCellId
-        } else if (indexPath as NSIndexPath).item == 2 {
-            //identifier = subscriptionCellId
-        } else {
-            identifier = cellId
-        } */
+         let identifier: String
+         if (indexPath as NSIndexPath).item == 1 {
+         //identifier = trendingCellId
+         } else if (indexPath as NSIndexPath).item == 2 {
+         //identifier = subscriptionCellId
+         } else {
+         identifier = cellId
+         } */
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) //as! TitleCell
         
@@ -195,13 +195,13 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-
-    /*
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: view.frame.height - 50)
-    } */
     
-//--------------------------------------------------
+    /*
+     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+     return CGSize(width: view.frame.width, height: view.frame.height - 50)
+     } */
+    
+    //--------------------------------------------------
     
     // MARK: - Refresh
     
@@ -227,7 +227,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == self.tableView {
-            return _feedItems.count ?? 0
+            return _feedItems.count 
         }
         return foundUsers.count
         //return filteredString.count
@@ -254,11 +254,11 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         if (tableView == self.tableView) {
             
-            cell.salestitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Salesman") as? String
+            cell.salestitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String
             
         } else {
             
-            cell.salestitleLabel!.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "Salesman") as? String
+            cell.salestitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String
             
         }
         
@@ -341,7 +341,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         vw.addSubview(separatorLineView3)
         
         return vw
-    } 
+    }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
@@ -353,7 +353,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Salesman")
-            query.whereKey("objectId", equalTo:(self._feedItems.object(at: (indexPath as NSIndexPath).row).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -393,12 +393,12 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         return true
     }
     
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
+    private func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
         
         return action == #selector(copy(_:))
     }
     
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
+    private func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: AnyObject?) {
         
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
@@ -490,7 +490,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "salesDetailSegue" {
             
@@ -501,10 +501,10 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             } else {
                 VC!.formStatus = "Edit"
                 let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-                VC!.objectId = _feedItems[myIndexPath].value(forKey: "objectId") as? String
-                VC!.frm11 = _feedItems[myIndexPath].value(forKey: "Active") as? String
-                VC!.frm12 = _feedItems[myIndexPath].value(forKey: "SalesNo") as? String
-                VC!.frm13 = _feedItems[myIndexPath].value(forKey: "Salesman") as? String
+                VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
+                VC!.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
+                VC!.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "SalesNo") as? String
+                VC!.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Salesman") as? String
                 VC!.image = self.selectedImage
             }
         }

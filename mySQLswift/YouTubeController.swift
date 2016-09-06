@@ -5,7 +5,7 @@
 //  Created by Peter Balsamo on 1/17/16.
 //  Copyright © 2016 Peter Balsamo. All rights reserved.
 //
-
+/*
 import UIKit
 
 class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -49,7 +49,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "idSeguePlayer" {
             let playerViewController = segue.destination as! PlayerViewController
@@ -220,7 +220,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     // MARK: Custom method implementation
     
-    func performGetRequest(_ targetURL: URL!, completion: (data: Data?, HTTPStatusCode: Int, error: NSError?) -> Void) {
+    func performGetRequest(_ targetURL: URL!, completion: @escaping (_ data: Data?, _ HTTPStatusCode: Int, _ error: NSError?) -> Void) {
         
         let request = NSMutableURLRequest(url: targetURL)
         request.httpMethod = "GET"
@@ -231,7 +231,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             DispatchQueue.main.async(execute: { () -> Void in
-                completion(data: data, HTTPStatusCode: (response as! HTTPURLResponse).statusCode, error: error)
+                completion(data, (response ).statusCode, error)
             })
         })
         
@@ -351,4 +351,4 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             self.viewWait.isHidden = true
         })
     }
-}
+} */

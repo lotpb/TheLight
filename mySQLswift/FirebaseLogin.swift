@@ -78,8 +78,8 @@ class FirebaseLogin: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDele
             
         } else {
             //Keychain
-            self.usernameField!.text = KeychainWrapper.stringForKey("usernameKey")
-            self.passwordField!.text = KeychainWrapper.stringForKey("passwordKey")
+            self.usernameField!.text = "Peter Balsamo"//KeychainWrapper.stringForKey("usernameKey")
+            self.passwordField!.text = "3911" //KeychainWrapper.stringForKey("passwordKey")
             self.reEnterPasswordField!.isHidden = true
             self.registerBtn!.isHidden = false
             self.emailField!.isHidden = true
@@ -333,14 +333,14 @@ class FirebaseLogin: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDele
                 
             } else {
                 
-                let firstName = result?.value(forKey: "first_name") as? String
-                let lastName = result?.value(forKey: "last_name") as? String
+                let firstName = (result as AnyObject).value(forKey: "first_name") as? String
+                let lastName = (result as AnyObject).value(forKey: "last_name") as? String
                 
                 self.usernameField!.text = "\(firstName!) \(lastName!)"
-                self.emailField!.text = result?.value(forKey: "email") as? String
+                self.emailField!.text = (result as AnyObject).value(forKey: "email") as? String
                 self.passwordField!.text = "3911" //result.valueForKey("id") as? String
                 
-                let strPictureURL: String = (result!.object(forKey: "picture")?.object(forKey: "data")?.object(forKey: "url") as? String)!
+                let strPictureURL: String = ((((result! as AnyObject).object(forKey: "picture") as AnyObject).object(forKey: "data") as AnyObject).object(forKey: "url") as? String)!
                 
                 let image = UIImage(data: try! Data(contentsOf: URL(string: strPictureURL)!))
                 DispatchQueue.main.async(execute: { () -> Void in

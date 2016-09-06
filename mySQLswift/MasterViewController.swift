@@ -79,12 +79,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         
         // MARK: - iAd
-        /*
+        
         if (defaults.bool(forKey: "iadKey"))  {
-            canDisplayBannerAds = true
+            //canDisplayBannerAds = true
         } else {
-            canDisplayBannerAds = false
-        } */
+            //canDisplayBannerAds = false
+        }
         
         
      // MARK: - Login
@@ -93,19 +93,19 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let userpassword:String = defaults.string(forKey: "passwordKey")!
         
         //Keychain
-        
+        /*
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
         if KeychainWrapper.setString(userId, forKey: "usernameKey") && KeychainWrapper.setString(userpassword, forKey: "passwordKey") {
             print("Keychain successful")
         } else {
             print("Keychain failed")
-        }
+        } */
         
         //Parse
         
         PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
             if error != nil {
-                 print("PFUser Error: \(error) \(error!._userInfo)")
+                 print("Error: \(error) \(error!._userInfo)")
                 return
             }
         }
@@ -163,7 +163,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         let setting = UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
             let settingsUrl = URL(string: UIApplicationOpenSettingsURLString)
-            UIApplication.shared.openURL(settingsUrl!)
+            
+            UIApplication.shared.open(settingsUrl!, options: [:], completionHandler: nil)
+            //UIApplication.shared.openURL(settingsUrl!)
         })
         let buttonTwo = UIAlertAction(title: "Users", style: .default, handler: { (action) -> Void in
             self.performSegue(withIdentifier: "userSegue", sender: self)
@@ -255,18 +257,14 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            if (tableView == self.tableView) {
-                return 135.0
-            } else {
-                return 0
-            }
+            return 135.0
         } else {
             return 0.0
         }
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-            
+        
         let vw = UIView()
         tableView.tableHeaderView = vw
         
@@ -316,7 +314,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         vw.addSubview(myLabel25)
         
         let separatorLineView2 = UIView(frame: CGRect(x: 85, y: 95, width: 60, height: 3.5))
-        if (changeYQL![0].contains("-")) {
+        if ((changeYQL![0] as AnyObject).contains("-")) {
             separatorLineView2.backgroundColor = .red
             myLabel25.textColor = .red
         } else {
@@ -346,7 +344,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         vw.addSubview(myLabel35)
         
         let separatorLineView3 = UIView(frame: CGRect(x: 160, y: 95, width: 60, height: 3.5))
-        if (changeYQL![1].contains("-")) {
+        if ((changeYQL![1] as AnyObject).contains("-")) {
             separatorLineView3.backgroundColor = .red
             myLabel35.textColor = .red
         } else {
@@ -378,6 +376,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         statButton.layer.borderColor = UIColor.black.cgColor
         statButton.layer.borderWidth = 1.0
         vw.addSubview(statButton) */
+        
         return vw
     }
 
@@ -534,7 +533,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
 
     }
 

@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 import UserNotifications
-//import Firebase
+import Firebase
 import FBSDKCoreKit
 import GoogleSignIn
 
@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var window: UIWindow?
     var defaults = UserDefaults.standard
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         // MARK: - Register Settings
         
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - Firebase
         
-         //FIRApp.configure()
+         FIRApp.configure()
         
         // MARK: - Parse
         
@@ -66,6 +66,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // MARK: - RegisterUserNotification
         
         if #available(iOS 10.0, *) {
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.sound, .alert, .badge]) {
+                (granted, error) in
+                // We can register for remote notifications here too!
+            }
+            
+            
+            /*
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge], completionHandler: { granted, error in
                 if granted {
                     print("使用者同意了，每天都能收到來自米花兒的幸福訊息")
@@ -74,7 +82,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                     print("使用者不同意，不喜歡米花兒，哭哭!")
                 }
                 
-            })
+            }) */
+            
         } else {
             let mySettings = UIUserNotificationSettings(types:[.badge, .sound, .alert], categories: nil)
             UIApplication.shared.registerUserNotificationSettings(mySettings)
@@ -89,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - ApplicationIconBadgeNumber
         
-        let notification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as! UILocalNotification!
+        let notification = launchOptions?[UIApplicationLaunchOptionsKey.localNotification] as! UILocalNotification!
         if (notification != nil) {
             notification?.applicationIconBadgeNumber = 0
         }
@@ -125,33 +134,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return true
     }
     
+    /*
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         
         application.applicationIconBadgeNumber = 0
         
-    }
+    } */
+    
     
     // MARK: - Google/Facebook
+    /*
     @available(iOS 9.0, *)
-    func application(_ application: UIApplication, open url: URL, options: [String : AnyObject])
-        -> Bool {
-            return self.application(application, open: url, sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey] as! String?, annotation: [:])
-    }
     
-    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        if GIDSignIn.sharedInstance().handle(url, sourceApplication: sourceApplication,annotation: annotation) {
-            return true
-        }
-        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+            return self.application(application: app, openURL: url, sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey] as! String?, annotation: [])
+    } */
+    
+    private func application(application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        
+        return (FBSDKApplicationDelegate.sharedInstance().application( application,open: url as URL!,sourceApplication: sourceApplication,annotation: annotation) || GIDSignIn.sharedInstance().handle(url as URL!, sourceApplication: sourceApplication, annotation: annotation))
     }
 
     
     // MARK: - Background Fetch
     
-    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    private func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         
             print("########### Received Background Fetch ###########")
+        
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "Background transfer service download!"
+            content.subtitle = "米花兒"
+            content.body = "Background transfer service: Download complete!"
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound(named: "Tornado.caf")
+            //content.categoryIdentifier = "status"
+
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
+        } else {
+        
             let localNotification: UILocalNotification = UILocalNotification()
             localNotification.alertAction = "Background transfer service download!"
             localNotification.alertBody = "Background transfer service: Download complete!"
@@ -160,13 +186,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             UIApplication.shared.presentLocalNotificationNow(localNotification)
             
             completionHandler(UIBackgroundFetchResult.newData)
+        }
     }
     
     
      // MARK: - Music Controller
     
-    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
-        backgroundSessionCompletionHandler = completionHandler
+    private func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+        //backgroundSessionCompletionHandler = completionHandler
     }
     
     // MARK:
@@ -220,7 +247,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     private func customizeAppearance() {
         
-        //UIApplication.sharedApplication().networkActivityIndicatorVisible = true //Activity Status Bar
+      //UIApplication.sharedApplication().networkActivityIndicatorVisible = true //Activity Status Bar
         UIApplication.shared.statusBarStyle = .lightContent
         
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
@@ -265,11 +292,27 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 // MARK: CLLocationManagerDelegate - Beacons
 extension AppDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        if let _ = region as? CLBeaconRegion {
-            let notification = UILocalNotification()
-            notification.alertBody = "Are you forgetting something?"
-            notification.soundName = "Default"
-            UIApplication.shared.presentLocalNotificationNow(notification)
+        
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "Are you forgetting something?"
+            content.subtitle = "米花兒"
+            content.body = "Are you forgetting something?"
+            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.sound = UNNotificationSound.default()
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
+            
+            if let _ = region as? CLBeaconRegion {
+                let notification = UILocalNotification()
+                notification.alertBody = "Are you forgetting something?"
+                notification.soundName = "Default"
+                UIApplication.shared.presentLocalNotificationNow(notification)
+            }
         }
     }
 }

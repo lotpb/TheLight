@@ -203,6 +203,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         processingView.isHidden = false
         
         // start recording
+        //recorder.startRecording(handler: (@escaping (Error?) -> Void)? = nil) {
         recorder.startRecording(withMicrophoneEnabled: true) { [unowned self] error in
             DispatchQueue.main.async { [unowned self] in
                 self.processingView.isHidden = true

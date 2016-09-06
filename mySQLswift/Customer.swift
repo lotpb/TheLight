@@ -121,7 +121,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == self.tableView {
-            return _feedItems.count ?? 0
+            return _feedItems.count 
         }
         return foundUsers.count
         //return filteredString.count
@@ -179,31 +179,31 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if (tableView == self.tableView) {
             
-            cell.custtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "LastName") as? String
-            cell.custlikeLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Rate") as? String
-            myLabel1.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Date") as? String
+            cell.custtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
+            cell.custlikeLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Rate") as? String
+            myLabel1.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String
             
-            var Amount:Int? = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "Amount")as? Int
+            var Amount:Int? = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Amount")as? Int
             let formatter = NumberFormatter()
             formatter.numberStyle = .currency
             if Amount == nil {
                 Amount = 0
             }
-            myLabel2.text =  formatter.string(from: Amount!)
+            myLabel2.text = formatter.string(from: Amount! as NSNumber)
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.custsubtitleLabel!.text = _feedItems[(indexPath as NSIndexPath).row].value(forKey: "City") as? String
+                cell.custsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
             } else {
                 cell.custsubtitleLabel!.text = ""
             }
            
         } else {
             
-            cell.custtitleLabel!.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "LastName") as? String
-            cell.custsubtitleLabel!.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "City") as? String
-            cell.custlikeLabel!.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "Rate") as? String
-            myLabel1.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "Date") as? String
-            myLabel2.text = filteredString[(indexPath as NSIndexPath).row].value(forKey: "Amount") as? String
+            cell.custtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
+            cell.custsubtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
+            cell.custlikeLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Rate") as? String
+            myLabel1.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String
+            myLabel2.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Amount") as? String
             
         }
         
@@ -211,13 +211,13 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
         cell.custreplyButton .setImage(replyimage, for: UIControlState())
         
-        if (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Comments") as? String == nil) || (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Comments") as? String == "") {
+        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == "") {
             cell.custreplyButton!.tintColor = .lightGray
         } else {
             cell.custreplyButton!.tintColor = Color.Cust.buttonColor
         }
         
-        if (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Active") as? Int == 1 ) {
+        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
             cell.custreplyLabel.text! = "Active"
             cell.custreplyLabel.adjustsFontSizeToFitWidth = true
         } else {
@@ -228,7 +228,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
         cell.custlikeButton .setImage(likeimage, for: UIControlState())
 
-        if (_feedItems[(indexPath as NSIndexPath).row].value(forKey: "Rate") as? String == "A" ) {
+        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Rate") as? String == "A" ) {
             cell.custlikeButton!.tintColor = Color.Cust.buttonColor
         } else {
             cell.custlikeButton!.tintColor = .lightGray
@@ -236,17 +236,15 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         myLabel.backgroundColor = Color.Cust.labelColor
-        myLabel.text = "Cust"
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
-        myLabel.layer.contentsGravity = kCAGravityResize
         myLabel.layer.masksToBounds = true
-        myLabel.layer.cornerRadius = 25.0
+        myLabel.text = "Cust"
         myLabel.font = Font.headtitle
+        myLabel.layer.cornerRadius = 25.0
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = (indexPath as NSIndexPath).row
         cell.addSubview(myLabel)
-
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(Customer.imgLoadSegue))
         myLabel.addGestureRecognizer(tap)
@@ -335,7 +333,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if editingStyle == .delete {
             let query = PFQuery(className:"Customer")
-            query.whereKey("objectId", equalTo:(self._feedItems.object(at: (indexPath as NSIndexPath).row).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -443,9 +441,9 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     // MARK: - imgLoadSegue
     
     func imgLoadSegue(_ sender:UITapGestureRecognizer) {
-        objectIdLabel = (_feedItems.object(at: (sender.view!.tag)).value(forKey: "objectId") as? String)!
-        dateLabel = (_feedItems.object(at: (sender.view!.tag)).value(forKey: "Date") as? String)!
-        titleLabel = (_feedItems.object(at: (sender.view!.tag)).value(forKey: "LastName") as? String)!
+        objectIdLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "objectId") as? String)!
+        dateLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "Date") as? String)!
+        titleLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "LastName") as? String)!
         self.performSegue(withIdentifier: "custuserSeque", sender: self)
     }
     
@@ -461,7 +459,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "custdetailSegue" {
             
@@ -471,83 +469,82 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let controller = segue.destination as? LeadDetail
             controller!.formController = "Customer"
             let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-            controller?.objectId = _feedItems[indexPath].value(forKey: "objectId") as? String
+            controller?.objectId = (_feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
             
-            var CustNo:Int? = _feedItems[indexPath].value(forKey: "CustNo") as? Int
+            var CustNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "CustNo") as? Int
             if CustNo == nil {
                 CustNo = 0
             }
-            controller?.custNo =  formatter.string(from: CustNo!)
-            
-            var LeadNo:Int? = _feedItems[indexPath].value(forKey: "LeadNo") as? Int
+            controller?.custNo = formatter.string(from: CustNo! as NSNumber)
+            var LeadNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "LeadNo") as? Int
             if LeadNo == nil {
                 LeadNo = 0
             }
-            controller?.leadNo =  formatter.string(from: LeadNo!)
+            controller?.leadNo = formatter.string(from: LeadNo! as NSNumber)
             
-            var Zip:Int? = _feedItems[indexPath].value(forKey: "Zip")as? Int
+            var Zip:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Zip")as? Int
             if Zip == nil {
                 Zip = 0
             }
-            controller?.zip =  formatter.string(from: Zip!)
+            controller?.zip = formatter.string(from: Zip! as NSNumber)
             
-            var Amount:Int? = _feedItems[indexPath].value(forKey: "Amount")as? Int
+            var Amount:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Amount")as? Int
             if Amount == nil {
                 Amount = 0
             }
-            controller?.amount =  formatter.string(from: Amount!)
+            controller?.amount = formatter.string(from: Amount! as NSNumber)
             
-            var SalesNo:Int? = _feedItems[indexPath].value(forKey: "SalesNo")as? Int
+            var SalesNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "SalesNo")as? Int
             if SalesNo == nil {
                 SalesNo = 0
             }
-            controller?.tbl22 = formatter.string(from: SalesNo! as Int)
+            controller?.tbl22 = formatter.string(from: SalesNo! as NSNumber)
             
-            var JobNo:Int? = _feedItems[indexPath].value(forKey: "JobNo")as? Int
+            var JobNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "JobNo")as? Int
             if JobNo == nil {
                 JobNo = 0
             }
-            controller?.tbl23 = formatter.string(from: JobNo!)
+            controller?.tbl23 = formatter.string(from: JobNo! as NSNumber)
             
-            var AdNo:Int? = _feedItems[indexPath].value(forKey: "ProductNo")as? Int
+            var AdNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "ProductNo")as? Int
             if AdNo == nil {
                 AdNo = 0
             }
-            controller?.tbl24 = formatter.string(from: AdNo!)
+            controller?.tbl24 = formatter.string(from: AdNo! as NSNumber)
             
-            var Quan:Int? = _feedItems[indexPath].value(forKey: "Quan")as? Int
+            var Quan:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Quan")as? Int
             if Quan == nil {
                 Quan = 0
             }
-            controller?.tbl25 = formatter.string(from: Quan!)
+            controller?.tbl25 = formatter.string(from: Quan! as NSNumber)
             
-            var Active:Int? = _feedItems[indexPath].value(forKey: "Active")as? Int
+            var Active:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Active")as? Int
             if Active == nil {
                 Active = 0
             }
-            controller?.active = formatter.string(from: Active!)
+            controller?.active = formatter.string(from: Active! as NSNumber)
             
-            controller?.date = _feedItems[indexPath].value(forKey: "Date") as? String
-            controller?.name = _feedItems[indexPath].value(forKey: "LastName") as? String
-            controller?.address = _feedItems[indexPath].value(forKey: "Address") as? String
-            controller?.city = _feedItems[indexPath].value(forKey: "City") as? String
-            controller?.state = _feedItems[indexPath].value(forKey: "State") as? String
-            controller?.tbl11 = _feedItems[indexPath].value(forKey: "Contractor") as? String
-            controller?.tbl12 = _feedItems[indexPath].value(forKey: "Phone") as? String
-            controller?.tbl13 = _feedItems[indexPath].value(forKey: "First") as? String
-            controller?.tbl14 = _feedItems[indexPath].value(forKey: "Spouse") as? String
-            controller?.tbl15 = _feedItems[indexPath].value(forKey: "Email") as? String
-            controller?.tbl21 = _feedItems[indexPath].value(forKey: "Start") as? String
+            controller?.date = (_feedItems[indexPath] as AnyObject).value(forKey: "Date") as? String
+            controller?.name = (_feedItems[indexPath] as AnyObject).value(forKey: "LastName") as? String
+            controller?.address = (_feedItems[indexPath] as AnyObject).value(forKey: "Address") as? String
+            controller?.city = (_feedItems[indexPath] as AnyObject).value(forKey: "City") as? String
+            controller?.state = (_feedItems[indexPath] as AnyObject).value(forKey: "State") as? String
+            controller?.tbl11 = (_feedItems[indexPath] as AnyObject).value(forKey: "Contractor") as? String
+            controller?.tbl12 = (_feedItems[indexPath] as AnyObject).value(forKey: "Phone") as? String
+            controller?.tbl13 = (_feedItems[indexPath] as AnyObject).value(forKey: "First") as? String
+            controller?.tbl14 = (_feedItems[indexPath] as AnyObject).value(forKey: "Spouse") as? String
+            controller?.tbl15 = (_feedItems[indexPath] as AnyObject).value(forKey: "Email") as? NSString
+            controller?.tbl21 = (_feedItems[indexPath] as AnyObject).value(forKey: "Start") as? NSString
 
-            let dateUpdated = _feedItems[indexPath].value(forKey: "updatedAt") as! Date
+            let dateUpdated = (_feedItems[indexPath] as AnyObject).value(forKey: "updatedAt") as! Date
             let dateFormat = DateFormatter()
             dateFormat.dateFormat = "MMM dd yy"
             controller?.tbl16 = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
             
-            controller?.tbl26 = _feedItems[indexPath].value(forKey: "Rate") as? String
-            controller?.complete = _feedItems[indexPath].value(forKey: "Completion") as? String
-            controller?.photo = _feedItems[indexPath].value(forKey: "Photo") as? String
-            controller?.comments = _feedItems[indexPath].value(forKey: "Comments") as? String
+            controller?.tbl26 = (_feedItems[indexPath] as AnyObject).value(forKey: "Rate") as? NSString
+            controller?.complete = (_feedItems[indexPath] as AnyObject).value(forKey: "Completion") as? String
+            controller?.photo = (_feedItems[indexPath] as AnyObject).value(forKey: "Photo") as? String
+            controller?.comments = (_feedItems[indexPath] as AnyObject).value(forKey: "Comments") as? String
             
             controller?.l11 = "Contractor"; controller?.l12 = "Phone"
             controller?.l13 = "First"; controller?.l14 = "Spouse"
