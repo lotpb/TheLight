@@ -189,25 +189,16 @@ class VideoPlayerView: UIView {
     var player: AVPlayer?
     
     private func setupPlayerView() {
-        /*
-        if let path = Bundle.main.path(forResource: "waterfall", ofType: "mp4")
-        {
-            player.setURL(NSURL(fileURLWithPath: path))
-        }
-        else
-        {
-            assertionFailure("Video file not found!")
-        } */
-        
+ 
         //warning: use your own video url here, the bandwidth for google firebase storage will run out as more and more people use this file
         
         //let urlString: String = videoURL
         
         //let urlString = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
   
-        let urlString = "https://files.parsetfss.com/6ab2bd45-dd6b-4dda-afde-ee839ccbdc32/tfss-9c23838b-c434-49fa-9f6d-54e0631366c5-movie.mp4"
+        //let urlString = "https://files.parsetfss.com/6ab2bd45-dd6b-4dda-afde-ee839ccbdc32/tfss-9c23838b-c434-49fa-9f6d-54e0631366c5-movie.mp4"
         
-        //let urlString = "https://firebasestorage.googleapis.com/v0/b/gameofchats-762ca.appspot.com/o/message_movies%2F12323439-9729-4941-BA07-2BAE970967C7.mov?alt=media&token=3e37a093-3bc8-410f-84d3-38332af9c726"
+        let urlString = "https://firebasestorage.googleapis.com/v0/b/gameofchats-762ca.appspot.com/o/message_movies%2F12323439-9729-4941-BA07-2BAE970967C7.mov?alt=media&token=3e37a093-3bc8-410f-84d3-38332af9c726"
         
         if let url = NSURL(string: urlString) {
             
@@ -242,9 +233,8 @@ class VideoPlayerView: UIView {
             })
         }
     }
-  //override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
     
-    func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutableRawPointer) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
    
         //this is when the player is ready and rendering frames
         if keyPath == "currentItem.loadedTimeRanges" {

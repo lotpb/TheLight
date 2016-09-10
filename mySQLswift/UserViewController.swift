@@ -327,7 +327,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "userdetailSegue" {
             let VC = segue.destination as? UserDetailController

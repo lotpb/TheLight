@@ -403,14 +403,14 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         }
     }
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "vendordetailSegue" {
             
             let formatter = NumberFormatter()
             
             let controller = segue.destination as? LeadDetail
-            controller!.formController = "Vendor"
+            controller?.formController = "Vendor"
             let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
             controller?.objectId = (_feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
             
@@ -465,8 +465,8 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         
         if segue.identifier == "newvendSegue" {
             let controller = segue.destination as? EditData
-            controller!.formController = "Vendor"
-            controller!.status = "New"
+            controller?.formController = "Vendor"
+            controller?.status = "New"
         }
         
     }

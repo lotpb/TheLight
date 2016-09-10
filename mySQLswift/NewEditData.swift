@@ -368,7 +368,6 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         
     }
     
-    
     // MARK: - Update Data
     
     func updateData() {

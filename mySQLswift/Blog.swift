@@ -377,35 +377,41 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
 //---------------------NSDataDetector-----------------------------
         
-        let text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
-        let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
-        let detector = try? NSDataDetector(types: types.rawValue)
-        detector?.enumerateMatches(in: text!, options: [], range: NSMakeRange(0, (text! as NSString).length)) { (result, flags, _) in
-            
-            let webattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
-            
-            //webattributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
-            
-            let emailattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
-            
-            let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.phonelinkText])
-            
-            if result!.resultType == .link {
-                
-                if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
-                    cell?.blogsubtitleLabel!.attributedText = emailattributedText
-                } else {
-                    cell?.blogsubtitleLabel!.attributedText = webattributedText
-                }
-                
-            } else if result?.resultType == .phoneNumber {
-                
-                cell?.blogsubtitleLabel!.attributedText = phoneattributedText
-            }
-        }
+        let text = (cell?.blogsubtitleLabel.text!)! as NSString
+        let attributedText = NSMutableAttributedString(attributedString: (cell?.blogsubtitleLabel.attributedText!)!)
+
+        
+        let boldRange = text.range(of: NSLocalizedString("sold", comment: ""))
+        let tintedRange = text.range(of: NSLocalizedString("eunited@verizon.com", comment: ""))
+        let tintedRange1 = text.range(of: NSLocalizedString("http://www.eunited.com", comment: ""))
+        let highlightedRange = text.range(of: NSLocalizedString("(516)241-4786", comment: ""))
+        let underlinedRange = text.range(of: NSLocalizedString("Lost", comment: ""))
+        
+        // Add bold.
+        let boldFontDescriptor = cell?.blogsubtitleLabel.font.fontDescriptor.withSymbolicTraits(.traitBold)
+        let boldFont = UIFont(descriptor: boldFontDescriptor!, size: 0)
+        attributedText.addAttribute(NSFontAttributeName, value: boldFont, range: boldRange)
+        
+        // Add tint.
+        attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.emaillinkText, range: tintedRange)
+        attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: tintedRange1)
+        
+        // Add highlight.
+        attributedText.addAttribute(NSBackgroundColorAttributeName, value: Color.Blog.phonelinkText, range: highlightedRange)
+        
+        // Add underline.
+        attributedText.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.styleSingle.rawValue, range: underlinedRange)
+        
+        /*
+        // Append a space with matching font of the rest of the body text.
+        let appendedSpace = NSMutableAttributedString.init(string: " ")
+        appendedSpace.addAttribute(NSFontAttributeName, value: boldFont, range: NSMakeRange(0, 1))
+        attributedText.append(appendedSpace) */
+        
+        cell?.blogsubtitleLabel!.attributedText  = attributedText
+
         
 //--------------------------------------------------
- 
 
         return cell!
     }
@@ -810,7 +816,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.performSegue(withIdentifier: "blogeditSegue", sender: self)
     }
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "blogeditSegue" {
             

@@ -209,7 +209,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 let emailattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
                 
-                let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.phonelinkText])
+                let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
                 
                 if result!.resultType == .link {
                     
@@ -335,15 +335,14 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func shareButton(sender: AnyObject) {
+    func shareButton(_ sender: AnyObject) {
         
         let activityViewController = UIActivityViewController (
             activityItems: [self.subject! as String],
             applicationActivities: nil)
         
         if let popoverController = activityViewController.popoverPresentationController {
-            popoverController.sourceView = sender as? UIView
-            popoverController.sourceRect = sender.bounds
+            popoverController.barButtonItem = sender as? UIBarButtonItem
         }
         
         self.present(activityViewController, animated: true, completion: nil)
@@ -381,7 +380,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     func parseData() {
         
         let query1 = PFQuery(className:"Blog")
-        query1.whereKey("ReplyId", equalTo:self.objectId)
+        query1.whereKey("ReplyId", equalTo:self.objectId!)
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
@@ -392,12 +391,11 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 print("Error")
             }
         }
-        
     }
 
     // MARK: - Navigation
 
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "blogeditSegue" {
             

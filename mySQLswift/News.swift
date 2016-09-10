@@ -264,7 +264,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
             self.performSegue(withIdentifier: "newsdetailSeque", sender: self)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "newsdetailSeque"
         {

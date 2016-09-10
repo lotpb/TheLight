@@ -436,7 +436,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
     }
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "employdetailSegue" {
             

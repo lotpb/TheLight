@@ -10,7 +10,8 @@ import UIKit
 import Parse
 import UserNotifications
 
-class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
+
+class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate {
     
     let ipadtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
     let ipadsubject = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
@@ -19,12 +20,13 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var Share: UIButton?
     @IBOutlet weak var Like: UIButton?
-    @IBOutlet weak var myDatePicker: UIDatePicker?
     @IBOutlet weak var toolBar: UIToolbar?
     @IBOutlet weak var subject: UITextView?
     @IBOutlet weak var imageBlog: UIImageView?
     @IBOutlet weak var placeholderlabel: UILabel?
     @IBOutlet weak var characterCountLabel: UILabel?
+    
+    //@IBOutlet weak var myDatePicker: UIDatePicker?
     
     var objectId : String?
     var msgNo : String?
@@ -43,7 +45,31 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     var formStatus : String?
     var activeImage : UIImageView? //star
+    
+    //------inlineDatePicker---------
+    
+    let kPickerAnimationDuration = 0.40 // duration for the animation to slide the date picker into view
+    let kDatePickerTag           = 99   // view tag identifiying the date picker view
+    
+    let kTitleKey = "title" // key for obtaining the data source item's title
+    let kDateKey  = "date"  // key for obtaining the data source item's date value
+    
+    // keep track of which rows have date cells
+    let kDateStartRow = 1
+    let kDateEndRow   = 3
+    
+    let kDateCellID       = "dateCell" // the cells with the start or end date
+    let kDatePickerCellID = "datePickerCell"
+    let kOtherCellID      = "otherCell"
+    
+    var dataArray: [[String: AnyObject]] = []
+    var dateFormatter = DateFormatter()
+    
+    // keep track which indexPath points to the cell with UIDatePicker
+    var datePickerIndexPath: IndexPath?
+    var pickerCellRowHeight: CGFloat = 216
 
+//-------------------------------------
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,26 +81,20 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        //navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
-        
         parseData() //load image
-        subject?.delegate = self
-        self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
+        configureTextView()
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.subject!.font = ipadsubject
-        } else {
-            self.subject!.font = Font.Blog.cellsubject
-        }
+        self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
+        self.tableView!.tableFooterView = UIView(frame: .zero)
         
         self.imageBlog!.layer.masksToBounds = true
         self.imageBlog!.layer.cornerRadius = 5
         self.imageBlog!.contentMode = .scaleAspectFill
         
         if ((self.formStatus == "New") || (self.formStatus == "Reply")) {
-
+            
             self.placeholderlabel!.textColor = .lightGray
-
+            
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let dateString = dateFormatter.string(from: (Date()) as Date)
@@ -98,39 +118,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             } else {
                 self.Like!.tintColor = Color.Blog.buttonColor
             }
-            
-//---------------------NSDataDetector-----------------------------
-            
-            let text = self.textcontentsubject!
-            let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
-            let detector = try? NSDataDetector(types: types.rawValue)
-            detector?.enumerateMatches(in: text, options: [], range: NSMakeRange(0, (text as NSString).length)) { (result, flags, _) in
-                
-                let webattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
-                
-                //attributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
-                
-                let emailattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
-                
-                let phoneattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.phonelinkText])
-                
-                if result!.resultType == .link {
-                    
-                    if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
-                        self.subject!.attributedText = emailattributedText
-                    } else {
-                        self.subject!.attributedText = webattributedText
-                    }
-                    
-                } else if result?.resultType == .phoneNumber {
-                    
-                    self.subject!.attributedText = phoneattributedText
-                }
-            }
         }
-//--------------------------------------------------
         
-        if (self.formStatus == "New") {
+        if (self.formStatus! == "New") {
             self.placeholderlabel!.text = "Share an idea?"
             self.Like!.tintColor = .white
             
@@ -145,24 +135,28 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.Like!.setImage(likeimage, for: UIControlState())
         self.Like!.setTitleColor(.white, for: UIControlState())
         
-        self.myDatePicker!.isHidden = false
-        self.myDatePicker!.datePickerMode = UIDatePickerMode.date
-        self.myDatePicker!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-      //self.myDatePicker!.setValue(UIColor.white(), forKeyPath: "textColor")
-        self.myDatePicker!.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
-
-        self.characterCountLabel!.text = ""
-        self.characterCountLabel!.textColor = .gray
         
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        //---------inline DatePicker---------------
+        
+        let itemOne = [kTitleKey : "Tap a cell to change its date:"]
+        let itemTwo = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
+        let itemThree = [kTitleKey : "Name", kDateKey : self.postby]
+        //let itemFour = [kTitleKey : "End Date", kDateKey : Date()] as [String : Any]
+        //let itemFive = [kTitleKey : "(other item2)"]
+        dataArray = [itemOne as Dictionary<String, AnyObject>, itemTwo as Dictionary<String, AnyObject>, itemThree as Dictionary<String, AnyObject>]
+        
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(localeChanged(_:)), name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        /*
+         self.myDatePicker!.isHidden = false
+         self.myDatePicker!.datePickerMode = UIDatePickerMode.date
+         self.myDatePicker!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+         //self.myDatePicker!.setValue(UIColor.white(), forKeyPath: "textColor")
+         self.myDatePicker!.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+         */
+        //--------------------------------------
  
     }
     
@@ -172,25 +166,17 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     }
     
     
-    // MARK: - DatePicker
-    
-    func datePickerValueChanged(sender: UIDatePicker) {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.timeZone = TimeZone.current
-        let strDate = dateFormatter.string(from: (myDatePicker?.date)!)
-        self.msgDate = strDate
-        self.tableView!.reloadData()
-    }
-    
     // MARK: - textView delegate
     
     func textViewDidBeginEditing(_ textView:UITextView) {
-        
+ 
         if subject!.text.isEmpty {
             self.placeholderlabel?.isHidden = true
         }
+        //fix done button dont work
+        let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneBarButtonItemClicked))
+        
+        navigationItem.setRightBarButton(doneBarButtonItem, animated: true)
     }
     
     func textViewDidEndEditing(_ textView:UITextView) {
@@ -199,7 +185,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
          self.placeholderlabel?.isHidden = false
         }
     }
-    
     
     // MARK: Characters Limit
     
@@ -217,33 +202,92 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         return newLength < CharacterLimit
     }
     
+    // MARK: TextView configure
     
-    // MARK: - Table View
+    func configureTextView() {
+        
+        subject?.delegate = self
+        subject?.dataDetectorTypes = UIDataDetectorTypes.all
+        self.characterCountLabel!.text = ""
+        self.characterCountLabel!.textColor = .gray
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.subject!.font = ipadsubject
+        } else {
+            self.subject!.font = Font.Blog.cellsubject
+        }
+        
+        if ((self.formStatus == "None") || (self.formStatus == "Reply")) {
+            let text = self.textcontentsubject!
+            let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
+            let detector = try? NSDataDetector(types: types.rawValue)
+            detector?.enumerateMatches(in: text, options: [], range: NSMakeRange(0, (text as NSString).length)) { (result, flags, _) in
+                
+                let webattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
+                
+                //attributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
+                
+                let emailattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
+                
+                let phoneattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
+                
+                if result!.resultType == .link {
+                    
+                    if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
+                        self.subject!.attributedText = emailattributedText
+                    } else {
+                        self.subject!.attributedText = webattributedText
+                    }
+                    
+                } else if result?.resultType == .phoneNumber {
+                    
+                    self.subject!.attributedText = phoneattributedText
+                }
+            }
+        }
+    }
+    
+    
+    // MARK: - TableView
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        
+        if hasInlineDatePicker() {
+            // we have a date picker, so allow for it in the number of rows in this section
+            return dataArray.count + 1
+        }
+        return dataArray.count
+        //return 2
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
+        var cell: UITableViewCell?
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        var cellID = kOtherCellID
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel!.font = ipadtitle
-            cell.detailTextLabel!.font = ipadtitle
-            
-        } else {
-            cell.textLabel!.font = Font.Blog.cellsubtitle
-            cell.detailTextLabel!.font = Font.Blog.cellsubtitle
+        if indexPathHasPicker(indexPath) {
+            // the indexPath is the one containing the inline date picker
+            cellID = kDatePickerCellID     // the current/opened date picker cell
+        } else if indexPathHasDate(indexPath) {
+            // the indexPath is one that contains the date information
+            cellID = kDateCellID       // the start/end date cells
         }
         
-        if (indexPath.row == 0) {
+        cell = tableView.dequeueReusableCell(withIdentifier: cellID)
+        
+        var modelRow = (indexPath as NSIndexPath).row
+        if (datePickerIndexPath != nil && ((datePickerIndexPath as NSIndexPath?)?.row)! <= (indexPath as NSIndexPath).row) {
+            modelRow -= 1
+        }
+        
+        let itemData = dataArray[modelRow]
+        
+        if (indexPath as NSIndexPath).row == 0 {
             
             self.activeImage = UIImageView(frame:CGRect(x: tableView.frame.size.width-35, y: 10, width: 18, height: 22))
             self.activeImage!.contentMode = .scaleAspectFill
@@ -258,21 +302,178 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 self.Like!.setTitle(" Likes \(liked!)", for: UIControlState.normal)
                 self.activeImage!.image = UIImage(named:"iosStar.png")
             }
+            cell?.textLabel?.text = "Crap"
+            cell?.contentView.addSubview(self.activeImage!)
+            cell?.selectionStyle = .none
+
+        }
+
+        if cellID == kDateCellID {
             
-            cell.textLabel!.text = self.postby
-            cell.detailTextLabel!.text = ""
-            cell.contentView.addSubview(self.activeImage!)
+            cell?.textLabel?.text = itemData[kTitleKey] as? String
+            cell?.detailTextLabel?.text = self.dateFormatter.string(from: itemData[kDateKey] as! Date)
             
-        } else if (indexPath.row == 1) {
+        } else if cellID == kOtherCellID {
             
-            cell.textLabel!.text = self.msgDate
-            cell.detailTextLabel!.text = "Date"
-            
+            cell?.textLabel!.text = "Name"
+            cell?.detailTextLabel?.text = itemData[kDateKey] as? String
+
         }
         
-        return cell
+        
+        return cell!
+    }
+
+//------------------------------------------------------------------
+    // MARK: - Inline Pickdate
+
+    func localeChanged(_ notif: Notification) {
+
+        self.tableView?.reloadData()
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        let cell = tableView.cellForRow(at: indexPath)
+        if cell?.reuseIdentifier == kDateCellID {
+            displayInlineDatePickerForRowAtIndexPath(indexPath)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
+        return (indexPathHasPicker(indexPath) ? pickerCellRowHeight : tableView.rowHeight)
+    }
+    
+    func hasInlineDatePicker() -> Bool {
+        return datePickerIndexPath != nil
+    }
+    
+    func indexPathHasPicker(_ indexPath: IndexPath) -> Bool {
+        return hasInlineDatePicker() && (datePickerIndexPath as NSIndexPath?)?.row == (indexPath as NSIndexPath).row
+    }
+    
+    func indexPathHasDate(_ indexPath: IndexPath) -> Bool {
+        var hasDate = false
+        
+        if ((indexPath as NSIndexPath).row == kDateStartRow) || ((indexPath as NSIndexPath).row == kDateEndRow || (hasInlineDatePicker() && ((indexPath as NSIndexPath).row == kDateEndRow + 1))) {
+            hasDate = true
+        }
+        return hasDate
+    }
+    
+    func displayInlineDatePickerForRowAtIndexPath(_ indexPath: IndexPath) {
+
+        self.tableView?.beginUpdates()
+        
+        var before = false // indicates if the date picker is below "indexPath", help us determine which row to reveal
+        if hasInlineDatePicker() {
+            before = ((datePickerIndexPath as NSIndexPath?)?.row)! < (indexPath as NSIndexPath).row
+        }
+        
+        let sameCellClicked = ((datePickerIndexPath as NSIndexPath?)?.row == (indexPath as NSIndexPath).row + 1)
+        
+        // remove any date picker cell if it exists
+        if self.hasInlineDatePicker() {
+            self.tableView?.deleteRows(at: [IndexPath(row: (datePickerIndexPath! as NSIndexPath).row, section: 0)], with: .fade)
+            datePickerIndexPath = nil
+        }
+        
+        if !sameCellClicked {
+            // hide the old date picker and display the new one
+            let rowToReveal = (before ? (indexPath as NSIndexPath).row - 1 : (indexPath as NSIndexPath).row)
+            let indexPathToReveal = IndexPath(row: rowToReveal, section: 0)
+            
+            toggleDatePickerForSelectedIndexPath(indexPathToReveal)
+            datePickerIndexPath = IndexPath(row: (indexPathToReveal as NSIndexPath).row + 1, section: 0)
+        }
+
+        self.tableView?.deselectRow(at: indexPath, animated:true)
+        
+        self.tableView?.endUpdates()
+        
+        updateDatePicker()
+    }
+    
+    func toggleDatePickerForSelectedIndexPath(_ indexPath: IndexPath) {
+        
+        self.tableView?.beginUpdates()
+        
+        let indexPaths = [IndexPath(row: (indexPath as NSIndexPath).row + 1, section: 0)]
+
+        if hasPickerForIndexPath(indexPath) {
+        
+            self.tableView?.deleteRows(at: indexPaths, with: .fade)
+        } else {
+        
+            self.tableView?.insertRows(at: indexPaths, with: .fade)
+        }
+        self.tableView?.endUpdates()
+    }
+    
+    func updateDatePicker() {
+        if let indexPath = datePickerIndexPath {
+            let associatedDatePickerCell = self.tableView?.cellForRow(at: indexPath)
+            if let targetedDatePicker = associatedDatePickerCell?.viewWithTag(kDatePickerTag) as! UIDatePicker? {
+                let itemData = dataArray[(self.datePickerIndexPath! as NSIndexPath).row - 1]
+                targetedDatePicker.setDate(itemData[kDateKey] as! Date, animated: false)
+            }
+        }
+    }
+    
+    func hasPickerForIndexPath(_ indexPath: IndexPath) -> Bool {
+        var hasDatePicker = false
+        
+        let targetedRow = (indexPath as NSIndexPath).row + 1
+        
+        let checkDatePickerCell = self.tableView?.cellForRow(at: IndexPath(row: targetedRow, section: 0))
+        let checkDatePicker = checkDatePickerCell?.viewWithTag(kDatePickerTag)
+        
+        hasDatePicker = checkDatePicker != nil
+        return hasDatePicker
+    }
+    
+    
+    @IBAction func dateAction(_ sender: UIDatePicker) {
+        
+        var targetedCellIndexPath: IndexPath?
+        
+        if self.hasInlineDatePicker() {
+            // inline date picker: update the cell's date "above" the date picker cell
+            //
+            targetedCellIndexPath = IndexPath(row: (datePickerIndexPath! as NSIndexPath).row - 1, section: 0)
+        } else {
+            // external date picker: update the current "selected" cell's date
+            targetedCellIndexPath = self.tableView?.indexPathForSelectedRow!
+        }
+        
+        let cell = self.tableView?.cellForRow(at: targetedCellIndexPath!)
+        let targetedDatePicker = sender
+        
+        // update our data model
+        var itemData = dataArray[(targetedCellIndexPath! as NSIndexPath).row]
+        itemData[kDateKey] = targetedDatePicker.date as AnyObject?
+        dataArray[(targetedCellIndexPath! as NSIndexPath).row] = itemData
+        
+        // update the cell's date string
+        cell?.detailTextLabel?.text = dateFormatter.string(from: targetedDatePicker.date)
+        
+    }
+//--------------------------------------------------------
+    // MARK: - DatePicker
+    /*
+     func datePickerValueChanged(sender: UIDatePicker) {
+     
+     let dateFormatter = DateFormatter()
+     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+     dateFormatter.timeZone = TimeZone.current
+     let strDate = dateFormatter.string(from: (myDatePicker?.date)!)
+     self.msgDate = strDate
+     self.tableView!.reloadData()
+     } */
+//---------------------------------------------------------
     
     // MARK: - Parse
     
@@ -289,10 +490,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                     }
                 }
             }
-        }
+        } 
 
     }
-    
     
     // MARK: - Update Buttons
     
@@ -308,15 +508,22 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.tableView!.reloadData()
     }
     
+    func doneBarButtonItemClicked() {
+        // Dismiss the keyboard by removing it as the first responder.
+        self.subject?.resignFirstResponder()
+        
+        navigationItem.setRightBarButton(nil, animated: true)
+    }
+    
     // MARK: - Notification
     
     func newBlogNotification() {
         
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
-            content.title = "\(self.postby) said:"
-            content.subtitle = "\(self.postby) said:"
-            content.body = "New Blog Posted at TheLight"
+            content.title = "Blog Post"
+            //content.subtitle = "\(self.postby!) said:"
+            content.body = "New Blog Posted by \(self.postby!) at TheLight"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound.default()
             content.categoryIdentifier = "status"
@@ -329,7 +536,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             
             let localNotification: UILocalNotification = UILocalNotification()
             localNotification.alertAction = "Blog Post"
-            localNotification.alertBody = "New Blog Posted by \(self.postby) at TheLight"
+            localNotification.alertBody = "New Blog Posted by \(self.postby!) at TheLight"
             localNotification.fireDate = Date(timeIntervalSinceNow: 10)
             localNotification.timeZone = TimeZone.current
             localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1

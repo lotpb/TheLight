@@ -141,8 +141,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
     
     // MARK: - Segue
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?)
-    {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         if segue.identifier == "uploadSegue"
         {
             let photo = segue.destination as? UploadController

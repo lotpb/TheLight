@@ -322,7 +322,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 return cell
                 
             } else if ((indexPath as NSIndexPath).row == 1) {
-                
+                /*
                 let date1 = (_feedItems.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
@@ -334,7 +334,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String
                 cell.collectionView.backgroundColor = .clear
-                
+                */
                 return cell
             }
             
@@ -348,7 +348,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 return cell
             } else if ((indexPath as NSIndexPath).row == 1) {
-                
+                /*
                 let date1 = (_feedItems6.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
@@ -360,7 +360,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 cell.snapdetailLabel?.text = (_feedItems6.firstObject as AnyObject).value(forKey: "Subject") as? String
                 cell.collectionView.backgroundColor = .clear
-                
+                */
                 return cell
             }
             
@@ -460,7 +460,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.collectionView.backgroundColor = .clear
                 
                 let localNotification = UILocalNotification()
-                if (UIApplication.shared.scheduledLocalNotifications!.count == 0) {
+                if (UIApplication.shared.currentUserNotificationSettings?.categories!.count == 0) {
                     cell.snapdetailLabel?.text = "You have no pending notifications :)"
                 } else {
                     cell.snaptitleLabel?.text = localNotification.fireDate?.description
@@ -791,7 +791,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 self.selectedEmail = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsDetail") as? String
                 self.selectedPhone = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "storyText") as? String
                 self.imageDetailurl = self.imageFile.url
-                self.selectedDate = ((self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
+                self.selectedDate = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as? Date
                 
                 self.performSegue(withIdentifier: "snapuploadSegue", sender:self)
                 }
@@ -819,7 +819,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 self.selectedEmail = (self._feedItems3[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "email") as? String
                 self.selectedPhone = (self._feedItems3[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "phone") as? String
                 
-                let updated:Date = ((self._feedItems3[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "createdAt") as? Date)!
+                let updated:Date = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as! Date
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMM dd, yyyy"
                 let createString = dateFormatter.string(from: updated)
@@ -890,7 +890,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
     }
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "snapuploadSegue" {
             

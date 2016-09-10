@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 import UserNotifications
-import Firebase
+//import Firebase
 import FBSDKCoreKit
 import GoogleSignIn
 
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - Firebase
         
-         FIRApp.configure()
+         //FIRApp.configure()
         
         // MARK: - Parse
         
@@ -66,25 +66,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // MARK: - RegisterUserNotification
         
         if #available(iOS 10.0, *) {
+            
             let center = UNUserNotificationCenter.current()
-            center.requestAuthorization(options: [.sound, .alert, .badge]) {
-                (granted, error) in
-                // We can register for remote notifications here too!
+            center.requestAuthorization(options: [.sound, .alert, .badge]) { (granted, error) in
+                if granted == true {
+                    print("Allow Authorization")
+                    UIApplication.shared.registerForRemoteNotifications()
+                } else {
+                    print("Don't Allow Authorization")
+                }
             }
-            
-            
-            /*
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge], completionHandler: { granted, error in
-                if granted {
-                    print("使用者同意了，每天都能收到來自米花兒的幸福訊息")
-                }
-                else {
-                    print("使用者不同意，不喜歡米花兒，哭哭!")
-                }
-                
-            }) */
-            
         } else {
+            
             let mySettings = UIUserNotificationSettings(types:[.badge, .sound, .alert], categories: nil)
             UIApplication.shared.registerUserNotificationSettings(mySettings)
         }
@@ -95,13 +88,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // MARK: - Background Fetch
         
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
-        
-        // MARK: - ApplicationIconBadgeNumber
-        
-        let notification = launchOptions?[UIApplicationLaunchOptionsKey.localNotification] as! UILocalNotification!
-        if (notification != nil) {
-            notification?.applicationIconBadgeNumber = 0
-        }
 
         
         // MARK: - Register login
@@ -134,13 +120,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return true
     }
     
-    /*
-    func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
-        
-        application.applicationIconBadgeNumber = 0
-        
-    } */
+    @available(iOS 10.0, *)
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: () -> Void) {
+        debugPrint("opened")
+        completionHandler()
+        //application.applicationIconBadgeNumber = 0
+    }
     
+
+    /*
+    private func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        application.applicationIconBadgeNumber = 0
+    } */
+
     
     // MARK: - Google/Facebook
     /*
@@ -166,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "Background transfer service download!"
-            content.subtitle = "米花兒"
+            //content.subtitle = "米花兒"
             content.body = "Background transfer service: Download complete!"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
@@ -269,13 +263,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
 
 }
-
+/*
 extension AppDelegate: UNUserNotificationCenterDelegate {
     
-    @available(iOS 10.0, *)
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.badge, .sound, .alert])
-    }
     
     @available(iOS 10.0, *)
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler:  @escaping () -> Void) {
@@ -287,7 +277,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         completionHandler()
     }
-}
+} */
 
 // MARK: CLLocationManagerDelegate - Beacons
 extension AppDelegate: CLLocationManagerDelegate {

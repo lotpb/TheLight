@@ -257,7 +257,6 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     // MARK: - Segues
 
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         imageObject = _feedItems.object(at: indexPath.row) as! PFObject
@@ -293,7 +292,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         }
     }
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "newsdetailSeque"
         {

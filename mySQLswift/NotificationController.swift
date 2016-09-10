@@ -98,7 +98,7 @@ class NotificationController: UIViewController {
             } */
             
             content.title = "Membership Status"
-            content.subtitle = "米花兒"
+            //content.subtitle = "米花兒"
             content.body = "Our system has detected that your membership is inactive."
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
@@ -106,7 +106,7 @@ class NotificationController: UIViewController {
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            UNUserNotificationCenter .current().add(request, withCompletionHandler: nil)
             
         } else {
         
@@ -147,45 +147,19 @@ class NotificationController: UIViewController {
      func memberNotification() {
       
         if #available(iOS 10.0, *) {
-            
-            let center = UNUserNotificationCenter.current()
-            
-            center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-                if granted {
-                    let content = UNMutableNotificationContent()
-                    content.title = "Hello"
-                    content.body = "Body goes here"
-                    content.sound = UNNotificationSound.default()
-                    
-                    // create a 10-second delay for our alert
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-                    
-                    // the identifier lets you cancel the alert later if needed
-                    let request = UNNotificationRequest(identifier: "MyAlert", content: content, trigger: trigger)
-                    
-                    // schedule the alert to run
-                    center.add(request)
-                }
-            }
-            
-            
-            /*
-            
+
             let content = UNMutableNotificationContent()
             content.title = "Membership Status"
-            content.subtitle = "米花兒"
+            //content.subtitle = "米花兒"
             content.body = "Our system has detected that your membership is inactive."
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
-            //content.categoryIdentifier = "status"
+            content.categoryIdentifier = "status"
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
-            
-            let center = UNUserNotificationCenter.current()
-            center.add(request)
 
-            //UNUserNotificationCenter.current().add(request, withCompletionHandler: nil) */
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
         } else {
             
@@ -209,8 +183,8 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "Blog Post"
-            content.subtitle = "米花兒"
-            content.body = "New Blog Posted at TheLight"
+            content.subtitle = "New blog message posted"
+            content.body = "TheLight just posted a new message"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
@@ -237,12 +211,19 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "be awesome!"
-            content.subtitle = "米花兒"
+            //content.subtitle = "米花兒"
             content.body = "Hey you! Yeah you! Swipe to unlock!"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
-            
+            /*
+            if let attachment = try? UNNotificationAttachment(
+                identifier: "asteroid-id-123-photo",
+                url: asteroidImageURL
+                ) {
+                content.attachments.append(attachment)
+            } */
+
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "heyYou-id-123", content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
@@ -266,8 +247,8 @@ class NotificationController: UIViewController {
         
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
-            content.title = "TheLight!"
-            content.subtitle = "米花兒"
+            content.title = "Promo Sale"
+            //content.subtitle = "米花兒"
             content.body = "Forget Something? Come back and SAVE 15% with Promo Code MYCART"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")

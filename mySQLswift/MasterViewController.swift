@@ -89,8 +89,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
      // MARK: - Login
  
-        let userId:String = defaults.string(forKey: "usernameKey")!
-        let userpassword:String = defaults.string(forKey: "passwordKey")!
+        let userId:String = defaults.object(forKey: "usernameKey") as! String!
+        let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
         
         //Keychain
         /*
@@ -533,7 +533,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
     
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
     }
 

@@ -144,7 +144,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", "\(self.formController)", "Form"), for: UIControlState())
+        titleButton.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -365,7 +365,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             cell?.layer.addSublayer(topBorder)
             cell?.layer.masksToBounds = true
 
-            cell?.leadtitleDetail!.text = "\(self.formController) News: \(self.lnewsTitle)"
+            cell?.leadtitleDetail!.text = "\(self.formController!) News: \(self.lnewsTitle!)"
             cell?.leadtitleDetail!.numberOfLines = 0
             cell?.leadtitleDetail!.textColor = .black
             
@@ -377,17 +377,17 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 
             } else {
                 
-                let dateStr = date!
+                let dateStr = self.date
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd"
                 
-                let date1 = dateFormatter.date(from: dateStr)
+                let date1 = dateFormatter.date(from: dateStr!)
                 let date2 = Date()
                 let calendar = Calendar.current
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day
-                    cell?.leadsubtitleDetail.text = "Comments, \(daysCount) days ago"
+                    cell?.leadsubtitleDetail.text = "Comments, \(daysCount!) days ago"
                 }
             }
             
@@ -949,7 +949,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             
             guard matchingContacts.isEmpty else {
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "There can only be one\n \(nameStr)", message: "Name already exists", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Name already exists", message: "There can only be one\n \(nameStr)", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
@@ -1005,7 +1005,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     // MARK: - Segue
     
-    func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "showmapSegue" {
             

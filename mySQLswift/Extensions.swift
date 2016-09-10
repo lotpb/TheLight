@@ -29,7 +29,7 @@ import UIKit
             static let buttonColor = UIColor.red
             static let weblinkText = Color.BlueColor
             static let emaillinkText = UIColor.red
-            static let phonelinkText = Color.DGreenColor
+            static let phonelinkText = UIColor.green
         }
         enum Lead {
             static let navColor = UIColor.black //UIColor(red: 0.01, green: 0.48, blue: 1.0, alpha: 1.0)

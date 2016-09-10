@@ -102,7 +102,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return (UIApplication.shared.scheduledLocalNotifications!.count)
+        return (UIApplication.shared.currentUserNotificationSettings?.categories!.count)!
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -124,7 +124,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         }
         
         
-        if (UIApplication.shared.scheduledLocalNotifications!.count == 0) {
+        if (UIApplication.shared.currentUserNotificationSettings?.categories!.count == 0) {
             
             cell.textLabel!.text = "You have no pending Notifications :)"
             cell.detailTextLabel!.text = "You have no pending Notifications :)"
