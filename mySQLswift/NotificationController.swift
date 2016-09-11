@@ -156,6 +156,11 @@ class NotificationController: UIViewController {
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
             
+            let imageURL = Bundle.main.url(forResource: "map", withExtension: "png")
+            let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
+            content.attachments = [attachment]
+            content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
+            
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
 
@@ -189,6 +194,11 @@ class NotificationController: UIViewController {
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
             
+            let imageURL = Bundle.main.url(forResource: "comments", withExtension: "png")
+            let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
+            content.attachments = [attachment]
+            content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
+            
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "newBlog-id-123", content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
@@ -216,13 +226,11 @@ class NotificationController: UIViewController {
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
-            /*
-            if let attachment = try? UNNotificationAttachment(
-                identifier: "asteroid-id-123-photo",
-                url: asteroidImageURL
-                ) {
-                content.attachments.append(attachment)
-            } */
+            
+            let imageURL = Bundle.main.url(forResource: "news", withExtension: "png")
+            let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
+            content.attachments = [attachment]
+            content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
 
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "heyYou-id-123", content: content, trigger: trigger)
@@ -251,8 +259,13 @@ class NotificationController: UIViewController {
             //content.subtitle = "米花兒"
             content.body = "Forget Something? Come back and SAVE 15% with Promo Code MYCART"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
-            content.sound = UNNotificationSound(named: "Tornado.caf")
+            content.sound = UNNotificationSound(named: "Tornado")
             content.categoryIdentifier = "status"
+            
+            let imageURL = Bundle.main.url(forResource: "calender", withExtension: "png")
+            let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
+            content.attachments = [attachment]
+            content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "promo-id-123", content: content, trigger: trigger)

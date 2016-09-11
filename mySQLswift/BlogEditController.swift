@@ -47,7 +47,6 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     var rating : String?
     var replyId : String?
     var liked : Int?
-    //var activityViewController:UIActivityViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -9,6 +9,25 @@
 import UIKit
 import Parse
 import UserNotifications
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
+}
+
+fileprivate func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l <= r
+    default:
+        return !(rhs < lhs)
+    }
+}
 
 
 class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate {
@@ -56,8 +75,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     // keep track of which rows have date cells
     let kDateStartRow = 1
-    let kDateEndRow   = 3
+    let kDateEndRow   = 1
     
+    let kTitleCellID      = "titleCell"
     let kDateCellID       = "dateCell" // the cells with the start or end date
     let kDatePickerCellID = "datePickerCell"
     let kOtherCellID      = "otherCell"
@@ -138,11 +158,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         //---------inline DatePicker---------------
         
-        let itemOne = [kTitleKey : "Tap a cell to change its date:"]
+        let itemOne = [kTitleKey : "Tap a cell to change its date:", kDateKey : ""]
         let itemTwo = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         let itemThree = [kTitleKey : "Name", kDateKey : self.postby]
-        //let itemFour = [kTitleKey : "End Date", kDateKey : Date()] as [String : Any]
-        //let itemFive = [kTitleKey : "(other item2)"]
+        //let itemFour = [kTitleKey : "Active", kDateKey : ""]
+ 
         dataArray = [itemOne as Dictionary<String, AnyObject>, itemTwo as Dictionary<String, AnyObject>, itemThree as Dictionary<String, AnyObject>]
         
         dateFormatter.dateStyle = .medium
@@ -257,18 +277,18 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if hasInlineDatePicker() {
-            // we have a date picker, so allow for it in the number of rows in this section
+  
             return dataArray.count + 1
         }
         return dataArray.count
-        //return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         var cell: UITableViewCell?
         
-        var cellID = kOtherCellID
+        var cellID = kTitleCellID
+      //var cellID = kOtherCellID
         
         if indexPathHasPicker(indexPath) {
             // the indexPath is the one containing the inline date picker
@@ -279,13 +299,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         }
         
         cell = tableView.dequeueReusableCell(withIdentifier: cellID)
-        
-        var modelRow = (indexPath as NSIndexPath).row
-        if (datePickerIndexPath != nil && ((datePickerIndexPath as NSIndexPath?)?.row)! <= (indexPath as NSIndexPath).row) {
-            modelRow -= 1
-        }
-        
-        let itemData = dataArray[modelRow]
         
         if (indexPath as NSIndexPath).row == 0 {
             
@@ -302,25 +315,34 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 self.Like!.setTitle(" Likes \(liked!)", for: UIControlState.normal)
                 self.activeImage!.image = UIImage(named:"iosStar.png")
             }
-            cell?.textLabel?.text = "Crap"
             cell?.contentView.addSubview(self.activeImage!)
             cell?.selectionStyle = .none
-
         }
+        
+        var modelRow = (indexPath as NSIndexPath).row
+        if (datePickerIndexPath != nil && ((datePickerIndexPath as NSIndexPath?)?.row)! <= (indexPath as NSIndexPath).row) {
+            modelRow -= 1
+        }
+        
+        let itemData = dataArray[modelRow]
 
         if cellID == kDateCellID {
             
             cell?.textLabel?.text = itemData[kTitleKey] as? String
             cell?.detailTextLabel?.text = self.dateFormatter.string(from: itemData[kDateKey] as! Date)
             
-        } else if cellID == kOtherCellID {
+        } else if cellID == kTitleCellID {
             
-            cell?.textLabel!.text = "Name"
-            cell?.detailTextLabel?.text = itemData[kDateKey] as? String
+            cell?.textLabel!.text = itemData[kTitleKey] as? String
+            cell?.detailTextLabel?.text = itemData[kDateKey] as! String?
+            cell?.selectionStyle = .none
+            
+        } else if cellID == kOtherCellID {
 
+            cell?.textLabel!.text = itemData[kTitleKey] as? String
+            cell?.detailTextLabel?.text = itemData[kDateKey] as! String?
+            
         }
-        
-        
         return cell!
     }
 
@@ -494,7 +516,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
 
     }
     
-    // MARK: - Update Buttons
+    // MARK: - Buttons
     
     @IBAction func like(sender:UIButton) {
 
@@ -548,6 +570,17 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     @IBAction func saveData(sender: UIButton) {
         
+        guard let text = self.subject?.text else { return }
+        
+        if text == "" {
+            
+            let alert = UIAlertController(title: "Oops!", message: "No text entered.", preferredStyle: .alert)
+            let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(okayAction)
+            self.present(alert, animated: true, completion: nil)
+            
+        } else {
+        
         if (self.formStatus == "None") {
             
             let query = PFQuery(className:"Blog")
@@ -573,35 +606,36 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             
         } else if (self.formStatus == "New") {
             
-            let saveblog:PFObject = PFObject(className:"Blog")
-            saveblog.setObject(self.msgDate!, forKey:"MsgDate")
-            saveblog.setObject(self.postby!, forKey:"PostBy")
-            saveblog.setObject(self.rating!, forKey:"Rating")
-            saveblog.setObject(self.subject!.text, forKey:"Subject")
-            saveblog.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
-            saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
-            saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
-            
-            if self.formStatus == "Reply" {
-                let query = PFQuery(className:"Blog")
-                query.whereKey("objectId", equalTo:self.replyId!)
-                query.getFirstObjectInBackground {(updateReply: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateReply!.incrementKey("CommentCount")
-                        updateReply!.saveEventually()
+                let saveblog:PFObject = PFObject(className:"Blog")
+                saveblog.setObject(self.msgDate!, forKey:"MsgDate")
+                saveblog.setObject(self.postby!, forKey:"PostBy")
+                saveblog.setObject(self.rating!, forKey:"Rating")
+                saveblog.setObject(self.subject!.text, forKey:"Subject")
+                saveblog.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
+                saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
+                saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
+                
+                if self.formStatus == "Reply" {
+                    let query = PFQuery(className:"Blog")
+                    query.whereKey("objectId", equalTo:self.replyId!)
+                    query.getFirstObjectInBackground {(updateReply: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateReply!.incrementKey("CommentCount")
+                            updateReply!.saveEventually()
+                        }
                     }
                 }
-            }
-            
-            saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                if success == true {
-                    self.newBlogNotification()
-                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
-                    self.show(vc!, sender: self)
-                    
-                    self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                } else {
-                    self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                
+                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    if success == true {
+                        self.newBlogNotification()
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
+                        self.show(vc!, sender: self)
+                        
+                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                    } else {
+                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                    }
                 }
             }
         }

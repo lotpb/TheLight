@@ -84,6 +84,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         application.applicationIconBadgeNumber = 0
         
+        UNUserNotificationCenter.current().delegate = self
+        
+        let likeAction = UNNotificationAction(identifier: "like", title: "好感動", options: [.foreground])
+        let dislikeAction = UNNotificationAction(identifier: "dislike", title: "沒感覺", options: [])
+        let category = UNNotificationCategory(identifier: "luckyMessage", actions: [likeAction, dislikeAction], intentIdentifiers: [], options: [])
+        UNUserNotificationCenter.current().setNotificationCategories([category])
+        
         
         // MARK: - Background Fetch
         
@@ -119,21 +126,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         return true
     }
-    
-    @available(iOS 10.0, *)
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: () -> Void) {
-        debugPrint("opened")
-        completionHandler()
-        //application.applicationIconBadgeNumber = 0
-    }
-    
-
-    /*
-    private func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        application.applicationIconBadgeNumber = 0
-    } */
 
     
     // MARK: - Google/Facebook
@@ -263,11 +255,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
 
 }
-/*
 extension AppDelegate: UNUserNotificationCenterDelegate {
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.badge, .sound, .alert])
+    }
     
-    @available(iOS 10.0, *)
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler:  @escaping () -> Void) {
         
         let content = response.notification.request.content
@@ -277,7 +270,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         completionHandler()
     }
-} */
+}
 
 // MARK: CLLocationManagerDelegate - Beacons
 extension AppDelegate: CLLocationManagerDelegate {
