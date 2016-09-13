@@ -125,7 +125,9 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             parseLookup()
         }
         
-        profileImageView!.layer.cornerRadius = profileImageView!.frame.size.width/2
+        profileImageView!.layer.cornerRadius = 32.0
+        profileImageView!.layer.borderColor = Color.Blog.borderbtnColor
+        profileImageView!.layer.borderWidth = 2.0
         profileImageView!.layer.masksToBounds = true
         
     }

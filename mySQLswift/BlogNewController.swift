@@ -9,25 +9,6 @@
 import UIKit
 import Parse
 import UserNotifications
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-    switch (lhs, rhs) {
-    case let (l?, r?):
-        return l < r
-    case (nil, _?):
-        return true
-    default:
-        return false
-    }
-}
-
-fileprivate func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-    switch (lhs, rhs) {
-    case let (l?, r?):
-        return l <= r
-    default:
-        return !(rhs < lhs)
-    }
-}
 
 
 class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate {
@@ -65,9 +46,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     var formStatus : String?
     var activeImage : UIImageView? //star
     
-    //------inlineDatePicker---------
+//------inlineDatePicker---------
     
-    let kPickerAnimationDuration = 0.40 // duration for the animation to slide the date picker into view
+    let kPickerAnimationDuration = 0.40 // duration for the animation to slide the date picker
     let kDatePickerTag           = 99   // view tag identifiying the date picker view
     
     let kTitleKey = "title" // key for obtaining the data source item's title
@@ -80,7 +61,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     let kTitleCellID      = "titleCell"
     let kDateCellID       = "dateCell" // the cells with the start or end date
     let kDatePickerCellID = "datePickerCell"
-    let kOtherCellID      = "otherCell"
     
     var dataArray: [[String: AnyObject]] = []
     var dateFormatter = DateFormatter()
@@ -155,14 +135,18 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.Like!.setImage(likeimage, for: UIControlState())
         self.Like!.setTitleColor(.white, for: UIControlState())
         
-        
         //---------inline DatePicker---------------
+        /*
+        if ((self.formStatus == "None")) {
+            let inlineDate = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
+        } else {
+            let inlineDate = [kTitleKey : "Date", kDateKey : self.textcontentdate]
+        } */
         
         let itemOne = [kTitleKey : "Tap a cell to change its date:", kDateKey : ""]
         let itemTwo = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         let itemThree = [kTitleKey : "Name", kDateKey : self.postby]
         //let itemFour = [kTitleKey : "Active", kDateKey : ""]
- 
         dataArray = [itemOne as Dictionary<String, AnyObject>, itemTwo as Dictionary<String, AnyObject>, itemThree as Dictionary<String, AnyObject>]
         
         dateFormatter.dateStyle = .medium
@@ -193,7 +177,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         if subject!.text.isEmpty {
             self.placeholderlabel?.isHidden = true
         }
-        //fix done button dont work
+        
         let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneBarButtonItemClicked))
         
         navigationItem.setRightBarButton(doneBarButtonItem, animated: true)
@@ -288,7 +272,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         var cell: UITableViewCell?
         
         var cellID = kTitleCellID
-      //var cellID = kOtherCellID
         
         if indexPathHasPicker(indexPath) {
             // the indexPath is the one containing the inline date picker
@@ -337,12 +320,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             cell?.detailTextLabel?.text = itemData[kDateKey] as! String?
             cell?.selectionStyle = .none
             
-        } else if cellID == kOtherCellID {
-
-            cell?.textLabel!.text = itemData[kTitleKey] as? String
-            cell?.detailTextLabel?.text = itemData[kDateKey] as! String?
-            
         }
+        
         return cell!
     }
 
@@ -574,10 +553,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         if text == "" {
             
-            let alert = UIAlertController(title: "Oops!", message: "No text entered.", preferredStyle: .alert)
-            let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alert.addAction(okayAction)
-            self.present(alert, animated: true, completion: nil)
+            self.simpleAlert(title: "Oops!", message: "No text entered.")
             
         } else {
         

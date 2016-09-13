@@ -18,7 +18,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var travelTime: UILabel!
     @IBOutlet weak var travelDistance: UILabel!
-    @IBOutlet weak var steps: UITextView!
+    @IBOutlet weak var stepView: UITextView!
     @IBOutlet weak var clearRoute: UIButton!
     @IBOutlet weak var routView: UIView!
     @IBOutlet weak var mapTypeSegmentedControl: UISegmentedControl!
@@ -30,7 +30,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     var mapzip : NSString?
     
     var route: MKRoute!
-    var allSteps : NSString?
+    var allSteps : String?
     
     var locationManager: CLLocationManager!
     var annotationPoint: MKPointAnnotation!
@@ -39,17 +39,17 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.stepView.font = cellsteps
+        self.stepView.isSelectable = false
+        
         self.allSteps = ""
         self.travelTime.text = ""
         self.travelDistance.text = ""
-        
         self.travelTime.font = celllabel1
-        self.travelDistance.font = celllabel1
-        self.steps.font = cellsteps
-        
-        self.routView.backgroundColor = Color.DGrayColor
         self.travelTime.textColor = .white
         self.travelDistance.textColor = .white
+        self.travelDistance.font = celllabel1
+        self.routView.backgroundColor = Color.DGrayColor
         
         self.clearRoute!.backgroundColor = .white
         self.clearRoute!.setTitleColor(Color.DGrayColor, for: UIControlState())
@@ -122,7 +122,6 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         self.mapView.showsPointsOfInterest = true
         self.mapView.showsCompass = true
         self.mapView.showsScale = true
-        //self.mapView.showsTraffic = true
         //self.mapView.showsBuildings = true
         
         let location: String = String(format: "%@ %@ %@ %@", self.mapaddress!, self.mapcity!, self.mapstate!, self.mapzip!)
@@ -150,7 +149,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
                 
                 let request = MKDirectionsRequest()
                 
-                request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: self.locationManager.location!.coordinate.latitude, longitude: self.locationManager.location!.coordinate.longitude), addressDictionary: nil))
+                request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!), addressDictionary: nil))
                 
                 request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude), addressDictionary: nil))
                 
@@ -178,34 +177,33 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     // MARK: - Routes
     
     func showRoute(_ response: MKDirectionsResponse) {
-        /*
+        
         let temp:MKRoute = response.routes.first! as MKRoute
         self.route = temp
         self.travelTime.text = String(format:"Time: %0.1f minutes", route.expectedTravelTime/60) as String
         self.travelDistance.text = String(format:"Distance: %0.1f Miles", route.distance/1609.344) as String
         self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
         
-        
         for i in 0 ..< self.route.steps.count {
             
             let step:MKRouteStep = self.route.steps[i] as MKRouteStep
-            let newStep:NSString = (step.instructions as? NSString)!
-            let distStep:NSString = String(format:"%0.2f miles", step.distance/1609.344) as NSString
-            self.allSteps = self.allSteps!.appending( "\(i+1). ")
-            self.allSteps = self.allSteps!.appending(newStep as NSString) as (String)
-            self.allSteps = self.allSteps!.appending(distStep as NSString)
-            self.allSteps = self.allSteps!.appending("\n\n")
-            self.steps.text = self.allSteps as! String
+            let newStep = (step.instructions)
+            let distStep = String(format:"%0.2f miles", step.distance/1609.344)
+            self.allSteps = self.allSteps!.appending( "\(i+1). ") as String?
+            self.allSteps = self.allSteps!.appending(newStep) as String?
+            self.allSteps = self.allSteps!.appending("\n") as String?
+            self.allSteps = self.allSteps!.appending(distStep) as String?
+            self.allSteps = self.allSteps!.appending("\n\n") as String?
+            self.stepView.text = self.allSteps
         }
         
-        /*
          if mapView.overlays.count == 1 {
          mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
          } else {
          let polylineBoundingRect =  MKMapRectUnion(mapView.visibleMapRect, route.polyline.boundingMapRect)
          mapView.setVisibleMapRect(polylineBoundingRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
-         } */
- */
+         }
+ 
     }
     
     // MARK: - Map Annotation
@@ -265,16 +263,16 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     
     // MARK: - Button
     
-    func trafficBtnTapped() {
-        //if mapView.showsTraffic == mapView.showsTraffic {
+    func trafficBtnTapped(_ sender: AnyObject) {
+ 
         mapView.showsTraffic = !mapView.showsTraffic
         
         /*
         if mapView.showsTraffic == mapView.showsTraffic {
             sender.setTitle("Hide Traffic", for: UIControlState.normal)
         } else {
-            sender.setTitle("Hide Traffic", for: UIControlState.normal)
-        } */
+            sender.setTitle("Show Traffic", for: UIControlState.normal)
+        }*/
     }
     
     func scaleBtnTapped() {
@@ -292,7 +290,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     }
     
     func compassBtnTapped() {
-        
+        //displayInFlyoverMode()
         mapView.showsCompass = !mapView.showsCompass
     }
     
@@ -314,16 +312,42 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     
     func requestsAlternateRoutesBtnTapped() {
         
-        //mapView.requestsAlternateRoutes = !mapView.requestsAlternateRoutes
-
+        let request = MKDirectionsRequest()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 40.7127, longitude: -74.0059), addressDictionary: nil))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.783333, longitude: -122.416667), addressDictionary: nil))
+        request.requestsAlternateRoutes = true
+        request.transportType = .automobile
+        
+        let directions = MKDirections(request: request)
+        
+        directions.calculate { [unowned self] response, error in
+            guard let unwrappedResponse = response else { return }
+            
+            for route in unwrappedResponse.routes {
+                self.mapView.add(route.polyline)
+                self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+            }
+        }
     }
     
-    func shareButton() {
+    func displayInFlyoverMode() {
         
-        let alertController = UIAlertController(title:"Map Options", message:"", preferredStyle: .actionSheet)
+        mapView.mapType = .satelliteFlyover
+        mapView.showsBuildings = true
+        let location = CLLocationCoordinate2D(latitude: 51.50722, longitude: -0.12750)
+        let altitude: CLLocationDistance  = 500
+        let heading: CLLocationDirection = 90
+        let pitch = CGFloat(45)
+        let camera = MKMapCamera(lookingAtCenter: location, fromDistance: altitude, pitch: pitch, heading: heading)
+        mapView.setCamera(camera, animated: true)
+    }
+    
+    func shareButton(_ sender: AnyObject) {
+        
+        let alertController = UIAlertController(title:"", message:"", preferredStyle: .actionSheet)
         
         let buttonOne = UIAlertAction(title: "Show Traffic", style: .default, handler: { (action) -> Void in
-            self.trafficBtnTapped()
+            self.trafficBtnTapped(self)
         })
         let buttonTwo = UIAlertAction(title: "Show Scale", style: .default, handler: { (action) -> Void in
             self.scaleBtnTapped()
@@ -343,6 +367,10 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         let buttonSeven = UIAlertAction(title: "Alternate Routes", style: .default, handler: { (action) -> Void in
             self.requestsAlternateRoutesBtnTapped()
         })
+        let buttonEight = UIAlertAction(title: "Show Flyover", style: .default, handler: { (action) -> Void in
+            self.displayInFlyoverMode()
+        })
+
         let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
         }
         
@@ -353,11 +381,12 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         alertController.addAction(buttonFive)
         alertController.addAction(buttonSix)
         alertController.addAction(buttonSeven)
+        alertController.addAction(buttonEight)
         alertController.addAction(buttonCancel)
-        /*
+        
         if let popoverController = alertController.popoverPresentationController {
             popoverController.barButtonItem = sender as? UIBarButtonItem
-        } */
+        }
         self.present(alertController, animated: true, completion: nil)
     }
 

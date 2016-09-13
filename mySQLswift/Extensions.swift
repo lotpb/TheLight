@@ -6,6 +6,8 @@
 //  Copyright © 2016 Peter Balsamo. All rights reserved.
 //
 
+// MARK:, // TODO: and // FIXME:
+
 //import Foundation
 import UIKit
 
@@ -133,6 +135,7 @@ public extension String {
 public extension UIViewController {
     
     func simpleAlert (title:String, message:String) {
+ 
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
@@ -210,43 +213,6 @@ func requestSuggestionsURL(text: String) -> URL {
     let url = URL.init(string: "https://api.bing.com/osjson.aspx?query=\(netText)")!
     return url
 }
-
-/*
-extension UIImageView {
-    
-    func loadImageUsingCacheWithUrlString(urlString: String) {
-        
-        self.image = nil
-        
-        //check cache for image first
-        if let cachedImage = imageCache.object(forKey: urlString) as? UIImage {
-            self.image = cachedImage
-            return
-        }
-        
-        //otherwise fire off a new download
-        let url = URL(string: urlString)
-        URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
-            
-            //download hit an error so lets return out
-            if error != nil {
-                print(error)
-                return
-            }
-            
-            DispatchQueue.main.async(execute: {
-                
-                if let downloadedImage = UIImage(data: data!) {
-                    imageCache.setObject(downloadedImage, forKey: urlString)
-                    
-                    self.image = downloadedImage
-                }
-            })
-            
-        }).resume()
-    }
-    
-} */
  
 //----------------------------
 

@@ -111,7 +111,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         self.present(alert, animated: true, completion: nil)
     }
    
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
+    private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
         if (navigationAction.navigationType == WKNavigationType.linkActivated && !(navigationAction.request as NSURLRequest).url!.host!.lowercased().hasPrefix("www.drudgereport.com")) {
             
           //UIApplication.shared.openURL(navigationAction.request.url!)

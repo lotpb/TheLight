@@ -894,7 +894,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             newContact.phoneNumbers = [homephone1, homephone2, homephone3]
 
             let homeEmail = CNLabeledValue(label: CNLabelHome, value: self.tbl21!)
-            //let workEmail = CNLabeledValue(label: CNLabelWork,value: "liam@workemail.com")
+          //let workEmail = CNLabeledValue(label: CNLabelWork,value: "liam@workemail.com")
             newContact.emailAddresses = [homeEmail]
             
             var birthday = DateComponents()
@@ -949,9 +949,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             
             guard matchingContacts.isEmpty else {
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Name already exists", message: "There can only be one\n \(nameStr)", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
+                    self.simpleAlert(title: "Name already exists", message: "There can only be one\n \(nameStr)")
                 }
                 return
             }
@@ -972,34 +970,33 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
     }
     
-    
      // FIXME:
     
     func getBirthday() {
-        /*
+        
         let store = CNContactStore()
         
-        //This line retrieves all contacts for the current name and gets the birthday and name properties
-        
-        let contacts:[CNContact] = try! store.unifiedContacts(matching: CNContact.predicateForContacts(matchingName: "\(self.name!)"), keysToFetch:[CNContactBirthdayKey as CNKeyDescriptor, CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
-        
-        //Get the first contact in the array of contacts (since you're only looking for 1 you don't need to loop through the contacts)
-        
-        var contact = contacts[0]
-        if (contact = 0) {
-
-            if ((contact.birthday as NSDateComponents?)?.date as Date!) != nil {
-                let dateFormatter = DateFormatter()
-                //dateFormatter.timeZone = TimeZone(name: "UTC")
-                dateFormatter.dateFormat = "MMM-dd-yyyy"
-                let stringDate = dateFormatter.string(from: (contact.birthday! as NSDateComponents).date!)
-                
-                self.simpleAlert(title: "\(self.name!) Birthday", message: stringDate)
-            } else {
-                self.simpleAlert(title: "Info", message: "No Birthdays")
-            }
+        let nameStr: String
+        if (formController == "Leads") || (formController == "Customer") {
+            nameStr = "\(self.tbl13!) \(self.name!)"
+        } else {
+            nameStr = "\(self.name!)"
         }
-      */
+
+        let contacts:[CNContact] = try! store.unifiedContacts(matching: CNContact.predicateForContacts(matchingName: nameStr), keysToFetch:[CNContactBirthdayKey as CNKeyDescriptor, CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
+
+        let contact = contacts[0]
+        if ((contact.birthday as NSDateComponents?)?.date as Date!) != nil {
+           
+            let formatter = DateFormatter()
+            formatter.timeZone = NSTimeZone(name: "UTC") as TimeZone!
+            formatter.dateFormat = "MMM-dd-yyyy"
+            let stringDate = formatter.string(from: contact.birthday!.date!)
+
+            self.simpleAlert(title: "\(nameStr) Birthday", message: stringDate)
+        } else {
+            self.simpleAlert(title: "Info", message: "No Birthdays for \(nameStr) ")
+        }
     }
     
     

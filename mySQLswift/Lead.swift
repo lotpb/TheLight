@@ -96,8 +96,6 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK:, // TODO: and // FIXME:
-    
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
@@ -230,7 +228,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         }
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        myLabel.backgroundColor = Color.Lead.labelColor //UIColor(red: 0.02, green: 0.36, blue: 0.53, alpha: 1.0)
+        myLabel.backgroundColor = Color.Lead.labelColor
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
