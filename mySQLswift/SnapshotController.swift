@@ -460,7 +460,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.collectionView.backgroundColor = .clear
                 
                 let localNotification = UILocalNotification()
-                if (UIApplication.shared.currentUserNotificationSettings?.categories!.count == 0) {
+                if UIApplication.shared.applicationState == .active {
                     cell.snapdetailLabel?.text = "You have no pending notifications :)"
                 } else {
                     cell.snaptitleLabel?.text = localNotification.fireDate?.description

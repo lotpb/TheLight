@@ -58,6 +58,7 @@ PODS:
     - GoogleSymbolUtilities (~> 1.0)
   - Parse (1.14.2):
     - Bolts/Tasks (~> 1.8)
+  - SwiftKeychainWrapper (2.0.0)
 
 DEPENDENCIES:
   - Firebase
@@ -66,6 +67,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - Google/SignIn
   - Parse
+  - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
@@ -85,7 +87,8 @@ SPEC CHECKSUMS:
   GoogleSymbolUtilities: 33117db1b5f290c6fbf259585e4885b4c84b98d7
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
+  SwiftKeychainWrapper: 3575838215fa36c816899c301a7afe370bd94814
 
-PODFILE CHECKSUM: 1f8b2a1d7cde9868facf5959c8142f732b2e687f
+PODFILE CHECKSUM: 3615044dab322b1104bedbf1f12eb8b35dddb6f0
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.0.beta.2

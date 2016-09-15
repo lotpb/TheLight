@@ -372,179 +372,187 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     func updateData() {
         
-        if (self.formController == "Salesman") {
+        guard let textSales = self.salesman.text else { return }
+        
+        if textSales == "" {
             
-            if (self.formStatus == "Edit") { //Edit Salesman
+            self.simpleAlert(title: "Oops!", message: "No text entered.")
+            
+        } else {
+            
+            if (self.formController == "Salesman") {
                 
-                let query = PFQuery(className:"Salesman")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"SalesNo")
-                        updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Salesman")
-                        updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
-                        updateblog!.saveEventually()
-                        self.tableView!.reloadData()
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                if (self.formStatus == "Edit") { //Edit Salesman
+                    
+                    let query = PFQuery(className:"Salesman")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"SalesNo")
+                            updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Salesman")
+                            updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
+                            updateblog!.saveEventually()
+                            self.tableView!.reloadData()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                    
+                } else { //Save Salesman
+                    
+                    let saveblog:PFObject = PFObject(className:"Salesman")
+                    saveblog.setObject("-1" , forKey:"SalesNo")
+                    saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Salesman")
+                    saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
                     }
                 }
                 
-            } else { //Save Salesman
+            } else  if (formController == "Jobs") {
                 
-                let saveblog:PFObject = PFObject(className:"Salesman")
-                saveblog.setObject("-1" , forKey:"SalesNo")
-                saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Salesman")
-                saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                if (self.formStatus == "Edit") { //Edit Job
+                    
+                    let query = PFQuery(className:"Job")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"JobNo")
+                            updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Description")
+                            updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
+                            updateblog!.saveEventually()
+                            self.tableView!.reloadData()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                    
+                } else { //Save Job
+                    
+                    let saveblog:PFObject = PFObject(className:"Job")
+                    
+                    saveblog.setObject("-1" , forKey:"JobNo")
+                    saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Description")
+                    saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
                     }
                 }
+                
+            } else  if (self.formController == "Product") {
+                
+                let numberFormatter = NumberFormatter()
+                let myPrice : NSNumber = numberFormatter.number(from: self.price.text!)!
+                
+                if (self.formStatus == "Edit") { //Edit Products
+                    
+                    let query = PFQuery(className:"Product")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(myPrice , forKey:"Price")
+                            updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"ProductNo")
+                            updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Products")
+                            updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
+                            updateblog!.saveEventually()
+                            self.tableView!.reloadData()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                    
+                } else { //Save Products
+                    
+                    let saveblog:PFObject = PFObject(className:"Product")
+                    saveblog.setObject(myPrice , forKey:"Price")
+                    saveblog.setObject("-1" , forKey:"ProductNo")
+                    saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Products")
+                    saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                }
+                
+            } else if (self.formController == "Advertising") {
+                
+                if (self.formStatus == "Edit") { //Edit Advertising
+                    
+                    let query = PFQuery(className:"Advertising")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"AdNo")
+                            updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Advertiser")
+                            updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
+                            updateblog!.saveEventually()
+                            self.tableView!.reloadData()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                    
+                } else { //Save Advertising
+                    
+                    let saveblog:PFObject = PFObject(className:"Advertising")
+                    saveblog.setObject("-1" , forKey:"AdNo")
+                    saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Advertiser")
+                    saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                }
+                
             }
-            
-        } else  if (formController == "Jobs") {
-            
-            if (self.formStatus == "Edit") { //Edit Job
-                
-                let query = PFQuery(className:"Job")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"JobNo")
-                        updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Description")
-                        updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
-                        updateblog!.saveEventually()
-                        self.tableView!.reloadData()
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    }
-                }
-    
-            } else { //Save Job
-                
-                let saveblog:PFObject = PFObject(className:"Job")
-
-                saveblog.setObject("-1" , forKey:"JobNo")
-                saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Description")
-                saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    }
-                }
-            }
-            
-        } else  if (self.formController == "Product") {
-            
-            let numberFormatter = NumberFormatter()
-            let myPrice : NSNumber = numberFormatter.number(from: self.price.text!)!
-            
-            if (self.formStatus == "Edit") { //Edit Products
-                
-                let query = PFQuery(className:"Product")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(myPrice , forKey:"Price")
-                        updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"ProductNo")
-                        updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Products")
-                        updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
-                        updateblog!.saveEventually()
-                        self.tableView!.reloadData()
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    }
-                }
-                
-            } else { //Save Products
-                
-                let saveblog:PFObject = PFObject(className:"Product")
-                saveblog.setObject(myPrice , forKey:"Price")
-                saveblog.setObject("-1" , forKey:"ProductNo")
-                saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Products")
-                saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    }
-                }
-            }
-            
-        } else if (self.formController == "Advertising") {
-            
-            if (self.formStatus == "Edit") { //Edit Advertising
-                
-                let query = PFQuery(className:"Advertising")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"AdNo")
-                        updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Advertiser")
-                        updateblog!.setObject(self.active ?? NSNull(), forKey:"Active")
-                        updateblog!.saveEventually()
-                        self.tableView!.reloadData()
-                        
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    }
-                }
-                
-            } else { //Save Advertising
-                
-                let saveblog:PFObject = PFObject(className:"Advertising")
-                saveblog.setObject("-1" , forKey:"AdNo")
-                saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Advertiser")
-                saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
- 
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    }
-                }
-            }
-            
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeId")
+            self.show(vc!, sender: self)
         }
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeId")
-        self.show(vc!, sender: self)
     }
-    
 }

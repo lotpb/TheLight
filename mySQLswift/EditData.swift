@@ -982,384 +982,395 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func updateData() {
         
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .none
+        guard let textFirst = self.first.text else { return }
+        guard let textLast = self.last.text else { return }
+        guard let textComp = self.company.text else { return }
         
-        if (self.formController == "Leads") {
-    
-            let myActive : NSNumber = numberFormatter.number(from: (self.frm30 as? String)!)!
+        if textFirst == "" &&  textLast == "" && textComp == "" {
             
-            var Lead = self.leadNo
-            if Lead == nil { Lead = "" }
-            let myLead = numberFormatter.number(from: Lead! as String)
+            self.simpleAlert(title: "Oops!", message: "No text entered.")
             
-            var Amount = self.amount.text
-            if Amount == nil { Amount = "" }
-            let myAmount = numberFormatter.number(from: Amount!)
+        } else {
             
-            var Zip = self.zip.text
-            if Zip == nil { Zip = "" }
-            let myZip = numberFormatter.number(from: Zip!)
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = .none
             
-            var Sale = self.saleNo
-            if Sale == nil { Sale = "" }
-            let mySale = numberFormatter.number(from: Sale! as String)
-            
-            var Job = self.jobNo
-            if Job == nil { Job = "" }
-            let myJob = numberFormatter.number(from: Job! as String)
-            
-            var Ad = self.adNo
-            if Ad == nil { Ad = "" }
-            let myAd = numberFormatter.number(from: Ad! as String)
-
-            if (self.status == "Edit") { //Edit Lead
+            if (self.formController == "Leads") {
                 
-                let query = PFQuery(className:"Leads")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
-                        updateblog!.setObject(myActive , forKey:"Active")
-                        updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Date")
-                        updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
-                        updateblog!.setObject(self.last.text ?? NSNull(), forKey:"LastName")
-                        updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                        updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
-                        updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
-                        updateblog!.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
-                        updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
-                        updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"AptDate")
-                        updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                        updateblog!.setObject(myAmount ?? NSNumber(value:-1), forKey:"Amount")
-                        updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
-                        updateblog!.setObject(self.callback.text ?? NSNull(), forKey:"CallBack")
-                        updateblog!.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
-                        updateblog!.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
-                        updateblog!.setObject(myAd ?? NSNumber(value:-1), forKey:"AdNo")
-                        updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Coments")
-                        //updateblog!.setObject(self.photo.text ?? NSNull(), forKey:"Photo")
-                        updateblog!.saveEventually()
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                let myActive : NSNumber = numberFormatter.number(from: (self.frm30 as? String)!)!
+                
+                var Lead = self.leadNo
+                if Lead == nil { Lead = "" }
+                let myLead = numberFormatter.number(from: Lead! as String)
+                
+                var Amount = self.amount.text
+                if Amount == nil { Amount = "" }
+                let myAmount = numberFormatter.number(from: Amount!)
+                
+                var Zip = self.zip.text
+                if Zip == nil { Zip = "" }
+                let myZip = numberFormatter.number(from: Zip!)
+                
+                var Sale = self.saleNo
+                if Sale == nil { Sale = "" }
+                let mySale = numberFormatter.number(from: Sale! as String)
+                
+                var Job = self.jobNo
+                if Job == nil { Job = "" }
+                let myJob = numberFormatter.number(from: Job! as String)
+                
+                var Ad = self.adNo
+                if Ad == nil { Ad = "" }
+                let myAd = numberFormatter.number(from: Ad! as String)
+                
+                if (self.status == "Edit") { //Edit Lead
+                    
+                    let query = PFQuery(className:"Leads")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
+                            updateblog!.setObject(myActive , forKey:"Active")
+                            updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Date")
+                            updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
+                            updateblog!.setObject(self.last.text ?? NSNull(), forKey:"LastName")
+                            updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                            updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
+                            updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
+                            updateblog!.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
+                            updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
+                            updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"AptDate")
+                            updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                            updateblog!.setObject(myAmount ?? NSNumber(value:-1), forKey:"Amount")
+                            updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
+                            updateblog!.setObject(self.callback.text ?? NSNull(), forKey:"CallBack")
+                            updateblog!.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
+                            updateblog!.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
+                            updateblog!.setObject(myAd ?? NSNumber(value:-1), forKey:"AdNo")
+                            updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Coments")
+                            //updateblog!.setObject(self.photo.text ?? NSNull(), forKey:"Photo")
+                            updateblog!.saveEventually()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
+                    }
+                    
+                } else { //Save Lead
+                    
+                    let saveblog:PFObject = PFObject(className:"Leads")
+                    saveblog.setObject(self.leadNo ?? NSNumber(value:-1), forKey:"LeadNo")
+                    saveblog.setObject(myActive , forKey:"Active")
+                    saveblog.setObject(self.date.text ?? NSNull(), forKey:"Date")
+                    saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
+                    saveblog.setObject(self.last.text ?? NSNull(), forKey:"LastName")
+                    saveblog.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                    saveblog.setObject(self.city.text ?? NSNull(), forKey:"City")
+                    saveblog.setObject(self.state.text ?? NSNull(), forKey:"State")
+                    saveblog.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
+                    saveblog.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
+                    saveblog.setObject(self.aptDate.text ?? NSNull(), forKey:"AptDate")
+                    saveblog.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                    saveblog.setObject(myAmount ?? NSNumber(value:0), forKey:"Amount")
+                    saveblog.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
+                    saveblog.setObject(self.callback.text ?? NSNull(), forKey:"CallBack")
+                    saveblog.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
+                    saveblog.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
+                    saveblog.setObject(myAd ?? NSNumber(value:-1), forKey:"AdNo")
+                    saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Coments")
+                    saveblog.setObject(self.photo ?? NSNull(), forKey:"Photo")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
                     }
                 }
+            } else if (self.formController == "Customer") {
                 
-            } else { //Save Lead
+                let myActive : NSNumber = numberFormatter.number(from: self.frm30! as String)!
                 
-                let saveblog:PFObject = PFObject(className:"Leads")
-                saveblog.setObject(self.leadNo ?? NSNumber(value:-1), forKey:"LeadNo")
-                saveblog.setObject(myActive , forKey:"Active")
-                saveblog.setObject(self.date.text ?? NSNull(), forKey:"Date")
-                saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
-                saveblog.setObject(self.last.text ?? NSNull(), forKey:"LastName")
-                saveblog.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                saveblog.setObject(self.city.text ?? NSNull(), forKey:"City")
-                saveblog.setObject(self.state.text ?? NSNull(), forKey:"State")
-                saveblog.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
-                saveblog.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
-                saveblog.setObject(self.aptDate.text ?? NSNull(), forKey:"AptDate")
-                saveblog.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                saveblog.setObject(myAmount ?? NSNumber(value:0), forKey:"Amount")
-                saveblog.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
-                saveblog.setObject(self.callback.text ?? NSNull(), forKey:"CallBack")
-                saveblog.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
-                saveblog.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
-                saveblog.setObject(myAd ?? NSNumber(value:-1), forKey:"AdNo")
-                saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Coments")
-                saveblog.setObject(self.photo ?? NSNull(), forKey:"Photo")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                var Cust = self.custNo
+                if Cust == nil { Cust = "" }
+                let myCust = numberFormatter.number(from: Cust! as String)
+                
+                var Lead = self.leadNo
+                if Lead == nil { Lead = "" }
+                let myLead = numberFormatter.number(from: Lead! as String)
+                
+                var Amount = (self.amount.text)
+                if Amount == nil { Amount = "" }
+                let myAmount =  numberFormatter.number(from: Amount!)
+                
+                var Zip = self.zip.text
+                if Zip == nil { Zip = "" }
+                let myZip = numberFormatter.number(from: Zip!)
+                
+                var Sale = self.saleNo
+                if Sale == nil { Sale = "" }
+                let mySale = numberFormatter.number(from: Sale! as String)
+                
+                var Job = self.jobNo
+                if Job == nil { Job = "" }
+                let myJob = numberFormatter.number(from: Job! as String)
+                
+                var Ad = self.adNo
+                if Ad == nil { Ad = "" }
+                let myAd = numberFormatter.number(from: Ad! as String)
+                
+                var Quan = self.callback.text
+                if Quan == nil { Quan = "" }
+                let myQuan = numberFormatter.number(from: Quan! as String)
+                
+                if (self.status == "Edit") { //Edit Customer
+                    
+                    let query = PFQuery(className:"Customer")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(myCust ?? NSNumber(value:-1), forKey:"CustNo")
+                            updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
+                            updateblog!.setObject(myActive , forKey:"Active")
+                            updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Date")
+                            updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
+                            updateblog!.setObject(self.last.text ?? NSNull(), forKey:"LastName")
+                            updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                            updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
+                            updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
+                            updateblog!.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
+                            updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
+                            updateblog!.setObject(myQuan ?? NSNumber(value:-1), forKey:"Quan")
+                            updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                            updateblog!.setObject(myAmount ?? NSNumber(value:-1), forKey:"Amount")
+                            updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
+                            updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"Rate")
+                            updateblog!.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
+                            updateblog!.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
+                            updateblog!.setObject(myAd ?? NSNumber(value:-1), forKey:"ProductNo")
+                            updateblog!.setObject(self.start.text ?? NSNull(), forKey:"Start")
+                            updateblog!.setObject(self.complete.text ?? NSNull(), forKey:"Completion")
+                            updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
+                            updateblog!.setObject(self.company.text ?? NSNull(), forKey:"Contractor")
+                            updateblog!.setObject(self.photo ?? NSNull(), forKey:"Photo")
+                            updateblog!.setObject(self.photo1 ?? NSNull(), forKey:"Photo1")
+                            updateblog!.setObject(self.photo2 ?? NSNull(), forKey:"Photo2")
+                            updateblog!.setObject(self.time ?? NSNull(), forKey:"Time")
+                            updateblog!.saveEventually()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
+                    }
+                } else { //Save Customer
+                    
+                    let saveblog:PFObject = PFObject(className:"Customer")
+                    saveblog.setObject(myCust ?? NSNumber(value:-1), forKey:"CustNo")
+                    saveblog.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
+                    saveblog.setObject(myActive , forKey:"Active")
+                    saveblog.setObject(self.date.text ?? NSNull(), forKey:"Date")
+                    saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
+                    saveblog.setObject(self.last.text ?? NSNull(), forKey:"LastName")
+                    saveblog.setObject(self.company.text ?? NSNull(), forKey:"Contractor")
+                    saveblog.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                    saveblog.setObject(self.city.text ?? NSNull(), forKey:"City")
+                    saveblog.setObject(self.state.text ?? NSNull(), forKey:"State")
+                    saveblog.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
+                    saveblog.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
+                    saveblog.setObject(self.aptDate.text ?? NSNull(), forKey:"Rate")
+                    saveblog.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
+                    saveblog.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
+                    saveblog.setObject(myAd ?? NSNumber(value:-1), forKey:"ProductNo")
+                    saveblog.setObject(myAmount ?? NSNumber(value:0), forKey:"Amount")
+                    saveblog.setObject(myQuan ?? NSNumber(value:-1), forKey:"Quan")
+                    saveblog.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                    saveblog.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
+                    saveblog.setObject(self.callback.text ?? NSNull(), forKey:"CallBack")
+                    saveblog.setObject(self.start.text ?? NSNull(), forKey:"Start")
+                    saveblog.setObject(self.complete.text ?? NSNull(), forKey:"Completion")
+                    saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Comment")
+                    saveblog.setObject(NSNull(), forKey:"Photo")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                        } else {
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
+                    }
+                }
+            } else  if (self.formController == "Vendor") {
+                
+                var Active = (self.frm30)
+                if Active == nil { Active = "0" }
+                let myActive =  numberFormatter.number(from: Active! as String)
+                
+                var Lead = (self.leadNo)
+                if Lead == nil { Lead = "-1" }
+                let myLead =  numberFormatter.number(from: Lead! as String)
+                
+                if (self.status == "Edit") { //Edit Vendor
+                    
+                    let query = PFQuery(className:"Vendors")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(myLead!, forKey:"VendorNo")
+                            updateblog!.setObject(myActive!, forKey:"Active")
+                            updateblog!.setObject(self.first.text ?? NSNull(), forKey:"Vendor")
+                            updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                            updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
+                            updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
+                            updateblog!.setObject(self.zip.text ?? NSNull(), forKey:"Zip")
+                            updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
+                            updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Phone1")
+                            updateblog!.setObject(self.jobName.text ?? NSNull(), forKey:"Phone2")
+                            updateblog!.setObject(self.adName.text ?? NSNull(), forKey:"Phone3")
+                            updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                            updateblog!.setObject(self.last.text ?? NSNull(), forKey:"WebPage")
+                            updateblog!.setObject(self.amount.text ?? NSNull(), forKey:"Department")
+                            updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Office")
+                            updateblog!.setObject(self.company.text ?? NSNull(), forKey:"Manager")
+                            updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Profession")
+                            updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"Assistant")
+                            updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
+                            updateblog!.saveEventually()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
+                    }
+                } else { //Save Vendor
+                    
+                    let saveVend:PFObject = PFObject(className:"Vendors")
+                    saveVend.setObject(myLead!, forKey:"VendorNo")
+                    saveVend.setObject(myActive!, forKey:"Active")
+                    saveVend.setObject(self.first.text ?? NSNull(), forKey:"Vendor")
+                    saveVend.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                    saveVend.setObject(self.city.text ?? NSNull(), forKey:"City")
+                    saveVend.setObject(self.state.text ?? NSNull(), forKey:"State")
+                    saveVend.setObject(self.zip.text ?? NSNumber(value:-1), forKey:"Zip")
+                    saveVend.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
+                    saveVend.setObject(self.salesman.text ?? NSNull(), forKey:"Phone1")
+                    saveVend.setObject(self.jobName.text ?? NSNull(), forKey:"Phone2")
+                    saveVend.setObject(self.adName.text ?? NSNull(), forKey:"Phone3")
+                    saveVend.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                    saveVend.setObject(self.last.text ?? NSNull(), forKey:"WebPage")
+                    saveVend.setObject(self.amount.text ?? NSNull(), forKey:"Department")
+                    saveVend.setObject(self.spouse.text ?? NSNull(), forKey:"Office")
+                    saveVend.setObject(self.company.text ?? NSNull(), forKey:"Manager")
+                    saveVend.setObject(self.date.text ?? NSNull(), forKey:"Profession")
+                    saveVend.setObject(self.aptDate.text ?? NSNull(), forKey:"Assistant")
+                    saveVend.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveVend.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
+                    }
+                }
+            } else if (self.formController == "Employee") {
+                
+                var Active = (self.frm30)
+                if Active == nil { Active = "0" }
+                let myActive =  numberFormatter.number(from: Active! as String)
+                
+                var Lead = (self.leadNo)
+                if Lead == nil { Lead = "-1" }
+                let myLead =  numberFormatter.number(from: Lead!)
+                
+                if (self.status == "Edit") { //Edit Employee
+                    
+                    let query = PFQuery(className:"Employee")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                        if error == nil {
+                            updateblog!.setObject(myLead!, forKey:"EmployeeNo")
+                            updateblog!.setObject(myActive!, forKey:"Active")
+                            updateblog!.setObject(self.company.text ?? NSNull(), forKey:"Company")
+                            updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                            updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
+                            updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
+                            updateblog!.setObject(self.zip.text ?? NSNull(), forKey:"Zip")
+                            updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"HomePhone")
+                            updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"WorkPhone")
+                            updateblog!.setObject(self.jobName.text ?? NSNull(), forKey:"CellPhone")
+                            updateblog!.setObject(self.adName.text ?? NSNull(), forKey:"SS")
+                            updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                            updateblog!.setObject(self.last.text ?? NSNull(), forKey:"Last")
+                            updateblog!.setObject(self.amount.text ?? NSNull(), forKey:"Department")
+                            updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Country")
+                            updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
+                            updateblog!.setObject(self.callback.text ?? NSNull(), forKey:"Manager")
+                            updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Title")
+                            updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"Middle")
+                            updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
+                            updateblog!.saveEventually()
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
+                    }
+                } else { //Save Employee
+                    
+                    let saveblog:PFObject = PFObject(className:"Employee")
+                    saveblog.setObject(NSNumber(value:-1), forKey:"EmployeeNo")
+                    saveblog.setObject(NSNumber(value:1), forKey:"Active")
+                    saveblog.setObject(self.company.text ?? NSNull(), forKey:"Company")
+                    saveblog.setObject(self.address.text ?? NSNull(), forKey:"Address")
+                    saveblog.setObject(self.city.text ?? NSNull(), forKey:"City")
+                    saveblog.setObject(self.state.text ?? NSNull(), forKey:"State")
+                    saveblog.setObject(self.zip.text ?? NSNull(), forKey:"Zip")
+                    saveblog.setObject(self.phone.text ?? NSNull(), forKey:"HomePhone")
+                    saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"WorkPhone")
+                    saveblog.setObject(self.jobName.text ?? NSNull(), forKey:"CellPhone")
+                    saveblog.setObject(self.adName.text ?? NSNull(), forKey:"SS")
+                    saveblog.setObject(self.date.text ?? NSNull(), forKey:"Country")
+                    saveblog.setObject(self.email.text ?? NSNull(), forKey:"Email")
+                    saveblog.setObject(self.last.text ?? NSNull(), forKey:"Last")
+                    saveblog.setObject(self.amount.text ?? NSNull(), forKey:"Department")
+                    saveblog.setObject(self.aptDate.text ?? NSNull(), forKey:"Middle")
+                    saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
+                    saveblog.setObject(self.callback.text ?? NSNull(), forKey:"Manager")
+                    saveblog.setObject(self.spouse.text ?? NSNull(), forKey:"Title")
+                    saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
+                    //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
+                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        if success == true {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
+                        }
                     }
                 }
             }
-        } else if (self.formController == "Customer") {
-            
-            let myActive : NSNumber = numberFormatter.number(from: self.frm30! as String)!
-            
-            var Cust = self.custNo
-            if Cust == nil { Cust = "" }
-            let myCust = numberFormatter.number(from: Cust! as String)
-            
-            var Lead = self.leadNo
-            if Lead == nil { Lead = "" }
-            let myLead = numberFormatter.number(from: Lead! as String)
-            
-            var Amount = (self.amount.text)
-            if Amount == nil { Amount = "" }
-            let myAmount =  numberFormatter.number(from: Amount!)
-            
-            var Zip = self.zip.text
-            if Zip == nil { Zip = "" }
-            let myZip = numberFormatter.number(from: Zip!)
-            
-            var Sale = self.saleNo
-            if Sale == nil { Sale = "" }
-            let mySale = numberFormatter.number(from: Sale! as String)
-            
-            var Job = self.jobNo
-            if Job == nil { Job = "" }
-            let myJob = numberFormatter.number(from: Job! as String)
-            
-            var Ad = self.adNo
-            if Ad == nil { Ad = "" }
-            let myAd = numberFormatter.number(from: Ad! as String)
-            
-            var Quan = self.callback.text
-            if Quan == nil { Quan = "" }
-            let myQuan = numberFormatter.number(from: Quan! as String)
-            
-            if (self.status == "Edit") { //Edit Customer
-                
-                let query = PFQuery(className:"Customer")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(myCust ?? NSNumber(value:-1), forKey:"CustNo")
-                        updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
-                        updateblog!.setObject(myActive , forKey:"Active")
-                        updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Date")
-                        updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
-                        updateblog!.setObject(self.last.text ?? NSNull(), forKey:"LastName")
-                        updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                        updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
-                        updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
-                        updateblog!.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
-                        updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
-                        updateblog!.setObject(myQuan ?? NSNumber(value:-1), forKey:"Quan")
-                        updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                        updateblog!.setObject(myAmount ?? NSNumber(value:-1), forKey:"Amount")
-                        updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
-                        updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"Rate")
-                        updateblog!.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
-                        updateblog!.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
-                        updateblog!.setObject(myAd ?? NSNumber(value:-1), forKey:"ProductNo")
-                        updateblog!.setObject(self.start.text ?? NSNull(), forKey:"Start")
-                        updateblog!.setObject(self.complete.text ?? NSNull(), forKey:"Completion")
-                        updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
-                        updateblog!.setObject(self.company.text ?? NSNull(), forKey:"Contractor")
-                        updateblog!.setObject(self.photo ?? NSNull(), forKey:"Photo")
-                        updateblog!.setObject(self.photo1 ?? NSNull(), forKey:"Photo1")
-                        updateblog!.setObject(self.photo2 ?? NSNull(), forKey:"Photo2")
-                        updateblog!.setObject(self.time ?? NSNull(), forKey:"Time")
-                        updateblog!.saveEventually()
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
-                    }
-                }
-            } else { //Save Customer
-                
-                let saveblog:PFObject = PFObject(className:"Customer")
-                saveblog.setObject(myCust ?? NSNumber(value:-1), forKey:"CustNo")
-                saveblog.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
-                saveblog.setObject(myActive , forKey:"Active")
-                saveblog.setObject(self.date.text ?? NSNull(), forKey:"Date")
-                saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
-                saveblog.setObject(self.last.text ?? NSNull(), forKey:"LastName")
-                saveblog.setObject(self.company.text ?? NSNull(), forKey:"Contractor")
-                saveblog.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                saveblog.setObject(self.city.text ?? NSNull(), forKey:"City")
-                saveblog.setObject(self.state.text ?? NSNull(), forKey:"State")
-                saveblog.setObject(myZip ?? NSNumber(value:-1), forKey:"Zip")
-                saveblog.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
-                saveblog.setObject(self.aptDate.text ?? NSNull(), forKey:"Rate")
-                saveblog.setObject(mySale ?? NSNumber(value:-1), forKey:"SalesNo")
-                saveblog.setObject(myJob ?? NSNumber(value:-1), forKey:"JobNo")
-                saveblog.setObject(myAd ?? NSNumber(value:-1), forKey:"ProductNo")
-                saveblog.setObject(myAmount ?? NSNumber(value:0), forKey:"Amount")
-                saveblog.setObject(myQuan ?? NSNumber(value:-1), forKey:"Quan")
-                saveblog.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                saveblog.setObject(self.spouse.text ?? NSNull(), forKey:"Spouse")
-                saveblog.setObject(self.callback.text ?? NSNull(), forKey:"CallBack")
-                saveblog.setObject(self.start.text ?? NSNull(), forKey:"Start")
-                saveblog.setObject(self.complete.text ?? NSNull(), forKey:"Completion")
-                saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Comment")
-                saveblog.setObject(NSNull(), forKey:"Photo")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
- 
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                    } else {
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
-                    }
-                }
+            DispatchQueue.main.async {
+                let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeId")
+                self.show(vc!, sender: self)
             }
-        } else  if (self.formController == "Vendor") {
-            
-            var Active = (self.frm30)
-            if Active == nil { Active = "0" }
-            let myActive =  numberFormatter.number(from: Active! as String)
-            
-            var Lead = (self.leadNo)
-            if Lead == nil { Lead = "-1" }
-            let myLead =  numberFormatter.number(from: Lead! as String)
-            
-            if (self.status == "Edit") { //Edit Vendor
-                
-                let query = PFQuery(className:"Vendors")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(myLead!, forKey:"VendorNo")
-                        updateblog!.setObject(myActive!, forKey:"Active")
-                        updateblog!.setObject(self.first.text ?? NSNull(), forKey:"Vendor")
-                        updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                        updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
-                        updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
-                        updateblog!.setObject(self.zip.text ?? NSNull(), forKey:"Zip")
-                        updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
-                        updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Phone1")
-                        updateblog!.setObject(self.jobName.text ?? NSNull(), forKey:"Phone2")
-                        updateblog!.setObject(self.adName.text ?? NSNull(), forKey:"Phone3")
-                        updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                        updateblog!.setObject(self.last.text ?? NSNull(), forKey:"WebPage")
-                        updateblog!.setObject(self.amount.text ?? NSNull(), forKey:"Department")
-                        updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Office")
-                        updateblog!.setObject(self.company.text ?? NSNull(), forKey:"Manager")
-                        updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Profession")
-                        updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"Assistant")
-                        updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
-                        updateblog!.saveEventually()
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
-                    }
-                }
-            } else { //Save Vendor
-                
-                let saveVend:PFObject = PFObject(className:"Vendors")
-                saveVend.setObject(myLead!, forKey:"VendorNo")
-                saveVend.setObject(myActive!, forKey:"Active")
-                saveVend.setObject(self.first.text ?? NSNull(), forKey:"Vendor")
-                saveVend.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                saveVend.setObject(self.city.text ?? NSNull(), forKey:"City")
-                saveVend.setObject(self.state.text ?? NSNull(), forKey:"State")
-                saveVend.setObject(self.zip.text ?? NSNumber(value:-1), forKey:"Zip")
-                saveVend.setObject(self.phone.text ?? NSNull(), forKey:"Phone")
-                saveVend.setObject(self.salesman.text ?? NSNull(), forKey:"Phone1")
-                saveVend.setObject(self.jobName.text ?? NSNull(), forKey:"Phone2")
-                saveVend.setObject(self.adName.text ?? NSNull(), forKey:"Phone3")
-                saveVend.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                saveVend.setObject(self.last.text ?? NSNull(), forKey:"WebPage")
-                saveVend.setObject(self.amount.text ?? NSNull(), forKey:"Department")
-                saveVend.setObject(self.spouse.text ?? NSNull(), forKey:"Office")
-                saveVend.setObject(self.company.text ?? NSNull(), forKey:"Manager")
-                saveVend.setObject(self.date.text ?? NSNull(), forKey:"Profession")
-                saveVend.setObject(self.aptDate.text ?? NSNull(), forKey:"Assistant")
-                saveVend.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveVend.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
-                    }
-                }
-            }
-        } else if (self.formController == "Employee") {
-            
-            var Active = (self.frm30)
-            if Active == nil { Active = "0" }
-            let myActive =  numberFormatter.number(from: Active! as String)
-            
-            var Lead = (self.leadNo)
-            if Lead == nil { Lead = "-1" }
-            let myLead =  numberFormatter.number(from: Lead!)
-            
-            if (self.status == "Edit") { //Edit Employee
-                
-                let query = PFQuery(className:"Employee")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                    if error == nil {
-                        updateblog!.setObject(myLead!, forKey:"EmployeeNo")
-                        updateblog!.setObject(myActive!, forKey:"Active")
-                        updateblog!.setObject(self.company.text ?? NSNull(), forKey:"Company")
-                        updateblog!.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                        updateblog!.setObject(self.city.text ?? NSNull(), forKey:"City")
-                        updateblog!.setObject(self.state.text ?? NSNull(), forKey:"State")
-                        updateblog!.setObject(self.zip.text ?? NSNull(), forKey:"Zip")
-                        updateblog!.setObject(self.phone.text ?? NSNull(), forKey:"HomePhone")
-                        updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"WorkPhone")
-                        updateblog!.setObject(self.jobName.text ?? NSNull(), forKey:"CellPhone")
-                        updateblog!.setObject(self.adName.text ?? NSNull(), forKey:"SS")
-                        updateblog!.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                        updateblog!.setObject(self.last.text ?? NSNull(), forKey:"Last")
-                        updateblog!.setObject(self.amount.text ?? NSNull(), forKey:"Department")
-                        updateblog!.setObject(self.spouse.text ?? NSNull(), forKey:"Country")
-                        updateblog!.setObject(self.first.text ?? NSNull(), forKey:"First")
-                        updateblog!.setObject(self.callback.text ?? NSNull(), forKey:"Manager")
-                        updateblog!.setObject(self.date.text ?? NSNull(), forKey:"Title")
-                        updateblog!.setObject(self.aptDate.text ?? NSNull(), forKey:"Middle")
-                        updateblog!.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
-                        updateblog!.saveEventually()
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
-                    }
-                }
-            } else { //Save Employee
-                
-                let saveblog:PFObject = PFObject(className:"Employee")
-                saveblog.setObject(NSNumber(value:-1), forKey:"EmployeeNo")
-                saveblog.setObject(NSNumber(value:1), forKey:"Active")
-                saveblog.setObject(self.company.text ?? NSNull(), forKey:"Company")
-                saveblog.setObject(self.address.text ?? NSNull(), forKey:"Address")
-                saveblog.setObject(self.city.text ?? NSNull(), forKey:"City")
-                saveblog.setObject(self.state.text ?? NSNull(), forKey:"State")
-                saveblog.setObject(self.zip.text ?? NSNull(), forKey:"Zip")
-                saveblog.setObject(self.phone.text ?? NSNull(), forKey:"HomePhone")
-                saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"WorkPhone")
-                saveblog.setObject(self.jobName.text ?? NSNull(), forKey:"CellPhone")
-                saveblog.setObject(self.adName.text ?? NSNull(), forKey:"SS")
-                saveblog.setObject(self.date.text ?? NSNull(), forKey:"Country")
-                saveblog.setObject(self.email.text ?? NSNull(), forKey:"Email")
-                saveblog.setObject(self.last.text ?? NSNull(), forKey:"Last")
-                saveblog.setObject(self.amount.text ?? NSNull(), forKey:"Department")
-                saveblog.setObject(self.aptDate.text ?? NSNull(), forKey:"Middle")
-                saveblog.setObject(self.first.text ?? NSNull(), forKey:"First")
-                saveblog.setObject(self.callback.text ?? NSNull(), forKey:"Manager")
-                saveblog.setObject(self.spouse.text ?? NSNull(), forKey:"Title")
-                saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
-                //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
-                    if success == true {
-
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                        
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updating the data")
-                    }
-                }
-            }
-        }
-        DispatchQueue.main.async {
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeId")
-            self.show(vc!, sender: self)
         }
     }
 }

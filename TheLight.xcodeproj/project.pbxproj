@@ -70,7 +70,6 @@
 		AFD754F41C4FFEB200021F97 /* UploadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD754F31C4FFEB200021F97 /* UploadController.swift */; };
 		AFDFCBB91C3EA4EA00F02E7B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDFCBB81C3EA4EA00F02E7B /* MapView.swift */; };
 		AFE0CEFD1D3EAB5700D6D3F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AFE0CEFB1D3EAB5700D6D3F0 /* Main.storyboard */; };
-		AFE263851C17411D007BBB90 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE263841C17411D007BBB90 /* iAd.framework */; };
 		AFE263921C17418B007BBB90 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE263881C17418B007BBB90 /* CFNetwork.framework */; };
 		AFE263931C17418B007BBB90 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE263891C17418B007BBB90 /* CoreGraphics.framework */; };
 		AFE263941C17418B007BBB90 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFE2638A1C17418B007BBB90 /* CoreLocation.framework */; };
@@ -204,7 +203,6 @@
 		AFD754F31C4FFEB200021F97 /* UploadController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadController.swift; sourceTree = "<group>"; };
 		AFDFCBB81C3EA4EA00F02E7B /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AFE0CEFC1D3EAB5700D6D3F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		AFE263841C17411D007BBB90 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		AFE263881C17418B007BBB90 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		AFE263891C17418B007BBB90 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		AFE2638A1C17418B007BBB90 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -262,7 +260,6 @@
 				AF99CD161C2EF0F700F55E1D /* FBSDKShareKit.framework in Frameworks */,
 				AFE263931C17418B007BBB90 /* CoreGraphics.framework in Frameworks */,
 				AFE263941C17418B007BBB90 /* CoreLocation.framework in Frameworks */,
-				AFE263851C17411D007BBB90 /* iAd.framework in Frameworks */,
 				AFE263951C17418B007BBB90 /* MapKit.framework in Frameworks */,
 				AFE263961C17418B007BBB90 /* MessageUI.framework in Frameworks */,
 				AFE263971C17418B007BBB90 /* MobileCoreServices.framework in Frameworks */,
@@ -543,7 +540,6 @@
 				AFE2638F1C17418B007BBB90 /* Security.framework */,
 				AFE263901C17418B007BBB90 /* StoreKit.framework */,
 				AFE263911C17418B007BBB90 /* SystemConfiguration.framework */,
-				AFE263841C17411D007BBB90 /* iAd.framework */,
 			);
 			name = Framework;
 			sourceTree = "<group>";
@@ -721,7 +717,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		28B88D6B46557F3F2B25CC6F /* [CP] Embed Pods Frameworks */ = {

@@ -953,7 +953,9 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 }
                 return
             }
+            
 //---------------------------------
+            
             let saveRequest = CNSaveRequest()
             saveRequest.add(newContact, toContainerWithIdentifier: nil)
             let contactStore = CNContactStore()
@@ -961,13 +963,9 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             try contactStore.execute(saveRequest)
             
             self.simpleAlert(title: "Contact", message: "Contact successfully saved.")
-        }
-        catch {
-            
+        } catch {
             self.simpleAlert(title: "Contact", message: "Failed to add the contact.")
-            
         }
-        
     }
     
      // FIXME:

@@ -10,8 +10,7 @@ import UIKit
 import Parse
 import AVFoundation
 import FirebaseAnalytics
-//import SwiftKeychainWrapper
-//import iAd
+import SwiftKeychainWrapper
 //import EventKitUI
 
 class MasterViewController: UITableViewController, UISplitViewControllerDelegate, UISearchResultsUpdating {
@@ -78,14 +77,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             playSound()
         }
         
-        // MARK: - iAd
-        
-        if (defaults.bool(forKey: "iadKey"))  {
-            //canDisplayBannerAds = true
-        } else {
-            //canDisplayBannerAds = false
-        }
-        
         
      // MARK: - Login
  
@@ -93,13 +84,13 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
         
         //Keychain
-        /*
+        
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
         if KeychainWrapper.setString(userId, forKey: "usernameKey") && KeychainWrapper.setString(userpassword, forKey: "passwordKey") {
             print("Keychain successful")
         } else {
             print("Keychain failed")
-        } */
+        }
         
         //Parse
         

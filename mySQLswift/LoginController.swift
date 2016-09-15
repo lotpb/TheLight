@@ -13,6 +13,7 @@ import MapKit
 import LocalAuthentication
 import FBSDKLoginKit
 import GoogleSignIn
+import SwiftKeychainWrapper
 
 
 class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
@@ -71,8 +72,8 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
             
         } else {
             //Keychain
-            self.usernameField!.text = "Peter Balsamo" //KeychainWrapper.stringForKey("usernameKey")
-            self.passwordField!.text = "3911" //KeychainWrapper.stringForKey("passwordKey")
+            self.usernameField!.text = KeychainWrapper.stringForKey("usernameKey")
+            self.passwordField!.text = KeychainWrapper.stringForKey("passwordKey")
             self.reEnterPasswordField!.isHidden = true
             self.registerBtn!.isHidden = false
             self.forgotPassword!.isHidden = false

@@ -70,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             let center = UNUserNotificationCenter.current()
             center.requestAuthorization(options: [.sound, .alert, .badge]) { (granted, error) in
                 if granted == true {
-                    print("Allow Authorization")
+                    //print("Allow Authorization")
                     UIApplication.shared.registerForRemoteNotifications()
                 } else {
                     print("Don't Allow Authorization")
@@ -154,7 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             content.title = "Background transfer service download!"
             //content.subtitle = "米花兒"
             content.body = "Background transfer service: Download complete!"
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             //content.categoryIdentifier = "status"
 
@@ -178,8 +178,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
      // MARK: - Music Controller
     
-    private func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
-        //backgroundSessionCompletionHandler = completionHandler
+    internal func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        backgroundSessionCompletionHandler = completionHandler
     }
     
     // MARK:

@@ -109,18 +109,18 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         self.selectPic.layer.borderWidth = 2.0
         
         self.commentDetail.delegate = self
-        //self.commentDetail.textContainerInset = UIEdgeInsetsMake(0, -4, 0, 0)
-        self.commentDetail.isEditable = true //bug fix
-        //self.commentDetail.isEditable = false //bug fix
-        self.commentDetail.isSelectable = true
-        self.commentDetail.isEditable = false
         self.commentDetail.autocorrectionType = UITextAutocorrectionType.yes
         self.commentDetail.dataDetectorTypes = UIDataDetectorTypes.all
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        self.commentDetail.isScrollEnabled = true
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(UploadController.finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerViewController)
+        self.commentDetail.isScrollEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -153,7 +153,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     @IBAction func selectImage(_ sender: AnyObject) {
         
         imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .savedPhotosAlbum
+        imagePicker.sourceType = .photoLibrary //.savedPhotosAlbum
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: imagePicker.sourceType)!  
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
@@ -202,8 +202,8 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     
     func finishedPlaying(_ myNotification:Notification) {
         
-        let stopedPlayerItem: AVPlayerItem = myNotification.object as! AVPlayerItem
-        stopedPlayerItem.seek(to: kCMTimeZero)
+        let stoppedPlayerItem: AVPlayerItem = myNotification.object as! AVPlayerItem
+        stoppedPlayerItem.seek(to: kCMTimeZero)
     }
     
     // MARK: - Notification
