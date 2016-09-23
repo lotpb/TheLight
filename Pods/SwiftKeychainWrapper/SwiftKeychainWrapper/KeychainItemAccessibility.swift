@@ -37,7 +37,7 @@ public enum KeychainItemAccessibility {
      The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user.
      
      After the first unlock, the data remains accessible until the next restart. This is recommended for items that need to be accessed by background applications. Items with this attribute migrate to a new device when using encrypted backups.
-    */
+     */
     @available(iOS 4, *)
     case afterFirstUnlock
     
@@ -107,15 +107,11 @@ private let keychainItemAccessibilityLookup: [KeychainItemAccessibility:CFString
         .afterFirstUnlock: kSecAttrAccessibleAfterFirstUnlock,
         .afterFirstUnlockThisDeviceOnly: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
         .always: kSecAttrAccessibleAlways,
+        .whenPasscodeSetThisDeviceOnly: kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
         .alwaysThisDeviceOnly : kSecAttrAccessibleAlwaysThisDeviceOnly,
         .whenUnlocked: kSecAttrAccessibleWhenUnlocked,
         .whenUnlockedThisDeviceOnly: kSecAttrAccessibleWhenUnlockedThisDeviceOnly
     ]
-    
-    // INFO: While this framework only supports iOS 8 and up, the files themselves can be pulled directly into an iOS 7 project and work fine as long as this #available check is in place. Unfortunately, this also generates a warning in the framework project for now.
-    if #available(iOSApplicationExtension 8, *) {
-        lookup[.whenPasscodeSetThisDeviceOnly] = kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
-    }
     
     return lookup
 }()

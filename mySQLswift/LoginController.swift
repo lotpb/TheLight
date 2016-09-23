@@ -72,8 +72,8 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
             
         } else {
             //Keychain
-            self.usernameField!.text = KeychainWrapper.stringForKey("usernameKey")
-            self.passwordField!.text = KeychainWrapper.stringForKey("passwordKey")
+            self.usernameField!.text = KeychainWrapper.defaultKeychainWrapper.string(forKey: "usernameKey")
+            self.passwordField!.text = KeychainWrapper.defaultKeychainWrapper.string(forKey: "passwordKey")
             self.reEnterPasswordField!.isHidden = true
             self.registerBtn!.isHidden = false
             self.forgotPassword!.isHidden = false

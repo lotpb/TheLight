@@ -12,7 +12,7 @@ import AVFoundation
 
 class CollectionViewCell: UICollectionViewCell {
     
-    //-----------youtube---------
+//-----------youtube---------
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -71,7 +71,7 @@ class CollectionViewCell: UICollectionViewCell {
         super.init(coder: aDecoder)
         //fatalError("init(coder:) has not been implemented")
     }
-    //---------------------------------
+//---------------------------------
     
     // News
     @IBOutlet weak var imageView: UIImageView?

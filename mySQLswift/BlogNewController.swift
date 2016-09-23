@@ -136,17 +136,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.Like!.setTitleColor(.white, for: UIControlState())
         
         //---------inline DatePicker---------------
-        /*
-        if ((self.formStatus == "None")) {
-            let inlineDate = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
-        } else {
-            let inlineDate = [kTitleKey : "Date", kDateKey : self.textcontentdate]
-        } */
         
         let itemOne = [kTitleKey : "Tap a cell to change its date:", kDateKey : ""]
         let itemTwo = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         let itemThree = [kTitleKey : "Name", kDateKey : self.postby]
-        //let itemFour = [kTitleKey : "Active", kDateKey : ""]
+      //let itemFour = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         dataArray = [itemOne as Dictionary<String, AnyObject>, itemTwo as Dictionary<String, AnyObject>, itemThree as Dictionary<String, AnyObject>]
         
         dateFormatter.dateStyle = .medium
@@ -311,8 +305,15 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
 
         if cellID == kDateCellID {
             
+            let dateCell : String
+            if ((self.formStatus == "None")) {
+                dateCell = self.msgDate!
+            } else {
+                dateCell = self.dateFormatter.string(from: itemData[kDateKey] as! Date)
+            }
+            
             cell?.textLabel?.text = itemData[kTitleKey] as? String
-            cell?.detailTextLabel?.text = self.dateFormatter.string(from: itemData[kDateKey] as! Date)
+            cell?.detailTextLabel?.text = dateCell //self.dateFormatter.string(from: itemData[kDateKey] as! Date)
             
         } else if cellID == kTitleCellID {
             
@@ -460,6 +461,12 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         // update the cell's date string
         cell?.detailTextLabel?.text = dateFormatter.string(from: targetedDatePicker.date)
+        
+        // update the parse date string
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        //dateFormatter.timeZone = TimeZone.current
+        let strDate = dateFormatter.string(from: (targetedDatePicker.date))
+        self.msgDate = strDate
         
     }
 //--------------------------------------------------------

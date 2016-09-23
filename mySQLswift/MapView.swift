@@ -69,7 +69,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         //fix not centering
         //activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50)) as UIActivityIndicatorView
         activityIndicator = UIActivityIndicatorView(frame: UIScreen.main.bounds)
-        //activityIndicator?.center = view.center
+        //activityIndicator?.center = self.view.center
         activityIndicator?.hidesWhenStopped = true
         activityIndicator?.activityIndicatorViewStyle = .whiteLarge
         activityIndicator?.backgroundColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)

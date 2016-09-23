@@ -202,7 +202,6 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     @IBAction func startRecordingButtonTapped(_ sender: AnyObject) {
         processingView.isHidden = false
         
-        
         // start recording
         //recorder.startRecording(handler: (@escaping (Error?) -> Void)? = nil) {
         recorder.startRecording(withMicrophoneEnabled: true) { [unowned self] error in

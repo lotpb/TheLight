@@ -14,7 +14,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     let cellId = "cellId"
     let trendingCellId = "trendingCellId"
     let subscriptionCellId = "subscriptionCellId"
-    //let accountCellId = "cell"
+    let accountCellId = "accountId"
     
     //var views = [UIView]()
     //var viewsAreInitialized = false
@@ -82,7 +82,9 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         self.collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: cellId)
         self.collectionView?.register(TrendingCell.self, forCellWithReuseIdentifier: trendingCellId)
         self.collectionView?.register(SubscriptionCell.self, forCellWithReuseIdentifier: subscriptionCellId)
-        //self.collectionView?.register(AccountCollectionViewController.self, forCellWithReuseIdentifier: accountCellId)
+        self.collectionView?.register(AccountCell.self, forCellWithReuseIdentifier: accountCellId)
+        
+      //self.collectionView?.register(AccountCollectionViewController.self, forCellWithReuseIdentifier: accountCellId)
         
         self.collectionView?.contentInset = UIEdgeInsetsMake(50,0,0,0)
         self.collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(50,0,0,0)
@@ -126,7 +128,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         } else if (indexPath as NSIndexPath).item == 2 {
             identifier = subscriptionCellId
         } else if (indexPath as NSIndexPath).item == 3 {
-            identifier = cellId
+            identifier = accountCellId
              /*
              //for title in self.titles {
              let storyBoard = self.storyboard!

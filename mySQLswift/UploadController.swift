@@ -29,10 +29,10 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var selectPic: UIButton!
     
+    var playerViewController = AVPlayerViewController()
+    var imagePicker = UIImagePickerController()
     var pickImage = false
     var editImage = false
-    var playerViewController = AVPlayerViewController()
-    var imagePicker: UIImagePickerController!
     var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0,y: 0, width: 150, height: 150)) as UIActivityIndicatorView
     //var activityIndicator : UIActivityIndicatorView?
     
@@ -154,11 +154,11 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary //.savedPhotosAlbum
-        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: imagePicker.sourceType)!  
+        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
         imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
-        self.present(imagePicker, animated: false, completion: nil)
+        self.present(imagePicker, animated: true, completion: nil)
     }
     
     

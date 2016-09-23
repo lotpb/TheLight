@@ -61,9 +61,10 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.collectionView!.delegate = self
         self.collectionView!.backgroundColor = .white
         
-        //let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: nil)
+        //fix below no add user
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
-        let buttons:NSArray = [searchButton]
+        let buttons:NSArray = [addButton, searchButton]
         self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
         
         parseData()

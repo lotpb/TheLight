@@ -11,6 +11,8 @@ import AVFoundation
 
 class VideoPlayerView: UIView {
     
+    var videoURL : String?
+    
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         aiv.translatesAutoresizingMaskIntoConstraints = false
@@ -227,9 +229,7 @@ class VideoPlayerView: UIView {
                     let durationSeconds = CMTimeGetSeconds(duration)
                     
                     self.videoSlider.value = Float(seconds / durationSeconds)
-                    
                 }
-                
             })
         }
     }
@@ -271,14 +271,11 @@ class VideoPlayerView: UIView {
 class VideoLauncher: NSObject {
     
     var videoURL : String?
-    /*
-    func preferredStatusBarUpdateAnimation() -> UIStatusBarAnimation {
-        return .fade
-    }*/
     
     func showVideoPlayer() {
         print("Showing video player animation....")
         //print(videoURL)
+        //VideoPlayerView.videoURL = self.videoURL
         
         if let keyWindow = UIApplication.shared.keyWindow {
             let view = UIView(frame: keyWindow.frame)

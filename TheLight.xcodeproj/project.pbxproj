@@ -43,6 +43,7 @@
 		AF5C01E21C493204009BB817 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01E11C493204009BB817 /* Track.swift */; };
 		AF5C01E41C49320E009BB817 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01E31C49320E009BB817 /* Download.swift */; };
 		AF6C691B1C455BAE00CD6A36 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AF6C691A1C455BAE00CD6A36 /* Settings.bundle */; };
+		AF6DD0711D94454B00069D69 /* AccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6DD0701D94454B00069D69 /* AccountCell.swift */; };
 		AF6E27041C3AC52300612C25 /* EditData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6E27031C3AC52200612C25 /* EditData.swift */; };
 		AF7383EB1C302DD00049407C /* NotificationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7383EA1C302DD00049407C /* NotificationDetailController.swift */; };
 		AF74E4601D1BFF58004DE7D6 /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF74E45F1D1BFF58004DE7D6 /* SettingCell.swift */; };
@@ -164,6 +165,7 @@
 		AF5C01E31C49320E009BB817 /* Download.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 		AF69A34C1D7B1BF9002BE793 /* TheLight.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TheLight.entitlements; sourceTree = SOURCE_ROOT; };
 		AF6C691A1C455BAE00CD6A36 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		AF6DD0701D94454B00069D69 /* AccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountCell.swift; sourceTree = "<group>"; };
 		AF6E27031C3AC52200612C25 /* EditData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditData.swift; sourceTree = "<group>"; };
 		AF7383EA1C302DD00049407C /* NotificationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationDetailController.swift; sourceTree = "<group>"; };
 		AF74E45F1D1BFF58004DE7D6 /* SettingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 				AF74E45F1D1BFF58004DE7D6 /* SettingCell.swift */,
 				AFE34A3B1D3277E400C78D8B /* TrendingCell.swift */,
 				AFE34A3D1D3277EB00C78D8B /* SubscriptionCell.swift */,
+				AF6DD0701D94454B00069D69 /* AccountCell.swift */,
 				AFF1423E1D67A51600CD017A /* Search.swift */,
 				AFF1423C1D67972800CD017A /* AccountVC.swift */,
 			);
@@ -804,6 +807,7 @@
 				AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */,
 				AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */,
 				AFE419D41D19EDA200A6F590 /* SettingsLauncher.swift in Sources */,
+				AF6DD0711D94454B00069D69 /* AccountCell.swift in Sources */,
 				AF5C01DE1C493199009BB817 /* MusicController.swift in Sources */,
 				AF011A721C40A798000EAF5D /* ProductController.swift in Sources */,
 				AFF5D55A1D3AD96400975055 /* User.swift in Sources */,

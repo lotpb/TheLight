@@ -93,6 +93,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         super.viewDidLoad()
         
         clearFormData()
+        observeKeyboardNotifications() //Move Keyboard
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle(String(format: "%@ %@", self.status!, self.formController!), for: UIControlState())
@@ -110,8 +111,8 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         self.pickerView.delegate = self
         self.pickerView.dataSource = self
+      //self.pickerView.backgroundColor = .whiteColor()
         NotificationCenter.default.addObserver(self, selector: (#selector(EditData.updatePicker)), name: NSNotification.Name.UITextFieldTextDidBeginEditing, object: nil)
-        //self.pickerView.backgroundColor = .whiteColor()
         
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(EditData.updateData))
         let buttons:NSArray = [saveButton]
@@ -141,15 +142,17 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //navigationController?.hidesBarsOnSwipe = true
+        
         self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+      //navigationController?.hidesBarsOnSwipe = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
          NotificationCenter.default.removeObserver(self)
-        //navigationController?.hidesBarsOnSwipe = false
+       //navigationController?.hidesBarsOnSwipe = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -600,7 +603,6 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
         } else if((indexPath as NSIndexPath).row == 15) {
             self.start = textframe
-            //self.start!.tag = 15
             self.start!.placeholder = "Start Date"
             if self.frm31 == nil {
                 self.start!.text = ""
@@ -614,7 +616,6 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
         } else if((indexPath as NSIndexPath).row == 16) {
             self.complete = textframe
-            //self.complete!.tag = 16
             self.complete!.placeholder = "Completion Date"
             
             if self.frm32 == nil {
@@ -920,26 +921,29 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     
     // MARK: - Move Keyboard
-    // FIXME:
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        animateViewMoving(true, moveValue: 100)
+    fileprivate func observeKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        animateViewMoving(false, moveValue: 100)
+    func keyboardHide() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+            
+            }, completion: nil)
     }
     
-    func animateViewMoving (_ up:Bool, moveValue :CGFloat){
-        let movementDuration:TimeInterval = 0.3
-        let movement:CGFloat = ( up ? -moveValue : moveValue)
-        UIView.beginAnimations( "animateView", context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration )
-        self.view.frame = self.view.frame.offsetBy(dx: 0,  dy: movement)
-        UIView.commitAnimations()
+    func keyboardShow() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.frame = CGRect(x: 0, y: -110, width: self.view.frame.width, height: self.view.frame.height)
+            
+            }, completion: nil)
     }
-    
+//------------------------------------------------
     
     // MARK: - Segues
     

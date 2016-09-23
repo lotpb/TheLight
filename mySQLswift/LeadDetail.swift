@@ -680,7 +680,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 if (application.canOpenURL(phoneCallURL)) {
                     
                     application.open(phoneCallURL, options: [:], completionHandler: nil)
-                    //application.openURL(phoneCallURL)
+
                 }
             } else {
                 

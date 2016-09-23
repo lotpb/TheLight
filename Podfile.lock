@@ -59,6 +59,7 @@ PODS:
   - Parse (1.14.2):
     - Bolts/Tasks (~> 1.8)
   - SwiftKeychainWrapper (2.0.0)
+  - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
   - Firebase
@@ -68,6 +69,17 @@ DEPENDENCIES:
   - Google/SignIn
   - Parse
   - SwiftKeychainWrapper
+  - SwiftyJSON (from `https://github.com/BaiduHiDeviOS/SwiftyJSON.git`, branch `swift3`)
+
+EXTERNAL SOURCES:
+  SwiftyJSON:
+    :branch: swift3
+    :git: https://github.com/BaiduHiDeviOS/SwiftyJSON.git
+
+CHECKOUT OPTIONS:
+  SwiftyJSON:
+    :commit: de5dc3b1b421805769590d331178551bbb0e5733
+    :git: https://github.com/BaiduHiDeviOS/SwiftyJSON.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
@@ -88,7 +100,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
   SwiftKeychainWrapper: 3575838215fa36c816899c301a7afe370bd94814
+  SwiftyJSON: 6118fb49d7519c4d31a0c1f3d5af936e9047b556
 
-PODFILE CHECKSUM: 3615044dab322b1104bedbf1f12eb8b35dddb6f0
+PODFILE CHECKSUM: ec1f085fce44aec539fff57fc4acf1ef162e013b
 
 COCOAPODS: 1.1.0.beta.2

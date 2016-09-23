@@ -323,7 +323,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
             } else if ((indexPath as NSIndexPath).row == 1) {
                 /*
-                let date1 = (_feedItems.firstObject as AnyObject).value(forKey: "createdAt") as? Date
+                let date1 = ((_feedItems.firstObject as Any) as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day

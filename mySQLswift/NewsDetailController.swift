@@ -72,7 +72,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         
         self.newsImageview.isUserInteractionEnabled = true
         self.newsImageview.image = self.image
-        self.newsImageview.contentMode = .scaleToFill
+        self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
         
         self.titleLabel.text = self.newsTitle
         self.titleLabel.numberOfLines = 2

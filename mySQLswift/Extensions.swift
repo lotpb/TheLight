@@ -213,6 +213,27 @@ func requestSuggestionsURL(text: String) -> URL {
     let url = URL.init(string: "https://api.bing.com/osjson.aspx?query=\(netText)")!
     return url
 }
- 
+
+//not used - valid email
+extension String {
+    var isValidEmailAddress: Bool {
+        let types: NSTextCheckingResult.CheckingType = [.link]
+        let linkDetector = try? NSDataDetector(types: types.rawValue)
+        let range = NSRange(location: 0, length: self.characters.count)
+        let result = linkDetector?.firstMatch(in: self, options: .reportCompletion, range: range)
+        let scheme = result?.url?.scheme ?? ""
+        return scheme == "mailto" && result?.range.length == self.characters.count
+    }
+    
+    // for a login screen...
+//    let text = emailTextField.text ?? ""
+//    let valid = text.isValidEmailAddress
+//    
+//    // to see differences...
+//    let goodEmail = “foo@bar.com”.isValidEmailAddress // true
+//    let badEmail = "foo bar@baz.com".isValidEmailAddress // false
+
+}
+
 //----------------------------
 

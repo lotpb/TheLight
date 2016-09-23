@@ -86,7 +86,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         //Keychain
         
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
-        if KeychainWrapper.setString(userId, forKey: "usernameKey") && KeychainWrapper.setString(userpassword, forKey: "passwordKey") {
+        if (KeychainWrapper.defaultKeychainWrapper.string(forKey: "usernameKey") != nil) && (KeychainWrapper.defaultKeychainWrapper.string(forKey: "passwordKey") != nil) {
             print("Keychain successful")
         } else {
             print("Keychain failed")
