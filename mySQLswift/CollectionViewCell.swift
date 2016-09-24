@@ -315,7 +315,7 @@ class VideoCell: CollectionViewCell {
         //left constraint
         addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .left, relatedBy: .equal, toItem: numberLabel, attribute: .right, multiplier: 1, constant: 5))
         //right constraint
-        //addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .Right, relatedBy: .Equal, toItem: thumbnailImageView, attribute: .Right, multiplier: 1, constant: 0))
+      //addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .Right, relatedBy: .Equal, toItem: thumbnailImageView, attribute: .Right, multiplier: 1, constant: 0))
         //height constraint
         addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 25))
     }

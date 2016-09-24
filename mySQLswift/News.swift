@@ -16,8 +16,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     let subscriptionCellId = "subscriptionCellId"
     let accountCellId = "accountId"
     
-    //var views = [UIView]()
-    //var viewsAreInitialized = false
     let titles = ["Home", "Trending", "Subscriptions", "Account"]
     
     @IBOutlet weak var collectionView: UICollectionView!
