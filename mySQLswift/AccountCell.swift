@@ -20,9 +20,10 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
 
     let headerImageView: UIImageView = {
-        let image = UIImage(named: "")
+        let image = UIImage(named:"images")!.withRenderingMode(.alwaysTemplate)
         let imageView = UIImageView(image: image)
-        imageView.backgroundColor = .black
+        imageView.tintColor = .black
+        //imageView.backgroundColor = .black
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -77,8 +78,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
     private lazy var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.backgroundColor = .clear
         return tableView
     }()
@@ -114,11 +113,13 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         floatingButton.setImage(floatimage, for: .normal)
         //floatingButton.addTarget(self, action: #selector(maptype), for: .touchUpInside)
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.estimatedRowHeight = 65
+        registerCells()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableViewAutomaticDimension
-        //tableView.addSubview(refreshControl)
-        
+      //tableView.addSubview(refreshControl)
+
         addSubview(headerImageView)
         addSubview(userProfileImageView)
         addSubview(usertitleLabel)
@@ -142,11 +143,13 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         addConstraint(NSLayoutConstraint(item: nameButton, attribute: .top, relatedBy: .equal, toItem: userProfileImageView, attribute: .bottom, multiplier: 1, constant: 13))
         //left constraint
         addConstraint(NSLayoutConstraint(item: nameButton, attribute: .left, relatedBy: .equal, toItem: usertitleLabel, attribute: .right, multiplier: 1, constant: 10))
-        //right constraint
-        //addConstraint(NSLayoutConstraint(item: nameButton, attribute: .Right, relatedBy: .Equal, toItem: thumbnailImageView, attribute: .Right, multiplier: 1, constant: 0))
-        //height constraint
-        //addConstraint(NSLayoutConstraint(item: nameButton, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 15))
 
+    }
+    
+    
+    fileprivate func registerCells() {
+        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(AccountViewCell.self, forCellReuseIdentifier: "accountcell")
     }
     
     
@@ -182,40 +185,45 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "accountcell", for: indexPath) as! AccountViewCell
         
         cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.detailLabel.textColor = UIColor(white: 0.5, alpha: 1)
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            
+            cell.titleLabel.font =  Font.celllabel1
+            cell.detailLabel.font =  Font.News.newslabel2
+            
+        } else {
+            
+            cell.titleLabel.font =  Font.celllabel1
+            cell.detailLabel.font =  Font.News.newslabel2
+
+        }
+        
         if ((indexPath as NSIndexPath).section == 0) {
- 
-            cell.imageView?.image = UIImage.init(named: self.image[indexPath.row])
-            cell.textLabel?.text = self.items[indexPath.row]
+            
+            cell.titleImage.frame = CGRect(x: 28, y: 12, width: 20, height: 20)
+            cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.size.width, height: 20.0)
+            
+            cell.titleImage.image = UIImage.init(named: self.image[indexPath.row])
+            cell.titleLabel.text = self.items[indexPath.row]
             
             return cell
         }
         
         if ((indexPath as NSIndexPath).section == 1) {
-            /*
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell")! as! AccountViewCell
             
             cell.titleImage.frame = CGRect(x: 15, y: 10, width: 45, height: 45)
-            cell.titleLabel.frame = CGRect(x: 100, y: 10, width: tableView.frame.size.width, height: 20.0)
-            cell.detailLabel.frame = CGRect(x: 100, y: 70, width: tableView.frame.size.width, height: 20.0)
+            cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.size.width, height: 20.0)
+            cell.detailLabel.frame = CGRect(x: 75, y: 30, width: tableView.frame.size.width, height: 20.0)
             
             cell.titleImage.image = UIImage.init(named: self.image1[indexPath.row])
             cell.titleLabel.text = self.items1[indexPath.row]
-            cell.detailLabel.text = self.itemsDetail1[indexPath.row] */
-
-            let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "subtitleCell")
-            
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
-            cell.detailTextLabel?.textColor = UIColor(white: 0.6, alpha: 1)
-  
-            cell.imageView?.image = UIImage.init(named: self.image1[indexPath.row])
-            cell.textLabel?.text = self.items1[indexPath.row]
-            cell.detailTextLabel?.text = self.itemsDetail1[indexPath.row]
+            cell.detailLabel.text = self.itemsDetail1[indexPath.row]
             
             return cell
         }
@@ -267,13 +275,14 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         }
         return vw
     }
+    
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
-// fix
+
+
 class AccountViewCell: UITableViewCell {
     
     let titleImage: UIImageView = {
@@ -301,6 +310,14 @@ class AccountViewCell: UITableViewCell {
         return label
     }()
     
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+  
+        addSubview(titleImage)
+        addSubview(titleLabel)
+        addSubview(detailLabel)
+     
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
