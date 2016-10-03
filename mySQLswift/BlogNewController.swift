@@ -579,7 +579,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                     updateblog!.saveEventually()
                     
                     let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
-                    self.show(vc!, sender: self)
+                    //self.show(vc!, sender: self)
+                    self.present(vc!, animated: true)
                     
                     self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                 } else {
@@ -613,7 +614,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                     if success == true {
                         self.newBlogNotification()
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
-                        self.show(vc!, sender: self)
+                        //self.show(vc!, sender: self)
+                        self.present(vc!, animated: true)
                         
                         self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                     } else {

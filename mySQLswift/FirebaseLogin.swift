@@ -105,8 +105,8 @@ class FirebaseLogin: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDele
         self.registerBtn!.setTitleColor(.white, for: UIControlState())
         self.loginBtn!.setTitleColor(.white, for: UIControlState())
         self.backloginBtn!.setTitleColor(.white, for: UIControlState())
-        self.emailField!.keyboardType = UIKeyboardType.emailAddress
-        self.phoneField!.keyboardType = UIKeyboardType.numbersAndPunctuation
+        self.emailField!.keyboardType = .emailAddress
+        self.phoneField!.keyboardType = .numbersAndPunctuation
         
         self.passwordField!.text = ""
         

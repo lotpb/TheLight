@@ -688,6 +688,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     // MARK: - YahooFinance
     
     func YahooFinanceLoad() {
+        guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         
         let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
         let queryResults = results?.value(forKeyPath: "query.results.channel") as! NSDictionary?

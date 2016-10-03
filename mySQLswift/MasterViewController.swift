@@ -108,6 +108,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.refreshControl!.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
         self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl!)
+        
+        self.versionCheck()
 
     }
 
@@ -118,6 +120,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.navigationController?.navigationBar.barTintColor = .black
         // refreshYQL
         self.refreshData()
+        
     }
     
     /*
@@ -436,10 +439,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     func versionCheck() {
         
         let query = PFQuery(className:"Version")
-        //query.cachePolicy = PFCachePolicy.CacheThenNetwork
+        query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
             
-            let versionId = object?.object(forKey: "VersionId") as! String?
+            let versionId = object?.value(forKey: "VersionId") as! String?
             if (versionId != self.defaults.string(forKey: "versionKey")) {
                 
                 DispatchQueue.main.async {

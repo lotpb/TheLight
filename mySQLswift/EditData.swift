@@ -224,27 +224,27 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         self.comment?.autocorrectionType = UITextAutocorrectionType.default
         self.callback?.clearButtonMode = .never
-        self.zip?.keyboardType = UIKeyboardType.decimalPad
+        self.zip?.keyboardType = .decimalPad
         
         if (formController == "Leads" || formController == "Customer") {
-            self.amount?.keyboardType = UIKeyboardType.decimalPad
+            self.amount?.keyboardType = .decimalPad
         }
         if (formController == "Customer") {
-            self.callback?.keyboardType = UIKeyboardType.decimalPad
+            self.callback?.keyboardType = .decimalPad
         }
         if (formController == "Vendor") {
-            self.last?.keyboardType = UIKeyboardType.URL
-            self.salesman?.keyboardType = UIKeyboardType.numbersAndPunctuation
-            self.jobName?.keyboardType = UIKeyboardType.numbersAndPunctuation
-            self.adName?.keyboardType = UIKeyboardType.numbersAndPunctuation
+            self.last?.keyboardType = .URL
+            self.salesman?.keyboardType = .numbersAndPunctuation
+            self.jobName?.keyboardType = .numbersAndPunctuation
+            self.adName?.keyboardType = .numbersAndPunctuation
         }
         if (formController == "Employee") {
-            self.salesman?.keyboardType = UIKeyboardType.numbersAndPunctuation
-            self.jobName?.keyboardType = UIKeyboardType.numbersAndPunctuation
-            self.adName?.keyboardType = UIKeyboardType.numbersAndPunctuation
+            self.salesman?.keyboardType = .numbersAndPunctuation
+            self.jobName?.keyboardType = .numbersAndPunctuation
+            self.adName?.keyboardType = .numbersAndPunctuation
         }
-        self.email?.keyboardType = UIKeyboardType.emailAddress
-        self.phone?.keyboardType = UIKeyboardType.numbersAndPunctuation
+        self.email?.keyboardType = .emailAddress
+        self.phone?.keyboardType = .numbersAndPunctuation
         
         self.email?.returnKeyType = UIReturnKeyType.next
         
@@ -1374,7 +1374,8 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             }
             DispatchQueue.main.async {
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeId")
-                self.show(vc!, sender: self)
+                //self.show(vc!, sender: self)
+                self.present(vc!, animated: true)
             }
         }
     }

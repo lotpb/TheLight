@@ -695,7 +695,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     func openurl() {
         
         if (self.tbl26 != NSNull() && self.tbl26 != "0") {
-            
+
             let Hooks = "http://\(self.tbl26!)"
             let Url = URL(string: Hooks)
             
@@ -706,7 +706,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 } else {
                     // Fallback on earlier versions
                 }
-
                 
             } else {
                 
@@ -723,8 +722,9 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     func sendEmail() {
         
         if (formController == "Leads") || (formController == "Customer") {
-            if ((self.tbl15 != NSNull()) && (self.tbl15 != "0")) {
-                self.getEmail(t15!)
+            if ((self.tbl15 != NSNull()) || (self.tbl15 != "0")) {
+                
+                self.getEmail((t15!) as NSString)
                 
             } else {
                 
@@ -733,6 +733,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }
         if (formController == "Vendor") || (formController == "Employee") {
             if ((self.tbl21 != NSNull()) && (self.tbl21 != "0" )) {
+                
                 self.getEmail(t21!)
                 
             } else {

@@ -503,9 +503,9 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         } else {
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 let storyBoard : UIStoryboard = UIStoryboard (name: "Main", bundle: nil);
-                let objSecondryViewController :LeadDetail = storyBoard.instantiateViewController(withIdentifier: "SecondryViewController") as! LeadDetail
+                let vc:LeadDetail = storyBoard.instantiateViewController(withIdentifier: "SecondryViewController") as! LeadDetail
                 //objSecondryViewController.selectedColor = cell.textLabel?.text
-                showDetailViewController(objSecondryViewController, sender: self)
+                showDetailViewController(vc, sender: self)
                 
             } else {
                 self.performSegue(withIdentifier: "showDetail2", sender: self)

@@ -27,11 +27,11 @@ class VideoPlayerView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
         button.isHidden = true
-        
         button.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
         
         return button
     }()
+    
     
     lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -40,24 +40,72 @@ class VideoPlayerView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
         button.isHidden = true
-
         button.addTarget(self, action: #selector(handleClose), for: .touchUpInside)
         
         return button
     }()
+
     
-    lazy var settingButton: UIButton = {
-        let button = UIButton(type: .system)
-        let image = UIImage(named: "nav_more_icon")
-        button.setImage(image, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = .white
-        button.isHidden = true
-        
-        button.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
-        
-        return button
+    let controlsContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0, alpha: 1)
+        return view
     }()
+    
+    
+    let videoLengthLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "00:00"
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.textAlignment = .right
+        return label
+    }()
+    
+    
+    let currentTimeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "00:00"
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 13)
+        return label
+    }()
+    
+    
+    lazy var videoSlider: UISlider = {
+        let slider = UISlider()
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.minimumTrackTintColor = .red
+        slider.maximumTrackTintColor = .white
+        slider.setThumbImage(UIImage(named: "thumb"), for: .normal)
+        slider.addTarget(self, action: #selector(handleSliderChange), for: .valueChanged)
+        
+        return slider
+    }()
+    
+    
+    /*
+     private lazy var tableView : UITableView = {
+     let tableView = UITableView()
+     tableView.backgroundColor = .blue
+     return tableView
+     }() */
+    
+    /*
+     lazy var settingButton: UIButton = {
+     let button = UIButton(type: .system)
+     let image = UIImage(named: "nav_more_icon")
+     button.setImage(image, for: .normal)
+     button.translatesAutoresizingMaskIntoConstraints = false
+     button.tintColor = .white
+     button.isHidden = true
+     
+     button.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
+     
+     return button
+     }() */
     
     func handleClose(_ VideoLauncher: VideoLauncher) {
         
@@ -67,7 +115,6 @@ class VideoPlayerView: UIView {
     func handleSettings(_ VideoLauncher: VideoLauncher) {
         
         self.removeFromSuperview()
-
     }
     
     var isPlaying = false
@@ -80,46 +127,9 @@ class VideoPlayerView: UIView {
             player?.play()
             pausePlayButton.setImage(UIImage(named: "pause"), for: .normal)
         }
-        
         isPlaying = !isPlaying
     }
     
-    let controlsContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0, alpha: 1)
-        return view
-    }()
-    
-    let videoLengthLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "00:00"
-        label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.textAlignment = .right
-        return label
-    }()
-    
-    let currentTimeLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "00:00"
-        label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 13)
-        return label
-    }()
-    
-    lazy var videoSlider: UISlider = {
-        let slider = UISlider()
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.minimumTrackTintColor = .red
-        slider.maximumTrackTintColor = .white
-        slider.setThumbImage(UIImage(named: "thumb"), for: .normal)
-        
-        slider.addTarget(self, action: #selector(handleSliderChange), for: .valueChanged)
-        
-        return slider
-    }()
     
     func handleSliderChange() {
         print(videoSlider.value)
@@ -140,12 +150,21 @@ class VideoPlayerView: UIView {
      override init(frame: CGRect) {
         super.init(frame: frame)
         
+        backgroundColor = .black
+        
+        //tableView.delegate = self
+        //tableView.dataSource = self
+        //tableView.estimatedRowHeight = 44
+        //tableView.rowHeight = UITableViewAutomaticDimension
+        //tableView.addSubview(refreshControl)
+        
         setupPlayerView()
         
         setupGradientLayer()
         
         controlsContainerView.frame = frame
         addSubview(controlsContainerView)
+        //addSubview(tableView)
         
         controlsContainerView.addSubview(activityIndicatorView)
         activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -179,13 +198,16 @@ class VideoPlayerView: UIView {
         addConstraintsWithFormat(format: "H:|-16-[v0(30)]", views: closeButton)
         closeButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         closeButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
+        /*
         controlsContainerView.addSubview(settingButton)
         addConstraintsWithFormat(format: "H:|-16-[v0(30)]", views: settingButton)
         settingButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        settingButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        settingButton.heightAnchor.constraint(equalToConstant: 30).isActive = true */
         
-        backgroundColor = .black
+        //addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: tableView)
+        //addConstraintsWithFormat(format: "V:|-200-[v0]-0-|", views: tableView)
+        
+        
     }
     
     var player: AVPlayer?

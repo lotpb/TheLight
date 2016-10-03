@@ -200,11 +200,10 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     }
     
     @IBAction func startRecordingButtonTapped(_ sender: AnyObject) {
-        processingView.isHidden = false
         
-        // start recording
-        //recorder.startRecording(handler: (@escaping (Error?) -> Void)? = nil) {
-        recorder.startRecording(withMicrophoneEnabled: true) { [unowned self] error in
+        processingView.isHidden = false
+
+        recorder.startRecording{ [unowned self] (error) in
             DispatchQueue.main.async { [unowned self] in
                 self.processingView.isHidden = true
             }
@@ -240,7 +239,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
             
             DispatchQueue.main.async { [unowned self] in
                 // show preview window
-                self.present(previewViewController!, animated: true, completion: nil)
+                self.present(previewViewController!, animated: true)
             }
             })
     }

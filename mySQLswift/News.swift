@@ -127,17 +127,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
             identifier = subscriptionCellId
         } else if (indexPath as NSIndexPath).item == 3 {
             identifier = accountCellId
-             /*
-             //for title in self.titles {
-             let storyBoard = self.storyboard!
-             let vc = storyBoard.instantiateViewController(withIdentifier: "Account")
-             self.addChildViewController(vc)
-             vc.view.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: (self.view.bounds.height - 44))
-             vc.didMove(toParentViewController: self)
-             self.views.append(vc.view)
-             //}
-             self.viewsAreInitialized = true */
-            
         } else {
             identifier = cellId
         }
@@ -254,6 +243,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: view.frame.height - 50)
     }
+
 
 //-------------------------------------------------
 

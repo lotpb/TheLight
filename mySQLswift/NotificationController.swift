@@ -104,7 +104,11 @@ class NotificationController: UIViewController {
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
             
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            var dateComponents = DateComponents()
+            dateComponents.hour = 10
+            dateComponents.minute = 30
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+          //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
             UNUserNotificationCenter .current().add(request, withCompletionHandler: nil)
             
@@ -220,9 +224,9 @@ class NotificationController: UIViewController {
         
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
-            content.title = "be awesome!"
+            content.title = "work-out and be awesome!"
             //content.subtitle = "米花兒"
-            content.body = "Hey you! Yeah you! Swipe to unlock!"
+            content.body = "Hey you! Yeah you! Time to Workout!"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
@@ -231,8 +235,13 @@ class NotificationController: UIViewController {
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
             content.attachments = [attachment]
             content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
-
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            
+            var dateComponents = DateComponents()
+            dateComponents.hour = 14
+            dateComponents.minute = 30
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            
+            //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "heyYou-id-123", content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
@@ -262,7 +271,7 @@ class NotificationController: UIViewController {
             content.sound = UNNotificationSound(named: "Tornado")
             content.categoryIdentifier = "status"
             
-            let imageURL = Bundle.main.url(forResource: "calender", withExtension: "png")
+            let imageURL = Bundle.main.url(forResource: "calendar", withExtension: "png")
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
             content.attachments = [attachment]
             content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]

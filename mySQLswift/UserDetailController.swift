@@ -153,8 +153,8 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         emailTitle = defaults.string(forKey: "emailtitleKey")! as NSString
         messageBody = defaults.string(forKey: "emailmessageKey")! as NSString
         
-        self.emailField!.keyboardType = UIKeyboardType.emailAddress
-        self.phoneField!.keyboardType = UIKeyboardType.numbersAndPunctuation
+        self.emailField!.keyboardType = .emailAddress
+        self.phoneField!.keyboardType = .numbersAndPunctuation
     }
 
     override func didReceiveMemoryWarning() {

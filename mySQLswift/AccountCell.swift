@@ -8,8 +8,11 @@
 
 import UIKit
 import Parse
+import MobileCoreServices //kUTTypeImage
+//import CoreLocation
+//import MessageUI
 
-class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
+class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     private var image = ["History", "My Videos", "Notifications", "Watch Later"]
     private var items = ["History", "My Videos", "Notifications", "Watch Later"]
@@ -17,6 +20,9 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     private var image1 = ["profile-rabbit-toy", "taylor_swift_profile", "thumbUp", "taylor_swift_profile"]
     private var items1 = ["All Videos", "Favorites", "Liked videos", "My Top Videos"]
     private var itemsDetail1 = ["80 videos", "106 videos", "76 videos", "42 videos"]
+    
+    var imagePicker: UIImagePickerController!
+    @IBOutlet weak var userimageView: UIImageView?
     
 
     let headerImageView: UIImageView = {
@@ -111,7 +117,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         floatingButton.layer.cornerRadius = floatingButton.frame.size.width / 2
         let floatimage: UIImage? = UIImage(named:"Camcorder")!.withRenderingMode(.alwaysTemplate)
         floatingButton.setImage(floatimage, for: .normal)
-        //floatingButton.addTarget(self, action: #selector(maptype), for: .touchUpInside)
+        floatingButton.addTarget(self, action: #selector(selectCamera), for: .touchUpInside)
         
         registerCells()
         tableView.delegate = self
@@ -137,7 +143,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         addConstraintsWithFormat(format: "V:|-0-[v0(90)]", views: headerImageView)
         addConstraintsWithFormat(format: "V:|-15-[v0(44)]", views: userProfileImageView)
         addConstraintsWithFormat(format: "V:|-60-[v0(30)]-60-[v1(6)]", views: usertitleLabel, nameButton)
-        addConstraintsWithFormat(format: "V:|-91-[v0(500)]", views: tableView)
+        addConstraintsWithFormat(format: "V:|-91-[v0]-0-|", views: tableView)
         
         //top constraint
         addConstraint(NSLayoutConstraint(item: nameButton, attribute: .top, relatedBy: .equal, toItem: userProfileImageView, attribute: .bottom, multiplier: 1, constant: 13))
@@ -274,6 +280,42 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
             return vw
         }
         return vw
+    }
+    
+    // MARK: - Button
+    // MARK: Video
+    
+    func selectCamera(_ sender: AnyObject) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            
+            imagePicker = UIImagePickerController()
+            imagePicker.sourceType = .camera
+            imagePicker.mediaTypes = [kUTTypeImage as String]
+            imagePicker.allowsEditing = true
+            imagePicker.delegate = self
+            imagePicker.showsCameraControls = true
+            //self.present(imagePicker, animated: true, completion: nil)
+        } else {
+            print("Camera is not available")
+        }
+    }
+    
+    
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
+        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+            
+            self.userimageView!.image = pickedImage
+            
+            //dismiss(animated: true, completion: { () -> Void in
+            //})
+        }
+    }
+    
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        
+        picker.dismiss(animated: true, completion: nil)
     }
     
 

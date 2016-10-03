@@ -177,6 +177,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     // MARK: - Routes
     
     func showRoute(_ response: MKDirectionsResponse) {
+        guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         
         let temp:MKRoute = response.routes.first! as MKRoute
         self.route = temp

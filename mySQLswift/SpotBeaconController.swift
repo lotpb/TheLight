@@ -116,29 +116,44 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
                 lastFoundBeacon = closestBeacon
                 lastProximity = closestBeacon.proximity
                 
+             
+                
                 var proximityMessage: String!
-                switch lastFoundBeacon.proximity {
-                case CLProximity.immediate:
-                    proximityMessage = "Very close"
-                    self.view.backgroundColor = .red
-                    lblBeaconReport.textColor = .white
-                    lblBeaconDetails.textColor = .white
-                    lblBeaconReport.textColor = .white
-                case CLProximity.near:
-                    proximityMessage = "Near"
-                    self.view.backgroundColor = .purple
-                    lblBeaconReport.textColor = .white
-                    lblBeaconDetails.textColor = .white
-                    lblBeaconReport.textColor = .white
-                case CLProximity.far:
-                    proximityMessage = "Far"
-                    self.view.backgroundColor = .blue
-                    lblBeaconReport.textColor = .white
-                    lblBeaconDetails.textColor = .white
-                    lblBeaconReport.textColor = .white
-                default:
-                    proximityMessage = "Where's the beacon?"
-                    self.view.backgroundColor = .white
+                
+                
+                UIView.animate(withDuration: 0.8) {
+                    
+                    
+                    switch self.lastFoundBeacon.proximity {
+                    case CLProximity.immediate:
+                        proximityMessage = "Very close"
+                        self.view.backgroundColor = .red
+                        self.lblBeaconReport.textColor = .white
+                        self.lblBeaconDetails.textColor = .white
+                        self.lblBeaconReport.textColor = .white
+                    case CLProximity.near:
+                        proximityMessage = "Near"
+                        self.view.backgroundColor = .purple
+                        self.lblBeaconReport.textColor = .white
+                        self.lblBeaconDetails.textColor = .white
+                        self.lblBeaconReport.textColor = .white
+                    case CLProximity.far:
+                        proximityMessage = "Far"
+                        self.view.backgroundColor = .blue
+                        self.lblBeaconReport.textColor = .white
+                        self.lblBeaconDetails.textColor = .white
+                        self.lblBeaconReport.textColor = .white
+                    case CLProximity.unknown:
+                        proximityMessage = "Where's the beacon?"
+                        self.view.backgroundColor = .green
+                        //lblBeaconReport.textColor = .white
+                        //lblBeaconDetails.textColor = .white
+                        //lblBeaconReport.textColor = .white
+                        /*
+                         default:
+                         proximityMessage = "Where's the beacon?"
+                         self.view.backgroundColor = .white */
+                    }
                 }
                 
                 shouldHideBeaconDetails = false

@@ -146,14 +146,14 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
         myLabel.backgroundColor = Color.Table.labelColor
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
         myLabel.text = "Job's"
         myLabel.font = Font.headtitle
-        myLabel.layer.cornerRadius = 25.0
+        myLabel.layer.cornerRadius = 20.0
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = (indexPath as NSIndexPath).row
         cell.addSubview(myLabel)

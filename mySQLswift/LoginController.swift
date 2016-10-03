@@ -16,7 +16,7 @@ import GoogleSignIn
 import SwiftKeychainWrapper
 
 
-class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
+class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
     
     let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
     let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
@@ -59,9 +59,11 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        observeKeyboardNotifications() //Move Keyboard
+        
         if ((defaults.string(forKey: "registerKey") == nil)) {
             
-            self.registerBtn!.setTitle("Sign in", for: UIControlState())
+            self.registerBtn!.setTitle("Register", for: UIControlState())
             self.loginBtn!.isHidden = true //hide login button no user is regsitered
             self.forgotPassword!.isHidden = true
             self.authentButton!.isHidden = true
@@ -101,8 +103,8 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
         self.registerBtn!.setTitleColor(.white, for: UIControlState())
         self.loginBtn!.setTitleColor(.white, for: UIControlState())
         self.backloginBtn!.setTitleColor(.white, for: UIControlState())
-        self.emailField!.keyboardType = UIKeyboardType.emailAddress
-        self.phoneField!.keyboardType = UIKeyboardType.numbersAndPunctuation
+        self.emailField!.keyboardType = .emailAddress
+        self.phoneField!.keyboardType = .numbersAndPunctuation
         
         self.passwordField!.text = ""
         
@@ -170,7 +172,9 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
     }
     
     @IBAction func returnLogin(_ sender:AnyObject) {
-        
+
+        self.view.endEditing(true)
+        keyboardHide()
         self.registerBtn!.setTitle("Create an Account", for: UIControlState())
         self.usernameField!.text = defaults.string(forKey: "usernameKey")
         self.passwordField!.isHidden = false 
@@ -193,7 +197,7 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
         
         if (self.registerBtn!.titleLabel!.text == "Create an Account") {
             
-            self.registerBtn!.setTitle("Sign in", for: UIControlState())
+            self.registerBtn!.setTitle("Register", for: UIControlState())
             self.usernameField!.text = ""
             self.loginBtn!.isHidden = true
             self.forgotPassword!.isHidden = true
@@ -329,10 +333,8 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
     func redirectToHome() {
         
         let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        
         let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        
-        self.present(initialViewController, animated: true, completion: nil)
+        self.present(initialViewController, animated: true)
     }
     
 
@@ -515,6 +517,34 @@ class LoginController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDe
         }
         self.defaults.set(true, forKey: "registerKey")
     }
+    
+//------------------------------------------------
+    
+    // MARK: - Move Keyboard
+    
+    fileprivate func observeKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    func keyboardHide() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+            
+            }, completion: nil)
+    }
+    
+    func keyboardShow() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.frame = CGRect(x: 0, y: -140, width: self.view.frame.width, height: self.view.frame.height)
+            
+            }, completion: nil)
+    }
+    
+//------------------------------------------------
     
     
 }

@@ -89,7 +89,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         refreshControl.backgroundColor = .clear
         refreshControl.tintColor = .black
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(SnapshotController.refreshData), for: UIControlEvents.valueChanged)
+        self.refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
         
         parseData()
@@ -285,8 +285,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         cell.snapdetailLabel?.text = ""
         cell.snapdetailLabel?.textColor = .black
         
-        let date2 = Date()
-        let calendar = Calendar.current
+        //let date2 = Date()
+        //let calendar = Calendar.current
         
         if ((indexPath as NSIndexPath).section == 0) {
             
@@ -314,6 +314,11 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
             
         } else if ((indexPath as NSIndexPath).section == 1) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
+            
+            cell.collectionView.delegate = nil
+            cell.collectionView.dataSource = nil
+            cell.collectionView.backgroundColor = .white
             
             if ((indexPath as NSIndexPath).row == 0) {
                 
@@ -332,9 +337,14 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
                     }
                 }
-                cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String
-                cell.collectionView.backgroundColor = .clear
-                */
+                cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String */
+                cell.snaptitleLabel?.text = "none"
+                cell.snapdetailLabel?.text = "none"
+                //cell.collectionView.backgroundColor = .white
+                //cell.collectionView.delegate = self
+                //cell.collectionView.dataSource = self
+                //cell.collectionView.tag = 10
+ 
                 return cell
             }
             
@@ -358,9 +368,14 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
                     }
                 }
-                cell.snapdetailLabel?.text = (_feedItems6.firstObject as AnyObject).value(forKey: "Subject") as? String
-                cell.collectionView.backgroundColor = .clear
-                */
+                cell.snapdetailLabel?.text = (_feedItems6.firstObject as AnyObject).value(forKey: "Subject") as? String */
+                cell.snaptitleLabel?.text = "none"
+                cell.snapdetailLabel?.text = "none"
+                cell.collectionView.backgroundColor = .white
+                cell.collectionView.delegate = self
+                cell.collectionView.dataSource = self
+                cell.collectionView.tag = 10
+ 
                 return cell
             }
             
@@ -679,6 +694,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - Parse
     
     func parseData() {
+        guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         
         let query = PFQuery(className:"Newsios")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork

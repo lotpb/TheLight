@@ -21,15 +21,17 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     @IBOutlet weak var txtMinor: UITextField!
     
     let uuid = UUID(uuidString: "F34A1A1F-500F-48FB-AFAA-9584D641D7B1")
-    var beaconRegion: CLBeaconRegion!
-    var bluetoothPeripheralManager: CBPeripheralManager!
+    
+    var localBeacon: CLBeaconRegion!
+    var beaconPeripheralData: NSDictionary!
+    var peripheralManager: CBPeripheralManager!
     var isBroadcasting = false
-    var dataDictionary = NSDictionary()
+    //var dataDictionary = NSDictionary()
+    //var beaconRegion: CLBeaconRegion!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         btnAction.layer.cornerRadius = btnAction.frame.size.width / 2
         
@@ -37,7 +39,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         swipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirection.down
         view.addGestureRecognizer(swipeDownGestureRecognizer)
         
-        bluetoothPeripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
+        peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -67,13 +69,17 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         
         
         if !isBroadcasting {
-            if bluetoothPeripheralManager.state == .poweredOn {
+            if peripheralManager.state == .poweredOn {
                 let major: CLBeaconMajorValue = UInt16(Int(txtMajor.text!)!)
                 let minor: CLBeaconMinorValue = UInt16(Int(txtMinor.text!)!)
-                beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "com.TheLight.beacon")
+
+                localBeacon = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "com.TheLight.beacon")
+                beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: nil)
+                peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
                 
-                dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
-                bluetoothPeripheralManager.startAdvertising(dataDictionary as? [String : AnyObject])
+                //beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "com.TheLight.beacon")
+                //NSDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
+                //peripheralManager.startAdvertising(dataDictionary as? [String : AnyObject])
                 
                 btnAction.setTitle("Stop", for: UIControlState())
                 lblStatus.text = "Broadcasting..."
@@ -84,7 +90,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             }
         }
         else {
-            bluetoothPeripheralManager.stopAdvertising()
+            peripheralManager.stopAdvertising()
             
             btnAction.setTitle("Start", for: UIControlState())
             lblStatus.text = "Stopped"
@@ -103,30 +109,44 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         /*
         var statusMessage = ""
         
+        if peripheral.state == .poweredOn {
+            peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
+            statusMessage = "Bluetooth Status: Turned On"
+
+        } else if peripheral.state == .poweredOff {
+            peripheralManager.stopAdvertising()
+            statusMessage = "Bluetooth Status: Turned Off"
+        }
+        
+        lblBTStatus.text = statusMessage */
+        
+        
+        var statusMessage = ""
+        
         switch peripheral.state {
-        case CBPeripheralManagerState.poweredOn:
+        case .poweredOn:
             statusMessage = "Bluetooth Status: Turned On"
             
-        case CBPeripheralManagerState.poweredOff:
+        case .poweredOff:
             if isBroadcasting {
                 switchBroadcastingState(sender: self)
             }
             statusMessage = "Bluetooth Status: Turned Off"
             
-        case CBPeripheralManagerState.resetting:
+        case .resetting:
             statusMessage = "Bluetooth Status: Resetting"
             
-        case CBPeripheralManagerState.unauthorized:
+        case .unauthorized:
             statusMessage = "Bluetooth Status: Not Authorized"
             
-        case CBPeripheralManagerState.unsupported:
+        case .unsupported:
             statusMessage = "Bluetooth Status: Not Supported"
             
         default:
             statusMessage = "Bluetooth Status: Unknown"
         }
         
-        lblBTStatus.text = statusMessage */
+        lblBTStatus.text = statusMessage
     }
     
 }

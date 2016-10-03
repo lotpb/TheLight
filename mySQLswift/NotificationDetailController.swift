@@ -9,7 +9,7 @@
 import UIKit
 import  UserNotifications
 
-class NotificationDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class NotificationDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UNUserNotificationCenterDelegate {
     
     let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
     let ipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
@@ -145,66 +145,67 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         return cell
     }
     /*
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 90.0
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let vw = UIView()
-        vw.backgroundColor = .orangeColor()
+        vw.backgroundColor = .orange
         //tableView.tableHeaderView = vw
         
-        let myLabel1:UILabel = UILabel(frame: CGRectMake(10, 15, 50, 50))
+        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
         myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = UIColor.whiteColor()
-        myLabel1.textColor = UIColor.blackColor()
-        myLabel1.textAlignment = NSTextAlignment.Center
+        myLabel1.backgroundColor = .white
+        myLabel1.textColor = .black
+        myLabel1.textAlignment = NSTextAlignment.center
         myLabel1.layer.masksToBounds = true
-        myLabel1.text = String(format: "%@%d", "Count\n", (UIApplication.sharedApplication().scheduledLocalNotifications!.count))
+        myLabel1.text = String(format: "%@%d", "Count\n", (UIApplication.shared.scheduledLocalNotifications!.count))
         myLabel1.font = Font.headtitle
         myLabel1.layer.cornerRadius = 25.0
-        myLabel1.userInteractionEnabled = true
+        myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
         
-        let separatorLineView1 = UIView(frame: CGRectMake(10, 75, 50, 2.5))
-        separatorLineView1.backgroundColor = UIColor.whiteColor()
+        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
+        separatorLineView1.backgroundColor = .white
         vw.addSubview(separatorLineView1)
         
-        let myLabel2:UILabel = UILabel(frame: CGRectMake(80, 15, 50, 50))
+        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
         myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = UIColor.whiteColor()
-        myLabel2.textColor = UIColor.blackColor()
-        myLabel2.textAlignment = NSTextAlignment.Center
+        myLabel2.backgroundColor = .white
+        myLabel2.textColor = .black
+        myLabel2.textAlignment = NSTextAlignment.center
         myLabel2.layer.masksToBounds = true
         myLabel2.text = "Active"
         myLabel2.font = Font.headtitle
         myLabel2.layer.cornerRadius = 25.0
-        myLabel2.userInteractionEnabled = true
+        myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
         
-        let separatorLineView2 = UIView(frame: CGRectMake(80, 75, 50, 2.5))
-        separatorLineView2.backgroundColor = UIColor.whiteColor()
+        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
+        separatorLineView2.backgroundColor = .white
         vw.addSubview(separatorLineView2)
         
-        let myLabel3:UILabel = UILabel(frame: CGRectMake(150, 15, 50, 50))
+        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
         myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = UIColor.whiteColor()
-        myLabel3.textColor = UIColor.blackColor()
-        myLabel3.textAlignment = NSTextAlignment.Center
+        myLabel3.backgroundColor = .white
+        myLabel3.textColor = .black
+        myLabel3.textAlignment = .center
         myLabel3.layer.masksToBounds = true
         myLabel3.text = "Events"
         myLabel3.font = Font.headtitle
         myLabel3.layer.cornerRadius = 25.0
-        myLabel3.userInteractionEnabled = true
+        myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         
-        let separatorLineView3 = UIView(frame: CGRectMake(150, 75, 50, 2.5))
-        separatorLineView3.backgroundColor = UIColor.whiteColor()
+        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
+        separatorLineView3.backgroundColor = .white
         vw.addSubview(separatorLineView3)
         
         return vw
-    } */
+    }
+ */
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.

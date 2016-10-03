@@ -287,7 +287,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 vc.videoURL = self.imageFile.url
 
                 let navigationController = UINavigationController(rootViewController: vc)
-                UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true, completion: nil)
+                UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
             }
         }
     }
