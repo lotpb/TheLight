@@ -70,9 +70,12 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
             //self.newsTextview.isEditable = false //bug fix
         }
         
+        UIView.transition(with: self.newsImageview, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.newsImageview.image = self.image
+            }, completion: nil)
         self.newsImageview.isUserInteractionEnabled = true
-        self.newsImageview.image = self.image
-        self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
+        self.newsImageview.contentMode = .scaleToFill
+        //.scaleAspectFill //.scaleAspectFit
         
         self.titleLabel.text = self.newsTitle
         self.titleLabel.numberOfLines = 2

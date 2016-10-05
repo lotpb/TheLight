@@ -177,7 +177,10 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
                     imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-                        (cell?.blogImageView?.image = UIImage(data: imageData! as Data))!
+                        
+                        UIView.transition(with: (cell?.blogImageView)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            cell?.blogImageView?.image = UIImage(data: imageData! as Data)
+                            }, completion: nil)
                     }
                 }
             }

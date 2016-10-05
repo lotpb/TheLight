@@ -157,14 +157,11 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-            self.selectedImage = UIImage(data: imageData!)
-            cell.thumbnailImageView.image = self.selectedImage
             
-            /*
-            let URL = NSURL(string: self.imageFile.url!)
-            let thumbnailImage = self.thumbnailImageForFileUrl(fileUrl: URL!)
-            cell.thumbnailImageView.image = thumbnailImage */
-            
+            UIView.transition(with: cell.thumbnailImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                self.selectedImage = UIImage(data: imageData!)
+                cell.thumbnailImageView.image = self.selectedImage
+                }, completion: nil)
         }
         
         //profile Image
@@ -175,7 +172,10 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
                     imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-                        cell.userProfileImageView.image = UIImage(data: imageData!)
+                        
+                        UIView.transition(with: cell.userProfileImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            cell.userProfileImageView.image = UIImage(data: imageData!)
+                            }, completion: nil)
                     }
                 }
             }

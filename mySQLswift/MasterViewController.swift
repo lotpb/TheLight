@@ -56,10 +56,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         resultsController.tableView.delegate = self
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
-        let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(MasterViewController.actionButton))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
         let buttons:NSArray = [addButton, searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
         
         // MARK: - SplitView
         /*
@@ -173,10 +174,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let buttonSocial = UIAlertAction(title: "Social", style: .default, handler: { (action) -> Void in
             self.performSegue(withIdentifier: "socialSegue", sender: self)
         })
-        let buttonFive = UIAlertAction(title: "Logout", style: .default, handler: { (action) -> Void in
-            PFUser.logOut()
-            self.performSegue(withIdentifier: "showLogin", sender: self)
-        })
         let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
             //print("Cancel Button Pressed")
         }
@@ -186,7 +183,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         alertController.addAction(buttonThree)
         alertController.addAction(buttonFour)
         alertController.addAction(buttonSocial)
-        alertController.addAction(buttonFive)
         alertController.addAction(buttonCancel)
         
         if let popoverController = alertController.popoverPresentationController {
@@ -446,7 +442,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             if (versionId != self.defaults.string(forKey: "versionKey")) {
                 
                 DispatchQueue.main.async {
-                self.simpleAlert(title: "New Version!!", message: "A new version of app is available to download")
+                self.simpleAlert(title: "New Version!", message: "A new version of app is available to download")
                 }
             }
         }
@@ -474,6 +470,14 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             tradeYQL = querystockResults!.value(forKeyPath: "quote.LastTradePriceOnly") as? NSArray
             changeYQL = querystockResults!.value(forKeyPath: "quote.Change") as? NSArray
         }
+    }
+    
+    // MARK: - Logout
+    
+    func handleSignOut() {
+        PFUser.logOut()
+        self.performSegue(withIdentifier: "showLogin", sender: self)
+        
     }
 
     

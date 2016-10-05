@@ -63,13 +63,12 @@ class NotificationController: UIViewController {
     
     // MARK: - localNotification
     
-    /*
-    override class func initialize() {
-        var onceToken: dispatch_once_t = 0
-        dispatch_once(&onceToken) {
-            self.sendNotification()
-        }
-    } */
+    @IBAction func datePickerDidSelectNewDate(_ sender: UIDatePicker) {
+        let selectedDate = sender.date
+        print("Selected date: \(selectedDate)")
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        delegate?.scheduleNotification(at: selectedDate)
+    }
     
     @IBAction func sendNotification(_ sender:AnyObject) {
         
@@ -145,10 +144,11 @@ class NotificationController: UIViewController {
         UIApplication.shared.scheduleLocalNotification(notifications)
         self.customMessage.text = ""
         }
+        
     }
     
     
-     func memberNotification() {
+    func memberNotification() {
       
         if #available(iOS 10.0, *) {
 
@@ -352,3 +352,4 @@ class NotificationController: UIViewController {
     }
     
 }
+

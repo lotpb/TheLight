@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var window: UIWindow?
     var defaults = UserDefaults.standard
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
         // MARK: - Register Settings
         
@@ -42,9 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "emailmessageKey": "<h3>Programming in Swift</h3>"
             ])
         
-        // MARK: - Firebase
-        
-         //FIRApp.configure()
         
         // MARK: - Parse
         
@@ -67,15 +64,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         if #available(iOS 10.0, *) {
             
-            let center = UNUserNotificationCenter.current()
-            center.requestAuthorization(options: [.sound, .alert, .badge]) { (granted, error) in
-                if granted == true {
-                    //print("Allow Authorization")
-                    UIApplication.shared.registerForRemoteNotifications()
-                } else {
-                    print("Don't Allow Authorization")
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {(accepted, error) in
+                if !accepted {
+                    print("Notification access denied.")
                 }
             }
+            
+            let action = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: [])
+            let category = UNNotificationCategory(identifier: "myCategory", actions: [action], intentIdentifiers: [], options: [])
+            UNUserNotificationCenter.current().setNotificationCategories([category])
+            
         } else {
             
             let mySettings = UIUserNotificationSettings(types:[.badge, .sound, .alert], categories: nil)
@@ -83,13 +81,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         
         application.applicationIconBadgeNumber = 0
-        
-        UNUserNotificationCenter.current().delegate = self
-        
-        let likeAction = UNNotificationAction(identifier: "like", title: "好感動", options: [.foreground])
-        let dislikeAction = UNNotificationAction(identifier: "dislike", title: "沒感覺", options: [])
-        let category = UNNotificationCategory(identifier: "luckyMessage", actions: [likeAction, dislikeAction], intentIdentifiers: [], options: [])
-        UNUserNotificationCenter.current().setNotificationCategories([category])
         
         
         // MARK: - Background Fetch
@@ -107,15 +98,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.window?.rootViewController = initialViewController
             self.window?.makeKeyAndVisible()
         }
-        
-        // MARK: - SplitViewController
-        
-        /*
-        // Override point for customization after application launch.
-        let splitViewController = self.window!.rootViewController as! UISplitViewController
-        let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
-        splitViewController.delegate = self */
 
         
         // MARK: - Facebook Sign-in
@@ -123,6 +105,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
         customizeAppearance()
+        
+        // MARK: - Firebase
+        
+          //FIRApp.configure()
+        
+        
+        // MARK: - SplitViewController
+        /*
+         // Override point for customization after application launch.
+         let splitViewController = self.window!.rootViewController as! UISplitViewController
+         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
+         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+         splitViewController.delegate = self */
         
         return true
     }
@@ -147,7 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     private func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         
-            print("########### Received Background Fetch ###########")
+        print("########### Received Background Fetch ###########")
         
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
@@ -198,7 +193,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
     
-    // MARK: - Facebook
+    // MARK: -  
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
@@ -229,7 +224,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return false
     }
     
-    // MARK - App Theme Customization
+    // MARK: - Schedule Notification
+    
+    func scheduleNotification(at date: Date) {
+        
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents(in: .current, from: date)
+        let newComponents = DateComponents(calendar: calendar, timeZone: .current, month: components.month, day: components.day, hour: components.hour, minute: components.minute)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Tutorial Reminder"
+        content.body = "Just a reminder to read your tutorial over at appcoda.com!"
+        content.sound = UNNotificationSound.default()
+        content.categoryIdentifier = "myCategory"
+        
+        if let path = Bundle.main.path(forResource: "wishlist", ofType: "png") {
+            let url = URL(fileURLWithPath: path)
+            
+            do {
+                let attachment = try UNNotificationAttachment(identifier: "wishlist", url: url, options: nil)
+                content.attachments = [attachment]
+            } catch {
+                print("The attachment was not loaded.")
+            }
+        }
+        
+        let request = UNNotificationRequest(identifier: "textNotification", content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().add(request) {(error) in
+            if let error = error {
+                print("Uh oh! We had an error: \(error)")
+            }
+        }
+    }
+    
+    // MARK: - App Theme Customization
     
     private func customizeAppearance() {
         
@@ -255,26 +288,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
 
 }
+
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    
-    private func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-        completionHandler([.badge, .sound, .alert])
-        print("\(self.classForCoder)/" + #function)
-    }
-    
-    private func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
-        
-        let content = response.notification.request.content
-        print("title \(content.title)")
-        print("userInfo \(content.userInfo)")
-        print("actionIdentifier \(response.actionIdentifier)")
-        completionHandler()
-        
-        print("\(self.classForCoder)/" + #function)
+        if response.actionIdentifier == "remindLater" {
+            let newDate = Date(timeInterval: 5, since: Date())
+            scheduleNotification(at: newDate)
+        }
     }
 }
 
+/*
 // MARK: CLLocationManagerDelegate - Beacons
 extension AppDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
@@ -282,7 +307,7 @@ extension AppDelegate: CLLocationManagerDelegate {
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "Are you forgetting something?"
-            content.subtitle = "米花兒"
+            //content.subtitle = "米花兒"
             content.body = "Are you forgetting something?"
             content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
             content.sound = UNNotificationSound.default()
@@ -301,5 +326,5 @@ extension AppDelegate: CLLocationManagerDelegate {
             }
         }
     }
-}
+} */
 
