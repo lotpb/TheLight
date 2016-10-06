@@ -34,7 +34,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     var pickImage = false
     var editImage = false
     var activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0,y: 0, width: 150, height: 150)) as UIActivityIndicatorView
-    //var activityIndicator : UIActivityIndicatorView?
     
     var formStat : String?
     var objectId : String?
@@ -53,7 +52,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myUpload", for: UIControlState())
+        titleButton.setTitle("Upload", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -62,6 +61,11 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         self.mainView.backgroundColor = UIColor(white:0.90, alpha:1.0)
         self.progressView.isHidden = true
         self.progressView.setProgress(0, animated: true)
+        
+        let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(shootPhoto))
+        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(uploadImage))
+        let buttons:NSArray = [saveButton, cameraButton]
+        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
@@ -92,12 +96,11 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             self.commentDetail.text = addText
         }
         
-        
-        self.imgToUpload.backgroundColor = .white
+      //self.imgToUpload.backgroundColor = .white
         self.imgToUpload.isUserInteractionEnabled = true
         
         self.clearButton.setTitle("Clear", for: UIControlState())
-        self.clearButton .addTarget(self, action: #selector(UploadController.clearBtn), for: UIControlEvents.touchUpInside)
+        self.clearButton .addTarget(self, action: #selector(clearBtn), for: UIControlEvents.touchUpInside)
         self.clearButton.tintColor = Color.DGrayColor
         self.clearButton.layer.cornerRadius = 12.0
         self.clearButton.layer.borderColor = Color.DGrayColor.cgColor
@@ -119,14 +122,13 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(UploadController.finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerViewController)
+        NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerViewController)
         self.commentDetail.isScrollEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
     }
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -140,20 +142,28 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         if (self.clearButton.titleLabel!.text == "Clear")   {
             self.commentDetail.text = ""
             self.clearButton.setTitle("add text", for: UIControlState())
-            self.clearButton.sizeToFit()
         } else {
             self.commentDetail.text = addText
             self.clearButton.setTitle("Clear", for: UIControlState())
-            self.clearButton.sizeToFit()
         }
     }
     
     // MARK: - Button
     
+    // MARK: Camera
+    
+    func shootPhoto(_ sender: UIBarButtonItem) {
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+        imagePicker.cameraCaptureMode = .photo
+        imagePicker.modalPresentationStyle = .fullScreen
+        present(imagePicker,animated: true,completion: nil)
+    }
+    
     @IBAction func selectImage(_ sender: AnyObject) {
         
         imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .photoLibrary //.savedPhotosAlbum
+        imagePicker.sourceType = .photoLibrary
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
@@ -161,8 +171,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    
-    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         self.editImage = true
         let mediaType = info[UIImagePickerControllerMediaType] as! NSString
@@ -170,7 +179,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         if mediaType.isEqual(to: kUTTypeMovie as String) {
             
-            //let videoURL = NSURL(string: Videos[indexPath.row].url!)
             pickImage = false
             videoURL = info[UIImagePickerControllerMediaURL] as? URL
             let player = AVPlayer(url: videoURL!)
@@ -179,26 +187,26 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             playerViewController.view.frame = self.imgToUpload.bounds
             playerViewController.videoGravity = AVLayerVideoGravityResizeAspect
             playerViewController.showsPlaybackControls = true
-            self.imgToUpload.addSubview(playerViewController.view)
+            imgToUpload.addSubview(playerViewController.view)
             player.play()
             
         } else if mediaType.isEqual(to: kUTTypeImage as String) {
             
-            let image = info[UIImagePickerControllerEditedImage] as! UIImage
             pickImage = true
-            self.imgToUpload!.image = image
-            self.imgToUpload.contentMode = .scaleAspectFill
-            self.imgToUpload.clipsToBounds = true
+            let image = info[UIImagePickerControllerEditedImage] as? UIImage
+            imgToUpload.contentMode = .scaleAspectFill
+            imgToUpload.clipsToBounds = true
+            imgToUpload.image = image
             
         }
-        
     }
-    
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        picker.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
+    
+    // MARK: - video playback
     
     func finishedPlaying(_ myNotification:Notification) {
         
@@ -206,123 +214,122 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         stoppedPlayerItem.seek(to: kCMTimeZero)
     }
     
-    // MARK: - Notification
+    // MARK: - News Notification
     
-    func newBlogNotification() {
+    func newsNotification() {
         
-        if #available(iOS 10.0, *) {
-            let content = UNMutableNotificationContent()
-            content.title = "News \(self.commentSorce)"
-            content.subtitle = "News \(self.commentSorce)"
-            content.body = "New News Story Posted at TheLight"
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
-            content.sound = UNNotificationSound.default()
-            content.categoryIdentifier = "status"
-            
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-            let request = UNNotificationRequest(identifier: "FiveSecond", content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            
-        } else {
-            
-            let localNotification: UILocalNotification = UILocalNotification()
-            localNotification.alertAction = "Blog Post"
-            localNotification.alertBody = "New Blog Posted by \(self.commentSorce) at TheLight"
-            localNotification.fireDate = Date(timeIntervalSinceNow: 10)
-            localNotification.timeZone = TimeZone.current
-            localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-            localNotification.soundName = UILocalNotificationDefaultSoundName
-            UIApplication.shared.scheduleLocalNotification(localNotification)
-        }
+        let content = UNMutableNotificationContent()
+        content.title = "Breaking News"
+        content.body = "News Posted by \(PFUser.current()!.username!) at TheLight"
+        content.badge = 1
+        content.sound = UNNotificationSound.default()
+        content.categoryIdentifier = "status"
+        
+        let imageURL = Bundle.main.url(forResource: "news", withExtension: "png")
+        let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
+        content.attachments = [attachment]
+        content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let request = UNNotificationRequest(identifier: "news-id-123", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        
     }
 
     
     // MARK: - Update Data
     
-    @IBAction func uploadImage(_ sender: AnyObject) {
+    func uploadImage(_ sender: AnyObject) {
         
-        self.navigationItem.rightBarButtonItem!.isEnabled = false
-        self.progressView.isHidden = false
+        guard let text = self.commentTitle.text else { return }
         
-        activityIndicator.center = self.imgToUpload!.center
-        activityIndicator.startAnimating()
-        self.view.addSubview(activityIndicator)
-        
-        if (pickImage == true) { //image
-            pictureData = UIImageJPEGRepresentation(self.imgToUpload!.image!, 1.0)
-            file = PFFile(name: "img", data: pictureData!)
-        } else { //video
-
-            pictureData =  try? Data(contentsOf: videoURL!)
-            file = PFFile(name: "movie.mp4", data: pictureData!)
-        }
-        
-        if (self.formStat == "Update") {
+        if text == "" {
             
-            let query = PFQuery(className:"Newsios")
-            query.whereKey("objectId", equalTo:self.objectId!)
-            query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                if error == nil {
-                    updateblog!.setObject(self.commentTitle.text!, forKey:"newsTitle")
-                    updateblog!.setObject(self.commentSorce.text!, forKey:"newsDetail")
-                    updateblog!.setObject(self.commentDetail.text!, forKey:"storyText")
-                    updateblog!.setObject(PFUser.current()!.username!, forKey:"username")
-                    updateblog!.saveEventually()
-                    
-                    if self.editImage == true {
-                        
-                        self.file!.saveInBackground { (success: Bool, error: Error?) -> Void in
-                            if success {
-                                updateblog!.setObject(self.file!, forKey:"imageFile")
-                                updateblog!.saveInBackground { (success: Bool, error: Error?) -> Void in
-                                }
-                            }
-                        }
-                        
-                    }
-                    
-                    //self.simpleAlert("Upload Complete", message: "Successfully updated the data")
-                    
-                } else {
-                    
-                    self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    
-                }
-            }
+            self.simpleAlert(title: "Oops!", message: "No text entered.")
             
         } else {
             
-            file!.saveInBackground { (success: Bool, error: Error?) -> Void in
-                if success {
-                    let updateuser:PFObject = PFObject(className:"Newsios")
-                    updateuser.setObject(self.file!, forKey:"imageFile")
-                    updateuser.setObject(self.commentTitle.text!, forKey:"newsTitle")
-                    updateuser.setObject(self.commentSorce.text!, forKey:"newsDetail")
-                    updateuser.setObject(self.commentDetail.text!, forKey:"storyText")
-                    updateuser.setObject(PFUser.current()!.username!, forKey:"username")
-                    updateuser.saveInBackground { (success: Bool, error: Error?) -> Void in
+            self.navigationItem.rightBarButtonItem!.isEnabled = false
+            self.progressView.isHidden = false
+            
+            activityIndicator.center = self.imgToUpload!.center
+            activityIndicator.startAnimating()
+            self.view.addSubview(activityIndicator)
+            
+            if (pickImage == true) { //image
+                pictureData = UIImageJPEGRepresentation(self.imgToUpload!.image!, 1.0)
+                file = PFFile(name: "img", data: pictureData!)
+            } else { //video
+                
+                pictureData =  try? Data(contentsOf: videoURL!)
+                file = PFFile(name: "movie.mp4", data: pictureData!)
+            }
+            
+            if (self.formStat == "Update") {
+                
+                let query = PFQuery(className:"Newsios")
+                query.whereKey("objectId", equalTo:self.objectId!)
+                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    if error == nil {
+                        updateblog!.setObject(self.commentTitle.text!, forKey:"newsTitle")
+                        updateblog!.setObject(self.commentSorce.text!, forKey:"newsDetail")
+                        updateblog!.setObject(self.commentDetail.text!, forKey:"storyText")
+                        updateblog!.setObject(PFUser.current()!.username!, forKey:"username")
+                        updateblog!.saveEventually()
                         
-                        if success {
+                        if self.editImage == true {
                             
-                            self.newBlogNotification()
+                            self.file!.saveInBackground { (success: Bool, error: Error?) -> Void in
+                                if success {
+                                    updateblog!.setObject(self.file!, forKey:"imageFile")
+                                    updateblog!.saveInBackground { (success: Bool, error: Error?) -> Void in
+                                    }
+                                }
+                            }
                             
-                            self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
-                            
-                        } else {
-                            
-                            print("Error: \(error) \(error!._userInfo)")
                         }
+                        
+                        //self.simpleAlert("Upload Complete", message: "Successfully updated the data")
+                        
+                    } else {
+                        
+                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        
                     }
-                } else {
-                    
-                    self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    
+                }
+                
+            } else {
+                
+                file!.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    if success {
+                        let updateuser:PFObject = PFObject(className:"Newsios")
+                        updateuser.setObject(self.file!, forKey:"imageFile")
+                        updateuser.setObject(self.commentTitle.text!, forKey:"newsTitle")
+                        updateuser.setObject(self.commentSorce.text!, forKey:"newsDetail")
+                        updateuser.setObject(self.commentDetail.text!, forKey:"storyText")
+                        updateuser.setObject(PFUser.current()!.username!, forKey:"username")
+                        updateuser.saveInBackground { (success: Bool, error: Error?) -> Void in
+                            
+                            if success {
+                                
+                                self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
+                                self.newsNotification()
+                            } else {
+                                
+                                print("Error: \(error) \(error!._userInfo)")
+                            }
+                        }
+                    } else {
+                        
+                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        
+                    }
                 }
             }
+            //self.navigationController?.popToRootViewController(animated: true)
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.removeFromSuperview()
         }
-        //self.navigationController?.popToRootViewController(animated: true)
-        self.activityIndicator.stopAnimating()
-        self.activityIndicator.removeFromSuperview()
     }
 
 

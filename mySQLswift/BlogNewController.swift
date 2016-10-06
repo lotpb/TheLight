@@ -205,6 +205,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func configureTextView() {
         
         subject?.delegate = self
+        subject?.autocorrectionType = UITextAutocorrectionType.yes
         subject?.dataDetectorTypes = UIDataDetectorTypes.all
         self.characterCountLabel!.text = ""
         self.characterCountLabel!.textColor = .gray
@@ -223,11 +224,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 
                 let webattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
                 
-                //attributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
-                
                 let emailattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
                 
                 let phoneattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
+                
+                //attributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
                 
                 if result!.resultType == .link {
                     
@@ -527,32 +528,25 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     func newBlogNotification() {
         
-        if #available(iOS 10.0, *) {
-            let content = UNMutableNotificationContent()
-            content.title = "Blog Post"
-            //content.subtitle = "\(self.postby!) said:"
-            content.body = "New Blog Posted by \(self.postby!) at TheLight"
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
-            content.sound = UNNotificationSound.default()
-            content.categoryIdentifier = "status"
-            
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-            let request = UNNotificationRequest(identifier: "FiveSecond", content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            
-        } else {
-            
-            let localNotification: UILocalNotification = UILocalNotification()
-            localNotification.alertAction = "Blog Post"
-            localNotification.alertBody = "New Blog Posted by \(self.postby!) at TheLight"
-            localNotification.fireDate = Date(timeIntervalSinceNow: 10)
-            localNotification.timeZone = TimeZone.current
-            localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-            localNotification.soundName = UILocalNotificationDefaultSoundName
-            UIApplication.shared.scheduleLocalNotification(localNotification)
-        }
+        let content = UNMutableNotificationContent()
+        content.title = "Blog Post"
+        content.body = "New Blog Posted by \(self.postby!) at TheLight"
+        content.badge = 1
+        content.sound = UNNotificationSound.default()
+        content.categoryIdentifier = "status"
+        
+        let imageURL = Bundle.main.url(forResource: "comments", withExtension: "png")
+        let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
+        content.attachments = [attachment]
+        content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let request = UNNotificationRequest(identifier: "newBlog-id-123", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        
     }
 
+    // MARK: - Save Data
     
     @IBAction func saveData(sender: UIButton) {
         
@@ -563,33 +557,33 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.simpleAlert(title: "Oops!", message: "No text entered.")
             
         } else {
-        
-        if (self.formStatus == "None") {
             
-            let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo:self.objectId!)
-            query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
-                if error == nil {
-                    updateblog!.setObject(self.msgDate!, forKey:"MsgDate")
-                    updateblog!.setObject(self.postby!, forKey:"PostBy")
-                    updateblog!.setObject(self.rating!, forKey:"Rating")
-                    updateblog!.setObject(self.subject!.text, forKey:"Subject")
-                    updateblog!.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
-                    updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
-                    updateblog!.saveEventually()
-                    
-                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
-                    //self.show(vc!, sender: self)
-                    self.present(vc!, animated: true)
-                    
-                    self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                } else {
-                    self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+            if (self.formStatus == "None") {
+                
+                let query = PFQuery(className:"Blog")
+                query.whereKey("objectId", equalTo:self.objectId!)
+                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    if error == nil {
+                        updateblog!.setObject(self.msgDate!, forKey:"MsgDate")
+                        updateblog!.setObject(self.postby!, forKey:"PostBy")
+                        updateblog!.setObject(self.rating!, forKey:"Rating")
+                        updateblog!.setObject(self.subject!.text, forKey:"Subject")
+                        updateblog!.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
+                        updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
+                        updateblog!.saveEventually()
+                        
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
+                        self.show(vc!, sender: self)
+                        //self.present(vc!, animated: true)
+                        
+                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                    } else {
+                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                    }
                 }
-            }
-            
-        } else if (self.formStatus == "New") {
-            
+                
+            } else if (self.formStatus == "New") {
+                
                 let saveblog:PFObject = PFObject(className:"Blog")
                 saveblog.setObject(self.msgDate!, forKey:"MsgDate")
                 saveblog.setObject(self.postby!, forKey:"PostBy")
@@ -612,12 +606,12 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 
                 saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
                     if success == true {
-                        self.newBlogNotification()
+                        
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
-                        //self.show(vc!, sender: self)
-                        self.present(vc!, animated: true)
+                        self.show(vc!, sender: self)
                         
                         self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                        self.newBlogNotification()
                     } else {
                         self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
                     }

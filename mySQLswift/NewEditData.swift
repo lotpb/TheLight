@@ -552,8 +552,8 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                 
             }
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeId")
-            //self.show(vc!, sender: self)
-            self.present(vc!, animated: true)
+            self.show(vc!, sender: self)
+            //self.present(vc!, animated: true)
         }
     }
 }

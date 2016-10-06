@@ -187,7 +187,7 @@ class NotificationController: UIViewController {
     }
     
     
-    func newBlogNotification() {
+    func blogNotification() {
         
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
@@ -320,7 +320,7 @@ class NotificationController: UIViewController {
         })
         
         let newBog = UIAlertAction(title: "New Blog Posted", style: .default, handler: { (action) -> Void in
-            self.newBlogNotification()
+            self.blogNotification()
         })
         let heyYou = UIAlertAction(title: "Hey You", style: .default, handler: { (action) -> Void in
             self.HeyYouNotification()

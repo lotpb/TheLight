@@ -273,7 +273,6 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 
             } else {
                 self.selectedImage = UIImage(data: imageData! as Data)
-                //self.performSegue(withIdentifier: "newsdetailSeque", sender: self)
 
                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
@@ -285,7 +284,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 vc.newsStory = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "storyText") as? String
                 vc.image = self.selectedImage
                 vc.videoURL = self.imageFile.url
-
+                
                 let navigationController = UINavigationController(rootViewController: vc)
                 UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
             }

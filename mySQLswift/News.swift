@@ -100,7 +100,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(newButton))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(handleSearch))
-        let buttons:NSArray = [moreButton,searchButton,addButton]
+        let buttons:NSArray = [moreButton,addButton,searchButton]
         self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
     }
     

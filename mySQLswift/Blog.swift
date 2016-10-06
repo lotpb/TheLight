@@ -289,11 +289,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let boldFont = UIFont(descriptor: boldFontDescriptor!, size: 24)
         attributedText.addAttribute(NSFontAttributeName, value: boldFont, range: boldRange)
         
-        // Append a space with matching font of the rest of the body text.
-        let appendedSpace = NSMutableAttributedString.init(string: " ")
-        appendedSpace.addAttribute(NSFontAttributeName, value: boldFont, range: NSMakeRange(0, 1))
-        attributedText.append(appendedSpace)
-        
         // Add tint.
         attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.emaillinkText, range: tintedRange)
         attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: tintedRange1)
@@ -303,6 +298,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Add underline.
         attributedText.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.styleSingle.rawValue, range: underlinedRange)
+        /*
+        // Append a space with matching font of the rest of the body text.
+        let appendedSpace = NSMutableAttributedString.init(string: " ")
+        appendedSpace.addAttribute(NSFontAttributeName, value: boldFont, range: NSMakeRange(0, 1))
+        attributedText.append(appendedSpace) */
         
         cell?.blogsubtitleLabel!.attributedText  = attributedText
 

@@ -54,7 +54,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Vendor.newData))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Vendor.searchButton))
         let buttons:NSArray = [addButton,searchButton]
         self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
