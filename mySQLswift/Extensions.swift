@@ -119,7 +119,7 @@ import UIKit
     }
 
 
-// MARK: - RemoveWhiteSpace
+// MARK: - RemoveWhiteSpace  //EditData
 
 public extension String {
     
@@ -143,7 +143,7 @@ public extension UIViewController {
     
 }
 
-//-----------youtube---------
+//--------------youtube------------
 
 extension UIColor { //youtube red
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
@@ -164,9 +164,8 @@ extension UIView {
     }
 }
 
-//-----------youtube---------
-
-let imageCache = NSCache<AnyObject, AnyObject>()
+//declared in CollectionViewCell
+let imageCache = NSCache<NSString, UIImage>()
 
 class CustomImageView: UIImageView {
     
@@ -178,13 +177,12 @@ class CustomImageView: UIImageView {
         let url = URL(string: urlString)
         image = nil
         
-        //check cache for image first
-        if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
+        if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
+            
             self.image = imageFromCache
             return
         }
         
-        //otherwise fire off a new download
         URLSession.shared.dataTask(with: url!, completionHandler: { (data, respones, error) in
             
             if error != nil {
@@ -200,7 +198,7 @@ class CustomImageView: UIImageView {
                     self.image = imageToCache
                 }
                 
-                imageCache.setObject(imageToCache!, forKey: urlString as AnyObject)
+                imageCache.setObject(imageToCache!, forKey: urlString as NSString)
             })
             
         }).resume()
@@ -213,6 +211,8 @@ func requestSuggestionsURL(text: String) -> URL {
     let url = URL.init(string: "https://api.bing.com/osjson.aspx?query=\(netText)")!
     return url
 }
+
+//------------------------------------
 
 //not used - valid email
 extension String {

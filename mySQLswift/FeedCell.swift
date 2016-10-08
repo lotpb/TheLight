@@ -51,6 +51,10 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     override func setupViews() {
         super.setupViews()
         
+        fetchVideos()
+        
+        backgroundColor = .brown
+        
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .white//Color.News.navColor
         refreshControl.tintColor = .lightGray
@@ -58,10 +62,6 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
         self.refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
         self.collectionView.addSubview(refreshControl)
-        
-        fetchVideos()
-        
-        backgroundColor = .brown
         
         addSubview(collectionView)
         addConstraintsWithFormat(format: "H:|[v0]|", views: collectionView)
@@ -154,7 +154,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         cell.subtitlelabel.textColor = Color.DGrayColor
         cell.uploadbylabel.textColor = Color.DGrayColor
         
-        imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as! PFObject
+        imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
             
@@ -166,7 +166,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         //profile Image
         let query:PFQuery = PFUser.query()!
-        query.whereKey("username",  equalTo:(self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "username") as! String)
+        query.whereKey("username",  equalTo:(self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as! String)
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
             if error == nil {
@@ -181,15 +181,15 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             }
         }
         
-        cell.titleLabelnew.text = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
+        cell.titleLabelnew.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
         cell.actionButton.addTarget(self, action: #selector(shareButton), for: UIControlEvents.touchUpInside)
         cell.likeBtn.addTarget(self, action: #selector(likeSetButton), for: UIControlEvents.touchUpInside)
         
-        let date1 = ((self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
+        let date1 = ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
         let date2 = Date()
         let calendar = Calendar.current
         let diffDateComponents = calendar.dateComponents([.day], from: date1, to: date2)
-        cell.subtitlelabel.text = String(format: "%@, %d%@" , ((self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, diffDateComponents.day!," days ago" )
+        cell.subtitlelabel.text = String(format: "%@, %d%@" , ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, diffDateComponents.day!," days ago" )
         
         let updated:Date = date1
         let dateFormatter = DateFormatter()
@@ -211,7 +211,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         cell.playButton.isHidden = result1 == false
         cell.playButton.setTitle(imageDetailurl, for: UIControlState.normal)
         
-        var Liked:Int? = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Liked")as? Int
+        var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
         if Liked == nil {
             Liked = 0
         }
@@ -272,21 +272,23 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 videoLauncher.showVideoPlayer()
                 
             } else {
+                
                 self.selectedImage = UIImage(data: imageData! as Data)
 
                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
 
-                vc.objectId = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "objectId") as? String
-                vc.newsTitle = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
-                vc.newsDetail = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "newsDetail") as? String
-                vc.newsDate = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as? Date
-                vc.newsStory = (self._feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "storyText") as? String
+                vc.objectId = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
+                vc.newsTitle = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
+                vc.newsDetail = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsDetail") as? String
+                vc.newsDate = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
+                vc.newsStory = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "storyText") as? String
                 vc.image = self.selectedImage
                 vc.videoURL = self.imageFile.url
                 
                 let navigationController = UINavigationController(rootViewController: vc)
                 UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
+                
             }
         }
     }

@@ -56,9 +56,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         resultsController.tableView.delegate = self
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
+        
         let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
-        let buttons:NSArray = [addButton, searchButton]
-        navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        
+        navigationItem.rightBarButtonItems = [addButton, searchButton]
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
         
@@ -235,11 +236,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         if (tableView == self.tableView) {
             
-            cell.textLabel!.text = menuItems[(indexPath as NSIndexPath).row] as? String
+            cell.textLabel!.text = menuItems[indexPath.row] as? String
             
         } else {
             
-            cell.textLabel!.text = self.foundUsers[(indexPath as NSIndexPath).row]
+            cell.textLabel!.text = self.foundUsers[indexPath.row]
         }
         
         return cell
@@ -377,7 +378,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            objects.remove(at: (indexPath as NSIndexPath).row)
+            objects.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.

@@ -54,10 +54,9 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Lead.newData))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Lead.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
 
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.Lead.navColor
@@ -183,23 +182,23 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         
         if (tableView == self.tableView) {
             
-            cell.leadtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
+            cell.leadtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
             
-            myLabel1.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String
-            myLabel2.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "CallBack") as? String
+            myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String
+            myLabel2.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.leadsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
+                cell.leadsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String
             } else {
                 cell.leadsubtitleLabel!.text = ""
             }
         
         } else {
 
-            cell.leadtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
-            cell.leadsubtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
-            myLabel1.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String
-            myLabel2.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "CallBack") as? String
+            cell.leadtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
+            cell.leadsubtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "City") as? String
+            myLabel1.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Date") as? String
+            myLabel2.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String
         }
         
         cell.leadreplyButton.tintColor = .lightGray
@@ -212,13 +211,13 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         
         cell.leadreplyLabel.text! = ""
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Coments") as? String == nil) || ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Coments") as? String == "") {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Coments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Coments") as? String == "") {
             cell.leadreplyButton!.tintColor = .lightGray
         } else {
             cell.leadreplyButton!.tintColor = Color.Lead.buttonColor
         }
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
             cell.leadlikeButton!.tintColor = Color.Lead.buttonColor
             cell.leadlikeLabel.text! = "Active"
             cell.leadlikeLabel.adjustsFontSizeToFitWidth = true
@@ -236,7 +235,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 25.0
         myLabel.isUserInteractionEnabled = true
-        myLabel.tag = (indexPath as NSIndexPath).row
+        myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(Lead.imgLoadSegue))
@@ -320,7 +319,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         
         if editingStyle == .delete {
             let query = PFQuery(className:"Leads")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -345,7 +344,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {

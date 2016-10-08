@@ -48,12 +48,10 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         self.newsImageview.backgroundColor = .black
         
         let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NewsDetailController.editData))
-        let buttons:NSArray = [editItem]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+
+        navigationItem.rightBarButtonItems = [editItem]
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
-        
-        //let playButton = UIButton(type: UIButtonType.custom) as UIButton
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             

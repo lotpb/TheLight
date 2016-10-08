@@ -67,10 +67,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         if (self.formController == "Blog") {
         self.comments = "90 percent of my picks made $$$. The stock whisper has traded over 1000 traders worldwide"
         }
-        /*
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: Selector())
-        let buttons:NSArray = [shareButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem] */
         
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .clear
@@ -160,10 +156,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         let dateFormatter = DateFormatter()
         
         if (self.formController == "Blog") {
-            dateStr = ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "MsgDate") as? String)!
+            dateStr = ((_feedItems[indexPath.row] as AnyObject).value(forKey: "MsgDate") as? String)!
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         } else {
-            dateStr = ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String)!
+            dateStr = ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String)!
             dateFormatter.dateFormat = "yyyy-MM-dd"
         }
     
@@ -172,10 +168,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         
         if (self.formController == "Blog") {
             
-            cell.blogtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "PostBy") as? String
-            cell.blogsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Subject") as? String
+            cell.blogtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
+            cell.blogsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
             cell.blogmsgDateLabel!.text = dateFormatter.string(from: date)as String!
-            var CommentCount:Int? = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "CommentCount")as? Int
+            var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CommentCount")as? Int
             if CommentCount == nil {
                 CommentCount = 0
             }
@@ -185,10 +181,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             
             let formatter = NumberFormatter()
             formatter.numberStyle = .currency
-            cell.blogtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
-            cell.blogsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
+            cell.blogtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
+            cell.blogsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String
             cell.blogmsgDateLabel!.text = dateFormatter.string(from: date)as String!
-            var CommentCount:Int? = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Amount")as? Int
+            var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Amount")as? Int
             if CommentCount == nil {
                 CommentCount = 0
             }
@@ -363,7 +359,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            objects.remove(at: (indexPath as NSIndexPath).row)
+            objects.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {

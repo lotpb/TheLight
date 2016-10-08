@@ -352,33 +352,33 @@ extension MusicController: UISearchBarDelegate {
 extension MusicController: TrackCellDelegate {
     func pauseTapped(_ cell: TrackCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            let track = searchResults[(indexPath as NSIndexPath).row]
+            let track = searchResults[indexPath.row]
             pauseDownload(track)
-            tableView.reloadRows(at: [IndexPath(row: (indexPath as NSIndexPath).row, section: 0)], with: .none)
+            tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
         }
     }
     
     func resumeTapped(_ cell: TrackCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            let track = searchResults[(indexPath as NSIndexPath).row]
+            let track = searchResults[indexPath.row]
             resumeDownload(track)
-            tableView.reloadRows(at: [IndexPath(row: (indexPath as NSIndexPath).row, section: 0)], with: .none)
+            tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
         }
     }
     
     func cancelTapped(_ cell: TrackCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            let track = searchResults[(indexPath as NSIndexPath).row]
+            let track = searchResults[indexPath.row]
             cancelDownload(track)
-            tableView.reloadRows(at: [IndexPath(row: (indexPath as NSIndexPath).row, section: 0)], with: .none)
+            tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
         }
     }
     
     func downloadTapped(_ cell: TrackCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            let track = searchResults[(indexPath as NSIndexPath).row]
+            let track = searchResults[indexPath.row]
             startDownload(track)
-            tableView.reloadRows(at: [IndexPath(row: (indexPath as NSIndexPath).row, section: 0)], with: .none)
+            tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .none)
         }
     }
 }
@@ -396,7 +396,7 @@ extension MusicController: UITableViewDataSource {
         // Delegate cell button tap events to this view controller
         cell.delegate = self
         
-        let track = searchResults[(indexPath as NSIndexPath).row]
+        let track = searchResults[indexPath.row]
         
         // Configure title and artist labels
         cell.titleLabel.text = track.name
@@ -435,7 +435,7 @@ extension MusicController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let track = searchResults[(indexPath as NSIndexPath).row]
+        let track = searchResults[indexPath.row]
         if localFileExistsForTrack(track) {
             playDownload(track)
         }

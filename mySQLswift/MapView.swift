@@ -58,8 +58,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         btnLayer3.cornerRadius = 9.0
         
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(MapView.shareButton))
-        let buttons:NSArray = [actionButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [actionButton]
         
         addActivityIndicator()
         

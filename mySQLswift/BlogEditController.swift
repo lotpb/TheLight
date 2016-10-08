@@ -106,8 +106,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(BlogEditController.shareButton))
         let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(BlogEditController.deleteButton))
-        let buttons:NSArray = [actionButton,trashButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [actionButton,trashButton]
         
         parseData()
         
@@ -232,7 +231,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             var cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell") as! CustomTableCell!
             
             let query:PFQuery = PFUser.query()!
-            query.whereKey("username",  equalTo: (self._feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "PostBy") as! String)
+            query.whereKey("username",  equalTo: (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as! String)
             query.limit = 1
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
@@ -267,15 +266,15 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 cell?.replydateLabel.font = replylabel
             }
 
-            let date1 = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as? Date
+            let date1 = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
             let date2 = Date()
             let calendar = Calendar.current
             let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
             
-            cell?.replytitleLabel!.text = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "PostBy") as? String
-            cell?.replysubtitleLabel!.text = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Subject") as? String
+            cell?.replytitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
+            cell?.replysubtitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
             cell?.replydateLabel!.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
-            var Liked:Int? = (_feedItems1[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Liked") as? Int
+            var Liked:Int? = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Liked") as? Int
             if Liked == nil {
                 Liked = 0
             }
@@ -303,7 +302,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            objects.remove(at: (indexPath as NSIndexPath).row)
+            objects.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -325,7 +324,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
         
         let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:((_feedItems1.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+        query.whereKey("objectId", equalTo:((_feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
             if error == nil {
                 object!.incrementKey("Liked")

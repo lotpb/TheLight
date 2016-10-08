@@ -84,8 +84,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         //self.automaticallyAdjustsScrollViewInsets = false
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(StatisticController.searchButton))
-        let buttons:NSArray = [searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [searchButton]
         
         self.refreshControl = UIRefreshControl()
         self.refreshControl.backgroundColor = Color.Stat.navColor
@@ -202,9 +201,9 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         cell.accessoryType = UITableViewCellAccessoryType.none
 
-        if ((indexPath as NSIndexPath).section == 0) {
+        if (indexPath.section == 0) {
             
-            if ((indexPath as NSIndexPath).row == 0) {
+            if (indexPath.row == 0) {
                 if ((changeYQL[0] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
                 } else {
@@ -219,7 +218,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 1) {
+            } else if (indexPath.row == 1) {
                 
                 if ((changeYQL[1] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -235,7 +234,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 2) {
+            } else if (indexPath.row == 2) {
                 
                 if ((changeYQL[2] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -251,7 +250,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 3) {
+            } else if (indexPath.row == 3) {
                 
                 if ((changeYQL[3] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -267,7 +266,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 4) {
+            } else if (indexPath.row == 4) {
                 
                 if ((changeYQL[4] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -283,7 +282,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 5) {
+            } else if (indexPath.row == 5) {
                 
                 if ((changeYQL[5] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -299,7 +298,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 6) {
+            } else if (indexPath.row == 6) {
                 
                 if ((changeYQL[6] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -315,7 +314,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 7) {
+            } else if (indexPath.row == 7) {
                 
                 if ((changeYQL[7] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -331,7 +330,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 8) {
+            } else if (indexPath.row == 8) {
                 
                 if ((changeYQL[8] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -347,7 +346,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 9) {
+            } else if (indexPath.row == 9) {
                 
                 if ((changeYQL[9] as AnyObject).contains("-")) {
                     label2.backgroundColor = .red
@@ -363,48 +362,48 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
             }
-        } else if ((indexPath as NSIndexPath).section == 1) {
+        } else if (indexPath.section == 1) {
             
-            if ((indexPath as NSIndexPath).row == 0) {
+            if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Todays Temperature"
                 cell.detailTextLabel!.text = "\(tempYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 1) {
+            } else if (indexPath.row == 1) {
                 
                 cell.textLabel!.text = "Todays Weather"
                 cell.detailTextLabel!.text = "\(weathYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 2) {
+            } else if (indexPath.row == 2) {
                 
                 cell.textLabel!.text = "Sunrise"
                 cell.detailTextLabel!.text = "\(riseYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 3) {
+            } else if (indexPath.row == 3) {
                 
                 cell.textLabel!.text = "Sunset"
                 cell.detailTextLabel!.text = "\(setYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 4) {
+            } else if (indexPath.row == 4) {
                 
                 cell.textLabel!.text = "Humidity"
                 cell.detailTextLabel!.text = "\(humYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 5) {
+            } else if (indexPath.row == 5) {
                 
                 cell.textLabel!.text = "City"
                 cell.detailTextLabel!.text = "\(cityYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 6) {
+            } else if (indexPath.row == 6) {
                 
                 cell.textLabel!.text = "Last Update"
                 cell.detailTextLabel!.text = "\(updateYQL!)"
@@ -412,36 +411,36 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 return cell
             }
             
-        } else if ((indexPath as NSIndexPath).section == 2) {
+        } else if (indexPath.section == 2) {
             
-            if ((indexPath as NSIndexPath).row == 0) {
+            if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "\(dayYQL[0])"
                 cell.detailTextLabel!.text = "\(textYQL[0])"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 1) {
+            } else if (indexPath.row == 1) {
                 
                 cell.textLabel!.text = "\(dayYQL[1])"
                 cell.detailTextLabel!.text = "\(textYQL[1])"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 2) {
+            } else if (indexPath.row == 2) {
                 
                 cell.textLabel!.text = "\(dayYQL[2])"
                 cell.detailTextLabel!.text = "\(textYQL[2])"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 3) {
+            } else if (indexPath.row == 3) {
                 
                 cell.textLabel!.text = "\(dayYQL[3])"
                 cell.detailTextLabel!.text = "\(textYQL[3])"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 4) {
+            } else if (indexPath.row == 4) {
                 
                 cell.textLabel!.text = "\(dayYQL[4])"
                 cell.detailTextLabel!.text = "\(textYQL[4])"
@@ -449,54 +448,54 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 return cell
             }
             
-        } else if ((indexPath as NSIndexPath).section == 3) {
+        } else if (indexPath.section == 3) {
             
-            if ((indexPath as NSIndexPath).row == 0) {
+            if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Leads Today"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 1) {
+            } else if (indexPath.row == 1) {
                 
                 cell.textLabel!.text = "Appointment's Today"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 2) {
+            } else if (indexPath.row == 2) {
                 
                 cell.textLabel!.text = "Appointment's Tomorrow"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 3) {
+            } else if (indexPath.row == 3) {
                 
                 cell.textLabel!.text = "Leads Active"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 4) {
+            } else if (indexPath.row == 4) {
                 
                 cell.textLabel!.text = "Leads Year"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 5) {
+            } else if (indexPath.row == 5) {
                 
                 cell.textLabel!.text = "Leads Avg"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 6) {
+            } else if (indexPath.row == 6) {
                 
                 cell.textLabel!.text = "Leads High"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 7) {
+            } else if (indexPath.row == 7) {
                 
                 cell.textLabel!.text = "Leads Low"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
@@ -504,54 +503,54 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 return cell
             }
             
-        } else if ((indexPath as NSIndexPath).section == 4) {
+        } else if (indexPath.section == 4) {
             
-            if ((indexPath as NSIndexPath).row == 0) {
+            if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Customers Today"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 1) {
+            } else if (indexPath.row == 1) {
                 
                 cell.textLabel!.text = "Customers Yesterday"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 2) {
+            } else if (indexPath.row == 2) {
                 
                 cell.textLabel!.text = "Windows Sold"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
                 
-            } else if ((indexPath as NSIndexPath).row == 3) {
+            } else if (indexPath.row == 3) {
                 
                 cell.textLabel!.text = "Customers Active"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 4) {
+            } else if (indexPath.row == 4) {
                 
                 cell.textLabel!.text = "Customers Year"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 5) {
+            } else if (indexPath.row == 5) {
                 
                 cell.textLabel!.text = "Customers Avg"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 6) {
+            } else if (indexPath.row == 6) {
                 
                 cell.textLabel!.text = "Customers High"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
                 
                 return cell
-            } else if ((indexPath as NSIndexPath).row == 7) {
+            } else if (indexPath.row == 7) {
                 
                 cell.textLabel!.text = "Customers Low"
                 //cell.detailTextLabel!.text = w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"

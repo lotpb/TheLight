@@ -78,9 +78,8 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        let searchButton = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(DetailViewController.lightcamera))
-        let buttons:NSArray = [searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        let searchButton = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(lightcamera))
+        navigationItem.rightBarButtonItems = [searchButton]
         
         // MARK: - locationManager
 

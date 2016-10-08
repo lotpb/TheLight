@@ -286,6 +286,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
     }
+    
 
 }
 

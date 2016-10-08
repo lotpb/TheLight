@@ -51,10 +51,9 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(ProductController.newData))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(ProductController.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
         
         parseData()
         
@@ -136,11 +135,11 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         if (tableView == self.tableView) {
            
-            cell.prodtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Products") as? String
+            cell.prodtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Products") as? String
             
         } else {
             
-            cell.prodtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Products") as? String
+            cell.prodtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Products") as? String
             
         }
         
@@ -153,7 +152,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 20.0
         myLabel.isUserInteractionEnabled = true
-        myLabel.tag = (indexPath as NSIndexPath).row
+        myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
         
         return cell
@@ -235,7 +234,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Product")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -260,7 +259,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
@@ -360,7 +359,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         } else {
             
             isFormStat = false
-            let imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as? PFObject
+            let imageObject = _feedItems.object(at: indexPath.row) as? PFObject
             if let imageFile = imageObject!.object(forKey: "imageFile") as? PFFile {
                 
                 imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in

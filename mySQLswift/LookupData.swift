@@ -166,30 +166,30 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         if (tableView == self.tableView) {
             
             if (lookupItem == "City") {
-                cell.textLabel!.text = ((zipArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String)!
+                cell.textLabel!.text = ((zipArray[indexPath.row] as AnyObject).value(forKey: "City") as? String)!
             } else if (lookupItem == "Salesman") {
-                cell.textLabel!.text = ((salesArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String)!
+                cell.textLabel!.text = ((salesArray[indexPath.row] as AnyObject).value(forKey: "Salesman") as? String)!
             } else if (lookupItem == "Job") {
-                cell.textLabel!.text = ((jobArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String)!
+                cell.textLabel!.text = ((jobArray[indexPath.row] as AnyObject).value(forKey: "Description") as? String)!
             } else if (lookupItem == "Product") {
-                cell.textLabel!.text = ((adproductArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Products") as? String)!
+                cell.textLabel!.text = ((adproductArray[indexPath.row] as AnyObject).value(forKey: "Products") as? String)!
             } else if (lookupItem == "Advertiser") {
-                cell.textLabel!.text = ((adproductArray[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Advertiser") as? String)!
+                cell.textLabel!.text = ((adproductArray[indexPath.row] as AnyObject).value(forKey: "Advertiser") as? String)!
             }
             
         } else {
             
             if (lookupItem == "City") {
                 //cell.textLabel!.text = foundUsers[indexPath.row]
-                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String)!
+                cell.textLabel!.text = ((filteredString[indexPath.row] as AnyObject).value(forKey: "City") as? String)!
             } else if (lookupItem == "Salesman") {
-                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String)!
+                cell.textLabel!.text = ((filteredString[indexPath.row] as AnyObject).value(forKey: "Salesman") as? String)!
             } else if (lookupItem == "Job") {
-                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String)!
+                cell.textLabel!.text = ((filteredString[indexPath.row] as AnyObject).value(forKey: "Description") as? String)!
             } else if (lookupItem == "Product") {
-                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Products") as? String)!
+                cell.textLabel!.text = ((filteredString[indexPath.row] as AnyObject).value(forKey: "Products") as? String)!
             } else if (lookupItem == "Advertiser") {
-                cell.textLabel!.text = ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Advertiser") as? String)!
+                cell.textLabel!.text = ((filteredString[indexPath.row] as AnyObject).value(forKey: "Advertiser") as? String)!
             }
             
         }
@@ -305,18 +305,18 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         if (!isFilltered) {
             if (lookupItem == "City") {
-                zipArray.object(at: (indexPath as NSIndexPath).row)
+                zipArray.object(at: indexPath.row)
             } else if (lookupItem == "Salesman") {
-                salesArray.object(at: (indexPath as NSIndexPath).row)
+                salesArray.object(at: indexPath.row)
             } else if (lookupItem == "Job") {
-                jobArray.object(at: (indexPath as NSIndexPath).row)
+                jobArray.object(at: indexPath.row)
             } else if (lookupItem == "Product") {
-                adproductArray.object(at: (indexPath as NSIndexPath).row)
+                adproductArray.object(at: indexPath.row)
             } else if (lookupItem == "Advertiser") {
-                adproductArray.object(at: (indexPath as NSIndexPath).row)
+                adproductArray.object(at: indexPath.row)
             }
         } else {
-            filteredString.object(at: (indexPath as NSIndexPath).row)
+            filteredString.object(at: indexPath.row)
         }
         passDataBack()
     }

@@ -53,9 +53,10 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         //self.navigationItem.leftBarButtonItem = self.editButtonItem()
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(AdController.newData))
+        
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(AdController.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
         
         parseData()
         
@@ -137,11 +138,11 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         if (tableView == self.tableView) {
             
-            cell.adtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Advertiser") as? String
+            cell.adtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Advertiser") as? String
             
         } else {
             
-            cell.adtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Advertiser") as? String
+            cell.adtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Advertiser") as? String
 
         }
         
@@ -154,7 +155,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 20.0
         myLabel.isUserInteractionEnabled = true
-        myLabel.tag = (indexPath as NSIndexPath).row
+        myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
         
         return cell
@@ -236,7 +237,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Advertising")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -261,7 +262,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
@@ -373,7 +374,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 VC!.formStatus = "New"
             } else {
                 VC!.formStatus = "Edit"
-                let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
+                let myIndexPath = self.tableView!.indexPathForSelectedRow!.row
                 VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
                 VC!.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
                 VC!.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "AdNo") as? String

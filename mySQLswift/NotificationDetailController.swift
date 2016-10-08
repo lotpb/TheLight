@@ -44,9 +44,8 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
         //self.tableView!.tableFooterView = UIView(frame: .zero)
         
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(NotificationDetailController.deleteButton))
-        let buttons:NSArray = [trashButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))
+        navigationItem.rightBarButtonItems = [trashButton]
         
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .orange
@@ -132,7 +131,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         } else {
             /*
             localNotifications = UIApplication.shared.scheduledLocalNotifications! as [AnyObject]
-            localNotification = localNotifications.object(at: (indexPath as NSIndexPath).row) as! UILocalNotification
+            localNotification = localNotifications.object(at: indexPath.row) as! UILocalNotification
             
             //cell.textLabel!.text = "You have no pending Notifications :)"
             //cell.detailTextLabel!.text = "You have no pending Notifications :)"
@@ -214,7 +213,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            objects.remove(at: (indexPath as NSIndexPath).row)
+            objects.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.

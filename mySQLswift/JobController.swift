@@ -53,10 +53,9 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         //self.navigationItem.leftBarButtonItem = self.editButtonItem()
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(JobController.newData))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(JobController.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
         
         parseData()
         
@@ -138,11 +137,11 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         if (tableView == self.tableView) {
             
-            cell.jobtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String
+            cell.jobtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Description") as? String
             
         } else {
             
-            cell.jobtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Description") as? String
+            cell.jobtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Description") as? String
             
         }
         
@@ -155,7 +154,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 20.0
         myLabel.isUserInteractionEnabled = true
-        myLabel.tag = (indexPath as NSIndexPath).row
+        myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
         
         return cell
@@ -237,7 +236,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Job")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -262,7 +261,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {

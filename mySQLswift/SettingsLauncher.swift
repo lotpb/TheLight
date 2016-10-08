@@ -103,7 +103,7 @@ class SettingsLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SettingCell
         
-        let setting = settings[(indexPath as NSIndexPath).item]
+        let setting = settings[indexPath.item]
         cell.setting = setting
         
         return cell
@@ -119,7 +119,7 @@ class SettingsLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let setting = self.settings[(indexPath as NSIndexPath).item]
+        let setting = self.settings[indexPath.item]
         handleDismiss(setting)
     }
     

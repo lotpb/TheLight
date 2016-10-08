@@ -177,12 +177,12 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        if ((indexPath as NSIndexPath).section == 0) {
+        if ((indexPath).section == 0) {
             let result:CGFloat = 44
             
             return result
         }
-        else if ((indexPath as NSIndexPath).section == 1) {
+        else if ((indexPath).section == 1) {
             let result:CGFloat = 54
             
             return result
@@ -210,7 +210,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
 
         }
         
-        if ((indexPath as NSIndexPath).section == 0) {
+        if (indexPath.section == 0) {
             
             cell.titleImage.frame = CGRect(x: 28, y: 12, width: 20, height: 20)
             cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.size.width, height: 20.0)
@@ -221,7 +221,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
             return cell
         }
         
-        if ((indexPath as NSIndexPath).section == 1) {
+        if (indexPath.section == 1) {
             
             cell.titleImage.frame = CGRect(x: 15, y: 10, width: 45, height: 45)
             cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.size.width, height: 20.0)

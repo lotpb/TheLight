@@ -31,8 +31,7 @@ class NotificationController: UIViewController {
 
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(NotificationController.actionButton))
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NotificationController.editButton))
-        let buttons:NSArray = [editButton, actionButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [editButton, actionButton]
         
         self.customMessage.clearButtonMode = .always
         self.customMessage!.font = celltitle

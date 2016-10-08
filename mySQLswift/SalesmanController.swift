@@ -56,10 +56,9 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         resultsController.tableView.delegate = self
         
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(SalesmanController.newData))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(SalesmanController.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
         
         parseData()
         setupCollectionView()
@@ -123,9 +122,9 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         /*
          let identifier: String
-         if (indexPath as NSIndexPath).item == 1 {
+         if indexPath.item == 1 {
          //identifier = trendingCellId
-         } else if (indexPath as NSIndexPath).item == 2 {
+         } else if indexPath.item == 2 {
          //identifier = subscriptionCellId
          } else {
          identifier = cellId
@@ -254,11 +253,11 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         if (tableView == self.tableView) {
             
-            cell.salestitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String
+            cell.salestitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Salesman") as? String
             
         } else {
             
-            cell.salestitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Salesman") as? String
+            cell.salestitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Salesman") as? String
             
         }
         
@@ -271,7 +270,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 20.0
         myLabel.isUserInteractionEnabled = true
-        myLabel.tag = (indexPath as NSIndexPath).row
+        myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
         
         return cell
@@ -353,7 +352,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Salesman")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -378,7 +377,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
@@ -475,7 +474,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         } else {
             
             isFormStat = false
-            let imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as? PFObject
+            let imageObject = _feedItems.object(at: indexPath.row) as? PFObject
             if let imageFile = imageObject!.object(forKey: "imageFile") as? PFFile {
                 
                 imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in

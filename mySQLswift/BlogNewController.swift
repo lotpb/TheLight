@@ -278,7 +278,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         cell = tableView.dequeueReusableCell(withIdentifier: cellID)
         
-        if (indexPath as NSIndexPath).row == 0 {
+        if indexPath.row == 0 {
             
             self.activeImage = UIImageView(frame:CGRect(x: tableView.frame.size.width-35, y: 10, width: 18, height: 22))
             self.activeImage!.contentMode = .scaleAspectFill
@@ -297,8 +297,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             cell?.selectionStyle = .none
         }
         
-        var modelRow = (indexPath as NSIndexPath).row
-        if (datePickerIndexPath != nil && ((datePickerIndexPath as NSIndexPath?)?.row)! <= (indexPath as NSIndexPath).row) {
+        var modelRow = indexPath.row
+        if (datePickerIndexPath != nil && (datePickerIndexPath?.row)! <= indexPath.row) {
             modelRow -= 1
         }
         
@@ -355,13 +355,13 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     }
     
     func indexPathHasPicker(_ indexPath: IndexPath) -> Bool {
-        return hasInlineDatePicker() && (datePickerIndexPath as NSIndexPath?)?.row == (indexPath as NSIndexPath).row
+        return hasInlineDatePicker() && datePickerIndexPath!.row == indexPath.row
     }
     
     func indexPathHasDate(_ indexPath: IndexPath) -> Bool {
         var hasDate = false
         
-        if ((indexPath as NSIndexPath).row == kDateStartRow) || ((indexPath as NSIndexPath).row == kDateEndRow || (hasInlineDatePicker() && ((indexPath as NSIndexPath).row == kDateEndRow + 1))) {
+        if (indexPath.row == kDateStartRow) || (indexPath.row == kDateEndRow || (hasInlineDatePicker() && (indexPath.row == kDateEndRow + 1))) {
             hasDate = true
         }
         return hasDate
@@ -373,24 +373,24 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         var before = false // indicates if the date picker is below "indexPath", help us determine which row to reveal
         if hasInlineDatePicker() {
-            before = ((datePickerIndexPath as NSIndexPath?)?.row)! < (indexPath as NSIndexPath).row
+            before = (datePickerIndexPath?.row)! < indexPath.row
         }
         
-        let sameCellClicked = ((datePickerIndexPath as NSIndexPath?)?.row == (indexPath as NSIndexPath).row + 1)
+        let sameCellClicked = ((datePickerIndexPath as NSIndexPath?)?.row == indexPath.row + 1)
         
         // remove any date picker cell if it exists
         if self.hasInlineDatePicker() {
-            self.tableView?.deleteRows(at: [IndexPath(row: (datePickerIndexPath! as NSIndexPath).row, section: 0)], with: .fade)
+            self.tableView?.deleteRows(at: [IndexPath(row: datePickerIndexPath!.row, section: 0)], with: .fade)
             datePickerIndexPath = nil
         }
         
         if !sameCellClicked {
             // hide the old date picker and display the new one
-            let rowToReveal = (before ? (indexPath as NSIndexPath).row - 1 : (indexPath as NSIndexPath).row)
+            let rowToReveal = (before ? indexPath.row - 1 : indexPath.row)
             let indexPathToReveal = IndexPath(row: rowToReveal, section: 0)
             
             toggleDatePickerForSelectedIndexPath(indexPathToReveal)
-            datePickerIndexPath = IndexPath(row: (indexPathToReveal as NSIndexPath).row + 1, section: 0)
+            datePickerIndexPath = IndexPath(row: indexPathToReveal.row + 1, section: 0)
         }
 
         self.tableView?.deselectRow(at: indexPath, animated:true)
@@ -404,7 +404,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         self.tableView?.beginUpdates()
         
-        let indexPaths = [IndexPath(row: (indexPath as NSIndexPath).row + 1, section: 0)]
+        let indexPaths = [IndexPath(row: indexPath.row + 1, section: 0)]
 
         if hasPickerForIndexPath(indexPath) {
         
@@ -420,7 +420,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         if let indexPath = datePickerIndexPath {
             let associatedDatePickerCell = self.tableView?.cellForRow(at: indexPath)
             if let targetedDatePicker = associatedDatePickerCell?.viewWithTag(kDatePickerTag) as! UIDatePicker? {
-                let itemData = dataArray[(self.datePickerIndexPath! as NSIndexPath).row - 1]
+                let itemData = dataArray[self.datePickerIndexPath!.row - 1]
                 targetedDatePicker.setDate(itemData[kDateKey] as! Date, animated: false)
             }
         }
@@ -429,7 +429,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func hasPickerForIndexPath(_ indexPath: IndexPath) -> Bool {
         var hasDatePicker = false
         
-        let targetedRow = (indexPath as NSIndexPath).row + 1
+        let targetedRow = indexPath.row + 1
         
         let checkDatePickerCell = self.tableView?.cellForRow(at: IndexPath(row: targetedRow, section: 0))
         let checkDatePicker = checkDatePickerCell?.viewWithTag(kDatePickerTag)
@@ -446,7 +446,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         if self.hasInlineDatePicker() {
             // inline date picker: update the cell's date "above" the date picker cell
             //
-            targetedCellIndexPath = IndexPath(row: (datePickerIndexPath! as NSIndexPath).row - 1, section: 0)
+            targetedCellIndexPath = IndexPath(row: datePickerIndexPath!.row - 1, section: 0)
         } else {
             // external date picker: update the current "selected" cell's date
             targetedCellIndexPath = self.tableView?.indexPathForSelectedRow!
@@ -456,9 +456,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         let targetedDatePicker = sender
         
         // update our data model
-        var itemData = dataArray[(targetedCellIndexPath! as NSIndexPath).row]
+        var itemData = dataArray[targetedCellIndexPath!.row]
         itemData[kDateKey] = targetedDatePicker.date as AnyObject?
-        dataArray[(targetedCellIndexPath! as NSIndexPath).row] = itemData
+        dataArray[targetedCellIndexPath!.row] = itemData
         
         // update the cell's date string
         cell?.detailTextLabel?.text = dateFormatter.string(from: targetedDatePicker.date)
@@ -572,7 +572,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                         updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
                         updateblog!.saveEventually()
                         
-                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
                         self.show(vc!, sender: self)
                         //self.present(vc!, animated: true)
                         
@@ -607,7 +607,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
                     if success == true {
                         
-                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "homeBlog")
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
                         self.show(vc!, sender: self)
                         
                         self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")

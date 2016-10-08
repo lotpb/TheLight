@@ -56,8 +56,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Vendor.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
         
         parseData()
         
@@ -151,19 +150,19 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         
         if (tableView == self.tableView) {
             
-            cell.vendtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Vendor") as? String
+            cell.vendtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Vendor") as? String
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.vendsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Profession") as? String
+                cell.vendsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Profession") as? String
             } else {
                 cell.vendsubtitleLabel!.text = ""
             }
  
         } else {
             
-            cell.vendtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Vendor") as? String
+            cell.vendtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Vendor") as? String
     
-            cell.vendsubtitleLabel.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Profession") as? String
+            cell.vendsubtitleLabel.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Profession") as? String
         }
         
         cell.vendreplyButton.tintColor = .lightGray
@@ -176,13 +175,13 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         
         cell.vendreplyLabel.text! = ""
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == "") {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == "") {
             cell.vendreplyButton!.tintColor = .lightGray
         } else {
             cell.vendreplyButton!.tintColor = Color.Vend.buttonColor
         }
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
             cell.vendlikeButton!.tintColor = Color.Vend.buttonColor
             cell.vendlikeLabel.text! = "Active"
             cell.vendlikeLabel.adjustsFontSizeToFitWidth = true
@@ -279,7 +278,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let query = PFQuery(className:"Vendors")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -304,7 +303,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -396,7 +395,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == resultsController.tableView {
-            userDetails = foundUsers[(indexPath as NSIndexPath).row]
+            userDetails = foundUsers[indexPath.row]
             //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
         } else {
             self.performSegue(withIdentifier: "vendordetailSegue", sender: self)

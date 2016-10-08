@@ -110,15 +110,15 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         //Facebook
         fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
+        self.mainView.addSubview(fbButton)
+        fbButton.delegate = self
+        
         if (FBSDKAccessToken.current() != nil) {
             print("User is already logged in")
         } else {
             fbButton.readPermissions = ["public_profile", "email", "user_friends","user_birthday"]
         }
-        fbButton.delegate = self
-        self.mainView.addSubview(fbButton)
-       
-        
+
         //Google
         signInButton.frame = CGRect(x: self.view.frame.size.width - 131, y: 320, width: 126, height: 40)
         GIDSignIn.sharedInstance().uiDelegate = self

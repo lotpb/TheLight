@@ -64,8 +64,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         //fix below no add user
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
-        let buttons:NSArray = [addButton, searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton, searchButton]
         
         parseData()
 
@@ -137,17 +136,17 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell?.usersubtitleLabel!.font = cellsubtitle
         }
         
-        let imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as! PFObject
+        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
             cell?.userImageView?.image = UIImage(data: imageData!)
         }
 
-        let dateUpdated = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "createdAt") as! Date
+        let dateUpdated = (_feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
         let dateFormat = DateFormatter()
         dateFormat.dateFormat = "EEE, MMM d, h:mm a"
         
-        cell?.usertitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "username") as? String
+        cell?.usertitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
         cell?.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
  
         return cell!
@@ -182,7 +181,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            objects.remove(at: (indexPath as NSIndexPath).row)
+            objects.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
@@ -228,13 +227,13 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         title.textColor = .black
         title.textAlignment = NSTextAlignment.center
         title.layer.masksToBounds = true
-        title.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "username") as? String
+        title.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
         title.font = Font.headtitle
         title.adjustsFontSizeToFitWidth = true
         title.clipsToBounds = true
         cell.addSubview(title)
         
-        let imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as! PFObject
+        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
         cell.loadingSpinner!.isHidden = true
@@ -306,7 +305,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         self.formController = "TableView"
         
-        let imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as! PFObject
+        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
         imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
@@ -319,7 +318,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         self.formController = "CollectionView"
         
-        let imageObject = _feedItems.object(at: (indexPath as NSIndexPath).row) as! PFObject
+        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
         imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
@@ -354,16 +353,16 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let indexPaths = self.collectionView!.indexPathsForSelectedItems!
                 let indexPath = indexPaths[0] as IndexPath
                 
-                let updated:Date = ((self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "createdAt") as? Date)!
+                let updated:Date = ((self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "createdAt") as? Date)!
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMM dd, yyyy"
                 let createString = dateFormatter.string(from: updated)
                 
-                VC!.objectId = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "objectId") as? String
-                VC!.username = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "username") as? String
+                VC!.objectId = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "objectId") as? String
+                VC!.username = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "username") as? String
                 VC!.create = createString
-                VC!.email = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "email") as? String
-                VC!.phone = (self._feedItems[((indexPath as NSIndexPath).row)] as AnyObject).value(forKey: "phone") as? String
+                VC!.email = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "email") as? String
+                VC!.phone = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "phone") as? String
                 VC!.userimage = self.selectedImage
             }
         }

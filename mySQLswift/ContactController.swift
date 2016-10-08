@@ -66,7 +66,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kCellID, for: indexPath)
-        let contact = contacts[(indexPath as NSIndexPath).row]
+        let contact = contacts[indexPath.row]
         
         // get the full name
         let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"

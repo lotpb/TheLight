@@ -92,7 +92,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             let channelDescriptionLabel = cell.viewWithTag(11) as! UILabel
             let thumbnailImageView = cell.viewWithTag(12) as! UIImageView
             
-            let channelDetails = channelsDataArray[(indexPath as NSIndexPath).row]
+            let channelDetails = channelsDataArray[indexPath.row]
             channelTitleLabel.text = channelDetails["title"] as? String
             channelDescriptionLabel.text = channelDetails["description"] as? String
             thumbnailImageView.image = UIImage(data: try! Data(contentsOf: URL(string: (channelDetails["thumbnail"] as? String)!)!))
@@ -103,7 +103,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             let videoTitle = cell.viewWithTag(10) as! UILabel
             let videoThumbnail = cell.viewWithTag(11) as! UIImageView
             
-            let videoDetails = videosArray[(indexPath as NSIndexPath).row]
+            let videoDetails = videosArray[indexPath.row]
             videoTitle.text = videoDetails["title"] as? String
             videoThumbnail.image = UIImage(data: try! Data(contentsOf: URL(string: (videoDetails["thumbnail"] as? String)!)!))
         }
@@ -132,10 +132,10 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             videosArray.removeAll(keepingCapacity: false)
             
             // Fetch the video details for the tapped channel.
-            getVideosForChannelAtIndex((indexPath as NSIndexPath).row)
+            getVideosForChannelAtIndex(indexPath.row)
         }
         else {
-            selectedVideoIndex = (indexPath as NSIndexPath).row
+            selectedVideoIndex = indexPath.row
             performSegue(withIdentifier: "idSeguePlayer", sender: self)
         }
     }

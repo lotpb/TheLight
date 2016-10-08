@@ -225,8 +225,8 @@ class VideoPlayerView: UIView {
         let urlString = "https://firebasestorage.googleapis.com/v0/b/gameofchats-762ca.appspot.com/o/message_movies%2F12323439-9729-4941-BA07-2BAE970967C7.mov?alt=media&token=3e37a093-3bc8-410f-84d3-38332af9c726"
         
         if let url = NSURL(string: urlString) {
-            
             player = AVPlayer(url: url as URL)
+            
             let playerLayer = AVPlayerLayer(player: player)
             self.layer.addSublayer(playerLayer)
             playerLayer.frame = self.frame
@@ -241,7 +241,7 @@ class VideoPlayerView: UIView {
             player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
                 
                 let seconds = CMTimeGetSeconds(progressTime)
-                let secondsString = Int(seconds) % 60 //String(format: "%02d", Int(seconds % 60))
+                let secondsString = String(format: "%02d", Int(seconds.truncatingRemainder(dividingBy: 60)))
                 let minutesString = String(format: "%02d", Int(seconds / 60))
                 
                 self.currentTimeLabel.text = "\(minutesString):\(secondsString)"
@@ -321,6 +321,7 @@ class VideoLauncher: NSObject {
                     //maybe we'll do something here later...
                     UIApplication.shared.isStatusBarHidden = true
                     //UIApplication.shared.setStatusBarHidden(true, with: .fade)
+                    
             })
         }
     }

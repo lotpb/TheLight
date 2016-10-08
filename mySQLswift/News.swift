@@ -97,11 +97,14 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func setupNavBarButtons() {
+        
         let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
+        
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(newButton))
+        
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(handleSearch))
-        let buttons:NSArray = [moreButton,addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        
+        navigationItem.rightBarButtonItems = [moreButton,addButton,searchButton]
     }
     
     // MARK: - NavigationController Hidden
@@ -121,11 +124,11 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let identifier: String
-        if (indexPath as NSIndexPath).item == 1 {
+        if indexPath.item == 1 {
             identifier = trendingCellId
-        } else if (indexPath as NSIndexPath).item == 2 {
+        } else if indexPath.item == 2 {
             identifier = subscriptionCellId
-        } else if (indexPath as NSIndexPath).item == 3 {
+        } else if indexPath.item == 3 {
             identifier = accountCellId
         } else {
             identifier = cellId

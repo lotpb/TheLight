@@ -64,8 +64,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(shootPhoto))
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(uploadImage))
-        let buttons:NSArray = [saveButton, cameraButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [saveButton, cameraButton]
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
@@ -152,12 +151,19 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     
     // MARK: Camera
     
-    func shootPhoto(_ sender: UIBarButtonItem) {
-        imagePicker.allowsEditing = false
-        imagePicker.sourceType = UIImagePickerControllerSourceType.camera
-        imagePicker.cameraCaptureMode = .photo
-        imagePicker.modalPresentationStyle = .fullScreen
-        present(imagePicker,animated: true,completion: nil)
+    func shootPhoto(_ sender: AnyObject) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.sourceType = .camera
+            imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera)!
+            imagePicker.allowsEditing = true
+            imagePicker.delegate = self
+            imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
+            self.present(imagePicker, animated: true, completion: nil)
+        } else{
+            self.simpleAlert(title: "Alert!", message: "Camera not available")
+        }
     }
     
     @IBAction func selectImage(_ sender: AnyObject) {
@@ -198,7 +204,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             imgToUpload.clipsToBounds = true
             imgToUpload.image = image
             
-        }
+        } 
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -283,14 +289,27 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                                 if success {
                                     updateblog!.setObject(self.file!, forKey:"imageFile")
                                     updateblog!.saveInBackground { (success: Bool, error: Error?) -> Void in
+ 
+                                        self.simpleAlert(title: "Image Upload Complete", message: "Successfully updated the image")
+                                        
+                                        let newVC = News()
+                                        self.navigationController?.pushViewController(newVC, animated: true)
+                                        /*
+                                        DispatchQueue.main.async {
+                                            
+                                            let vc = self.storyboard?.instantiateViewController(withIdentifier: "newsId")
+                                            self.show(vc!, sender: self)
+   
+                                        } */
+   
                                     }
                                 }
                             }
                             
                         }
                         
-                        //self.simpleAlert("Upload Complete", message: "Successfully updated the data")
-                        
+                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                        self.navigationItem.rightBarButtonItem!.isEnabled = true
                     } else {
                         
                         self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")

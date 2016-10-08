@@ -114,9 +114,8 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
       //self.pickerView.backgroundColor = .whiteColor()
         NotificationCenter.default.addObserver(self, selector: (#selector(EditData.updatePicker)), name: NSNotification.Name.UITextFieldTextDidBeginEditing, object: nil)
         
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(EditData.updateData))
-        let buttons:NSArray = [saveButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
+        navigationItem.rightBarButtonItems = [saveButton]
         
         if (status == "New") {
             self.frm30 = "1"
@@ -178,7 +177,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
-        if (indexPath as NSIndexPath).row == 14 {
+        if indexPath.row == 14 {
             return 100
         }
         return 44
@@ -248,7 +247,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         self.email?.returnKeyType = UIReturnKeyType.next
         
-        if ((indexPath as NSIndexPath).row == 0) {
+        if (indexPath.row == 0) {
             
             let theSwitch = UISwitch(frame:CGRect.zero)
             self.activeImage?.contentMode = .scaleAspectFill
@@ -270,7 +269,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell.accessoryView = theSwitch
             cell.contentView.addSubview(activeImage!)
             
-        } else if ((indexPath as NSIndexPath).row == 1) {
+        } else if (indexPath.row == 1) {
             
             self.date = textframe
             self.date!.tag = 0
@@ -305,7 +304,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.date!)
             
-        } else if ((indexPath as NSIndexPath).row == 2) {
+        } else if (indexPath.row == 2) {
             
             self.address = textframe
             if self.frm14 == nil {
@@ -317,7 +316,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell.textLabel!.text = "Address"
             cell.contentView.addSubview(self.address!)
             
-        } else if ((indexPath as NSIndexPath).row == 3) {
+        } else if (indexPath.row == 3) {
             
             self.city = textframe
             if self.frm15 == nil {
@@ -330,7 +329,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell.textLabel!.text = "City"
             cell.contentView.addSubview(self.city!)
             
-        } else if ((indexPath as NSIndexPath).row == 4) {
+        } else if (indexPath.row == 4) {
             
             self.state = textframe
             if self.frm16 == nil {
@@ -352,7 +351,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.zip!)
             
-        } else if ((indexPath as NSIndexPath).row == 5) {
+        } else if (indexPath.row == 5) {
             
             self.aptDate = textframe
             if self.frm19 == nil {
@@ -387,7 +386,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.aptDate!)
             
-        } else if ((indexPath as NSIndexPath).row == 6) {
+        } else if (indexPath.row == 6) {
             
             self.phone = textframe
             self.phone!.placeholder = "Phone"
@@ -399,7 +398,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell.textLabel!.text = "Phone"
             cell.contentView.addSubview(self.phone!)
             
-        } else if ((indexPath as NSIndexPath).row == 7) {
+        } else if (indexPath.row == 7) {
             
             self.salesman = textframe
             self.salesman!.adjustsFontSizeToFitWidth = true
@@ -426,7 +425,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.salesman!)
             
-        } else if ((indexPath as NSIndexPath).row == 8) {
+        } else if (indexPath.row == 8) {
             
             self.jobName = textframe
             if self.frm22 == nil {
@@ -450,7 +449,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.jobName!)
             
-        } else if ((indexPath as NSIndexPath).row == 9) {
+        } else if (indexPath.row == 9) {
             self.adName = textframe
             self.adName!.placeholder = "Advertiser"
             if self.frm23 == nil {
@@ -480,7 +479,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.adName!)
             
-        } else if((indexPath as NSIndexPath).row == 10) {
+        } else if(indexPath.row == 10) {
             
             self.amount = textframe
             
@@ -513,7 +512,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.amount!)
             
-        } else if ((indexPath as NSIndexPath).row == 11) {
+        } else if (indexPath.row == 11) {
             
             self.email = textframe
             self.email!.placeholder = "Email"
@@ -526,7 +525,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell.textLabel!.text = "Email"
             cell.contentView.addSubview(self.email!)
             
-        } else if((indexPath as NSIndexPath).row == 12) {
+        } else if(indexPath.row == 12) {
             self.spouse = textframe
             self.spouse!.placeholder = "Spouse"
             
@@ -548,7 +547,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.spouse!)
             
-        } else if ((indexPath as NSIndexPath).row == 13) {
+        } else if (indexPath.row == 13) {
             self.callback = textframe
 
                 if self.frm27 == nil {
@@ -591,7 +590,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.contentView.addSubview(self.callback!)
             
-        } else if ((indexPath as NSIndexPath).row == 14) {
+        } else if (indexPath.row == 14) {
             self.comment = textviewframe
             if self.frm28 == nil {
                 self.comment!.text = ""
@@ -601,7 +600,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell.textLabel!.text = "Comments"
             cell.contentView.addSubview(self.comment!)
             
-        } else if((indexPath as NSIndexPath).row == 15) {
+        } else if(indexPath.row == 15) {
             self.start = textframe
             self.start!.placeholder = "Start Date"
             if self.frm31 == nil {
@@ -614,7 +613,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell.textLabel!.text = "Start Date"
             cell.contentView.addSubview(self.start!)
             
-        } else if((indexPath as NSIndexPath).row == 16) {
+        } else if(indexPath.row == 16) {
             self.complete = textframe
             self.complete!.placeholder = "Completion Date"
             
@@ -950,19 +949,19 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if ((indexPath as NSIndexPath).row == 3) {
+        if (indexPath.row == 3) {
             lookupItem = "City"
             self.performSegue(withIdentifier: "lookupDataSegue", sender: self)
         }
-        if ((indexPath as NSIndexPath).row == 7) {
+        if (indexPath.row == 7) {
             lookupItem = "Salesman"
             self.performSegue(withIdentifier: "lookupDataSegue", sender: self)
         }
-        if ((indexPath as NSIndexPath).row == 8) {
+        if (indexPath.row == 8) {
             lookupItem = "Job"
             self.performSegue(withIdentifier: "lookupDataSegue", sender: self)
         }
-        if ((indexPath as NSIndexPath).row == 9) {
+        if (indexPath.row == 9) {
             if (self.formController == "Customer") {
                 lookupItem = "Product"
             } else {

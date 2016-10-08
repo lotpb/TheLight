@@ -115,8 +115,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func setupNavBarButtons() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(Blog.newButton))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(Blog.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
     }
     
     // MARK: - refresh
@@ -391,7 +390,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -415,7 +414,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
@@ -455,7 +454,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
         
         posttoIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
-        userIndex = (_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String
+        userIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
         self.performSegue(withIdentifier: "blognewSegue", sender: self)
     }
     
@@ -625,7 +624,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
-        let socialText = (self._feedItems[(indexPath! as NSIndexPath).row] as AnyObject).value(forKey: "Subject") as? String
+        let socialText = (self._feedItems[indexPath!.row] as AnyObject).value(forKey: "Subject") as? String
         
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
             
@@ -716,7 +715,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if segue.identifier == "blogeditSegue" {
             
             let VC = segue.destination as? BlogEditController
-            let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
+            let myIndexPath = self.tableView!.indexPathForSelectedRow!.row
             VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
             VC!.msgNo = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgNo") as? String
             VC!.postby = (_feedItems[myIndexPath] as AnyObject).value(forKey: "PostBy") as? String

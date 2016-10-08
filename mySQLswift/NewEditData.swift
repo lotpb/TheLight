@@ -62,9 +62,8 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
         
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(NewEditData.updateData))
-        let buttons:NSArray = [saveButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
+        navigationItem.rightBarButtonItems = [saveButton]
 
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .clear
@@ -122,9 +121,9 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
-        if (formController == "Product") && ((indexPath as NSIndexPath).row == 4) {
+        if (formController == "Product") && (indexPath.row == 4) {
             return 200
-        } else if (formController == "Salesman") && ((indexPath as NSIndexPath).row == 3) {
+        } else if (formController == "Salesman") && (indexPath.row == 3) {
             return 200
         }
         return 44
@@ -152,7 +151,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             self.price?.font = Font.celltitle
         }
         
-        if ((indexPath as NSIndexPath).row == 0) {
+        if (indexPath.row == 0) {
             
             let theSwitch = UISwitch(frame:CGRect.zero)
             theSwitch.addTarget(self, action: #selector(NewEditData.changeSwitch), for: .valueChanged)
@@ -176,7 +175,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             cell.accessoryView = theSwitch
             cell.contentView.addSubview(activeImage!)
             
-        } else if ((indexPath as NSIndexPath).row == 1) {
+        } else if (indexPath.row == 1) {
             
             self.salesman = textframe
             self.salesman!.adjustsFontSizeToFitWidth = true
@@ -212,7 +211,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             
             cell.contentView.addSubview(self.salesman!)
             
-        } else if ((indexPath as NSIndexPath).row == 2) {
+        } else if (indexPath.row == 2) {
             
             self.salesNo = textframe
             
@@ -244,7 +243,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             
             cell.contentView.addSubview(self.salesNo)
             
-        } else if ((indexPath as NSIndexPath).row == 3) {
+        } else if (indexPath.row == 3) {
             self.price = textframe
             self.price!.adjustsFontSizeToFitWidth = true
             
@@ -269,7 +268,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                 
                 cell.contentView.addSubview(self.price)
             }
-        } else if ((indexPath as NSIndexPath).row == 4) {
+        } else if (indexPath.row == 4) {
             
             if (formController == "Product") {
                 //if self.image == nil {
@@ -293,7 +292,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            objects.remove(at: (indexPath as NSIndexPath).row)
+            objects.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {

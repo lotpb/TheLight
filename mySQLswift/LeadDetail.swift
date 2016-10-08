@@ -217,8 +217,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(LeadDetail.editButton))
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(LeadDetail.actionButton))
-        let buttons:NSArray = [editButton,actionButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [editButton,actionButton]
         
         let topBorder = CALayer()
         let width = CGFloat(2.0)
@@ -327,17 +326,17 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         if (tableView == self.listTableView) {
             
-            cell.textLabel?.text = tableData4.object(at: (indexPath as NSIndexPath).row) as? String
+            cell.textLabel?.text = tableData4.object(at: indexPath.row) as? String
             
-            cell.detailTextLabel?.text = tableData.object(at: (indexPath as NSIndexPath).row) as? String
+            cell.detailTextLabel?.text = tableData.object(at: indexPath.row) as? String
             
             return cell
             
         } else if (tableView == self.listTableView2) {
             
-            cell.textLabel?.text = tableData3.object(at: (indexPath as NSIndexPath).row) as? String
+            cell.textLabel?.text = tableData3.object(at: indexPath.row) as? String
             
-            cell.detailTextLabel?.text = tableData2.object(at: (indexPath as NSIndexPath).row) as? String
+            cell.detailTextLabel?.text = tableData2.object(at: indexPath.row) as? String
             
             return cell
             

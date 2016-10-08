@@ -58,8 +58,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Customer.newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Customer.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
 
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.Cust.navColor
@@ -179,11 +178,11 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if (tableView == self.tableView) {
             
-            cell.custtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
-            cell.custlikeLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Rate") as? String
-            myLabel1.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String
+            cell.custtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
+            cell.custlikeLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Rate") as? String
+            myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String
             
-            var Amount:Int? = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Amount")as? Int
+            var Amount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Amount")as? Int
             let formatter = NumberFormatter()
             formatter.numberStyle = .currency
             if Amount == nil {
@@ -192,18 +191,18 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             myLabel2.text = formatter.string(from: Amount! as NSNumber)
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.custsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
+                cell.custsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String
             } else {
                 cell.custsubtitleLabel!.text = ""
             }
            
         } else {
             
-            cell.custtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "LastName") as? String
-            cell.custsubtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "City") as? String
-            cell.custlikeLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Rate") as? String
-            myLabel1.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Date") as? String
-            myLabel2.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Amount") as? String
+            cell.custtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
+            cell.custsubtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "City") as? String
+            cell.custlikeLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Rate") as? String
+            myLabel1.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Date") as? String
+            myLabel2.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Amount") as? String
             
         }
         
@@ -211,13 +210,13 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
         cell.custreplyButton .setImage(replyimage, for: UIControlState())
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == "") {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == "") {
             cell.custreplyButton!.tintColor = .lightGray
         } else {
             cell.custreplyButton!.tintColor = Color.Cust.buttonColor
         }
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
             cell.custreplyLabel.text! = "Active"
             cell.custreplyLabel.adjustsFontSizeToFitWidth = true
         } else {
@@ -228,7 +227,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
         cell.custlikeButton .setImage(likeimage, for: UIControlState())
 
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Rate") as? String == "A" ) {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Rate") as? String == "A" ) {
             cell.custlikeButton!.tintColor = Color.Cust.buttonColor
         } else {
             cell.custlikeButton!.tintColor = .lightGray
@@ -243,7 +242,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 25.0
         myLabel.isUserInteractionEnabled = true
-        myLabel.tag = (indexPath as NSIndexPath).row
+        myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(Customer.imgLoadSegue))
@@ -333,7 +332,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if editingStyle == .delete {
             let query = PFQuery(className:"Customer")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -358,7 +357,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
@@ -452,7 +451,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == resultsController.tableView {
-            userDetails = filteredString[(indexPath as NSIndexPath).row] as! [String : AnyObject]
+            userDetails = filteredString[indexPath.row] as! [String : AnyObject]
             //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
         } else {
             self.performSegue(withIdentifier: "custdetailSegue", sender: self)
@@ -468,7 +467,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             let controller = segue.destination as? LeadDetail
             controller!.formController = "Customer"
-            let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
+            let indexPath = self.tableView!.indexPathForSelectedRow!.row
             controller?.objectId = (_feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
             
             var CustNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "CustNo") as? Int

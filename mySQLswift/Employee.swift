@@ -57,10 +57,9 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Employee.newData))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Employee.searchButton))
-        let buttons:NSArray = [addButton,searchButton]
-        self.navigationItem.rightBarButtonItems = buttons as? [UIBarButtonItem]
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
         
         parseData()
         
@@ -154,20 +153,20 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if (tableView == self.tableView) {
             
-            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "First") as? String)!,
-                ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Last") as? String)!,
-                ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Company") as? String)!)
+            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((_feedItems[indexPath.row] as AnyObject).value(forKey: "First") as? String)!,
+                ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Last") as? String)!,
+                ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Company") as? String)!)
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.employsubtitleLabel!.text = (_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Title") as? String
+                cell.employsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Title") as? String
             } else {
                 cell.employsubtitleLabel!.text = ""
             }
             
         } else {
 
-            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "First") as? String)!, ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Last") as? String)!, ((filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Company") as? String)!)
-            cell.employsubtitleLabel!.text = (filteredString[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Title") as? String
+            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((filteredString[indexPath.row] as AnyObject).value(forKey: "First") as? String)!, ((filteredString[indexPath.row] as AnyObject).value(forKey: "Last") as? String)!, ((filteredString[indexPath.row] as AnyObject).value(forKey: "Company") as? String)!)
+            cell.employsubtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Title") as? String
         }
         
         cell.employreplyButton.tintColor = .lightGray
@@ -180,13 +179,13 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         cell.employreplyLabel.text! = ""
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Comments") as? String == "") {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == "") {
             cell.employreplyButton!.tintColor = .lightGray
         } else {
             cell.employreplyButton!.tintColor = Color.Employ.buttonColor
         }
         
-        if ((_feedItems[(indexPath as NSIndexPath).row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
             cell.employlikeButton!.tintColor = Color.Employ.buttonColor
             cell.employlikeLabel.text! = "Active"
             cell.employlikeLabel.adjustsFontSizeToFitWidth = true
@@ -284,7 +283,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         if editingStyle == .delete {
             
             let query = PFQuery(className:"Employee")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: (indexPath as NSIndexPath).row) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
@@ -309,7 +308,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             self.present(alertController, animated: true) {
             }
             
-            _feedItems.removeObject(at: (indexPath as NSIndexPath).row)
+            _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
