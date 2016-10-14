@@ -12,6 +12,10 @@ target 'TheLight' do
     pod 'Firebase/Database'
     pod 'Firebase/Auth'
     pod 'Firebase/Storage'
+    pod 'FacebookCore'
+    pod 'FacebookLogin'
+    pod 'FacebookShare'
     pod 'SwiftKeychainWrapper'
+    
     
 end

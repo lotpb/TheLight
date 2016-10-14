@@ -9,9 +9,10 @@
 import UIKit
 import Parse
 import UserNotifications
-//import Firebase
-import FBSDKCoreKit
 import GoogleSignIn
+import FBSDKLoginKit
+//import FBSDKCoreKit
+//import Firebase
 
 
 @UIApplicationMain
@@ -85,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - Background Fetch
         
-            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
 
         
         // MARK: - Register login
@@ -103,6 +104,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // MARK: - Facebook Sign-in
         
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        // MARK: - Customize Appearance
         
         customizeAppearance()
         
@@ -124,17 +127,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     
     // MARK: - Google/Facebook
-    /*
-    @available(iOS 9.0, *)
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         
-            return self.application(application: app, openURL: url, sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey] as! String?, annotation: [])
-    } */
-    
-    private func application(application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        
-        return (FBSDKApplicationDelegate.sharedInstance().application( application,open: url as URL!,sourceApplication: sourceApplication,annotation: annotation) || GIDSignIn.sharedInstance().handle(url as URL!, sourceApplication: sourceApplication, annotation: annotation))
+        return (FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)  || GIDSignIn.sharedInstance().handle(url as URL!, sourceApplication: sourceApplication, annotation: annotation))
     }
 
     
@@ -147,14 +143,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "Background transfer service download!"
-            //content.subtitle = "米花兒"
             content.body = "Background transfer service: Download complete!"
             content.badge = 1
-            content.sound = UNNotificationSound(named: "Tornado.caf")
-            //content.categoryIdentifier = "status"
+            content.sound = UNNotificationSound.default()
+            content.categoryIdentifier = "Background Fetch"
 
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            
             let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
+            
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
         } else {
@@ -235,10 +232,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
         
         let content = UNMutableNotificationContent()
-        content.title = "Tutorial Reminder"
-        content.body = "Just a reminder to read your tutorial over at appcoda.com!"
-        content.sound = UNNotificationSound.default()
-        content.categoryIdentifier = "myCategory"
+        content.title = "Membership Status"
+        content.body = "Our system has detected that your membership is inactive.!"
+        content.sound = UNNotificationSound(named: "Tornado.caf")
+        content.categoryIdentifier = "status"
         
         if let path = Bundle.main.path(forResource: "wishlist", ofType: "png") {
             let url = URL(fileURLWithPath: path)
@@ -266,7 +263,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     private func customizeAppearance() {
         
-      //UIApplication.sharedApplication().networkActivityIndicatorVisible = true //Activity Status Bar
         UIApplication.shared.statusBarStyle = .lightContent
         
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]

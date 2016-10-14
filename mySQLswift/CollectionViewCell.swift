@@ -7,16 +7,30 @@
 //
 
 import UIKit
-//import Parse
 import AVFoundation
+//import Parse
 
 class CollectionViewCell: UICollectionViewCell {
     
 //-----------youtube---------
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
     }
+    
+    func setupViews() {
+        
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)!
+    }
+
+    /*
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    } */
     
     lazy var playButton2: UIButton = {
         let button = UIButton(type: .system)
@@ -29,6 +43,7 @@ class CollectionViewCell: UICollectionViewCell {
         button.addGestureRecognizer(tap)
         return button
     }()
+    
     /*
     let activityIndicatorView2: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -63,13 +78,6 @@ class CollectionViewCell: UICollectionViewCell {
         loadingSpinner?.stopAnimating()
     }
     
-    func setupViews() {
-
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 //---------------------------------
     
     // News
@@ -88,12 +96,10 @@ class CollectionViewCell: UICollectionViewCell {
     // Snapshot Controller / UserView Controller
     @IBOutlet weak var loadingSpinner: UIActivityIndicatorView?
     
-
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
- 
         self.layer.cornerRadius = 7.0
         self.clipsToBounds = true
     }
@@ -112,7 +118,7 @@ class VideoCell: CollectionViewCell {
         let imageView = CustomImageView()
         imageView.isUserInteractionEnabled = true
         imageView.backgroundColor = .black
-        imageView.image = UIImage(named: "taylor_swift_blank_space")
+        imageView.image = UIImage(named: "")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -120,7 +126,7 @@ class VideoCell: CollectionViewCell {
     
     let userProfileImageView: CustomImageView = {
         let imageView = CustomImageView()
-        imageView.image = UIImage(named: "taylor_swift_profile")
+        imageView.image = UIImage(named: "")
         imageView.layer.cornerRadius = 22
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -140,7 +146,7 @@ class VideoCell: CollectionViewCell {
     let titleLabelnew: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Taylor Swift - Blank Space"
+        label.text = ""
         label.numberOfLines = 2
         return label
     }()
@@ -148,7 +154,7 @@ class VideoCell: CollectionViewCell {
     let subtitlelabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "TaylorSwiftVEVO • 1,604,684,607 views • 2 years ago"
+        label.text = ""
         label.textColor = .lightGray
         return label
     }()
@@ -250,7 +256,7 @@ class VideoCell: CollectionViewCell {
         
         addConstraintsWithFormat(format: "H:|-16-[v0(44)]", views: userProfileImageView)
         
-        addConstraintsWithFormat(format: "H:|-16-[v0(25)]", views: actionButton)
+        addConstraintsWithFormat(format: "H:|-26-[v0(25)]", views: actionButton)
         
         //vertical constraints
         addConstraintsWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-21-[v2(25)]-10-[v3(1)]|", views: thumbnailImageView, userProfileImageView, actionButton, separatorView)
@@ -294,7 +300,7 @@ class VideoCell: CollectionViewCell {
         //top constraint
         addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .top, relatedBy: .equal, toItem: subtitlelabel, attribute: .bottom, multiplier: 1, constant: 1))
         //left constraint
-        addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .left, relatedBy: .equal, toItem: actionButton, attribute: .right, multiplier: 1, constant: 12))
+        addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .left, relatedBy: .equal, toItem: actionButton, attribute: .right, multiplier: 1, constant: 14))
         //right constraint
         //addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .Right, relatedBy: .Equal, toItem: thumbnailImageView, attribute: .Right, multiplier: 1, constant: 0))
         //height constraint

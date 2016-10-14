@@ -26,11 +26,12 @@ class NotificationController: UIViewController {
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
-        //titleButton.addTarget(self, action: Selector(), forControlEvents: UIControlEvents.TouchUpInside)
         self.navigationItem.titleView = titleButton
 
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(NotificationController.actionButton))
+        
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NotificationController.editButton))
+        
         navigationItem.rightBarButtonItems = [editButton, actionButton]
         
         self.customMessage.clearButtonMode = .always
@@ -72,42 +73,41 @@ class NotificationController: UIViewController {
     @IBAction func sendNotification(_ sender:AnyObject) {
         
         if #available(iOS 10.0, *) {
+            
             let content = UNMutableNotificationContent()
-            
-            /*
-            content.fireDate = fixedNotificationDate(datePicker.date)
-            
-            switch(frequencySegmentedControl.selectedSegmentIndex){
-            case 0:
-                //notifications.repeatInterval = NSCalendar.Unit.
-                break;
-            case 1:
-                content.repeatInterval = .day
-                break;
-            case 2:
-                content.repeatInterval = .weekday
-                break;
-            case 3:
-                content.repeatInterval = .year
-                break;
-            default:
-                //notifications.repeatInterval = Calendar.init(identifier: 0)
-                break;
-            } */
-            
-            content.title = "Membership Status"
-            //content.subtitle = "米花兒"
-            content.body = "Our system has detected that your membership is inactive."
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
-            content.sound = UNNotificationSound(named: "Tornado.caf")
+            content.title = "Test"
+            content.body = customMessage.text!
+            content.badge = 1
+            content.sound = UNNotificationSound.default()
             content.categoryIdentifier = "status"
             
+            if let path = Bundle.main.path(forResource: "calendar", ofType: "png") {
+                let url = URL(fileURLWithPath: path)
+                
+                do {
+                    let attachment = try UNNotificationAttachment(identifier: "calendar", url: url, options: nil)
+                    content.attachments = [attachment]
+                } catch {
+                    print("The attachment was not loaded.")
+                }
+            }
+            
+            let month = datePicker.calendar.component(.month, from: datePicker.date)
+            let day = datePicker.calendar.component(.day, from: datePicker.date)
+            let hour = datePicker.calendar.component(.hour, from: datePicker.date)
+            let minute = datePicker.calendar.component(.minute, from: datePicker.date)
+            
             var dateComponents = DateComponents()
-            dateComponents.hour = 10
-            dateComponents.minute = 30
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-          //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            dateComponents.timeZone = .current
+            dateComponents.month = month
+            dateComponents.day = day
+            dateComponents.hour = hour
+            dateComponents.minute = minute
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
             let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
+            
             UNUserNotificationCenter .current().add(request, withCompletionHandler: nil)
             
         } else {
@@ -143,7 +143,6 @@ class NotificationController: UIViewController {
         UIApplication.shared.scheduleLocalNotification(notifications)
         self.customMessage.text = ""
         }
-        
     }
     
     
@@ -153,9 +152,8 @@ class NotificationController: UIViewController {
 
             let content = UNMutableNotificationContent()
             content.title = "Membership Status"
-            //content.subtitle = "米花兒"
             content.body = "Our system has detected that your membership is inactive."
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
             
@@ -193,7 +191,7 @@ class NotificationController: UIViewController {
             content.title = "Blog Post"
             content.subtitle = "New blog message posted"
             content.body = "TheLight just posted a new message"
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
             
@@ -204,6 +202,7 @@ class NotificationController: UIViewController {
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "newBlog-id-123", content: content, trigger: trigger)
+            
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
         } else {
@@ -224,9 +223,8 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "work-out and be awesome!"
-            //content.subtitle = "米花兒"
             content.body = "Hey you! Yeah you! Time to Workout!"
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
             content.categoryIdentifier = "status"
             
@@ -240,8 +238,9 @@ class NotificationController: UIViewController {
             dateComponents.minute = 30
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
             
-            //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+          //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "heyYou-id-123", content: content, trigger: trigger)
+            
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
         } else {
@@ -264,9 +263,8 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "Promo Sale"
-            //content.subtitle = "米花兒"
             content.body = "Forget Something? Come back and SAVE 15% with Promo Code MYCART"
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
+            content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado")
             content.categoryIdentifier = "status"
             
@@ -297,6 +295,7 @@ class NotificationController: UIViewController {
     
     //Here we are going to set the value of second to zero
     func fixedNotificationDate(_ dateToFix: Date) -> Date {
+        
         let calendar = Calendar.current
         var dateComponents = calendar.dateComponents([.day, .month, .year, .hour, .minute], from: dateToFix)
         

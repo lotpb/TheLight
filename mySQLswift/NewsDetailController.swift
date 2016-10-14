@@ -47,7 +47,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         self.scrollView.maximumZoomScale = 6.0
         self.newsImageview.backgroundColor = .black
         
-        let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NewsDetailController.editData))
+        let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
 
         navigationItem.rightBarButtonItems = [editItem]
         
@@ -68,12 +68,11 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
             //self.newsTextview.isEditable = false //bug fix
         }
         
+        self.newsImageview.isUserInteractionEnabled = true
+        self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
         UIView.transition(with: self.newsImageview, duration: 0.5, options: .transitionCrossDissolve, animations: {
             self.newsImageview.image = self.image
             }, completion: nil)
-        self.newsImageview.isUserInteractionEnabled = true
-        self.newsImageview.contentMode = .scaleToFill
-        //.scaleAspectFill //.scaleAspectFit
         
         self.titleLabel.text = self.newsTitle
         self.titleLabel.numberOfLines = 2
@@ -91,7 +90,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         let dateString = dateFormatter.string(from: date1!)
 
         self.detailLabel.text = String(format: "%@ %@ %@", (self.newsDetail!), "Uploaded", "\(dateString)")
-        self.detailLabel.textColor = .lightGray
+        self.detailLabel.textColor = .gray
         self.detailLabel.sizeToFit()
         
         self.newsTextview.text = self.newsStory
@@ -101,6 +100,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         self.newsTextview.isSelectable = true
         self.newsTextview.isEditable = false
         self.newsTextview.dataDetectorTypes = UIDataDetectorTypes.link
+        
+        self.findFace()
         
     }
     
@@ -138,6 +139,38 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
     func editData(_ sender: AnyObject) {
         
         self.performSegue(withIdentifier: "uploadSegue", sender: self)
+    }
+    
+    // MARK: - FaceDetector
+    
+    func findFace() {
+        
+        guard let faceImage = CIImage(image: self.newsImageview.image!) else { return }
+        
+        let accuracy = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: accuracy)
+        let faces = faceDetector?.features(in: faceImage, options: [CIDetectorSmile: true, CIDetectorEyeBlink: true])
+        
+        for face in faces as! [CIFaceFeature] {
+            
+            if face.hasSmile {
+                print("😁")
+            }
+            
+            if face.leftEyeClosed {
+                print("Left: 😉")
+            }
+            
+            if face.rightEyeClosed {
+                print("Right: 😉")
+            }
+        }
+        
+        if faces!.count != 0 {
+            print("Number of Faces: \(faces!.count)")
+        } else {
+            print("No Faces 😢")
+        }
     }
     
     // MARK: - Segue

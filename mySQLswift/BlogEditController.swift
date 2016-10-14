@@ -12,15 +12,15 @@ import Parse
 class BlogEditController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightBold)
-    let ipadsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
-    let ipaddate = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+    let ipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+    let ipaddate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
     
     let replyipadtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
     let replyipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
     let replyipaddate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
     let replyipadlabel = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
     
-    let replytitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightBold)
+    let replytitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
     let replysubtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
     let replydate = UIFont.systemFont(ofSize: 14, weight: UIFontWeightBold)
     let replylabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)

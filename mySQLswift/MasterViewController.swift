@@ -84,11 +84,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
  
         let userId:String = defaults.object(forKey: "usernameKey") as! String!
         let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
+        let userSuccessful: Bool = KeychainWrapper.standard.set(userId, forKey: "usernameKey")
+        let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
         
         //Keychain
-        
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
-        if (KeychainWrapper.defaultKeychainWrapper.string(forKey: "usernameKey") != nil) && (KeychainWrapper.defaultKeychainWrapper.string(forKey: "passwordKey") != nil) {
+        if (userSuccessful == true) && (passSuccessful == true) {
             print("Keychain successful")
         } else {
             print("Keychain failed")

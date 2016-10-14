@@ -107,8 +107,12 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func setupTableView() {
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 110
         self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.estimatedRowHeight = 110
+        self.tableView!.sectionHeaderHeight = UITableViewAutomaticDimension;
+        self.tableView!.estimatedSectionHeaderHeight = 90
+        self.tableView!.sectionFooterHeight = UITableViewAutomaticDimension;
+        self.tableView!.estimatedSectionFooterHeight = 0
         self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
     }
     
@@ -147,26 +151,26 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
+        //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
-        
-        cell?.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            cell?.blogtitleLabel!.font =  Font.Blog.celltitle
-            cell?.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
-            cell?.blogmsgDateLabel.font = Font.Blog.celldate
-            cell?.numLabel.font = Font.Blog.cellLabel
-            cell?.commentLabel.font = Font.Blog.cellLabel
+            cell.blogtitleLabel!.font =  Font.Blog.celltitle
+            cell.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
+            cell.blogmsgDateLabel.font = Font.Blog.celldate
+            cell.numLabel.font = Font.Blog.cellLabel
+            cell.commentLabel.font = Font.Blog.cellLabel
             
         } else {
             
-            cell?.blogtitleLabel!.font =  Font.Blog.celltitle
-            cell?.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
-            cell?.blogmsgDateLabel.font = Font.Blog.celldate
-            cell?.numLabel.font = Font.Blog.cellLabel
-            cell?.commentLabel.font = Font.Blog.cellLabel
+            cell.blogtitleLabel!.font =  Font.Blog.celltitle
+            cell.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
+            cell.blogmsgDateLabel.font = Font.Blog.celldate
+            cell.numLabel.font = Font.Blog.cellLabel
+            cell.commentLabel.font = Font.Blog.cellLabel
         }
         
         let query:PFQuery = PFUser.query()!
@@ -177,24 +181,24 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
                     imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                         
-                        UIView.transition(with: (cell?.blogImageView)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell?.blogImageView?.image = UIImage(data: imageData! as Data)
+                        UIView.transition(with: (cell.blogImageView)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            cell.blogImageView?.image = UIImage(data: imageData! as Data)
                             }, completion: nil)
                     }
                 }
             }
         } 
         
-        cell?.blogImageView?.layer.cornerRadius = (cell?.blogImageView?.frame.size.width)! / 2
-        cell?.blogImageView?.layer.borderColor = UIColor.lightGray.cgColor
-        cell?.blogImageView?.layer.borderWidth = 0.5
-        cell?.blogImageView?.layer.masksToBounds = true
-        cell?.blogImageView?.isUserInteractionEnabled = true
-        cell?.blogImageView?.contentMode = .scaleAspectFill
-        cell?.blogImageView?.tag = indexPath.row
+        cell.blogImageView?.layer.cornerRadius = (cell.blogImageView?.frame.size.width)! / 2
+        cell.blogImageView?.layer.borderColor = UIColor.lightGray.cgColor
+        cell.blogImageView?.layer.borderWidth = 0.5
+        cell.blogImageView?.layer.masksToBounds = true
+        cell.blogImageView?.isUserInteractionEnabled = true
+        cell.blogImageView?.contentMode = .scaleAspectFill
+        cell.blogImageView?.tag = indexPath.row
         
-        let tap = UITapGestureRecognizer(target: self, action:#selector(Blog.imgLoadSegue))
-        cell?.blogImageView.addGestureRecognizer(tap)
+        let tap = UITapGestureRecognizer(target: self, action:#selector(imgLoadSegue))
+        cell.blogImageView.addGestureRecognizer(tap)
         
         let dateStr = (_feedItems[indexPath.row] as AnyObject).value(forKey: "MsgDate") as? String
         let dateFormatter = DateFormatter()
@@ -211,71 +215,71 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
 
         if searchController.isActive {
-            cell?.blogtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
-            cell?.blogsubtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
-            cell?.blogmsgDateLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"MsgDate") as? String
-            cell?.numLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Liked") as? String
-            cell?.commentLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? String
+            cell.blogtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
+            cell.blogsubtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
+            cell.blogmsgDateLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"MsgDate") as? String
+            cell.numLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Liked") as? String
+            cell.commentLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? String
         } else {
-            cell?.blogtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
-            cell?.blogsubtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
-            cell?.blogmsgDateLabel?.text = dateFormatter.string(from: date as Date)as String!
+            cell.blogtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
+            cell.blogsubtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
+            cell.blogmsgDateLabel?.text = dateFormatter.string(from: date as Date)as String!
             
             var Liked:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Liked")as? Int
             if Liked == nil {
                 Liked = 0
             }
-            cell?.numLabel?.text = "\(Liked!)"
+            cell.numLabel?.text = "\(Liked!)"
             
             var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? Int
             if CommentCount == nil {
                 CommentCount = 0
             }
-            cell?.commentLabel?.text = "\(CommentCount!)"
+            cell.commentLabel?.text = "\(CommentCount!)"
         }
         
-        cell?.replyButton.tintColor = .lightGray
+        cell.replyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell?.replyButton .setImage(replyimage, for: .normal)
-        cell?.replyButton .addTarget(self, action: #selector(replySetButton), for: UIControlEvents.touchUpInside)
+        cell.replyButton .setImage(replyimage, for: .normal)
+        cell.replyButton .addTarget(self, action: #selector(replySetButton), for: UIControlEvents.touchUpInside)
         
-        cell?.likeButton.tintColor = .lightGray
+        cell.likeButton.tintColor = .lightGray
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell?.likeButton.setImage(likeimage, for: .normal)
-        cell?.likeButton.addTarget(self, action: #selector(likeSetButton), for: UIControlEvents.touchUpInside)
+        cell.likeButton.setImage(likeimage, for: .normal)
+        cell.likeButton.addTarget(self, action: #selector(likeSetButton), for: UIControlEvents.touchUpInside)
 
-        cell?.flagButton.tintColor = .lightGray
+        cell.flagButton.tintColor = .lightGray
         let reportimage : UIImage? = UIImage(named:"Flag.png")!.withRenderingMode(.alwaysTemplate)
-        cell?.flagButton .setImage(reportimage, for: .normal)
-        cell?.flagButton .addTarget(self, action: #selector(flagSetButton), for: UIControlEvents.touchUpInside)
+        cell.flagButton .setImage(reportimage, for: .normal)
+        cell.flagButton .addTarget(self, action: #selector(flagSetButton), for: UIControlEvents.touchUpInside)
   
-        cell?.actionBtn.tintColor = .lightGray
+        cell.actionBtn.tintColor = .lightGray
         let actionimage : UIImage? = UIImage(named:"nav_more_icon.png")!.withRenderingMode(.alwaysTemplate)
-        cell?.actionBtn .setImage(actionimage, for: .normal)
-        cell?.actionBtn .addTarget(self, action: #selector(showShare), for: UIControlEvents.touchUpInside)
+        cell.actionBtn .setImage(actionimage, for: .normal)
+        cell.actionBtn .addTarget(self, action: #selector(showShare), for: UIControlEvents.touchUpInside)
         
-        if !(cell?.numLabel.text! == "0") {
-            cell?.numLabel.textColor = Color.Blog.buttonColor
+        if !(cell.numLabel.text! == "0") {
+            cell.numLabel.textColor = Color.Blog.buttonColor
         } else {
-            cell?.numLabel.text! = ""
+            cell.numLabel.text! = ""
         }
         
-        if !(cell?.commentLabel.text! == "0") {
-            cell?.commentLabel.textColor = .lightGray
+        if !(cell.commentLabel.text! == "0") {
+            cell.commentLabel.textColor = .lightGray
         } else {
-            cell?.commentLabel.text! = ""
+            cell.commentLabel.text! = ""
         }
         
-        if (cell?.commentLabel.text! == "") {
-            cell?.replyButton.tintColor = .lightGray
+        if (cell.commentLabel.text! == "") {
+            cell.replyButton.tintColor = .lightGray
         } else {
-            cell?.replyButton.tintColor = Color.Blog.buttonColor
+            cell.replyButton.tintColor = Color.Blog.buttonColor
         }
         
 //---------------------NSDataDetector-----------------------------
         
-        let text = (cell?.blogsubtitleLabel.text!)! as NSString
-        let attributedText = NSMutableAttributedString(attributedString: (cell?.blogsubtitleLabel.attributedText!)!)
+        let text = (cell.blogsubtitleLabel.text!) as NSString
+        let attributedText = NSMutableAttributedString(attributedString: (cell.blogsubtitleLabel.attributedText!))
 
         let boldRange = text.range(of: NSLocalizedString("VCSY", comment: ""))
         let tintedRange = text.range(of: NSLocalizedString("eunited@verizon.com", comment: ""))
@@ -284,7 +288,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let underlinedRange = text.range(of: NSLocalizedString("Lost", comment: ""))
         
         // Add bold.
-        let boldFontDescriptor = cell?.blogsubtitleLabel.font.fontDescriptor.withSymbolicTraits(.traitBold)
+        let boldFontDescriptor = cell.blogsubtitleLabel.font.fontDescriptor.withSymbolicTraits(.traitBold)
         let boldFont = UIFont(descriptor: boldFontDescriptor!, size: 24)
         attributedText.addAttribute(NSFontAttributeName, value: boldFont, range: boldRange)
         
@@ -303,11 +307,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         appendedSpace.addAttribute(NSFontAttributeName, value: boldFont, range: NSMakeRange(0, 1))
         attributedText.append(appendedSpace) */
         
-        cell?.blogsubtitleLabel!.attributedText  = attributedText
+        cell.blogsubtitleLabel!.attributedText  = attributedText
 
 //--------------------------------------------------
 
-        return cell!
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

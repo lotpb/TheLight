@@ -8,12 +8,12 @@
 
 import UIKit
 import Parse
-//import Firebase
 import MapKit
 import LocalAuthentication
 import FBSDKLoginKit
 import GoogleSignIn
 import SwiftKeychainWrapper
+import Firebase
 
 
 class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
@@ -38,12 +38,13 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     var defaults = UserDefaults.standard
     var pictureData : Data?
-    var user : PFUser?
     var userimage : UIImage?
+    var user : PFUser?
     
     //Facebook
+    //var dict : NSDictionary!
     var fbButton : FBSDKLoginButton = FBSDKLoginButton()
-    var dict : NSDictionary!
+    
     //Google
     var signInButton : GIDSignInButton = GIDSignInButton()
     
@@ -55,9 +56,28 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         return imageView
     }()
     
+    //var firebase: FIRDatabaseReference?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        /*
+        self.firebase = FIRDatabase.database().reference()
+        
+        if let user = FIRAuth.auth()?.currentUser {
+            self.firebase!.child("users/\(user.uid)/userID").setValue(user.uid)
+        } else {
+            FIRAuth.auth()?.signInAnonymously(completion: { (user, error) in
+                if error != nil {
+                    let alert = UIAlertController(title: "Oops!", message: error?.localizedDescription, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alert.addAction(defaultAction)
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    self.firebase!.child("users").child(user!.uid).setValue(["userID": user!.uid])
+                }
+            })
+        } */
         
         observeKeyboardNotifications() //Move Keyboard
         
@@ -74,8 +94,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             
         } else {
             //Keychain
-            self.usernameField!.text = KeychainWrapper.defaultKeychainWrapper.string(forKey: "usernameKey")
-            self.passwordField!.text = KeychainWrapper.defaultKeychainWrapper.string(forKey: "passwordKey")
+            self.usernameField!.text = KeychainWrapper.standard.string(forKey: "usernameKey")
+            self.passwordField!.text = KeychainWrapper.standard.string(forKey: "passwordKey")
             self.reEnterPasswordField!.isHidden = true
             self.registerBtn!.isHidden = false
             self.forgotPassword!.isHidden = false
@@ -107,6 +127,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.phoneField!.keyboardType = .numbersAndPunctuation
         
         self.passwordField!.text = ""
+        self.userimage = nil
         
         //Facebook
         fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
@@ -114,7 +135,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         fbButton.delegate = self
         
         if (FBSDKAccessToken.current() != nil) {
-            print("User is already logged in")
+            self.simpleAlert(title: "Alert", message: "User is already logged in")
+            //print("User is already logged in")
         } else {
             fbButton.readPermissions = ["public_profile", "email", "user_friends","user_birthday"]
         }
@@ -235,8 +257,10 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     func registerNewUser() {
         
-        userimage = UIImage(named:"profile-rabbit-toy.png")
-        pictureData = UIImageJPEGRepresentation(userimage!, 0.9)
+        if (self.userimage == nil) {
+        self.userimage = UIImage(named:"profile-rabbit-toy.png")
+        }
+        pictureData = UIImageJPEGRepresentation(self.userimage!, 0.9)
         let file = PFFile(name: "Image.jpg", data: pictureData!)
         
         let user = PFUser()
@@ -255,14 +279,14 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 self.simpleAlert(title: "Success", message: "You have registered a new user")
                 
             } else {
-                print("Error: \(error)")
+                self.simpleAlert(title: "Alert", message: "Error: \(error)")
+                //print("Error: \(error)")
             }
         }
     }
     
     
     // MARK: - Google
-    
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         
         if error != nil {
@@ -277,7 +301,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         redirectToHome()
     }
     
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!, withError error: Error!) {
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         
         if error != nil {
             print(error)
@@ -292,6 +316,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         
         if ((error) != nil) {
+            self.simpleAlert(title: "Alert", message: error.localizedDescription)
             print(error.localizedDescription)
             return
         } else {
@@ -299,44 +324,53 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         }
     }
     
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        print("loginButtonDidLogOut")
+    }
+    
     
     func fetchProfileFB() {
         
-        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "email, name, first_name, last_name, picture.type(large)"])
-        graphRequest.start(completionHandler: { (connection, result, error) -> Void in
-            
-            if ((error) != nil) {
-                print("Error: \(error)")
-                
-            } else {
-                
-                let firstName = (result as AnyObject).value(forKey: "first_name") as? String
-                let lastName = (result as AnyObject).value(forKey: "last_name") as? String
-                
-                self.usernameField!.text = "\(firstName!) \(lastName!)"
-                self.emailField!.text = (result as AnyObject).value(forKey: "email") as? String
-                self.passwordField!.text = "3911" //result.valueForKey("id") as? String
-                
-                let strPictureURL: String = ((((result! as AnyObject).object(forKey: "picture") as AnyObject).object(forKey: "data") as AnyObject).object(forKey: "url") as? String)!
-                
-                let image = UIImage(data: try! Data(contentsOf: URL(string: strPictureURL)!))
-                DispatchQueue.main.async(execute: { () -> Void in
-                    self.userImageView.image = image
-                })
-                
-                self.redirectToHome()
-            }
-        })
+        if((FBSDKAccessToken.current()) != nil){
+            FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, first_name, last_name, picture.type(large), email"])
+                .start(completionHandler: { (connection, result, error) in
+                if (error == nil) {
+                    
+                    guard let result = result as? NSDictionary,
+                        let firstName = result["first_name"] as? String,
+                        let lastName = result["last_name"] as? String,
+                        let email = result["email"] as? String
+                        //let user_id_fb = result["id"]  as? String
+                        else {
+                            return
+                    }
+                    
+                    var pictureUrl = ""
+                    if let picture = result["picture"] as? [String:AnyObject],
+                        let data = picture["data"] as? [String:AnyObject],
+                        let url = data["url"] as? String {
+                        pictureUrl = url
+                    }
+                    
+                    self.userimage = UIImage(data: try! Data(contentsOf: URL(string: pictureUrl)!))
+                    DispatchQueue.main.async(execute: { () -> Void in
+                        self.userImageView.image = self.userimage
+                    })
+                    
+                    self.usernameField!.text = "\(firstName) \(lastName)"
+                    self.emailField!.text = "\(email)"
+                    self.passwordField!.text = "3911"
+
+                    self.registerNewUser()
+                    self.redirectToHome()
+                    
+                } else {
+                    print("Error: \(error)")
+                }
+
+            })
+        }
     }
-    
-    
-    func redirectToHome() {
-        
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
-    }
-    
 
     /*
     func showFriendFB() {
@@ -362,16 +396,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.navigationController?.navigationBar.tintColor = .whiteColor()
         })
     } */
-    
-    
-    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        
-        print("loginButtonDidLogOut")
-
-    }
 
     
-    // MARK: - Password
+    // MARK: - Password Reset
     
     @IBAction func passwordReset(_ sender:AnyObject) {
         
@@ -453,7 +480,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         self.usernameField!.text = "Peter Balsamo"
         self.passwordField!.text = "3911"
-        self.emailField!.text = "eunitedws@verizon.net"
+        self.emailField!.text = "eunited@optonline.net"
         self.phoneField!.text = "(516)241-4786"
 
         PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
@@ -495,8 +522,17 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.present(alertController, animated: true, completion: nil)
     }
     
+    // MARK: - RedirectToHome
     
-    // MARK: Map
+    func redirectToHome() {
+        
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
+    }
+    
+    
+    // MARK: - Map
     
     func refreshLocation() {
         
@@ -544,8 +580,35 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             }, completion: nil)
     }
     
-//------------------------------------------------
-    
+//--------------Firebase----------------------------------
+    /*
+    @IBAction func createAccountAction(_ sender: AnyObject) {
+        
+        guard let email = self.emailField?.text else { return }
+        guard let password = self.passwordField?.text else { return }
+        
+        if email != "" && password != "" {
+            let credential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
+            
+            FIRAuth.auth()?.currentUser?.link(with: credential, completion: { (user, error) in
+                if error != nil {
+                    let alert = UIAlertController(title: "Oops!", message: error?.localizedDescription, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alert.addAction(defaultAction)
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    self.firebase!.child("users/\(user!.uid)/email").setValue(user!.email!)
+                }
+            })
+            
+        } else {
+            let alert = UIAlertController(title: "Oops!", message: "Please enter an email and password.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(defaultAction)
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+    } */
     
 }
 

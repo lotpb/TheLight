@@ -15,13 +15,16 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     private var webView: WKWebView
     var url: URL?
     
+    let SegTitles = ["CNN", "Drudge", "cnet", "United", "Cult of Mac", "Twits"]
+    
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var backButton: UIBarButtonItem!
     @IBOutlet weak var forwardButton: UIBarButtonItem!
     @IBOutlet weak var reloadButton: UIBarButtonItem!
     @IBOutlet weak var recentPostsButton: UIBarButtonItem!
     @IBOutlet weak var safari: UIBarButtonItem!
-  
+    @IBOutlet weak var segControl: UISegmentedControl!
+    
     required init?(coder aDecoder: NSCoder) {
         let config = WKWebViewConfiguration()
         self.webView = WKWebView(frame: CGRect.zero, configuration: config)
@@ -32,7 +35,8 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
-        //self.navigationController?.navigationBar.tintColor = .white
+        //changes segmented color
+        self.navigationController?.navigationBar.tintColor = .white
         //self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
     }
     
@@ -44,6 +48,10 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.segControl? = UISegmentedControl(items: SegTitles)
+        //self.segControl?.selectedSegmentIndex = 2
+        //self.segControl?.layer.cornerRadius = 15.0
+        
         view.insertSubview(webView, belowSubview: progressView)
         
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -155,7 +163,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
             let request = URLRequest(url: url!)
             webView.load(request)
         case 4:
-            url = URL(string:"http://finance.yahoo.com/mb/UPL/")!
+            url = URL(string:"http://www.cultofmac.com/category/news/")!
             let request = URLRequest(url: url!)
             webView.load(request)
         case 5:

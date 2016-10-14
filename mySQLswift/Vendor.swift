@@ -351,7 +351,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         let query1 = PFQuery(className:"Vendors")
         query1.whereKey("Active", equalTo:1)
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        //query1.orderByDescending("createdAt")
+        //query1.order(byDescending: "createdAt")
         query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
                 let temp: NSArray = objects! as NSArray

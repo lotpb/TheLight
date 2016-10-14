@@ -9,8 +9,7 @@
 import UIKit
 import Parse
 
-class SalesmanController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
+class SalesmanController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
     
     
     @IBOutlet weak var tableView: UITableView?
@@ -61,8 +60,6 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         navigationItem.rightBarButtonItems = [addButton,searchButton]
         
         parseData()
-        setupCollectionView()
-        setupMenuBar()
         
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.Table.navColor
@@ -91,117 +88,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
-    //-----------------------------------------------------------------
-    
-    func setupCollectionView() {
-        
-        if let flowLayout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
-            flowLayout.scrollDirection = .horizontal
-            flowLayout.minimumLineSpacing = 0
-        }
-        
-        self.collectionView?.backgroundColor = .red
-        self.collectionView?.register(TitleCell.self, forCellWithReuseIdentifier: cellId)
-        //self.collectionView?.register(TrendingCell.self, forCellWithReuseIdentifier: trendingCellId)
-        //self.collectionView?.register(SubscriptionCell.self, forCellWithReuseIdentifier: subscriptionCellId)
-        
-        self.collectionView?.contentInset = UIEdgeInsetsMake(50,0,0,0)
-        self.collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(50,0,0,0)
-        
-        self.collectionView?.isPagingEnabled = true
-    }
-    
-    // MARK: - collectionView
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        /*
-         let identifier: String
-         if indexPath.item == 1 {
-         //identifier = trendingCellId
-         } else if indexPath.item == 2 {
-         //identifier = subscriptionCellId
-         } else {
-         identifier = cellId
-         } */
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) //as! TitleCell
-        
-        return cell
-        
-    }
-    
-    
-    lazy var titleBar: TitleBar = {
-        let mb = TitleBar()
-        mb.homeController = self
-        return mb
-    }()
-    
-    func setupMenuBar() {
-        
-        navigationController?.hidesBarsOnSwipe = true
-        
-        let redView = UIView()
-        redView.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
-        view.addSubview(redView)
-        view.addConstraintsWithFormat(format: "H:|[v0]|", views: redView)
-        view.addConstraintsWithFormat(format: "V:[v0(50)]", views: redView)
-        
-        view.addSubview(titleBar)
-        view.addConstraintsWithFormat(format: "H:|[v0]|", views: titleBar)
-        view.addConstraintsWithFormat(format: "V:[v0(50)]", views: titleBar)
-        
-        titleBar.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        titleBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
-    }
-    
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        
-        let index = targetContentOffset.pointee.x / view.frame.width
-        
-        let indexPath = IndexPath(item: Int(index), section: 0)
-        titleBar.collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionViewScrollPosition())
-        
-        //setTitleForIndex(index: Int(index))
-    }
-    
-    func handleSearch() {
-        scrollToMenuIndex(menuIndex: 2)
-    }
-    
-    func scrollToMenuIndex(menuIndex: Int) {
-        
-        let indexPath = IndexPath(item: menuIndex, section: 0)
-        self.collectionView?.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition(), animated: true)
-        
-        //setTitleForIndex(index: menuIndex)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height = (view.frame.width - 16 - 16) * 9 / 16
-        return CGSize(width: view.frame.width, height: height + 16 + 88)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    /*
-     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-     return CGSize(width: view.frame.width, height: view.frame.height - 50)
-     } */
-    
-    //--------------------------------------------------
-    
+
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {

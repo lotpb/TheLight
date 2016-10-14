@@ -155,11 +155,11 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let imagePicker = UIImagePickerController()
+            imagePicker.allowsEditing = true
             imagePicker.sourceType = .camera
             imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera)!
-            imagePicker.allowsEditing = true
             imagePicker.delegate = self
-            imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
+            //imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
             self.present(imagePicker, animated: true, completion: nil)
         } else{
             self.simpleAlert(title: "Alert!", message: "Camera not available")
@@ -169,11 +169,11 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     @IBAction func selectImage(_ sender: AnyObject) {
         
         imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = true
         imagePicker.sourceType = .photoLibrary
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-        imagePicker.allowsEditing = true
         imagePicker.delegate = self
-        imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
+        //imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
         self.present(imagePicker, animated: true, completion: nil)
     }
     
@@ -289,26 +289,24 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                                 if success {
                                     updateblog!.setObject(self.file!, forKey:"imageFile")
                                     updateblog!.saveInBackground { (success: Bool, error: Error?) -> Void in
- 
+                                        
                                         self.simpleAlert(title: "Image Upload Complete", message: "Successfully updated the image")
                                         
                                         let newVC = News()
                                         self.navigationController?.pushViewController(newVC, animated: true)
                                         /*
-                                        DispatchQueue.main.async {
-                                            
-                                            let vc = self.storyboard?.instantiateViewController(withIdentifier: "newsId")
-                                            self.show(vc!, sender: self)
-   
-                                        } */
-   
+                                         DispatchQueue.main.async {
+                                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "newsId")
+                                         self.show(vc!, sender: self)
+                                         } */
                                     }
                                 }
                             }
                             
+                        } else {
+                            
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                         }
-                        
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                         self.navigationItem.rightBarButtonItem!.isEnabled = true
                     } else {
                         

@@ -111,6 +111,7 @@ class FirebaseLogin: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDele
         self.passwordField!.text = ""
         
         //Facebook
+        
         fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
         if (FBSDKAccessToken.current() != nil) {
             print("User is already logged in")
@@ -125,12 +126,9 @@ class FirebaseLogin: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDele
         signInButton.frame = CGRect(x: self.mainView.frame.size.width/2-60, y: 320, width: 126, height: 40)
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().disconnect()
         self.mainView.addSubview(signInButton)
         
-        //Facebook/Google LogOut
-        let loginManager: FBSDKLoginManager = FBSDKLoginManager()
-        loginManager.logOut()
-        GIDSignIn.sharedInstance().disconnect()
         
     }
     
@@ -318,7 +316,10 @@ class FirebaseLogin: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDele
             print(error.localizedDescription)
             return
         } else {
+            
             fetchProfileFB()
+            let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+            loginManager.logOut()
         }
     }
     
