@@ -15,8 +15,15 @@ import GoogleSignIn
 import SwiftKeychainWrapper
 import Firebase
 
+// A delay function
+func delay(_ seconds: Double, completion: @escaping ()->Void) {
+    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(seconds * 1000.0))) {
+        completion()
+    }
+}
 
-class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
+
+class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate,  GIDSignInUIDelegate, GIDSignInDelegate {
     
     let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
     let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
@@ -42,7 +49,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     var user : PFUser?
     
     //Facebook
-    //var dict : NSDictionary!
     var fbButton : FBSDKLoginButton = FBSDKLoginButton()
     
     //Google
@@ -130,28 +136,44 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.userimage = nil
         
         //Facebook
-        fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
-        self.mainView.addSubview(fbButton)
+
         fbButton.delegate = self
-        
         if (FBSDKAccessToken.current() != nil) {
             self.simpleAlert(title: "Alert", message: "User is already logged in")
             //print("User is already logged in")
         } else {
             fbButton.readPermissions = ["public_profile", "email", "user_friends","user_birthday"]
         }
-
+        self.mainView.addSubview(fbButton)
+        
         //Google
-        signInButton.frame = CGRect(x: self.view.frame.size.width - 131, y: 320, width: 126, height: 40)
+
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
+        //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
+        //GIDSignIn.sharedInstance().signInSilently()
+        //GIDSignIn.sharedInstance().disconnect()
         self.mainView.addSubview(signInButton)
-        
-        //Facebook/Google LogOut
-        let loginManager: FBSDKLoginManager = FBSDKLoginManager()
-        loginManager.logOut()
-        GIDSignIn.sharedInstance().disconnect()
 
+    }
+    
+    //Animate Buttons
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],
+                       animations: {
+                        self.signInButton.frame = CGRect(x: self.view.frame.size.width - 131, y: 320, width: 126, height: 40)
+            },
+                       completion: nil
+        )
+        
+        UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
+                       animations: {
+                        self.fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
+            },
+                       completion: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -258,7 +280,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     func registerNewUser() {
         
         if (self.userimage == nil) {
-        self.userimage = UIImage(named:"profile-rabbit-toy.png")
+            self.userimage = UIImage(named:"profile-rabbit-toy.png")
         }
         pictureData = UIImageJPEGRepresentation(self.userimage!, 0.9)
         let file = PFFile(name: "Image.jpg", data: pictureData!)
@@ -287,6 +309,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     
     // MARK: - Google
+
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         
         if error != nil {
@@ -298,7 +321,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.passwordField!.text = "3911"
         print(user.profile.email)
         print(user.profile.imageURL(withDimension: 400))
+        GIDSignIn.sharedInstance().disconnect()
         redirectToHome()
+        
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
@@ -494,7 +519,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     // MARK: Authenticate Password Alert
     
     func showPasswordAlert() {
-        
+        /*
         let alertController = UIAlertController(title: "Touch ID Password", message: "Please enter your password.", preferredStyle: .alert)
         
         let defaultAction = UIAlertAction(title: "OK", style: .cancel) { (action) -> Void in
@@ -519,16 +544,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             textField.isSecureTextEntry = true
             
         }
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    // MARK: - RedirectToHome
-    
-    func redirectToHome() {
-        
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
+        self.present(alertController, animated: true, completion: nil) */
     }
     
     
@@ -541,7 +557,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             if error == nil {
                 PFUser.current()!.setValue(geoPoint, forKey: "currentLocation")
                 PFUser.current()!.saveInBackground()
-                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                self.redirectToHome()
+                //self.performSegue(withIdentifier: "loginSegue", sender: nil)
             }
         }
         self.defaults.set(self.usernameField!.text, forKey: "usernameKey")
@@ -552,6 +569,16 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.defaults.set(self.emailField!.text, forKey: "emailKey")
         }
         self.defaults.set(true, forKey: "registerKey")
+    }
+    
+    
+    // MARK: - RedirectToHome
+    
+    func redirectToHome() {
+        
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
 //------------------------------------------------

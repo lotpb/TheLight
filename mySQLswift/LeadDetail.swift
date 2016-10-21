@@ -972,8 +972,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func getBirthday() {
         
-        let store = CNContactStore()
-        
         let nameStr: String
         if (formController == "Leads") || (formController == "Customer") {
             nameStr = "\(self.tbl13!) \(self.name!)"
@@ -981,9 +979,12 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             nameStr = "\(self.name!)"
         }
 
-        let contacts:[CNContact] = try! store.unifiedContacts(matching: CNContact.predicateForContacts(matchingName: nameStr), keysToFetch:[CNContactBirthdayKey as CNKeyDescriptor, CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
+        let store = CNContactStore()
 
+        let contacts:[CNContact] = try! store.unifiedContacts(matching: CNContact.predicateForContacts(matchingName: nameStr), keysToFetch:[CNContactBirthdayKey as CNKeyDescriptor, CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
+        
         let contact = contacts[0]
+ 
         if ((contact.birthday as NSDateComponents?)?.date as Date!) != nil {
            
             let formatter = DateFormatter()
@@ -995,6 +996,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         } else {
             self.simpleAlert(title: "Info", message: "No Birthdays for \(nameStr) ")
         }
+        
     }
     
     

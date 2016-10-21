@@ -12,7 +12,27 @@ import UserNotifications
 import GoogleSignIn
 import FBSDKLoginKit
 //import FBSDKCoreKit
-//import Firebase
+import Firebase
+
+enum TouchActions: String {
+    case special = "special"
+    case favorite = "favorite"
+    case search = "search"
+    case add = "add"
+    
+    var number: Int {
+        switch  self {
+        case .special:
+            return 3
+        case .favorite:
+            return 2
+        case .search:
+            return 1
+        case .add:
+            return 0
+        }
+    }
+}
 
 
 @UIApplicationMain
@@ -99,20 +119,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.window?.rootViewController = initialViewController
             self.window?.makeKeyAndVisible()
         }
+        
+        
+        // MARK: - Customize Appearance
+        
+        customizeAppearance()
 
         
         // MARK: - Facebook Sign-in
         
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
-        // MARK: - Customize Appearance
-        
-        customizeAppearance()
-        
+       
         // MARK: - Firebase
         
-          //FIRApp.configure()
+        FIRApp.configure()
         
+        // MARK: - 3D Touch
+        
+
         
         // MARK: - SplitViewController
         /*
@@ -128,9 +153,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     // MARK: - Google/Facebook
     
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        return (FBSDKApplicationDelegate.sharedInstance().application(app, open: url as URL!, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String, annotation: options[UIApplicationOpenURLOptionsKey.annotation]) || GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation]))
+    //})
+    }
+
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         
-        return (FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)  || GIDSignIn.sharedInstance().handle(url as URL!, sourceApplication: sourceApplication, annotation: annotation))
+        return (FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation) || GIDSignIn.sharedInstance().handle(url as URL!, sourceApplication: sourceApplication, annotation: annotation))
     }
 
     
@@ -190,7 +221,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
     
-    // MARK: -  
+    // MARK: 
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
@@ -220,6 +251,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         return false
     }
+    
+    // MARK: - 3D Touch
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        
+        guard let type = TouchActions(rawValue: shortcutItem.type) else {
+            completionHandler(false)
+            return
+        }
+        
+        let selectedIndex = type.number
+        (window?.rootViewController as? UITabBarController)?.selectedIndex = selectedIndex
+        
+        completionHandler(true)
+    }
+    
+
     
     // MARK: - Schedule Notification
     

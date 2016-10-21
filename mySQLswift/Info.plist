@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationUsageDescription</key>
-	<string>Can we use your location?</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -73,8 +71,6 @@
 	</dict>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Can we use your bluetooth?</string>
-	<key>NSRemindersUsageDescription</key>
-	<string>Can we use your reminder?</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Can we use your calender?</string>
 	<key>NSCameraUsageDescription</key>
@@ -83,12 +79,16 @@
 	<string>Can we use to your contacts?</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Can we use your location?</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Can we use your location?</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Can we use your location?</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Can we use your microphone?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Can we save to your Photo library?</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Can we use your reminder?</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -99,6 +99,45 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+    <key>UIApplicationShortcutItems</key>
+    <array>
+        <dict>
+            <key>UIApplicationShortcutItemIconType</key>
+            <string>UIApplicationShortcutIconTypeAdd</string>
+            <key>UIApplicationShortcutItemSubtitle</key>
+            <string>Add an item.</string>
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Add</string>
+            <key>UIApplicationShortcutItemType</key>
+            <string>$(PRODUCT_BUNDLE_IDENTIFIER).First</string>
+        </dict>
+        <dict>
+            <key>UIApplicationShortcutItemIconType</key>
+            <string>UIApplicationShortcutIconTypeSearch</string>
+            <key>UIApplicationShortcutItemSubtitle</key>
+            <string>Search for an item.</string>
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Search</string>
+            <key>UIApplicationShortcutItemType</key>
+            <string>$(PRODUCT_BUNDLE_IDENTIFIER).Second</string>
+        </dict>
+        <dict>
+            <key>UIApplicationShortcutItemIconType</key>
+            <string>UIApplicationShortcutIconTypeFavorite</string>
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Favorite</string>
+            <key>UIApplicationShortcutItemType</key>
+            <string>favorite</string>
+        </dict>
+        <dict>
+            <key>UIApplicationShortcutItemIconFile</key>
+            <string>thunder</string>
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Create something special</string>
+            <key>UIApplicationShortcutItemType</key>
+            <string>special</string>
+        </dict>
+    </array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

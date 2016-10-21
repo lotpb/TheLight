@@ -33,7 +33,8 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.red], for:.selected)
+        
+        //self.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.red], for:.selected)
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle("myLeads", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel

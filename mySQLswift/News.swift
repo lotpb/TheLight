@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 
 
 class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SearchDelegate {
@@ -19,6 +20,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     let titles = ["Home", "Trending", "Subscriptions", "Account"]
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var peekAndPopButton: UIButton!  //3D Touch
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
@@ -26,6 +28,10 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if is3DTouchAvailable {
+            registerForPreviewing(with: self, sourceView: view)
+        }
         
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
         titleLabel.text = "  Home"
@@ -48,15 +54,12 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     
     override func viewWillDisappear(_ animated: Bool) {
         //NotificationCenter.default.removeObserver(self)
-        navigationController?.hidesBarsOnSwipe = false //fix statbar hidden
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.tintColor = .white
-        //self.navigationController?.navigationItem.hidesBackButton = true
-        //self.navigationItem.hidesBackButton = true
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
@@ -108,6 +111,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     }
     
     // MARK: - NavigationController Hidden
+    
     func hideBar(notification: NSNotification)  {
         let state = notification.object as! Bool
         self.navigationController?.setNavigationBarHidden(state, animated: true)
@@ -185,8 +189,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     
     func setupMenuBar() {
         
-        //navigationController?.hidesBarsOnSwipe = true
-        
         let redView = UIView()
         redView.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
         view.addSubview(redView)
@@ -250,8 +252,8 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
 
 //-------------------------------------------------
     
-
     // MARK: - Segues
+    
     /*
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -267,5 +269,28 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         }
     } */
 
+}
+
+//PRAGMA MARK :- Peek and Pop
+extension News: UIViewControllerPreviewingDelegate {
+    
+    var is3DTouchAvailable: Bool {
+        return view.traitCollection.forceTouchCapability == .available
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        tabBarController?.selectedIndex = TouchActions.favorite.number
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        
+        guard let favoriteViewController = storyboard?.instantiateViewController(withIdentifier: "favoriteVC"), peekAndPopButton.frame.contains(location)  else { return nil}
+        
+        favoriteViewController.preferredContentSize = CGSize(width: 0, height: 300.0)
+        
+        return favoriteViewController
+    }
+    
+    
 }
 //-----------------------end------------------------------

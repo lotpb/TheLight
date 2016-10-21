@@ -47,10 +47,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         titleLabel.textAlignment = NSTextAlignment.center
         navigationItem.titleView = titleLabel
         
-        // get rid of black bar underneath navbar
-        UINavigationBar.appearance().shadowImage = UIImage()
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        
         parseData()
         setupTableView()
         setupNavBarButtons()
@@ -64,11 +60,21 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.refreshControl.addTarget(self, action: #selector(Blog.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
         
+        // get rid of black bar underneath navbar
+        UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        
+        // MARK: NavigationController Hidden
+        /*
+        NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil) */
+        
         /*
          if let split = self.splitViewController {
          let controllers = split.viewControllers
          self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
          } */
+        
+        ///Firebase
         
         /*
          FIRAuth.auth()?.signIn(withEmail: "eunitedws@verizon.net", password: "united", completion: { (user, error) in
@@ -86,7 +92,9 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         self.navigationController?.navigationBar.tintColor = .white
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
@@ -96,6 +104,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         refreshData(self)
     }
     
@@ -105,6 +114,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func setupTableView() {
+        
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
         self.tableView!.rowHeight = UITableViewAutomaticDimension
@@ -117,6 +127,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func setupNavBarButtons() {
+        
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(Blog.newButton))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(Blog.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
@@ -128,6 +139,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         parseData()
         self.refreshControl?.endRefreshing()
     }
+    
+    // MARK: - NavigationController Hidden
+    /*
+    func hideBar(notification: NSNotification)  {
+        let state = notification.object as! Bool
+        self.navigationController?.setNavigationBarHidden(state, animated: true)
+    } */
     
     
     // MARK: - Table View
