@@ -20,7 +20,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     let titles = ["Home", "Trending", "Subscriptions", "Account"]
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var peekAndPopButton: UIButton!  //3D Touch
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
@@ -28,10 +27,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if is3DTouchAvailable {
-            registerForPreviewing(with: self, sourceView: view)
-        }
         
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
         titleLabel.text = "  Home"
@@ -231,13 +226,14 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         }
     }
     
+    
     func handleSearch() {
         if let window = UIApplication.shared.keyWindow {
             window.addSubview(self.search)
             self.search.animate()
         }
-        //scrollToMenuIndex(menuIndex: 2)
     }
+    
     
     func hideSearchView(status : Bool){
         if status == true {
@@ -245,52 +241,27 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         }
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: view.frame.height - 50)
     }
-
-
-//-------------------------------------------------
     
-    // MARK: - Segues
+//--------------end youtube Menu-------------------
     
-    /*
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    //handle Landscape and Portrait Orientation
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         
-            self.performSegue(withIdentifier: "newsdetailSeque", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        collectionView.collectionViewLayout.invalidateLayout()
         
-        if segue.identifier == "newsdetailSeque"
-        {
-
-            
+        let indexPath = IndexPath(item: 0, section: 0)
+        //scroll to indexPath after the rotation is going
+        DispatchQueue.main.async {
+            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            self.collectionView.reloadData()
         }
-    } */
-
+        
+    }
+    
 }
 
-//PRAGMA MARK :- Peek and Pop
-extension News: UIViewControllerPreviewingDelegate {
-    
-    var is3DTouchAvailable: Bool {
-        return view.traitCollection.forceTouchCapability == .available
-    }
-    
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        tabBarController?.selectedIndex = TouchActions.favorite.number
-    }
-    
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        
-        guard let favoriteViewController = storyboard?.instantiateViewController(withIdentifier: "favoriteVC"), peekAndPopButton.frame.contains(location)  else { return nil}
-        
-        favoriteViewController.preferredContentSize = CGSize(width: 0, height: 300.0)
-        
-        return favoriteViewController
-    }
-    
-    
-}
 //-----------------------end------------------------------

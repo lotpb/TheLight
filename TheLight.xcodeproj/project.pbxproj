@@ -30,7 +30,6 @@
 		AF206E061C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF206E041C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 */; };
 		AF221C8D1C930A6400C9EF39 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF221C8C1C930A6400C9EF39 /* AddressBook.framework */; };
 		AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2817CA1C38794F00B2607A /* LeadUserController.swift */; };
-		AF2B37F01D35131E00AB7780 /* FirebaseLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2B37EF1D35131E00AB7780 /* FirebaseLogin.swift */; };
 		AF2D051B1D359A4200AC2A43 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D051A1D359A4200AC2A43 /* News.swift */; };
 		AF2D42E01D6CA9200071115E /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */; };
 		AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */; };
@@ -146,7 +145,6 @@
 		AF206E041C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "A Whiter Shade Of Pale.mp3"; path = "Music/A Whiter Shade Of Pale.mp3"; sourceTree = "<group>"; };
 		AF221C8C1C930A6400C9EF39 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		AF2817CA1C38794F00B2607A /* LeadUserController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadUserController.swift; sourceTree = "<group>"; };
-		AF2B37EF1D35131E00AB7780 /* FirebaseLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseLogin.swift; sourceTree = "<group>"; };
 		AF2D051A1D359A4200AC2A43 /* News.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
 		AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoLauncher.swift; sourceTree = "<group>"; };
 		AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
@@ -398,6 +396,7 @@
 		AF8CC3A91C41B34E004147F3 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				AFD1A30E1C1E32A500580F10 /* LoginController.swift */,
 				AF0369A61C173DDC00137D7E /* MasterViewController.swift */,
 				AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */,
 				AF0369A81C173DDC00137D7E /* DetailViewController.swift */,
@@ -505,8 +504,6 @@
 				AF7383EA1C302DD00049407C /* NotificationDetailController.swift */,
 				AF46FA831C2313EE00C27445 /* UserViewController.swift */,
 				AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */,
-				AFD1A30E1C1E32A500580F10 /* LoginController.swift */,
-				AF2B37EF1D35131E00AB7780 /* FirebaseLogin.swift */,
 			);
 			name = "Acc Controllers";
 			sourceTree = "<group>";
@@ -766,7 +763,6 @@
 				AFF3C8F21C4F38D500D9B7BD /* NewsDetailController.swift in Sources */,
 				AF0D6B331C4C554300334D03 /* YouTubeController.swift in Sources */,
 				AF2D42E01D6CA9200071115E /* VideoLauncher.swift in Sources */,
-				AF2B37F01D35131E00AB7780 /* FirebaseLogin.swift in Sources */,
 				AF9EE4C71C2771D70057B7DB /* NotificationController.swift in Sources */,
 				AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */,
 				AFD1A30B1C1E224600580F10 /* Customer.swift in Sources */,
@@ -998,7 +994,6 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
-				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
 			};
 			name = Debug;
 		};
@@ -1061,7 +1056,6 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
-				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
 			};
 			name = Release;
 		};

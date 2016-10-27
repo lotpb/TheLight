@@ -75,7 +75,7 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             
             let content = UNMutableNotificationContent()
-            content.title = "Test"
+            //content.title = "Test"
             content.body = customMessage.text!
             content.badge = 1
             content.sound = UNNotificationSound.default()
@@ -160,6 +160,8 @@ class NotificationController: UIViewController {
             let imageURL = Bundle.main.url(forResource: "map", withExtension: "png")
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
             content.attachments = [attachment]
+            
+          //content.userInfo = ["customNumber": 100]
             content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
@@ -189,7 +191,7 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
             content.title = "Blog Post"
-            content.subtitle = "New blog message posted"
+            content.subtitle = "New message posted"
             content.body = "TheLight just posted a new message"
             content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")

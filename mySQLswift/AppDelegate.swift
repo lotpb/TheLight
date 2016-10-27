@@ -11,28 +11,22 @@ import Parse
 import UserNotifications
 import GoogleSignIn
 import FBSDKLoginKit
-//import FBSDKCoreKit
 import Firebase
 
-enum TouchActions: String {
+/*
+enum ShortcutIdentifier: String {
     case special = "special"
     case favorite = "favorite"
     case search = "search"
     case add = "add"
     
-    var number: Int {
-        switch  self {
-        case .special:
-            return 3
-        case .favorite:
-            return 2
-        case .search:
-            return 1
-        case .add:
-            return 0
+    init?(fullIdentifier: String) {
+        guard let shortIdentifier = fullIdentifier.components(separatedBy: ".").last else {
+            return nil
         }
+        self.init(rawValue: shortIdentifier)
     }
-}
+} */
 
 
 @UIApplicationMain
@@ -69,9 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if (defaults.bool(forKey: "parsedataKey"))  {
             
         Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
-        
         PFAnalytics.trackAppOpened(launchOptions: launchOptions)
-            
         }
 
         // MARK: - prevent Autolock
@@ -80,14 +72,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
-
         // MARK: - RegisterUserNotification
         
         if #available(iOS 10.0, *) {
             
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {(accepted, error) in
                 if !accepted {
-                    print("Notification access denied.")
+                    print("Request Authorization Failed (\(error), \(error?.localizedDescription))")
                 }
             }
             
@@ -137,7 +128,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - 3D Touch
         
-
+        let firstItemIcon:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .share)
+        let firstItem = UIMutableApplicationShortcutItem(type: "1", localizedTitle: "Share", localizedSubtitle: "Share an item.", icon: firstItemIcon, userInfo: nil)
+        
+        let firstItemIcon1:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
+        let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "Add", localizedSubtitle: "Add an item.", icon: firstItemIcon1, userInfo: nil)
+        
+        
+        application.shortcutItems = [firstItem,firstItem1]
+  
         
         // MARK: - SplitViewController
         /*
@@ -156,8 +155,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         
         return (FBSDKApplicationDelegate.sharedInstance().application(app, open: url as URL!, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String, annotation: options[UIApplicationOpenURLOptionsKey.annotation]) || GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation]))
-    //})
     }
+    
 
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         
@@ -165,109 +164,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
 
     
-    // MARK: - Background Fetch
-    
-    private func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        
-        print("########### Received Background Fetch ###########")
-        
-        if #available(iOS 10.0, *) {
-            let content = UNMutableNotificationContent()
-            content.title = "Background transfer service download!"
-            content.body = "Background transfer service: Download complete!"
-            content.badge = 1
-            content.sound = UNNotificationSound.default()
-            content.categoryIdentifier = "Background Fetch"
-
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-            
-            let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
-            
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            
-        } else {
-        
-            let localNotification: UILocalNotification = UILocalNotification()
-            localNotification.alertAction = "Background transfer service download!"
-            localNotification.alertBody = "Background transfer service: Download complete!"
-            localNotification.soundName = UILocalNotificationDefaultSoundName
-            localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-            UIApplication.shared.presentLocalNotificationNow(localNotification)
-            
-            completionHandler(UIBackgroundFetchResult.newData)
-        }
-    }
-    
-    
-     // MARK: - Music Controller
-    
-    internal func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-        backgroundSessionCompletionHandler = completionHandler
-    }
-    
-    // MARK:
-    
-    func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    }
-    
-    // MARK: 
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        
-        FBSDKAppEvents.activateApp()
-    }
-    
-    // MARK:
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-    
-
-    // MARK: - Split view
-
-    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
-        
-        /*
-        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-        guard let topAsDetailController = secondaryAsNavController.topViewController as? SnapshotController else { return false }
-        
-        if topAsDetailController.detailItem == nil {
-            // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-            return true
-        } */
-        
-        return false
-    }
-    
     // MARK: - 3D Touch
     
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         
-        guard let type = TouchActions(rawValue: shortcutItem.type) else {
-            completionHandler(false)
-            return
-        }
+        let handledShortCutItem = handleShortCutItem(shortcutItem: shortcutItem)
+        completionHandler(handledShortCutItem)
         
-        let selectedIndex = type.number
-        (window?.rootViewController as? UITabBarController)?.selectedIndex = selectedIndex
-        
-        completionHandler(true)
     }
     
-
+    func handleShortCutItem(shortcutItem: UIApplicationShortcutItem) -> Bool {
+       
+        var handled = false
+        
+        if shortcutItem.type == "1" {
+            
+            let rootNavigationViewController = window!.rootViewController as? UINavigationController
+            let rootViewController = rootNavigationViewController?.viewControllers.first as UIViewController?
+            
+            //rootNavigationViewController?.popToRootViewController(animated: false)
+            rootViewController?.performSegue(withIdentifier: "showleadSegue", sender: nil)
+            handled = true
+            
+        }
+        
+        if shortcutItem.type == "2" {
+            
+            let rootNavigationViewController = window!.rootViewController as? UINavigationController
+            let rootViewController = rootNavigationViewController?.viewControllers.first as UIViewController?
+            
+            //rootNavigationViewController?.popToRootViewController(animated: false)
+            rootViewController?.performSegue(withIdentifier: "showcustSegue", sender: nil)
+            handled = true
+            
+        }
+        return handled
+    }
+    
     
     // MARK: - Schedule Notification
     
@@ -307,6 +240,94 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
     }
     
+    // MARK: - Background Fetch
+    
+    private func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        
+        print("########### Received Background Fetch ###########")
+        
+        if #available(iOS 10.0, *) {
+            let content = UNMutableNotificationContent()
+            content.title = "Background transfer service download!"
+            content.body = "Background transfer service: Download complete!"
+            content.badge = 1
+            content.sound = UNNotificationSound.default()
+            content.categoryIdentifier = "Background Fetch"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            
+            let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+        } else {
+            
+            let localNotification: UILocalNotification = UILocalNotification()
+            localNotification.alertAction = "Background transfer service download!"
+            localNotification.alertBody = "Background transfer service: Download complete!"
+            localNotification.soundName = UILocalNotificationDefaultSoundName
+            localNotification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
+            UIApplication.shared.presentLocalNotificationNow(localNotification)
+            
+            completionHandler(UIBackgroundFetchResult.newData)
+        }
+    }
+    
+    
+    // MARK: - Split view
+    
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
+        
+        /*
+         guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
+         guard let topAsDetailController = secondaryAsNavController.topViewController as? SnapshotController else { return false }
+         
+         if topAsDetailController.detailItem == nil {
+         // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
+         return true
+         } */
+        
+        return false
+    }
+    
+    
+     // MARK: - Music Controller
+    
+    internal func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        backgroundSessionCompletionHandler = completionHandler
+    }
+    
+    // MARK:
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+        // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    }
+    
+    // MARK: - Facebook
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        FBSDKAppEvents.activateApp()
+    }
+    
+    // MARK:
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    
     // MARK: - App Theme Customization
     
     private func customizeAppearance() {
@@ -321,6 +342,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         UITabBar.appearance().barTintColor = .black
         UITabBar.appearance().tintColor = .white
         UITabBar.appearance().isTranslucent = false
+      //UITabBar.appearance().unselectedItemTintColor = UIColor.yellow
         
         UIToolbar.appearance().barTintColor = Color.DGrayColor
         UIToolbar.appearance().tintColor = .white
@@ -335,6 +357,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        completionHandler([.alert])
+    }
+    
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         if response.actionIdentifier == "remindLater" {

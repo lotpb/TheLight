@@ -13,7 +13,7 @@ import LocalAuthentication
 import FBSDKLoginKit
 import GoogleSignIn
 import SwiftKeychainWrapper
-import Firebase
+//import Firebase
 
 // A delay function
 func delay(_ seconds: Double, completion: @escaping ()->Void) {
@@ -67,6 +67,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         /*
         self.firebase = FIRDatabase.database().reference()
         
@@ -140,7 +141,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         fbButton.delegate = self
         if (FBSDKAccessToken.current() != nil) {
             self.simpleAlert(title: "Alert", message: "User is already logged in")
-            //print("User is already logged in")
         } else {
             fbButton.readPermissions = ["public_profile", "email", "user_friends","user_birthday"]
         }
@@ -150,9 +150,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
 
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
-        //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
-        //GIDSignIn.sharedInstance().signInSilently()
-        //GIDSignIn.sharedInstance().disconnect()
         self.mainView.addSubview(signInButton)
 
     }
@@ -164,16 +161,11 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         UIView.animate(withDuration: 0.5, delay: 0.3, options: [],
                        animations: {
                         self.signInButton.frame = CGRect(x: self.view.frame.size.width - 131, y: 320, width: 126, height: 40)
-            },
-                       completion: nil
-        )
-        
-        UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
-                       animations: {
                         self.fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
             },
                        completion: nil
         )
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -288,6 +280,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         let user = PFUser()
         user.username = usernameField!.text
         user.password = passwordField!.text
+        user.email = emailField!.text
         
         user.setObject(file!, forKey:"imageFile")
         user.signUpInBackground { succeeded, error in
@@ -319,10 +312,20 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.usernameField!.text = user.profile.name
         self.emailField!.text = user.profile.email
         self.passwordField!.text = "3911"
-        print(user.profile.email)
-        print(user.profile.imageURL(withDimension: 400))
-        GIDSignIn.sharedInstance().disconnect()
-        redirectToHome()
+        
+        /*
+        var pictureUrl = ""
+        pictureUrl = user.profile.imageURL(withDimension: 400)
+        
+        self.userimage = UIImage(data: try! Data(contentsOf: URL(string: pictureUrl)!))
+        DispatchQueue.main.async(execute: { () -> Void in
+            self.userImageView.image = self.userimage
+        }) */
+        
+        //print(user.profile.imageURL(withDimension: 400))
+        //GIDSignIn.sharedInstance().disconnect()
+        self.registerNewUser()
+        self.redirectToHome()
         
     }
     
@@ -332,7 +335,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             print(error)
             return
         }
-        //LoginController.dismissViewControllerAnimated(true, completion: nil)
     }
     
     
@@ -350,7 +352,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        print("loginButtonDidLogOut")
+        print("Did log out of facebook")
     }
     
     
@@ -446,7 +448,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 
                 self.simpleAlert(title: "Alert", message: "Enter email in field: %@")
             }
-            
         }
     }
 
@@ -481,9 +482,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                         
                     case LAError.userFallback.rawValue:
                         print("User selected to enter password.")
-                        OperationQueue.main.addOperation({ () -> Void in
-                            self.showPasswordAlert()
-                        })
                     default:
                         let alert : UIAlertController = UIAlertController(title: "touch id failed", message: "Try again", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
@@ -493,10 +491,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 
             })
         } else {
-            print(error?.localizedDescription)
-            OperationQueue.main.addOperation({ () -> Void in
-                self.showPasswordAlert()
-            })
+            print(error as Any)
         }
         
     }
@@ -514,37 +509,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 self.refreshLocation()
             }
         }
-    }
-    
-    // MARK: Authenticate Password Alert
-    
-    func showPasswordAlert() {
-        /*
-        let alertController = UIAlertController(title: "Touch ID Password", message: "Please enter your password.", preferredStyle: .alert)
-        
-        let defaultAction = UIAlertAction(title: "OK", style: .cancel) { (action) -> Void in
-            
-            if let textField = alertController.textFields?.first as UITextField?
-            {
-                if textField.text == self.defaults.string(forKey: "usernameKey")! //"Peter Balsamo"
-                {
-                    print("Authentication successful! :) ")
-                }
-                else
-                {
-                    self.showPasswordAlert()
-                }
-            }
-        }
-        alertController.addAction(defaultAction)
-        
-        alertController.addTextField { (textField) -> Void in
-            
-            textField.placeholder = "Password"
-            textField.isSecureTextEntry = true
-            
-        }
-        self.present(alertController, animated: true, completion: nil) */
     }
     
     

@@ -30,9 +30,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "271"
-            endingLineNumber = "271"
-            landmarkName = "getChannelDetails(_:)"
-            landmarkType = "7">
+            endingLineNumber = "271">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

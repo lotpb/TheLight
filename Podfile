@@ -13,14 +13,13 @@ target 'TheLight' do
     
     pod 'Google/SignIn'
     
-    pod 'FacebookCore'
-    pod 'FacebookLogin'
-    pod 'FacebookShare'
+    pod 'FBSDKCoreKit'
+    pod 'FBSDKShareKit'
+    pod 'FBSDKLoginKit'
     
     pod 'SwiftKeychainWrapper'
     
     pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'
     
     #pod 'Alamofire', '~> 4.0'
-    
 end

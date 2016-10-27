@@ -688,7 +688,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func YahooFinanceLoad() {
         guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
-        
+        //weather
         let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
         let queryResults = results?.value(forKeyPath: "query.results.channel") as! NSDictionary?
         if queryResults != nil {
@@ -709,7 +709,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             dayYQL = queryResults!.value(forKeyPath: "item.forecast.day") as? NSArray
             textYQL = queryResults!.value(forKeyPath: "item.forecast.text") as? NSArray
         }
-        
+        //stocks
         let stockresults = YQL.query(statement: "select * from yahoo.finance.quote where symbol in (\"^IXIC\",\"SPY\",\"UUP\",\"VCSY\",\"GPRO\",\"VXX\",\"UPLMQ\",\"UGAZ\",\"XLE\",\"^XOI\")")
         let querystockResults = stockresults?.value(forKeyPath: "query.results") as! NSDictionary?
         if querystockResults != nil {

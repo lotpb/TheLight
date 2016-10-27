@@ -9,9 +9,11 @@
 import UIKit
 import Parse
 import AVFoundation
-import FirebaseAnalytics
+import FBSDKLoginKit
+import GoogleSignIn
 import SwiftKeychainWrapper
-//import EventKitUI
+import FirebaseAnalytics
+
 
 class MasterViewController: UITableViewController, UISplitViewControllerDelegate, UISearchResultsUpdating {
 
@@ -30,12 +32,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     let defaults = UserDefaults.standard
     
-    var symYQL: NSArray?
-    var tradeYQL: NSArray?
-    var changeYQL: NSArray?
+    var symYQL: NSArray!
+    var tradeYQL: NSArray!
+    var changeYQL: NSArray!
 
-    var tempYQL: String?
-    var textYQL: String?
+    var tempYQL: String!
+    var textYQL: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,7 +62,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
         
         navigationItem.rightBarButtonItems = [addButton, searchButton]
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
         
         // MARK: - SplitView
@@ -88,6 +89,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
         
         //Keychain
+        
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
         if (userSuccessful == true) && (passSuccessful == true) {
             print("Keychain successful")
@@ -113,29 +115,30 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.tableView!.addSubview(refreshControl!)
         
         self.versionCheck()
+        symYQL = nil
+        tradeYQL = nil
+        changeYQL = nil
+        self.refreshData()
 
     }
+    
 
     override func viewWillAppear(_ animated: Bool) {
       //self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
+        
         self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.barTintColor = .black
-        // refreshYQL
         self.refreshData()
         
     }
     
-    /*
-    override class func initialize() {
-        var token: Int = 0
-        _ = MasterViewController.__once
-    } */
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     func refreshData() {
         self.updateYahoo()
@@ -261,15 +264,16 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         tableView.tableHeaderView = vw
         
         photoImage = UIImageView(frame:CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 135))
-        photoImage!.image = UIImage(named:"IMG_1133New.jpg")
-        photoImage!.layer.masksToBounds = true
-        photoImage!.contentMode = .scaleAspectFill
-        vw.addSubview(photoImage!)
+        photoImage.image = UIImage(named:"IMG_1133.jpg")
+        photoImage.layer.masksToBounds = true
+        photoImage.contentMode = .scaleAspectFill
+        vw.addSubview(photoImage)
         
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.frame = photoImage.bounds
         photoImage.addSubview(visualEffectView)
 
+        
         let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 60, height: 60))
         myLabel1.numberOfLines = 0
         myLabel1.backgroundColor = .white
@@ -305,8 +309,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         myLabel25.font = Font.headtitle
         vw.addSubview(myLabel25)
         
+        
         let separatorLineView2 = UIView(frame: CGRect(x: 85, y: 95, width: 60, height: 3.5))
-        if ((changeYQL![0] as AnyObject).contains("-")) {
+        if (changeYQL?[0] == nil || (changeYQL![0] as AnyObject).contains("-")) {
             separatorLineView2.backgroundColor = .red
             myLabel25.textColor = .red
         } else {
@@ -314,6 +319,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             myLabel25.textColor = .green
         }
         vw.addSubview(separatorLineView2)
+        
         
         let myLabel3:UILabel = UILabel(frame: CGRect(x: 160, y: 15, width: 60, height: 60))
         myLabel3.numberOfLines = 0
@@ -330,13 +336,13 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let myLabel35:UILabel = UILabel(frame: CGRect(x: 160, y: 75, width: 60, height: 20))
         myLabel35.numberOfLines = 1
         myLabel35.textAlignment = NSTextAlignment.center
-        //myLabel35.text = String(format: "%.02f", "\(change1YQL)")
         myLabel35.text = " \(changeYQL![1])"
         myLabel35.font = Font.Weathertitle
         vw.addSubview(myLabel35)
         
+        
         let separatorLineView3 = UIView(frame: CGRect(x: 160, y: 95, width: 60, height: 3.5))
-        if ((changeYQL![1] as AnyObject).contains("-")) {
+        if (changeYQL?[1] == nil || (changeYQL![1] as AnyObject).contains("-")) {
             separatorLineView3.backgroundColor = .red
             myLabel35.textColor = .red
         } else {
@@ -344,6 +350,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             myLabel35.textColor = .green
         }
         vw.addSubview(separatorLineView3)
+        
         
         let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 105, width: 280, height: 20))
         myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
@@ -353,10 +360,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             textYQL!.contains("Thunderstorms") ||
             textYQL!.contains("Showers")) {
             myLabel4.textColor = .red
+            self.simpleAlert(title: "Info", message: "Bad weather today!")
         } else {
             myLabel4.textColor = .green
         }
-        vw.addSubview(myLabel4)
+        vw.addSubview(myLabel4) 
         
         /* //Statistic Button
         let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.size.width-100, y: 95, width: 90, height: 30))
@@ -368,7 +376,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         statButton.layer.borderColor = UIColor.black.cgColor
         statButton.layer.borderWidth = 1.0
         vw.addSubview(statButton) */
-        
+ 
         return vw
     }
 
@@ -455,29 +463,33 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     func updateYahoo() {
         
+        guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
+        //weather
         let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
         let queryResults = results?.value(forKeyPath: "query.results.channel.item") as! NSDictionary?
         if queryResults != nil {
             
-            let weatherInfo = queryResults!["condition"] as! NSDictionary
-            tempYQL = weatherInfo.object(forKey: "temp") as? String
-            textYQL = weatherInfo.object(forKey: "text") as? String
+            let weatherInfo = queryResults!["condition"] as? NSDictionary
+            tempYQL = weatherInfo?.object(forKey: "temp") as? String
+            textYQL = weatherInfo?.object(forKey: "text") as? String
         }
-        
+        //stocks
         let stockresults = YQL.query(statement: "select * from yahoo.finance.quote where symbol in (\"^IXIC\",\"SPY\")")
-        let querystockResults = stockresults?.value(forKeyPath: "query.results") as! NSDictionary?
+        let querystockResults = stockresults?.value(forKeyPath: "query.results") as? NSDictionary?
         if querystockResults != nil {
             
-            symYQL = querystockResults!.value(forKeyPath: "quote.symbol") as? NSArray
-            tradeYQL = querystockResults!.value(forKeyPath: "quote.LastTradePriceOnly") as? NSArray
-            changeYQL = querystockResults!.value(forKeyPath: "quote.Change") as? NSArray
-        }
+            symYQL = querystockResults!?.value(forKeyPath: "quote.symbol") as? NSArray
+            tradeYQL = querystockResults!?.value(forKeyPath: "quote.LastTradePriceOnly") as? NSArray
+            changeYQL = querystockResults!?.value(forKeyPath: "quote.Change") as? NSArray
+        } 
     }
     
     // MARK: - Logout
     
     func handleSignOut() {
         PFUser.logOut()
+        FBSDKLoginManager().logOut()
+        GIDSignIn.sharedInstance().signOut()
         self.performSegue(withIdentifier: "showLogin", sender: self)
         
     }

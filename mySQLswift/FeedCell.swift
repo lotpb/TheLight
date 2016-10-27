@@ -238,6 +238,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    
     /*
     private func thumbnailImageForFileUrl(fileUrl: NSURL) -> UIImage? {
         let asset = AVAsset(url: fileUrl as URL)

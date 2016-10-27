@@ -69,6 +69,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         
         
         if !isBroadcasting {
+            
             if peripheralManager.state == .poweredOn {
                 let major: CLBeaconMajorValue = UInt16(Int(txtMajor.text!)!)
                 let minor: CLBeaconMinorValue = UInt16(Int(txtMinor.text!)!)
@@ -106,6 +107,15 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     // MARK: CBPeripheralManagerDelegate method implementation
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        
+        if peripheral.state == .poweredOn {
+            peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
+        } else if peripheral.state == .poweredOff {
+            peripheralManager.stopAdvertising()
+        }
+        
+        
+        
         /*
         var statusMessage = ""
         
@@ -120,7 +130,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         
         lblBTStatus.text = statusMessage */
         
-        
+        /*
         var statusMessage = ""
         
         switch peripheral.state {
@@ -146,7 +156,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             statusMessage = "Bluetooth Status: Unknown"
         }
         
-        lblBTStatus.text = statusMessage
+        lblBTStatus.text = statusMessage */
     }
     
 }

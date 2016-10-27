@@ -39,7 +39,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
         titleLabel.text = "myBlog"
         titleLabel.textColor = .white
@@ -169,6 +169,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
         //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
         
@@ -296,39 +297,51 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
 //---------------------NSDataDetector-----------------------------
         
-        let text = (cell.blogsubtitleLabel.text!) as NSString
-        let attributedText = NSMutableAttributedString(attributedString: (cell.blogsubtitleLabel.attributedText!))
+        let input = (cell.blogsubtitleLabel.text!) as String
+        let types: NSTextCheckingResult.CheckingType = [.date, .address, .phoneNumber, .link]
+        let detector = try! NSDataDetector(types: types.rawValue)
+        let matches = detector.matches(in: input, options: [], range: NSRange(location: 0, length: input.utf16.count))
+        
+        for match in matches {
+          //let url = (input as NSString).substring(with: match.range)
+            let url = input.substring(with: match.range.range(for: input)!)
+          //print(url)
 
-        let boldRange = text.range(of: NSLocalizedString("VCSY", comment: ""))
-        let tintedRange = text.range(of: NSLocalizedString("eunited@verizon.com", comment: ""))
-        let tintedRange1 = text.range(of: NSLocalizedString("http://www.eunited.com", comment: ""))
-        let highlightedRange = text.range(of: NSLocalizedString("(516)241-4786", comment: ""))
-        let underlinedRange = text.range(of: NSLocalizedString("Lost", comment: ""))
+            let text = (cell.blogsubtitleLabel.text!) as NSString
+            let attributedText = NSMutableAttributedString(attributedString: (cell.blogsubtitleLabel.attributedText!))
+            
+            // Add bold.
+            let boldRange = text.range(of: NSLocalizedString("VCSY", comment: ""))
+            let boldFontDescriptor = cell.blogsubtitleLabel.font.fontDescriptor.withSymbolicTraits(.traitBold)
+            let boldFont = UIFont(descriptor: boldFontDescriptor!, size: 24)
+            attributedText.addAttribute(NSFontAttributeName, value: boldFont, range: boldRange)
+            
+            // Add highlight.
+            let highlightedRange = text.range(of: NSLocalizedString("(516)241-4786", comment: ""))
+            attributedText.addAttribute(NSBackgroundColorAttributeName, value: Color.Blog.phonelinkText, range: highlightedRange)
+            
+            // Add underline.
+            let underlinedRange = text.range(of: NSLocalizedString("Lost", comment: ""))
+            attributedText.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.styleSingle.rawValue, range: underlinedRange)
+            
+            // Add tint.
+            //let tintedRange = text.range(of: NSLocalizedString("eunited@verizon.com", comment: ""))
+            //attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.emaillinkText, range: tintedRange)
+            //let tintedRange1 = text.range(of: NSLocalizedString("http://www.eunited.com", comment: ""))
+            let tintedRange1 = text.range(of: NSLocalizedString(url, comment: ""))
+            attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: tintedRange1)
+            
+            /*
+             // Append a space with matching font of the rest of the body text.
+             let appendedSpace = NSMutableAttributedString.init(string: " ")
+             appendedSpace.addAttribute(NSFontAttributeName, value: boldFont, range: NSMakeRange(0, 1))
+             attributedText.append(appendedSpace) */
+            
+            cell.blogsubtitleLabel!.attributedText = attributedText
+        }
         
-        // Add bold.
-        let boldFontDescriptor = cell.blogsubtitleLabel.font.fontDescriptor.withSymbolicTraits(.traitBold)
-        let boldFont = UIFont(descriptor: boldFontDescriptor!, size: 24)
-        attributedText.addAttribute(NSFontAttributeName, value: boldFont, range: boldRange)
+        //--------------------------------------------------
         
-        // Add tint.
-        attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.emaillinkText, range: tintedRange)
-        attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: tintedRange1)
-        
-        // Add highlight.
-        attributedText.addAttribute(NSBackgroundColorAttributeName, value: Color.Blog.phonelinkText, range: highlightedRange)
-        
-        // Add underline.
-        attributedText.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.styleSingle.rawValue, range: underlinedRange)
-        /*
-        // Append a space with matching font of the rest of the body text.
-        let appendedSpace = NSMutableAttributedString.init(string: " ")
-        appendedSpace.addAttribute(NSFontAttributeName, value: boldFont, range: NSMakeRange(0, 1))
-        attributedText.append(appendedSpace) */
-        
-        cell.blogsubtitleLabel!.attributedText  = attributedText
-
-//--------------------------------------------------
-
         return cell
     }
     
@@ -768,6 +781,22 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+}
+
+// MARK: - detect a URL in a String using NSDataDetector
+
+extension NSRange {
+    
+    func range(for str: String) -> Range<String.Index>? {
+        guard location != NSNotFound else { return nil }
+        
+        guard let fromUTFIndex = str.utf16.index(str.utf16.startIndex, offsetBy: location, limitedBy: str.utf16.endIndex) else { return nil }
+        guard let toUTFIndex = str.utf16.index(fromUTFIndex, offsetBy: length, limitedBy: str.utf16.endIndex) else { return nil }
+        guard let fromIndex = String.Index(fromUTFIndex, within: str) else { return nil }
+        guard let toIndex = String.Index(toUTFIndex, within: str) else { return nil }
+        
+        return fromIndex ..< toIndex
+    }
 }
 
     // MARK: - UISearchBar Delegate
