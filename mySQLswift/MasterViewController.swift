@@ -11,7 +11,6 @@ import Parse
 import AVFoundation
 import FBSDKLoginKit
 import GoogleSignIn
-import SwiftKeychainWrapper
 import FirebaseAnalytics
 
 
@@ -65,45 +64,19 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
         
         // MARK: - SplitView
+        
+        self.splitViewController?.delegate = self //added
+        self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.automatic //added
         /*
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         } */
-
-        self.splitViewController?.delegate = self //added
-        self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.automatic //added
         
         // MARK: - Sound
         
         if (defaults.bool(forKey: "soundKey"))  {
             playSound()
-        }
-        
-        
-     // MARK: - Login
- 
-        let userId:String = defaults.object(forKey: "usernameKey") as! String!
-        let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
-        let userSuccessful: Bool = KeychainWrapper.standard.set(userId, forKey: "usernameKey")
-        let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
-        
-        //Keychain
-        
-        //KeychainWrapper.accessGroup = "group.TheLightGroup"
-        if (userSuccessful == true) && (passSuccessful == true) {
-            print("Keychain successful")
-        } else {
-            print("Keychain failed")
-        }
-        
-        //Parse
-        
-        PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
-            if error != nil {
-                 print("Error: \(error) \(error!._userInfo)")
-                return
-            }
         }
         
         self.refreshControl = UIRefreshControl()
@@ -114,10 +87,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl!)
         
-        self.versionCheck()
         symYQL = nil
         tradeYQL = nil
         changeYQL = nil
+        self.versionCheck()
         self.refreshData()
 
     }
@@ -311,7 +284,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         
         let separatorLineView2 = UIView(frame: CGRect(x: 85, y: 95, width: 60, height: 3.5))
-        if (changeYQL?[0] == nil || (changeYQL![0] as AnyObject).contains("-")) {
+        if (changeYQL?[0] != nil) {
+            separatorLineView2.backgroundColor = .red
+            myLabel25.textColor = .red
+        } else if (changeYQL![0] as AnyObject).contains("-") {
             separatorLineView2.backgroundColor = .red
             myLabel25.textColor = .red
         } else {
@@ -340,9 +316,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         myLabel35.font = Font.Weathertitle
         vw.addSubview(myLabel35)
         
-        
         let separatorLineView3 = UIView(frame: CGRect(x: 160, y: 95, width: 60, height: 3.5))
-        if (changeYQL?[1] == nil || (changeYQL![1] as AnyObject).contains("-")) {
+        if (changeYQL?[1] != nil) {
+            separatorLineView3.backgroundColor = .red
+            myLabel35.textColor = .red
+        } else if (changeYQL![1] as AnyObject).contains("-") {
             separatorLineView3.backgroundColor = .red
             myLabel35.textColor = .red
         } else {
@@ -350,7 +328,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             myLabel35.textColor = .green
         }
         vw.addSubview(separatorLineView3)
-        
         
         let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 105, width: 280, height: 20))
         myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
@@ -367,7 +344,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         vw.addSubview(myLabel4) 
         
         /* //Statistic Button
-        let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.size.width-100, y: 95, width: 90, height: 30))
+        let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.width-100, y: 95, width: 90, height: 30))
         statButton.setTitle("Statistics", for: UIControlState())
         statButton.backgroundColor = Color.MGrayColor
         statButton.setTitleColor(UIColor.white, for: UIControlState())

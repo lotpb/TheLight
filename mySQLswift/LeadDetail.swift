@@ -200,7 +200,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.mySwitch!.onTintColor = Color.BlueColor
         self.mySwitch!.tintColor = .lightGray
 
-        photoImage = UIImageView(frame:CGRect(x: self.view.frame.size.width/2+15, y: 60, width: self.view.frame.size.width/2-25, height: 110))
+        photoImage = UIImageView(frame:CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110))
         photoImage!.image = UIImage(named:"IMG_1133.jpg")
         photoImage!.layer.masksToBounds = true
         photoImage!.layer.borderColor = UIColor.lightGray.cgColor
@@ -222,7 +222,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let topBorder = CALayer()
         let width = CGFloat(2.0)
         topBorder.borderColor = UIColor.lightGray.cgColor
-        topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 0.5)
+        topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
         topBorder.borderWidth = width
         tableView!.layer.addSublayer(topBorder)
         tableView!.layer.masksToBounds = true
@@ -342,37 +342,37 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             
         } else if (tableView == self.newsTableView) {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-                cell?.leadtitleDetail!.font = newstitle
-                cell?.leadsubtitleDetail!.font = newssubtitle
-                cell?.leadreadDetail!.font = newsdetail
-                cell?.leadnewsDetail!.font = newsdetail
+                cell.leadtitleDetail!.font = newstitle
+                cell.leadsubtitleDetail!.font = newssubtitle
+                cell.leadreadDetail!.font = newsdetail
+                cell.leadnewsDetail!.font = newsdetail
             } else {
-                cell?.leadtitleDetail!.font = newstitle
-                cell?.leadsubtitleDetail!.font = newssubtitle
-                cell?.leadreadDetail!.font = newsdetail
-                cell?.leadnewsDetail!.font = newsdetail
+                cell.leadtitleDetail!.font = newstitle
+                cell.leadsubtitleDetail!.font = newssubtitle
+                cell.leadreadDetail!.font = newsdetail
+                cell.leadnewsDetail!.font = newsdetail
             }
             
             let width = CGFloat(2.0)
             let topBorder = CALayer()
             topBorder.borderColor = UIColor.lightGray.cgColor
-            topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 0.5)
+            topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
             topBorder.borderWidth = width
-            cell?.layer.addSublayer(topBorder)
-            cell?.layer.masksToBounds = true
+            cell.layer.addSublayer(topBorder)
+            cell.layer.masksToBounds = true
 
-            cell?.leadtitleDetail!.text = "\(self.formController!) News: \(self.lnewsTitle!)"
-            cell?.leadtitleDetail!.numberOfLines = 0
-            cell?.leadtitleDetail!.textColor = .black
+            cell.leadtitleDetail!.text = "\(self.formController!) News: \(self.lnewsTitle!)"
+            cell.leadtitleDetail!.numberOfLines = 0
+            cell.leadtitleDetail!.textColor = .black
             
             //--------------------------------------------------------------
             
             if (self.formController == "Vendor" || self.formController == "Employee") {
                 
-                cell?.leadsubtitleDetail.text = "Comments"
+                cell.leadsubtitleDetail.text = "Comments"
                 
             } else {
                 
@@ -386,21 +386,21 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day
-                    cell?.leadsubtitleDetail.text = "Comments, \(daysCount!) days ago"
+                    cell.leadsubtitleDetail.text = "Comments, \(daysCount!) days ago"
                 }
             }
             
             //--------------------------------------------------------------
-            cell?.leadsubtitleDetail.textColor = .gray
+            cell.leadsubtitleDetail.textColor = .gray
             
-            cell?.leadreadDetail.text = "Read more"
-            cell?.leadreadDetail.textColor = Color.BlueColor
+            cell.leadreadDetail.text = "Read more"
+            cell.leadreadDetail.textColor = Color.BlueColor
             
-            cell?.leadnewsDetail.text = self.comments
-            cell?.leadnewsDetail.numberOfLines = 0
-            cell?.leadnewsDetail.textColor = .darkGray
+            cell.leadnewsDetail.text = self.comments
+            cell.leadnewsDetail.numberOfLines = 0
+            cell.leadnewsDetail.textColor = .darkGray
             
-            return cell!
+            return cell
             
         } else {
             return UITableViewCell()

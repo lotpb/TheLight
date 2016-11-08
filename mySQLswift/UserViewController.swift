@@ -162,7 +162,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         vw.backgroundColor = .lightGray
         //tableView.tableHeaderView = vw
         
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 5, width: tableView.frame.size.width-10, height: 20))
+        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 5, width: tableView.frame.width-10, height: 20))
         myLabel1.numberOfLines = 1
         myLabel1.backgroundColor = .clear
         myLabel1.textColor = .white

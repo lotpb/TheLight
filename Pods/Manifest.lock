@@ -5,11 +5,11 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - FBSDKCoreKit (4.16.1):
+  - FBSDKCoreKit (4.17.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.16.1):
+  - FBSDKLoginKit (4.17.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.16.1):
+  - FBSDKShareKit (4.17.0):
     - FBSDKCoreKit
   - Firebase (3.8.0):
     - Firebase/Core (= 3.8.0)
@@ -69,7 +69,7 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.1.0)
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.0)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.0)
-  - GTMOAuth2 (1.1.3):
+  - GTMOAuth2 (1.1.4):
     - GTMSessionFetcher (~> 1.1)
   - GTMSessionFetcher (1.1.7):
     - GTMSessionFetcher/Full (= 1.1.7)
@@ -106,9 +106,9 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  FBSDKCoreKit: 6feac4e8921ccd7afa83fb1df6291dc6eec42c7c
-  FBSDKLoginKit: 469a56cebe2e1ed62b1621d0b155970fd6aac2d8
-  FBSDKShareKit: 53af0239b5bd2ebf191f32f75991245a208cc982
+  FBSDKCoreKit: 30a21d2d7b92984b3d80497113433c00824c35e9
+  FBSDKLoginKit: 42b7129ac0373ca99eaf4cbebf4d07bd42371f59
+  FBSDKShareKit: 9b573d03fbee36cbaf42d5bb1f2bc019e0d72347
   Firebase: fdbecadb7b5cbef2774852d4fa659b9daf11f2af
   FirebaseAnalytics: 6e58fc9b397664369ac7617fb0ba93fab6ba7b5b
   FirebaseAuth: 96e9674ff31d6e1f826d53e26aa003a57cab0295
@@ -122,7 +122,7 @@ SPEC CHECKSUMS:
   GoogleSignIn: a8694c0a8e6d1b0ec77c58014de5bfd4ba2fa766
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
-  GTMOAuth2: 72f8a58b1ad821cc06638b6099a522789fe04fcc
+  GTMOAuth2: 7fc9c10f5c745f4d9850419ea88889fe3baa6b7d
   GTMSessionFetcher: a1f8ed39e4fe21c68957daed472c7afbcdf29166
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
   SwiftKeychainWrapper: aa69884eb623a6f7d644921bbf58c8cee416a9e6

@@ -10,6 +10,7 @@ target 'TheLight' do
     pod 'Firebase/Database'
     pod 'Firebase/Auth'
     pod 'Firebase/Storage'
+    #pod 'Firebase/RemoteConfig'
     
     pod 'Google/SignIn'
     
@@ -22,4 +23,5 @@ target 'TheLight' do
     pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'
     
     #pod 'Alamofire', '~> 4.0'
+    #pod 'JSQMessagesViewController'
 end

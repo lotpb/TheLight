@@ -213,7 +213,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         if (indexPath.section == 0) {
             
             cell.titleImage.frame = CGRect(x: 28, y: 12, width: 20, height: 20)
-            cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.size.width, height: 20.0)
+            cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.width, height: 20.0)
             
             cell.titleImage.image = UIImage.init(named: self.image[indexPath.row])
             cell.titleLabel.text = self.items[indexPath.row]
@@ -224,8 +224,8 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         if (indexPath.section == 1) {
             
             cell.titleImage.frame = CGRect(x: 15, y: 10, width: 45, height: 45)
-            cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.size.width, height: 20.0)
-            cell.detailLabel.frame = CGRect(x: 75, y: 30, width: tableView.frame.size.width, height: 20.0)
+            cell.titleLabel.frame = CGRect(x: 75, y: 10, width: tableView.frame.width, height: 20.0)
+            cell.detailLabel.frame = CGRect(x: 75, y: 30, width: tableView.frame.width, height: 20.0)
             
             cell.titleImage.image = UIImage.init(named: self.image1[indexPath.row])
             cell.titleLabel.text = self.items1[indexPath.row]
@@ -258,7 +258,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
             let topBorder = CALayer()
             let width = CGFloat(2.0)
             topBorder.borderColor = UIColor.lightGray.cgColor
-            topBorder.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 0.5)
+            topBorder.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 0.5)
             topBorder.borderWidth = width
             vw.layer.addSublayer(topBorder)
             vw.layer.masksToBounds = true

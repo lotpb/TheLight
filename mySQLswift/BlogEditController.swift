@@ -79,13 +79,13 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         
         let topBorder = CALayer()
         topBorder.borderColor = UIColor.lightGray.cgColor
-        topBorder.frame = CGRect(x: 0, y: 0, width:  self.view.frame.size.width, height: 0.5)
+        topBorder.frame = CGRect(x: 0, y: 0, width:  self.view.frame.width, height: 0.5)
         topBorder.borderWidth = width
         self.toolBar!.layer.addSublayer(topBorder)
         
         let bottomBorder = CALayer()
         bottomBorder.borderColor = UIColor.lightGray.cgColor
-        bottomBorder.frame = CGRect(x: 0, y: 43, width:self.view.frame.size.width, height: 0.5)
+        bottomBorder.frame = CGRect(x: 0, y: 43, width:self.view.frame.width, height: 0.5)
         bottomBorder.borderWidth = width
         self.toolBar!.layer.addSublayer(bottomBorder)
         

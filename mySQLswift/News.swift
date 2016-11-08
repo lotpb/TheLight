@@ -249,7 +249,9 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
 //--------------end youtube Menu-------------------
     
     //handle Landscape and Portrait Orientation
+    /* //code crashes on startup
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+         //super.willTransition(to: newCollection, with: coordinator)
         
         collectionView.collectionViewLayout.invalidateLayout()
         
@@ -259,8 +261,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
             self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             self.collectionView.reloadData()
         }
-        
-    }
+    } */
     
 }
 

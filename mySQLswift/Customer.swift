@@ -136,10 +136,10 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cellIdentifier = "UserFoundCell"
         }
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: tableView.frame.size.width - 105, y: 0, width: 95, height: 32))
+        let myLabel1:UILabel = UILabel(frame: CGRect(x: tableView.frame.width - 105, y: 0, width: 95, height: 32))
         myLabel1.backgroundColor = Color.Cust.labelColor1
         myLabel1.textColor = .white
         myLabel1.textAlignment = NSTextAlignment.center
@@ -147,7 +147,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         myLabel1.font = Font.headtitle
         cell.addSubview(myLabel1)
         
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: tableView.frame.size.width - 105, y: 33, width: 95, height: 33))
+        let myLabel2:UILabel = UILabel(frame: CGRect(x: tableView.frame.width - 105, y: 33, width: 95, height: 33))
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
         myLabel2.textAlignment = NSTextAlignment.center

@@ -176,11 +176,11 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)! as UITableViewCell
         
-        label1 = UILabel(frame: CGRect(x: tableView.frame.size.width-155, y: 5, width: 77, height: 25))
+        label1 = UILabel(frame: CGRect(x: tableView.frame.width-155, y: 5, width: 77, height: 25))
         label1.textColor = .black
         label1.textAlignment = NSTextAlignment.right
         
-        label2 = UILabel(frame: CGRect(x: tableView.frame.size.width-70, y: 5, width: 60, height: 25))
+        label2 = UILabel(frame: CGRect(x: tableView.frame.width-70, y: 5, width: 60, height: 25))
         label2.textColor = .white
         label2.textAlignment = NSTextAlignment.right
         
@@ -596,32 +596,32 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
              photoImage.addSubview(visualEffectView) */
             
             segmentedControl = UISegmentedControl (items: ["WEEKLY", "MONTHLY", "YEARLY"])
-            segmentedControl.frame = CGRect(x: tableView.frame.size.width/2-125, y: 45, width: 250, height: 30)
+            segmentedControl.frame = CGRect(x: tableView.frame.width/2-125, y: 45, width: 250, height: 30)
             segmentedControl.backgroundColor = .red
             segmentedControl.tintColor = .white
             segmentedControl.selectedSegmentIndex = 1
             segmentedControl.addTarget(self, action: #selector(StatisticController.segmentedControlAction), for: .valueChanged)
             vw.addSubview(segmentedControl)
             
-            let myLabel1 = UILabel(frame: CGRect(x: tableView.frame.size.width/2-45, y: 3, width: 90, height: 45))
+            let myLabel1 = UILabel(frame: CGRect(x: tableView.frame.width/2-45, y: 3, width: 90, height: 45))
             myLabel1.textColor = .white
             myLabel1.textAlignment = NSTextAlignment.center
             myLabel1.text = "Statistics"
             myLabel1.font = UIFont (name: "Avenir-Book", size: 21)
             vw.addSubview(myLabel1)
             
-            let myLabel2 = UILabel(frame: CGRect(x: tableView.frame.size.width/2-25, y: 75, width: 50, height: 45))
+            let myLabel2 = UILabel(frame: CGRect(x: tableView.frame.width/2-25, y: 75, width: 50, height: 45))
             myLabel2.textColor = .green
             myLabel2.textAlignment = NSTextAlignment.center
             myLabel2.text = "SALES"
             myLabel2.font = UIFont (name: "Avenir-Black", size: 16)
             vw.addSubview(myLabel2)
             
-            let separatorLineView1 = UIView(frame: CGRect(x: tableView.frame.size.width/2-30, y: 110, width: 60, height: 1.9))
+            let separatorLineView1 = UIView(frame: CGRect(x: tableView.frame.width/2-30, y: 110, width: 60, height: 1.9))
             separatorLineView1.backgroundColor = .white
             vw.addSubview(separatorLineView1)
             
-            myLabel3 = UILabel(frame: CGRect(x: tableView.frame.size.width/2-70, y: 115, width: 140, height: 45))
+            myLabel3 = UILabel(frame: CGRect(x: tableView.frame.width/2-70, y: 115, width: 140, height: 45))
             myLabel3.textColor = .white
             myLabel3.textAlignment = NSTextAlignment.center
             myLabel3.text = "$200,000"

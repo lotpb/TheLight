@@ -771,7 +771,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 VC!.replyId = String(format:"%@", userIndex!)
             } else {
                 VC!.formStatus = "New"
-                VC!.textcontentpostby = PFUser.current()!.username
+                VC!.textcontentpostby = PFUser.current()?.username
             }
         }
         if segue.identifier == "bloguserSegue" {

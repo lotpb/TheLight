@@ -276,11 +276,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             cellID = kDateCellID       // the start/end date cells
         }
         
-        cell = tableView.dequeueReusableCell(withIdentifier: cellID)
+        cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
         
         if indexPath.row == 0 {
             
-            self.activeImage = UIImageView(frame:CGRect(x: tableView.frame.size.width-35, y: 10, width: 18, height: 22))
+            self.activeImage = UIImageView(frame:CGRect(x: tableView.frame.width-35, y: 10, width: 18, height: 22))
             self.activeImage!.contentMode = .scaleAspectFill
             
             if (self.liked == nil || self.liked == 0) {
@@ -489,7 +489,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func parseData() {
        
         let query:PFQuery = PFUser.query()!
-        query.whereKey("username",  equalTo:self.textcontentpostby!)
+        query.whereKey("username",  equalTo: self.textcontentpostby!)
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
             if error == nil {

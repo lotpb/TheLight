@@ -10,23 +10,9 @@ import UIKit
 import Parse
 import UserNotifications
 import GoogleSignIn
-import FBSDKLoginKit
+import FBSDKCoreKit
 import Firebase
-
-/*
-enum ShortcutIdentifier: String {
-    case special = "special"
-    case favorite = "favorite"
-    case search = "search"
-    case add = "add"
-    
-    init?(fullIdentifier: String) {
-        guard let shortIdentifier = fullIdentifier.components(separatedBy: ".").last else {
-            return nil
-        }
-        self.init(rawValue: shortIdentifier)
-    }
-} */
+import SwiftKeychainWrapper
 
 
 @UIApplicationMain
@@ -111,6 +97,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.window?.makeKeyAndVisible()
         }
         
+        // MARK: - Login
+        
+        let userId:String = defaults.object(forKey: "usernameKey") as! String!
+        let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
+        let userSuccessful: Bool = KeychainWrapper.standard.set(userId, forKey: "usernameKey")
+        let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
+        
+        //Keychain
+        
+        //KeychainWrapper.accessGroup = "group.TheLightGroup"
+        if (userSuccessful == true) && (passSuccessful == true) {
+            print("Keychain successful")
+        } else {
+            print("Keychain failed")
+        }
+        
+        //Parse
+        
+        PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
+            if error != nil {
+                print("Error: \(error) \(error!._userInfo)")
+                return
+            }
+        }
+        
         
         // MARK: - Customize Appearance
         
@@ -154,14 +165,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         
-        return (FBSDKApplicationDelegate.sharedInstance().application(app, open: url as URL!, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String, annotation: options[UIApplicationOpenURLOptionsKey.annotation]) || GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation]))
+        let handled = FBSDKApplicationDelegate.sharedInstance().application(app, open: url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String!, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+        
+        GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String!, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+        
+        return handled
     }
     
 
+    /*
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         
         return (FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation) || GIDSignIn.sharedInstance().handle(url as URL!, sourceApplication: sourceApplication, annotation: annotation))
-    }
+    } */
 
     
     // MARK: - 3D Touch

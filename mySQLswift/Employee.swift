@@ -136,7 +136,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cellIdentifier = "UserFoundCell"
         }
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         cell.employsubtitleLabel!.textColor = .gray

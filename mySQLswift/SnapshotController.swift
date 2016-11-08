@@ -284,16 +284,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         cell.snapdetailLabel?.text = ""
         cell.snapdetailLabel?.textColor = .black
         
-        //let date2 = Date()
-        //let calendar = Calendar.current
+        let date2 = Date()
+        let calendar = Calendar.current
         
         if (indexPath.section == 0) {
             
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = String(format: "%@%d", "Top News ", _feedItems.count)
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                //cell.selectionStyle = UITableViewCellSelectionStyle.gray
+                //cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 
                 return cell
                 
@@ -313,11 +313,11 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
             
         } else if (indexPath.section == 1) {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
+            //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
             
-            cell.collectionView.delegate = nil
-            cell.collectionView.dataSource = nil
-            cell.collectionView.backgroundColor = .white
+            //cell.collectionView.delegate = nil
+            //cell.collectionView.dataSource = nil
+            //cell.collectionView.backgroundColor = .white
             
             if (indexPath.row == 0) {
                 
@@ -326,8 +326,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 return cell
                 
             } else if (indexPath.row == 1) {
-                /*
-                let date1 = ((_feedItems.firstObject as Any) as AnyObject).value(forKey: "createdAt") as? Date
+                
+                let date1 = (_feedItems.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day
@@ -336,13 +336,13 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
                     }
                 }
-                cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String */
+                cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String
                 cell.snaptitleLabel?.text = "none"
                 cell.snapdetailLabel?.text = "none"
-                //cell.collectionView.backgroundColor = .white
-                //cell.collectionView.delegate = self
-                //cell.collectionView.dataSource = self
-                //cell.collectionView.tag = 10
+                cell.collectionView.backgroundColor = .white
+                cell.collectionView.delegate = self
+                cell.collectionView.dataSource = self
+                cell.collectionView.tag = 10
  
                 return cell
             }
@@ -352,12 +352,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Top Blog Story"
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                //cell.selectionStyle = UITableViewCellSelectionStyle.gray
+                //cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 
                 return cell
             } else if (indexPath.row == 1) {
-                /*
+                
                 let date1 = (_feedItems6.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
@@ -367,7 +367,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
                     }
                 }
-                cell.snapdetailLabel?.text = (_feedItems6.firstObject as AnyObject).value(forKey: "Subject") as? String */
+                cell.snapdetailLabel?.text = (_feedItems6.firstObject as AnyObject).value(forKey: "Subject") as? String
                 cell.snaptitleLabel?.text = "none"
                 cell.snapdetailLabel?.text = "none"
                 cell.collectionView.backgroundColor = .white

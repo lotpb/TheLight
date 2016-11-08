@@ -132,7 +132,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
             cellIdentifier = "UserFoundCell"
         }
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         cell.vendsubtitleLabel!.textColor = .gray

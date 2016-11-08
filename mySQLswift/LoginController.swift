@@ -13,7 +13,7 @@ import LocalAuthentication
 import FBSDKLoginKit
 import GoogleSignIn
 import SwiftKeychainWrapper
-//import Firebase
+import Firebase
 
 // A delay function
 func delay(_ seconds: Double, completion: @escaping ()->Void) {
@@ -150,6 +150,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
 
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().signInSilently()
         self.mainView.addSubview(signInButton)
 
     }
@@ -160,7 +161,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         UIView.animate(withDuration: 0.5, delay: 0.3, options: [],
                        animations: {
-                        self.signInButton.frame = CGRect(x: self.view.frame.size.width - 131, y: 320, width: 126, height: 40)
+                        self.signInButton.frame = CGRect(x: self.view.frame.width - 131, y: 320, width: 126, height: 40)
                         self.fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
             },
                        completion: nil
@@ -311,7 +312,21 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         }
         self.usernameField!.text = user.profile.name
         self.emailField!.text = user.profile.email
-        self.passwordField!.text = "3911"
+        self.passwordField!.text = user.userID //"3911"
+        
+        guard let idToken = user.authentication.idToken else { return }
+        guard let accessToken = user.authentication.accessToken else { return }
+        let credentials = FIRGoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+        
+        FIRAuth.auth()?.signIn(with: credentials, completion: { (user, error) in
+            if let err = error {
+                print("Failed to create a Firebase User with Google account: ", err)
+                return
+            }
+            
+            guard let uid = user?.uid else { return }
+            print("Successfully logged into Firebase with Google", uid)
+        })
         
         /*
         var pictureUrl = ""
@@ -324,6 +339,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         //print(user.profile.imageURL(withDimension: 400))
         //GIDSignIn.sharedInstance().disconnect()
+        
         self.registerNewUser()
         self.redirectToHome()
         
@@ -343,12 +359,11 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         
         if ((error) != nil) {
-            self.simpleAlert(title: "Alert", message: error.localizedDescription)
-            print(error.localizedDescription)
+            print(error)
             return
-        } else {
-            fetchProfileFB()
         }
+        
+        fetchProfileFB()
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
@@ -358,16 +373,29 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     func fetchProfileFB() {
         
-        if((FBSDKAccessToken.current()) != nil){
-            FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, first_name, last_name, picture.type(large), email"])
-                .start(completionHandler: { (connection, result, error) in
+        let accessToken = FBSDKAccessToken.current()
+        guard let accessTokenString = accessToken?.tokenString else { return }
+        
+        let credentials = FIRFacebookAuthProvider.credential(withAccessToken: accessTokenString)
+        FIRAuth.auth()?.signIn(with: credentials, completion: { (user, error) in
+            if error != nil {
+                print("Something went wrong with our FB user: ", error ?? "")
+                return
+            }
+            
+            print("Successfully logged in with our user: ", user ?? "")
+        })
+        
+        //if((FBSDKAccessToken.current()) != nil){
+            FBSDKGraphRequest(graphPath: "/me", parameters: ["fields": "id, name, first_name, last_name, picture.type(large), email"])
+                .start { (connection, result, error) in
                 if (error == nil) {
                     
                     guard let result = result as? NSDictionary,
                         let firstName = result["first_name"] as? String,
                         let lastName = result["last_name"] as? String,
-                        let email = result["email"] as? String
-                        //let user_id_fb = result["id"]  as? String
+                        let email = result["email"] as? String,
+                        let useId = result["id"]  as? String
                         else {
                             return
                     }
@@ -386,17 +414,18 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                     
                     self.usernameField!.text = "\(firstName) \(lastName)"
                     self.emailField!.text = "\(email)"
-                    self.passwordField!.text = "3911"
+                    self.passwordField!.text = "\(useId)" //"3911"
 
                     self.registerNewUser()
                     self.redirectToHome()
                     
                 } else {
-                    print("Error: \(error)")
+                    print("Failed to start graph request:", error ?? "")
+                    return
                 }
 
-            })
-        }
+            }
+        //}
     }
 
     /*
