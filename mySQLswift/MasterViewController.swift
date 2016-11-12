@@ -92,6 +92,16 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         changeYQL = nil
         self.versionCheck()
         self.refreshData()
+        
+        // yahoo bad weather warning
+        if (defaults.bool(forKey: "weatherKey"))  {
+            if (textYQL!.contains("Rain") ||
+                textYQL!.contains("Snow") ||
+                textYQL!.contains("Thunderstorms") ||
+                textYQL!.contains("Showers")) {
+                self.simpleAlert(title: "Info", message: "Bad weather today!")
+            }
+        }
 
     }
     
@@ -337,7 +347,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             textYQL!.contains("Thunderstorms") ||
             textYQL!.contains("Showers")) {
             myLabel4.textColor = .red
-            self.simpleAlert(title: "Info", message: "Bad weather today!")
         } else {
             myLabel4.textColor = .green
         }
@@ -385,35 +394,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         player.play()
         
-    }
-    
-    // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-        
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchBar.searchBarStyle = .prominent
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
-        //tableView!.tableHeaderView = searchController.searchBar
-        tableView!.tableFooterView = UIView(frame: .zero)
-        UISearchBar.appearance().barTintColor = .black
-        self.present(searchController, animated: true, completion: nil)
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        
-        self.foundUsers.removeAll(keepingCapacity: false)
-        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (self.menuItems as NSArray).filtered(using: searchPredicate)
-        self.foundUsers = array as! [String]
-        self.resultsController.tableView.reloadData()
     }
     
     
@@ -469,6 +449,36 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         GIDSignIn.sharedInstance().signOut()
         self.performSegue(withIdentifier: "showLogin", sender: self)
         
+    }
+    
+    
+    // MARK: - Search
+    
+    func searchButton(_ sender: AnyObject) {
+        
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchBar.searchBarStyle = .prominent
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.showsBookmarkButton = false
+        searchController.searchBar.showsCancelButton = true
+        searchController.searchBar.placeholder = "Search here..."
+        searchController.searchBar.sizeToFit()
+        definesPresentationContext = true
+        searchController.dimsBackgroundDuringPresentation = true
+        searchController.hidesNavigationBarDuringPresentation = true
+        //tableView!.tableHeaderView = searchController.searchBar
+        tableView!.tableFooterView = UIView(frame: .zero)
+        UISearchBar.appearance().barTintColor = .black
+        self.present(searchController, animated: true, completion: nil)
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        self.foundUsers.removeAll(keepingCapacity: false)
+        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
+        let array = (self.menuItems as NSArray).filtered(using: searchPredicate)
+        self.foundUsers = array as! [String]
+        self.resultsController.tableView.reloadData()
     }
 
     

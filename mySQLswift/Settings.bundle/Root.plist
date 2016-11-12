@@ -48,9 +48,19 @@
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
-			<string>Notification Settings</string>
+			<string>Notify Message</string>
 			<key>File</key>
 			<string>Notification</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Notify Bad Weather</string>
+			<key>Key</key>
+			<string>weatherKey</string>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>

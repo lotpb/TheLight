@@ -582,7 +582,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                     }
                 }
                 
-            } else if (self.formStatus == "New") {
+            } else if (self.formStatus == "New" || self.formStatus == "Reply") {
                 
                 let saveblog:PFObject = PFObject(className:"Blog")
                 saveblog.setObject(self.msgDate!, forKey:"MsgDate")
@@ -593,7 +593,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
                 saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
                 
-                if self.formStatus == "Reply" {
+                if (self.formStatus == "Reply") {
                     let query = PFQuery(className:"Blog")
                     query.whereKey("objectId", equalTo:self.replyId!)
                     query.getFirstObjectInBackground {(updateReply: PFObject?, error: Error?) -> Void in

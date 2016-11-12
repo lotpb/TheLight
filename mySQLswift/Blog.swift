@@ -22,11 +22,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var _feedheadItems3 : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
     
-    //var messages = [Message]()
-    //var messagesDictionary = [String: Message]()
-    //var users = [User]()
-    //var usersDictionary = [String: User]()
-    
     var buttonView: UIView?
     var likeButton: UIButton?
     var refreshControl: UIRefreshControl!
@@ -36,6 +31,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var posttoIndex: String?
     var userIndex: String?
     var titleLabel = String()
+    var defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,29 +60,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
         
-        // MARK: NavigationController Hidden
-        /*
-        NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil) */
-        
-        /*
-         if let split = self.splitViewController {
-         let controllers = split.viewControllers
-         self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
-         } */
-        
-        ///Firebase
-        
-        /*
-         FIRAuth.auth()?.signIn(withEmail: "eunitedws@verizon.net", password: "united", completion: { (user, error) in
-         
-         if error != nil {
-         print(error)
-         return
-         }
-         self.observeMessages()
-         //self.observeUser()
-         //self.checkIfUserIsLoggedIn()
-         }) */
 
     }
 
@@ -133,19 +106,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         navigationItem.rightBarButtonItems = [addButton,searchButton]
     }
     
+    
     // MARK: - refresh
     
     func refreshData(_ sender:AnyObject) {
         parseData()
         self.refreshControl?.endRefreshing()
     }
-    
-    // MARK: - NavigationController Hidden
-    /*
-    func hideBar(notification: NSNotification)  {
-        let state = notification.object as! Bool
-        self.navigationController?.setNavigationBarHidden(state, animated: true)
-    } */
     
     
     // MARK: - Table View
@@ -767,11 +734,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if isReplyClicked == true {
                 VC!.formStatus = "Reply"
                 VC!.textcontentsubject = String(format:"@%@", posttoIndex!)
-                VC!.textcontentpostby = PFUser.current()!.value(forKey: "username") as? String
+                VC!.textcontentpostby = defaults.string(forKey: "usernameKey") //PFUser.current()!.value(forKey: "username") as? String
                 VC!.replyId = String(format:"%@", userIndex!)
             } else {
                 VC!.formStatus = "New"
-                VC!.textcontentpostby = PFUser.current()?.username
+                VC!.textcontentpostby = defaults.string(forKey: "usernameKey") //PFUser.current()?.username
             }
         }
         if segue.identifier == "bloguserSegue" {

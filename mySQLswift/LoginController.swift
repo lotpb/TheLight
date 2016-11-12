@@ -62,29 +62,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         return imageView
     }()
     
-    //var firebase: FIRDatabaseReference?
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        /*
-        self.firebase = FIRDatabase.database().reference()
-        
-        if let user = FIRAuth.auth()?.currentUser {
-            self.firebase!.child("users/\(user.uid)/userID").setValue(user.uid)
-        } else {
-            FIRAuth.auth()?.signInAnonymously(completion: { (user, error) in
-                if error != nil {
-                    let alert = UIAlertController(title: "Oops!", message: error?.localizedDescription, preferredStyle: .alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alert.addAction(defaultAction)
-                    self.present(alert, animated: true, completion: nil)
-                } else {
-                    self.firebase!.child("users").child(user!.uid).setValue(["userID": user!.uid])
-                }
-            })
-        } */
         
         observeKeyboardNotifications() //Move Keyboard
         
@@ -147,10 +127,10 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.mainView.addSubview(fbButton)
         
         //Google
-
+        GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().signInSilently()
+        //GIDSignIn.sharedInstance().signInSilently()
         self.mainView.addSubview(signInButton)
 
     }
