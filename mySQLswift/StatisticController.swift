@@ -24,6 +24,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     var myLabel3 : UILabel!
     var segmentedControl : UISegmentedControl!
     var mytimer: Timer = Timer()
+    let defaults = UserDefaults.standard
     
     var symYQL: NSArray!
     var tradeYQL: NSArray!
@@ -689,7 +690,9 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     func YahooFinanceLoad() {
         guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         //weather
-        let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
+        //let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
+        let results = YQL.query(statement: String(format: "%@%@", "select * from weather.forecast where woeid=", self.defaults.string(forKey: "weatherKey")!))
+        
         let queryResults = results?.value(forKeyPath: "query.results.channel") as! NSDictionary?
         if queryResults != nil {
             
@@ -710,7 +713,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             textYQL = queryResults!.value(forKeyPath: "item.forecast.text") as? NSArray
         }
         //stocks
-        let stockresults = YQL.query(statement: "select * from yahoo.finance.quote where symbol in (\"^IXIC\",\"SPY\",\"UUP\",\"VCSY\",\"GPRO\",\"VXX\",\"UPLMQ\",\"UGAZ\",\"XLE\",\"^XOI\")")
+        let stockresults = YQL.query(statement: "select * from yahoo.finance.quote where symbol in (\"^IXIC\",\"SPY\",\"FB\",\"VCSY\",\"GPRO\",\"VXX\",\"UPLMQ\",\"SWKS\",\"AAPL\",\"^XOI\")")
         let querystockResults = stockresults?.value(forKeyPath: "query.results") as! NSDictionary?
         if querystockResults != nil {
             

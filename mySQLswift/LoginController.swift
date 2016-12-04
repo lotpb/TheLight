@@ -14,6 +14,7 @@ import FBSDKLoginKit
 import GoogleSignIn
 import SwiftKeychainWrapper
 import Firebase
+import TwitterKit
 
 // A delay function
 func delay(_ seconds: Double, completion: @escaping ()->Void) {
@@ -117,7 +118,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.userimage = nil
         
         //Facebook
-
         fbButton.delegate = self
         if (FBSDKAccessToken.current() != nil) {
             self.simpleAlert(title: "Alert", message: "User is already logged in")
@@ -132,6 +132,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         GIDSignIn.sharedInstance().delegate = self
         //GIDSignIn.sharedInstance().signInSilently()
         self.mainView.addSubview(signInButton)
+        
+        //Twitter
+        setupTwitterButton()
 
     }
     
@@ -225,6 +228,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.phoneField!.isHidden = false
             self.fbButton.isHidden = true
             self.signInButton.isHidden = true
+            //self.twitterButton.isHidden = true
             
         } else {
             //check if all text fields are completed
@@ -279,6 +283,39 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 //print("Error: \(error)")
             }
         }
+    }
+    
+    // MARK: - TwitterButton
+    
+    fileprivate func setupTwitterButton() {
+        let twitterButton = TWTRLogInButton { (session, error) in
+            if let err = error {
+                print("Failed to login via Twitter: ", err)
+                return
+            }
+            
+            //print("Successfully logged in under Twitter...")
+            
+            //lets login with Firebase
+            
+            guard let token = session?.authToken else { return }
+            guard let secret = session?.authTokenSecret else { return }
+            let credentials = FIRTwitterAuthProvider.credential(withToken: token, secret: secret)
+            
+            FIRAuth.auth()?.signIn(with: credentials, completion: { (user, error) in
+                
+                if let err = error {
+                    print("Failed to login to Firebase with Twitter: ", err)
+                    return
+                }
+                
+                print("Successfully created a Firebase-Twitter user: ", user?.uid ?? "")
+                
+            })
+        }
+        
+        view.addSubview(twitterButton)
+        twitterButton.frame = CGRect(x: 10, y: 490, width: view.frame.width - 20, height: 38)
     }
     
     

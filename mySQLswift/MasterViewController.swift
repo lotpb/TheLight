@@ -48,20 +48,19 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
+        navigationItem.rightBarButtonItems = [addButton, searchButton]
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
+        
         self.tableView!.backgroundColor = .black
+        self.tableView!.tableFooterView = UIView(frame: .zero)
         
         foundUsers = []
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
-        
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
-        
-        let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
-        
-        navigationItem.rightBarButtonItems = [addButton, searchButton]
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
         
         // MARK: - SplitView
         
@@ -197,7 +196,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         return foundUsers.count
         //return filteredString.count
-        
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -422,7 +420,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         //weather
-        let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
+      //let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
+        let results = YQL.query(statement: String(format: "%@%@", "select * from weather.forecast where woeid=", self.defaults.string(forKey: "weatherKey")!))
+        
         let queryResults = results?.value(forKeyPath: "query.results.channel.item") as! NSDictionary?
         if queryResults != nil {
             

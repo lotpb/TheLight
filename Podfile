@@ -18,6 +18,10 @@ target 'TheLight' do
     pod 'FBSDKShareKit'
     pod 'FBSDKLoginKit'
     
+    pod 'Fabric'
+    pod 'TwitterKit'
+    pod 'TwitterCore'
+    
     pod 'SwiftKeychainWrapper'
     
     pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'

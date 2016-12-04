@@ -599,6 +599,7 @@
 				AFF84B1D1C7756E000D10470 /* Embed App Extensions */,
 				28B88D6B46557F3F2B25CC6F /* [CP] Embed Pods Frameworks */,
 				E49D284E69355A3EBEF20927 /* [CP] Copy Pods Resources */,
+				AF6B22A11DF09C3F007F1B6F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -616,7 +617,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Peter Balsamo";
 				TargetAttributes = {
 					AF0369A01C173DDC00137D7E = {
@@ -716,6 +717,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TheLight/Pods-TheLight-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		AF6B22A11DF09C3F007F1B6F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" bd111785dfa6fac1536eac1b27048aeb2ea21967 5b578b899fe8f4a6841f9d1a6892624965b16ca7b76b01f9347cb2dcd3f1edf2";
 		};
 		E49D284E69355A3EBEF20927 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;

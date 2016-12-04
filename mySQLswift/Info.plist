@@ -47,6 +47,25 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>bd111785dfa6fac1536eac1b27048aeb2ea21967</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict>
+					<key>consumerKey</key>
+					<string>7Imkd1CjrnxDtwrrX1VqlhyID</string>
+					<key>consumerSecret</key>
+					<string>sfzZFCY6f2HAxqSUqVvBcJPuIS8nFAYPXacFzUm0VJIbqZeZ2Q</string>
+				</dict>
+				<key>KitName</key>
+				<string>Twitter</string>
+			</dict>
+		</array>
+	</dict>
 	<key>FacebookAppID</key>
 	<string>990654514310679</string>
 	<key>FacebookDisplayName</key>
@@ -99,7 +118,6 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

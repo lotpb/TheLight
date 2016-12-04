@@ -26,8 +26,9 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     var beaconPeripheralData: NSDictionary!
     var peripheralManager: CBPeripheralManager!
     var isBroadcasting = false
-    //var dataDictionary = NSDictionary()
-    //var beaconRegion: CLBeaconRegion!
+    
+    var dataDictionary = NSDictionary()
+    var beaconRegion: CLBeaconRegion!
     
     
     override func viewDidLoad() {
@@ -78,9 +79,9 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
                 beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: nil)
                 peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
                 
-                //beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "com.TheLight.beacon")
-                //NSDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
-                //peripheralManager.startAdvertising(dataDictionary as? [String : AnyObject])
+                beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "com.TheLight.beacon")
+                dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
+                peripheralManager.startAdvertising(dataDictionary as? [String : AnyObject])
                 
                 btnAction.setTitle("Stop", for: UIControlState())
                 lblStatus.text = "Broadcasting..."
@@ -107,13 +108,15 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     // MARK: CBPeripheralManagerDelegate method implementation
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
-        
+        var statusMessage = ""
         if peripheral.state == .poweredOn {
             peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
+            statusMessage = "Bluetooth Status: Turned On"
         } else if peripheral.state == .poweredOff {
             peripheralManager.stopAdvertising()
+            statusMessage = "Bluetooth Status: Turned Off"
         }
-        
+        lblBTStatus.text = statusMessage
         
         
         /*

@@ -230,14 +230,11 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
         
         if mapView.overlays.count == 1 {
-            renderer.strokeColor =
-                UIColor.blue.withAlphaComponent(0.75)
+            renderer.strokeColor = UIColor.blue.withAlphaComponent(0.75)
         } else if mapView.overlays.count == 2 {
-            renderer.strokeColor =
-                UIColor.green.withAlphaComponent(0.75)
+            renderer.strokeColor = UIColor.green.withAlphaComponent(0.75)
         } else if mapView.overlays.count == 3 {
-            renderer.strokeColor =
-                UIColor.red.withAlphaComponent(0.75)
+            renderer.strokeColor = UIColor.red.withAlphaComponent(0.75)
         }
         renderer.lineWidth = 3
         return renderer

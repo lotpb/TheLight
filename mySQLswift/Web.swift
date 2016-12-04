@@ -16,6 +16,12 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     var url: URL?
     
     let SegTitles = ["CNN", "Drudge", "cnet", "United", "Cult of Mac", "Twits"]
+    let SegAddress = ["http://www.cnn.com",
+                      "http://www.Drudgereport.com",
+                      "http://www.cnet.com",
+                      "http://lotpb.github.io/UnitedWebPage/index.html",
+                      "http://www.cultofmac.com/category/news/",
+                      "http://stocktwits.com/The_Stock_Whisperer"]
     
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var backButton: UIBarButtonItem!
@@ -63,7 +69,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
       //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
 
-        webView.load(URLRequest(url:URL(string:"http://www.cnn.com")!))
+        webView.load(URLRequest(url:URL(string: SegAddress[0])!))
         
         backButton.isEnabled = false
         forwardButton.isEnabled = false
@@ -120,7 +126,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     }
    
     private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
-        if (navigationAction.navigationType == WKNavigationType.linkActivated && !(navigationAction.request as NSURLRequest).url!.host!.lowercased().hasPrefix("www.drudgereport.com")) {
+        if (navigationAction.navigationType == WKNavigationType.linkActivated && !(navigationAction.request as NSURLRequest).url!.host!.lowercased().hasPrefix(SegAddress[1])) {
             
           //UIApplication.shared.openURL(navigationAction.request.url!)
             UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
@@ -137,7 +143,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     
     @IBAction func didPressButton(_ sender: AnyObject) {
         
-        let safariVC = SFSafariViewController(url:URL(string: "http://www.cnn.com")!, entersReaderIfAvailable: true) // Set to false if not interested in using reader
+        let safariVC = SFSafariViewController(url:URL(string: SegAddress[0])!, entersReaderIfAvailable: true) // Set to false if not interested in using reader
         safariVC.delegate = self
         self.present(safariVC, animated: true, completion: nil)
     }
@@ -147,27 +153,27 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         
         switch sender.selectedSegmentIndex {
         case 0:
-             url = URL(string:"http://www.cnn.com")!
+             url = URL(string: SegAddress[0])!
              let request = URLRequest(url: url!)
              webView.load(request)
         case 1:
-             url = URL(string:"http://www.Drudgereport.com")!
+             url = URL(string: SegAddress[1])!
              let request = URLRequest(url: url!)
              webView.load(request)
         case 2:
-             url = URL(string:"http://www.cnet.com")!
+             url = URL(string: SegAddress[2])!
              let request = URLRequest(url: url!)
              webView.load(request)
         case 3:
-            url = URL(string:"http://lotpb.github.io/UnitedWebPage/index.html")!
+            url = URL(string: SegAddress[3])!
             let request = URLRequest(url: url!)
             webView.load(request)
         case 4:
-            url = URL(string:"http://www.cultofmac.com/category/news/")!
+            url = URL(string: SegAddress[4])!
             let request = URLRequest(url: url!)
             webView.load(request)
         case 5:
-            url = URL(string:"http://stocktwits.com/The_Stock_Whisperer")!
+            url = URL(string: SegAddress[5])!
             let request = URLRequest(url: url!)
             webView.load(request)
         default:
