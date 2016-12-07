@@ -41,10 +41,13 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
-        //self.tableView!.rowHeight = 65
-        self.tableView!.estimatedRowHeight = 110
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.tableView!.rowHeight = 65
+        } else {
+            self.tableView!.estimatedRowHeight = 100
+            self.tableView!.rowHeight = UITableViewAutomaticDimension
+        }
         self.automaticallyAdjustsScrollViewInsets = false
         
         users = []
@@ -57,6 +60,10 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Vendor.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
         
         parseData()
         
@@ -79,7 +86,11 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         super.viewWillAppear(animated)
         //navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.Vend.navColor
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.Vend.navColor
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -106,6 +117,12 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         
         self.performSegue(withIdentifier: "newvendSegue", sender: self)
         
+    }
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     // MARK: - Table View

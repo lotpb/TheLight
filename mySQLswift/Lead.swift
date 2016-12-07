@@ -44,9 +44,13 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
 
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 89
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = .clear
+        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.tableView!.rowHeight = 65
+        } else {
+            self.tableView!.estimatedRowHeight = 100
+            self.tableView!.rowHeight = UITableViewAutomaticDimension
+        }
         self.automaticallyAdjustsScrollViewInsets = false
         
         foundUsers = []
@@ -58,6 +62,10 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Lead.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
 
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.Lead.navColor
@@ -80,8 +88,11 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         super.viewWillAppear(animated)
         //navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
-        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
+        }
         //animateTable()
     }
     
@@ -109,6 +120,12 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
     func newData() {
         
         self.performSegue(withIdentifier: "newleadSegue", sender: self)
+    }
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     // MARK: - Table View
@@ -501,28 +518,20 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
             //userDetails = foundUsers[indexPath.row]
             //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
         } else {
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-                let storyBoard : UIStoryboard = UIStoryboard (name: "Main", bundle: nil);
-                let vc:LeadDetail = storyBoard.instantiateViewController(withIdentifier: "SecondryViewController") as! LeadDetail
-                //objSecondryViewController.selectedColor = cell.textLabel?.text
-                showDetailViewController(vc, sender: self)
-                
-            } else {
-                self.performSegue(withIdentifier: "showDetail2", sender: self)
-            }
+            self.performSegue(withIdentifier: "leaddetailSegue", sender: self)
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "showDetail2" {
+        if segue.identifier == "leaddetailSegue" {
             
             let formatter = NumberFormatter()
             formatter.numberStyle = .none
             
             let controller = segue.destination as? LeadDetail
-            controller?.formController = "Leads"
-            let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
+            controller!.formController = "Leads"
+            let indexPath = self.tableView!.indexPathForSelectedRow!.row
             controller?.objectId = (_feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
             
             var LeadNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "LeadNo") as? Int

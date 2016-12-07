@@ -22,17 +22,19 @@ class NotificationController: UIViewController {
         super.viewDidLoad()
 
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myNotification", for: UIControlState())
-        titleButton.titleLabel?.font = Font.navlabel
+        titleButton.setTitle("TheLight Software", for: UIControlState())
+        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
 
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(NotificationController.actionButton))
-        
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NotificationController.editButton))
-        
         navigationItem.rightBarButtonItems = [editButton, actionButton]
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
         
         self.customMessage.clearButtonMode = .always
         self.customMessage!.font = celltitle
@@ -58,7 +60,11 @@ class NotificationController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+        }
     }
     
     // MARK: - localNotification
@@ -349,6 +355,12 @@ class NotificationController: UIViewController {
         
         self.performSegue(withIdentifier: "notificationdetailsegue", sender: self)
         
+    }
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
 }

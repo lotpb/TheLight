@@ -57,8 +57,6 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         }
     }
     
-    
-    
 /*
     func configureView() {
         // Update the user interface for the detail item.
@@ -82,6 +80,10 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         
         let searchButton = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(lightcamera))
         navigationItem.rightBarButtonItems = [searchButton]
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
         
         // MARK: - locationManager
 
@@ -362,6 +364,14 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         langNum = row
+    }
+    
+    // MARK: - Button
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     

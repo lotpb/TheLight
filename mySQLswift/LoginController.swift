@@ -142,12 +142,10 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: 0.5, delay: 0.3, options: [],
-                       animations: {
-                        self.signInButton.frame = CGRect(x: self.view.frame.width - 131, y: 320, width: 126, height: 40)
-                        self.fbButton.frame = CGRect(x: 10, y: 325, width: 126, height: 38)
-            },
-                       completion: nil
+        UIView.animate(withDuration: 0.5, delay: 0.3, options: [], animations: {
+                        self.signInButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
+                        self.fbButton.frame = CGRect(x: 10, y: 325, width: 110, height: 38)
+        }, completion: nil
         )
         
     }
@@ -155,7 +153,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = .red
+        self.navigationController?.navigationBar.barTintColor = .black
     }
     
     override func didReceiveMemoryWarning() {
@@ -310,12 +308,15 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 }
                 
                 print("Successfully created a Firebase-Twitter user: ", user?.uid ?? "")
-                
             })
         }
         
         view.addSubview(twitterButton)
-        twitterButton.frame = CGRect(x: 10, y: 490, width: view.frame.width - 20, height: 38)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            twitterButton.frame = CGRect(x: self.view.frame.width/2 - 250, y: 325, width: 110, height: 40)
+        } else {
+            twitterButton.frame = CGRect(x: self.view.frame.width/2 - 55, y: 325, width: 110, height: 40)
+        }
     }
     
     
@@ -551,7 +552,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
 
         PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
             if user != nil {
-                
                 self.refreshLocation()
             }
         }

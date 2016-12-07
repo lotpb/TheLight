@@ -55,6 +55,10 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(ProductController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
+        
         parseData()
         
         self.refreshControl = UIRefreshControl()
@@ -96,6 +100,12 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     func newData() {
         isFormStat = true
         self.performSegue(withIdentifier: "prodDetailSegue", sender: self)
+    }
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     // MARK: - Table View

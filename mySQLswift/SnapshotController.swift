@@ -79,8 +79,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("mySnapshot", for: UIControlState())
-        titleButton.titleLabel?.font = Font.navlabel
+        titleButton.setTitle("TheLight Software", for: UIControlState())
+        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
@@ -91,6 +91,10 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
         
         parseData()
         setupTableView()
@@ -778,6 +782,15 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+    }
+    
+    // MARK: - Button
+    
+    func goHome() {
+        
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     // MARK: - Segues

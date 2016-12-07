@@ -53,7 +53,8 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 110
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        self.tableView!.backgroundColor = .white //UIColor(white:0.90, alpha:1.0)
+        self.tableView!.tableFooterView = UIView(frame: .zero)
         self.automaticallyAdjustsScrollViewInsets = false
         
         foundUsers = []
@@ -82,7 +83,11 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         super.viewWillAppear(animated)
         //navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.Table.labelColor
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.Table.labelColor
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

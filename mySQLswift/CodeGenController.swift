@@ -33,6 +33,10 @@ class CodeGenController: UIViewController {
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
+        
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo:defaults.string(forKey: "usernameKey")!)
         query.limit = 1
@@ -142,5 +146,13 @@ class CodeGenController: UIViewController {
     }
     
     //let userimage = generatePDF417BarcodeFromString("Hacking with Swift")
+    
+    // MARK: - Button
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
+    }
 
 }

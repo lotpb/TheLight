@@ -34,6 +34,17 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
+        titleButton.setTitle("TheLight Software", for: UIControlState())
+        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
+        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
+        titleButton.setTitleColor(.white, for: UIControlState())
+        self.navigationItem.titleView = titleButton
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
+        
         btnAction.layer.cornerRadius = btnAction.frame.size.width / 2
         
         let swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(TransmitBeaconController.handleSwipeGestureRecognizer))
@@ -160,6 +171,14 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         }
         
         lblBTStatus.text = statusMessage */
+    }
+    
+    // MARK: - Button
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
 }

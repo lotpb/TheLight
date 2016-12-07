@@ -71,11 +71,15 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myStats", for: UIControlState())
-        titleButton.titleLabel?.font = Font.navlabel
+        titleButton.setTitle("TheLight Software", for: UIControlState())
+        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
         
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
@@ -108,8 +112,13 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //navigationController?.hidesBarsOnSwipe = true
+        
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.Stat.navColor
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.Stat.navColor
+        }
         
         self.refreshData()
         
@@ -141,6 +150,12 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func newData() {
         self.performSegue(withIdentifier: "newleadSegue", sender: self)
+    }
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     // MARK: - Table View
@@ -583,7 +598,12 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         if (section == 0) {
             let vw = UIView()
             //vw.frame = CGRectMake(0 , 0, tableView.frame.width, 175)
-            vw.backgroundColor = Color.Stat.navColor
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                vw.backgroundColor = .black
+                self.navigationController?.navigationBar.barTintColor = .black
+            } else {
+                vw.backgroundColor = Color.Stat.navColor
+            }
             //tableView.tableHeaderView = vw
             /*
              photoImage = UIImageView(frame:CGRectMake(0, 0, vw.frame.size.width, 175))

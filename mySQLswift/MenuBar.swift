@@ -13,7 +13,11 @@ class MenuBar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UIC
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            cv.backgroundColor = .black
+        } else {
+            cv.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
+        }
         cv.dataSource = self
         cv.delegate = self
         return cv

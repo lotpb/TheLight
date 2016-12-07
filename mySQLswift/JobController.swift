@@ -57,6 +57,10 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(JobController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
+        
         parseData()
         
         self.refreshControl = UIRefreshControl()
@@ -99,6 +103,12 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func newData() {
         isFormStat = true
         self.performSegue(withIdentifier: "jobDetailSegue", sender: self)
+    }
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     // MARK: - Table View

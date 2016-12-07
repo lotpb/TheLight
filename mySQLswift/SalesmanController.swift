@@ -59,6 +59,10 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(SalesmanController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
+        
         parseData()
         
         self.refreshControl = UIRefreshControl()
@@ -102,6 +106,12 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     func newData() {
         isFormStat = true
         self.performSegue(withIdentifier: "salesDetailSegue", sender: self)
+    }
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     // MARK: - Table View
