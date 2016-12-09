@@ -27,7 +27,11 @@ class CodeGenController: UIViewController {
         super.viewDidLoad()
 
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Membership Card", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Membership", for: UIControlState())
+        } else {
+            titleButton.setTitle("Membership", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())

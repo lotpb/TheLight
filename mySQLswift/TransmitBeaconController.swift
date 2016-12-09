@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import QuartzCore
+//import QuartzCore
 import CoreLocation
 import CoreBluetooth
 
@@ -20,7 +20,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     @IBOutlet weak var txtMajor: UITextField!
     @IBOutlet weak var txtMinor: UITextField!
     
-    let uuid = UUID(uuidString: "F34A1A1F-500F-48FB-AFAA-9584D641D7B1")
+    var localBeaconUUID = "F34A1A1F-500F-48FB-AFAA-9584D641D7B1"
     
     var localBeacon: CLBeaconRegion!
     var beaconPeripheralData: NSDictionary!
@@ -35,17 +35,20 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("TheLight Software", for: UIControlState())
-        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Transmit Beacon", for: UIControlState())
+        } else {
+            titleButton.setTitle("Transmit Beacon", for: UIControlState())
+        }
+        titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
-        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
         }
         
-        btnAction.layer.cornerRadius = btnAction.frame.size.width / 2
+        btnAction.layer.cornerRadius = btnAction.frame.size.width/2
         
         let swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(TransmitBeaconController.handleSwipeGestureRecognizer))
         swipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirection.down
@@ -71,6 +74,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     // MARK: IBAction method implementation
     
     @IBAction func switchBroadcastingState(sender: AnyObject) {
+        
         if txtMajor.text == "" || txtMinor.text == "" {
             return
         }
@@ -79,44 +83,38 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             return
         }
         
-        
         if !isBroadcasting {
-            
-            if peripheralManager.state == .poweredOn {
-                let major: CLBeaconMajorValue = UInt16(Int(txtMajor.text!)!)
-                let minor: CLBeaconMinorValue = UInt16(Int(txtMinor.text!)!)
 
-                localBeacon = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "com.TheLight.beacon")
-                beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: nil)
-                peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
-                
-                beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "com.TheLight.beacon")
-                dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
-                peripheralManager.startAdvertising(dataDictionary as? [String : AnyObject])
-                
-                btnAction.setTitle("Stop", for: UIControlState())
-                lblStatus.text = "Broadcasting..."
-                txtMajor.isEnabled = false
-                txtMinor.isEnabled = false
-                
-                isBroadcasting = true
-            }
-        }
-        else {
+            let localBeaconMajor: CLBeaconMajorValue = UInt16(Int(txtMajor.text!)!)
+            let localBeaconMinor: CLBeaconMinorValue = UInt16(Int(txtMinor.text!)!)
+            let uuid = UUID(uuidString: localBeaconUUID)!
+            localBeacon = CLBeaconRegion(proximityUUID: uuid, major: localBeaconMajor, minor: localBeaconMinor, identifier: "com.TheLight.beacon")
+            beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: nil)
+            peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
+            
+            btnAction.setTitle("Stop", for: UIControlState())
+            lblStatus.text = "Broadcasting..."
+            txtMajor.isEnabled = false
+            txtMinor.isEnabled = false
+            isBroadcasting = true
+
+        } else {
+            
             peripheralManager.stopAdvertising()
+            peripheralManager = nil
+            beaconPeripheralData = nil
+            localBeacon = nil
             
             btnAction.setTitle("Start", for: UIControlState())
             lblStatus.text = "Stopped"
-            
             txtMajor.isEnabled = true
             txtMinor.isEnabled = true
-            
             isBroadcasting = false
-        }
+        } 
     }
     
     
-    // MARK: CBPeripheralManagerDelegate method implementation
+    // MARK: CBPeripheralManagerDelegate
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         var statusMessage = ""
@@ -126,52 +124,12 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         } else if peripheral.state == .poweredOff {
             peripheralManager.stopAdvertising()
             statusMessage = "Bluetooth Status: Turned Off"
+        } else if peripheral.state == .unsupported {
+            statusMessage = "Bluetooth Status: Not Supported"
         }
         lblBTStatus.text = statusMessage
-        
-        
-        /*
-        var statusMessage = ""
-        
-        if peripheral.state == .poweredOn {
-            peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
-            statusMessage = "Bluetooth Status: Turned On"
-
-        } else if peripheral.state == .poweredOff {
-            peripheralManager.stopAdvertising()
-            statusMessage = "Bluetooth Status: Turned Off"
-        }
-        
-        lblBTStatus.text = statusMessage */
-        
-        /*
-        var statusMessage = ""
-        
-        switch peripheral.state {
-        case .poweredOn:
-            statusMessage = "Bluetooth Status: Turned On"
-            
-        case .poweredOff:
-            if isBroadcasting {
-                switchBroadcastingState(sender: self)
-            }
-            statusMessage = "Bluetooth Status: Turned Off"
-            
-        case .resetting:
-            statusMessage = "Bluetooth Status: Resetting"
-            
-        case .unauthorized:
-            statusMessage = "Bluetooth Status: Not Authorized"
-            
-        case .unsupported:
-            statusMessage = "Bluetooth Status: Not Supported"
-            
-        default:
-            statusMessage = "Bluetooth Status: Unknown"
-        }
-        
-        lblBTStatus.text = statusMessage */
     }
+    
     
     // MARK: - Button
     

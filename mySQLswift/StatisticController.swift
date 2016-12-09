@@ -72,7 +72,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle("TheLight Software", for: UIControlState())
-        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
+        titleButton.titleLabel?.font = Font.navlabel //UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton

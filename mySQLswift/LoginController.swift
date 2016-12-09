@@ -278,9 +278,25 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 
             } else {
                 self.simpleAlert(title: "Alert", message: "Error: \(error)")
-                //print("Error: \(error)")
             }
         }
+        /*
+        FIRAuth.auth()?.createUser(withEmail: (emailField?.text!)!, password: (passwordField?.text!)!) { (user, error) in
+            
+            if error == nil {
+                print("You have successfully signed up")
+                //Goes to the Setup page which lets the user take a photo for their profile picture and also chose a username
+                
+                let vc = self.storyboard?.instantiateViewController(withIdentifier: "Home")
+                self.present(vc!, animated: true, completion: nil)
+                
+            } else {
+                self.simpleAlert(title: "Alert", message: "Error: \(error)")
+            }
+        } */
+        
+        
+        
     }
     
     // MARK: - TwitterButton

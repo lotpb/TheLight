@@ -32,7 +32,11 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myProducts", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Products", for: UIControlState())
+        } else {
+            titleButton.setTitle("Products", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -138,7 +142,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.prodtitleLabel!.font = Font.celltitle
+            cell.prodtitleLabel!.font = Font.celltitlePad
         } else {
             cell.prodtitleLabel!.font = Font.celltitle
         }

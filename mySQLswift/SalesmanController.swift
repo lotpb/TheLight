@@ -35,7 +35,11 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("mySalesman", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Salesman", for: UIControlState())
+        } else {
+            titleButton.setTitle("Salesman", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -143,7 +147,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.salestitleLabel!.font = Font.celltitle
+            cell.salestitleLabel!.font = Font.celltitlePad
         } else {
             cell.salestitleLabel!.font = Font.celltitle
         }

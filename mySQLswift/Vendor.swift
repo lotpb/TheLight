@@ -33,21 +33,21 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myVendors", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Vendors", for: UIControlState())
+        } else {
+            titleButton.setTitle("Vendors", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
-        
+
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.tableView!.rowHeight = 65
-        } else {
-            self.tableView!.estimatedRowHeight = 100
-            self.tableView!.rowHeight = UITableViewAutomaticDimension
-        }
+        self.tableView!.estimatedRowHeight = 100
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.automaticallyAdjustsScrollViewInsets = false
         
         users = []
@@ -155,7 +155,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         cell.vendsubtitleLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.vendtitleLabel!.font = Font.celltitle
+            cell.vendtitleLabel!.font = Font.celltitlePad
             cell.vendsubtitleLabel!.font = Font.cellsubtitle
             cell.vendlikeLabel.font = Font.celltitle
 
@@ -168,12 +168,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         if (tableView == self.tableView) {
             
             cell.vendtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Vendor") as? String
-            
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.vendsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Profession") as? String
-            } else {
-                cell.vendsubtitleLabel!.text = ""
-            }
+            cell.vendsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Profession") as? String
  
         } else {
             

@@ -36,21 +36,21 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myCustomer", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Customers", for: UIControlState())
+        } else {
+            titleButton.setTitle("Customers", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
-        
+
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.tableView!.rowHeight = 65
-        } else {
-            self.tableView!.estimatedRowHeight = 100
-            self.tableView!.rowHeight = UITableViewAutomaticDimension
-        }
+        self.tableView!.estimatedRowHeight = 100
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.automaticallyAdjustsScrollViewInsets = false
         
         users = []
@@ -177,7 +177,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            cell.custtitleLabel!.font = Font.celltitle
+            cell.custtitleLabel!.font = Font.celltitlePad
             cell.custsubtitleLabel!.font = Font.cellsubtitle
             cell.custreplyLabel.font = Font.cellreply
             cell.custlikeLabel.font = Font.celllike
@@ -197,6 +197,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         if (tableView == self.tableView) {
             
             cell.custtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
+            cell.custsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String
             cell.custlikeLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Rate") as? String
             myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String
             
@@ -207,12 +208,6 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 Amount = 0
             }
             myLabel2.text = formatter.string(from: Amount! as NSNumber)
-            
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                cell.custsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String
-            } else {
-                cell.custsubtitleLabel!.text = ""
-            }
            
         } else {
             

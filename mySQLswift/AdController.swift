@@ -31,11 +31,16 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myAdvertising", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Advertisers", for: UIControlState())
+        } else {
+            titleButton.setTitle("Advertisers", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
+
         
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
@@ -139,7 +144,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.adtitleLabel!.font = Font.celltitle
+            cell.adtitleLabel!.font = Font.celltitlePad
         } else {
             cell.adtitleLabel!.font = Font.celltitle
         }

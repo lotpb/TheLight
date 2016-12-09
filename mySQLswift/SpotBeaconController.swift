@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import QuartzCore
 import CoreLocation
+//import QuartzCore
 
 
 class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
@@ -20,16 +20,20 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
     var beaconRegion: CLBeaconRegion!
     var locationManager: CLLocationManager!
     var isSearchingForBeacons = false
-    var lastFoundBeacon: CLBeacon! = CLBeacon()
-    var lastProximity: CLProximity! = CLProximity.unknown
+    //var lastFoundBeacon: CLBeacon! = CLBeacon()
+    //var lastProximity: CLProximity! = CLProximity.unknown
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("TheLight Software", for: UIControlState())
-        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Spot Beacon", for: UIControlState())
+        } else {
+            titleButton.setTitle("Spot Beacon", for: UIControlState())
+        }
+        titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
@@ -38,17 +42,12 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
         }
         
-        lblBeaconDetails.isHidden = true
-        btnSwitchSpotting.layer.cornerRadius = 30.0
-        
         locationManager = CLLocationManager()
         locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
         
-        let uuid = UUID(uuidString: "F34A1A1F-500F-48FB-AFAA-9584D641D7B1")
-        beaconRegion = CLBeaconRegion(proximityUUID: uuid!, identifier: "com.TheLight.beacon")
-        
-        beaconRegion.notifyOnEntry = true
-        beaconRegion.notifyOnExit = true
+        lblBeaconDetails.isHidden = true
+        btnSwitchSpotting.layer.cornerRadius = 30.0
     }
     
     override func didReceiveMemoryWarning() {
@@ -61,12 +60,17 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
     // MARK: IBAction method implementation
     
     @IBAction func switchSpotting(_ sender: AnyObject) {
+        
+        let uuid = UUID(uuidString: "F34A1A1F-500F-48FB-AFAA-9584D641D7B1")
+        beaconRegion = CLBeaconRegion(proximityUUID: uuid!, identifier: "com.TheLight.beacon")
+      //beaconRegion = CLBeaconRegion(proximityUUID: uuid, major: 100, minor: 1, identifier: "com.TheLight.beacon")
+        beaconRegion.notifyOnEntry = true
+        beaconRegion.notifyOnExit = true
+        
+        locationManager.startMonitoring(for: beaconRegion)
+        locationManager.startRangingBeacons(in: beaconRegion)
+        
         if !isSearchingForBeacons {
-            locationManager.requestAlwaysAuthorization()
-            locationManager.startMonitoring(for: beaconRegion)
-            locationManager.pausesLocationUpdatesAutomatically = false //added
-            locationManager.startUpdatingLocation()
-            
             btnSwitchSpotting.setTitle("Stop Spotting", for: UIControlState())
             lblBeaconReport.text = "Spotting beacons..."
         }
@@ -78,41 +82,62 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
             btnSwitchSpotting.setTitle("Start Spotting", for: UIControlState())
             lblBeaconReport.text = "Not running"
             lblBeaconDetails.isHidden = true
+            self.view.backgroundColor = UIColor.white
         }
         
         isSearchingForBeacons = !isSearchingForBeacons
     }
     
     
-    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
-        locationManager.requestState(for: region)
-    }
-    
-    
-    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        if state == CLRegionState.inside {
-            locationManager.startRangingBeacons(in: beaconRegion)
-        }
-        else {
-            locationManager.stopRangingBeacons(in: beaconRegion)
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways {
+            if CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self) {
+                if CLLocationManager.isRangingAvailable() {
+                    //startScanning()
+                }
+            }
         }
     }
+
     
-    
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        lblBeaconReport.text = "Beacon in range"
-        lblBeaconDetails.isHidden = false
-        simpleAlert(title: "Welcome", message: "Welcome to our store") //added
+    func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
+        
+        
+        if beacons.count > 0 {
+            updateDistance(beacons[0].proximity)
+        } else {
+            updateDistance(.unknown)
+        }
     }
     
     
-    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        lblBeaconReport.text = "No beacons in range"
-        lblBeaconDetails.isHidden = true
-        simpleAlert(title: "Good Bye", message: "Have a nice day") //added
+    func updateDistance(_ distance: CLProximity) {
+        
+        var proximityMessage: String!
+        
+        UIView.animate(withDuration: 0.8) {
+            switch distance {
+            case .unknown:
+                proximityMessage = "Where's the beacon?"
+                self.view.backgroundColor = UIColor.gray
+                
+            case .far:
+                proximityMessage = "Far"
+                self.view.backgroundColor = UIColor.blue
+                
+            case .near:
+                proximityMessage = "Near"
+                self.view.backgroundColor = UIColor.orange
+                
+            case .immediate:
+                proximityMessage = "Very close"
+                self.view.backgroundColor = UIColor.red
+            }
+        }
+        lblBeaconDetails.text = "Beacon Details:\nMajor = " + proximityMessage
     }
     
-    
+    /*
     func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
         
         var shouldHideBeaconDetails = true
@@ -125,15 +150,11 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
             if closestBeacon != lastFoundBeacon || lastProximity != closestBeacon.proximity  {
                 lastFoundBeacon = closestBeacon
                 lastProximity = closestBeacon.proximity
-                
-             
-                
+     
                 var proximityMessage: String!
-                
-                
+     
                 UIView.animate(withDuration: 0.8) {
-                    
-                    
+     
                     switch self.lastFoundBeacon.proximity {
                     case CLProximity.immediate:
                         proximityMessage = "Very close"
@@ -183,22 +204,8 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
         //}
         
         lblBeaconDetails.isHidden = shouldHideBeaconDetails
-    }
-    
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
-    }
-    
-    
-    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        print(error)
-    }
-    
-    
-    func locationManager(_ manager: CLLocationManager, rangingBeaconsDidFailFor region: CLBeaconRegion, withError error: Error) {
-        print(error)
-    }
+    } */
+
     
     // MARK: - Button
     

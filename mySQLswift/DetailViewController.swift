@@ -72,8 +72,12 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         super.viewDidLoad()
 
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("TheLight Software", for: UIControlState())
-        titleButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Detail", for: UIControlState())
+        } else {
+            titleButton.setTitle("Detail", for: UIControlState())
+        }
+        titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton

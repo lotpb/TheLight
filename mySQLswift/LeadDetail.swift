@@ -30,6 +30,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     let Vtextdate = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
     let VtextAmount = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
     
+    let celltitlePad = UIFont.systemFont(ofSize: 14, weight: UIFontWeightSemibold)
+    let cellsubtitlePad = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
     let celltitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightSemibold)
     let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
     
@@ -161,6 +163,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
+            //self.mainView?.frame.size.height = 400
+
             labelamount!.font = ipadAmount
             labelname!.font = ipadname
             labeldate!.font = ipaddate
@@ -243,7 +247,11 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+        }
         self.labelname!.text = ""
         self.labelamount!.text = ""
         self.labeldate!.text = ""
@@ -314,8 +322,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel?.font = celltitle
-            cell.detailTextLabel?.font = cellsubtitle
+            cell.textLabel?.font = celltitlePad
+            cell.detailTextLabel?.font = cellsubtitlePad
         } else {
             cell.textLabel?.font = celltitle
             cell.detailTextLabel?.font = cellsubtitle

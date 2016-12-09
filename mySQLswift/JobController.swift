@@ -31,7 +31,11 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("myJobs", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - Jobs", for: UIControlState())
+        } else {
+            titleButton.setTitle("Jobs", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -140,7 +144,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.jobtitleLabel!.font = Font.celltitle
+            cell.jobtitleLabel!.font = Font.celltitlePad
         } else {
             cell.jobtitleLabel!.font = Font.celltitle
         }

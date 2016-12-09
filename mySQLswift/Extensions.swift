@@ -85,13 +85,14 @@ import UIKit
     */
 
     struct Font {
-        static let navlabel = UIFont.systemFont(ofSize: 25, weight: UIFontWeightMedium)
-        static let headtitle = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+        static let navlabel = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
+        static let headtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
         static let Edittitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
-        static let Weathertitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
+        static let Weathertitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
         //buttonFontSize,  labelFontSize, systemFontSize
         
         static let celltitle = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
+        static let celltitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
         static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular)
         static let celllabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         static let celllabel2 = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
