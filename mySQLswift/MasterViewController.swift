@@ -212,7 +212,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            cell.textLabel!.font = Font.celltitle
+            cell.textLabel!.font = Font.celltitlePad
             
         } else {
             

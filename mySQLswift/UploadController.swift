@@ -58,7 +58,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        self.mainView.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        self.mainView.backgroundColor = Color.LGrayColor
         self.progressView.isHidden = true
         self.progressView.setProgress(0, animated: true)
         

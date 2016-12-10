@@ -16,31 +16,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     let defaults = UserDefaults.standard
     
-    let ipadname = UIFont.systemFont(ofSize: 30, weight: UIFontWeightLight)
-    let ipaddate = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-    let ipadaddress = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
-    let ipadAmount = UIFont.systemFont(ofSize: 36, weight: UIFontWeightRegular)
-    
-    let textname = UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)
-    let textdate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    let textaddress = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
-    let textAmount = UIFont.systemFont(ofSize: 30, weight: UIFontWeightRegular)
-    
-    let Vtextname = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
-    let Vtextdate = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
-    let VtextAmount = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
-    
-    let celltitlePad = UIFont.systemFont(ofSize: 14, weight: UIFontWeightSemibold)
-    let cellsubtitlePad = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
-    let celltitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightSemibold)
-    let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
-    
-    let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightSemibold)
-    let newssubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-    let newsdetail = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    
-    let textbutton = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-    
     var tableData : NSMutableArray = NSMutableArray()
     var tableData2 : NSMutableArray = NSMutableArray()
     var tableData3 : NSMutableArray = NSMutableArray()
@@ -162,34 +137,32 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         messageBody = defaults.string(forKey: "emailmessageKey")
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            
-            //self.mainView?.frame.size.height = 400
 
-            labelamount!.font = ipadAmount
-            labelname!.font = ipadname
-            labeldate!.font = ipaddate
-            labeladdress!.font = ipadaddress
-            labelcity!.font = ipadaddress
-            mapbutton!.titleLabel?.font = textbutton
+            labelamount!.font = Font.Detail.ipadAmount
+            labelname!.font = Font.Detail.ipadname
+            labeldate!.font = Font.Detail.ipaddate
+            labeladdress!.font = Font.Detail.ipadaddress
+            labelcity!.font = Font.Detail.ipadaddress
+            mapbutton!.titleLabel?.font = Font.Detail.textbutton
             
         } else {
             
-            labeladdress!.font = textaddress
-            labelcity!.font = textaddress
-            mapbutton!.titleLabel?.font = textbutton
+            labeladdress!.font = Font.Detail.textaddress
+            labelcity!.font = Font.Detail.textaddress
+            mapbutton!.titleLabel?.font = Font.Detail.textbutton
             
             if (self.formController == "Vendor" || self.formController == "Employee") {
-                labelamount!.font = VtextAmount
-                labeldate!.font = Vtextdate
+                labelamount!.font = Font.Detail.VtextAmount
+                labeldate!.font = Font.Detail.Vtextdate
             } else {
-                labelamount!.font = textAmount
-                labeldate!.font = textdate
+                labelamount!.font = Font.Detail.textAmount
+                labeldate!.font = Font.Detail.textdate
             }
             
             if self.formController == "Vendor" {
-                labelname!.font = Vtextname
+                labelname!.font = Font.Detail.Vtextname
             } else {
-                labelname!.font = textname
+                labelname!.font = Font.Detail.textname
             }
         }
         
@@ -203,8 +176,22 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         self.mySwitch!.onTintColor = Color.BlueColor
         self.mySwitch!.tintColor = .lightGray
-
-        photoImage = UIImageView(frame:CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110))
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            /*
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.mainView?.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+            }, completion: nil) */
+            
+            UIView.animate(withDuration: 2, animations: {
+                self.mainView?.frame =
+                    CGRect(x: 100, y: 100, width: 100, height: 50)
+            })
+            
+            photoImage = UIImageView(frame:CGRect(x: self.view.frame.width/2-50, y: 60, width: self.view.frame.width/2-335, height: 160))
+        } else {
+            photoImage = UIImageView(frame:CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110))
+        }
         photoImage!.image = UIImage(named:"IMG_1133.jpg")
         photoImage!.layer.masksToBounds = true
         photoImage!.layer.borderColor = UIColor.lightGray.cgColor
@@ -322,11 +309,11 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel?.font = celltitlePad
-            cell.detailTextLabel?.font = cellsubtitlePad
+            cell.textLabel?.font = Font.Detail.celltitlePad
+            cell.detailTextLabel?.font = Font.Detail.cellsubtitlePad
         } else {
-            cell.textLabel?.font = celltitle
-            cell.detailTextLabel?.font = cellsubtitle
+            cell.textLabel?.font = Font.Detail.celltitle
+            cell.detailTextLabel?.font = Font.Detail.cellsubtitle
         }
         cell.textLabel?.textColor = .black
         cell.detailTextLabel?.textColor = .black
@@ -353,15 +340,15 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-                cell.leadtitleDetail!.font = newstitle
-                cell.leadsubtitleDetail!.font = newssubtitle
-                cell.leadreadDetail!.font = newsdetail
-                cell.leadnewsDetail!.font = newsdetail
+                cell.leadtitleDetail!.font = Font.Detail.ipadnewstitle
+                cell.leadsubtitleDetail!.font = Font.Detail.ipadnewssubtitle
+                cell.leadreadDetail!.font = Font.Detail.ipadnewsdetail
+                cell.leadnewsDetail!.font = Font.Detail.ipadnewsdetail
             } else {
-                cell.leadtitleDetail!.font = newstitle
-                cell.leadsubtitleDetail!.font = newssubtitle
-                cell.leadreadDetail!.font = newsdetail
-                cell.leadnewsDetail!.font = newsdetail
+                cell.leadtitleDetail!.font = Font.Detail.newstitle
+                cell.leadsubtitleDetail!.font = Font.Detail.newssubtitle
+                cell.leadreadDetail!.font = Font.Detail.newsdetail
+                cell.leadnewsDetail!.font = Font.Detail.newsdetail
             }
             
             let width = CGFloat(2.0)
@@ -415,11 +402,32 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if (section == 0) {
+                return 15
+            }
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if (section == 0) {
+                let vw = UIView()
+                vw.backgroundColor = Color.LGrayColor
+                return vw
+            }
+        }
+        return nil
+    }
+    
     // MARK: - LoadFieldData
     
     func fieldData() {
 
         self.labelname!.adjustsFontSizeToFitWidth = true
+        self.labelamount?.sizeToFit()
         
         if self.leadNo != nil {
             self.labelNo!.text = leadNo

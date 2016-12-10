@@ -49,7 +49,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
 
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
-        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        self.tableView!.backgroundColor = Color.LGrayColor
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.automaticallyAdjustsScrollViewInsets = false

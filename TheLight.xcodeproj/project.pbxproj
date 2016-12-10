@@ -397,8 +397,9 @@
 			isa = PBXGroup;
 			children = (
 				AFD1A30E1C1E32A500580F10 /* LoginController.swift */,
-				AF0369A61C173DDC00137D7E /* MasterViewController.swift */,
 				AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */,
+				AF8CC3AA1C42B9FB004147F3 /* StatisticController.swift */,
+				AF0369A61C173DDC00137D7E /* MasterViewController.swift */,
 				AF0369A81C173DDC00137D7E /* DetailViewController.swift */,
 				AFE263A11C176F15007BBB90 /* Lead.swift */,
 				AFD1A30A1C1E224600580F10 /* Customer.swift */,
@@ -408,7 +409,6 @@
 				AF011A711C40A798000EAF5D /* ProductController.swift */,
 				AF011A731C40AAE2000EAF5D /* JobController.swift */,
 				AF011A751C40AB2F000EAF5D /* SalesmanController.swift */,
-				AF8CC3AA1C42B9FB004147F3 /* StatisticController.swift */,
 				AF9A87831C18645C0091B0E3 /* Web.swift */,
 				AF8CC3A81C41B317004147F3 /* Edit Controllers */,
 				AFD1A3101C1E367B00580F10 /* Acc Controllers */,

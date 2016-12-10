@@ -45,7 +45,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         self.tableView!.rowHeight = 85
         //self.tableView!.estimatedRowHeight = 110
         //self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        self.tableView!.backgroundColor = Color.LGrayColor
         //self.tableView!.tableFooterView = UIView(frame: .zero)
         
         let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))

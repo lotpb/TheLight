@@ -67,7 +67,6 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         tableView.reloadData()
     }
     
-    
     // =========================================================================
     //MARK: - UITableViewDataSource
     
@@ -83,19 +82,17 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         let cell = tableView.dequeueReusableCell(withIdentifier: kCellID, for: indexPath)
         let contact = contacts[indexPath.row]
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            cell.textLabel?.font = Font.celltitlePad
+        } else {
+            cell.textLabel?.font = Font.celltitle
+        }
+        
         // get the full name
         let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"
         cell.textLabel?.text = fullName
         
         return cell
-    }
-    
-    // MARK: - Button
-    
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
     }
     
     
@@ -145,6 +142,14 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     
     @IBAction func tapped(_ sender: AnyObject) {
         view.endEditing(true)
+    }
+    
+    // MARK: - Button
+    
+    func goHome() {
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        self.present(initialViewController, animated: true)
     }
     
     

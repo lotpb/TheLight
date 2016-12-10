@@ -22,7 +22,7 @@ import UIKit
     enum Color {
         static let BlueColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
         static let DGrayColor = UIColor(white:0.45, alpha:1.0)
-      //static let MGrayColor = UIColor(white:0.25, alpha:1.0)
+        static let LGrayColor = UIColor(white:0.90, alpha:1.0)
         static let DGreenColor = UIColor(red:0.16, green:0.54, blue:0.13, alpha: 1.0)
         
         enum Blog {
@@ -34,9 +34,9 @@ import UIKit
             static let phonelinkText = UIColor.green
         }
         enum Lead {
-            static let navColor = UIColor.black //UIColor(red: 0.01, green: 0.48, blue: 1.0, alpha: 1.0)
+            static let navColor = UIColor.black
             static let labelColor = DGrayColor
-            static let labelColor1 = UIColor.red //DGrayColor
+            static let labelColor1 = UIColor.red
             static let buttonColor = UIColor.red
         }
         
@@ -116,6 +116,37 @@ import UIKit
         
         struct Snapshot {
             static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
+        }
+        
+        struct Detail {
+            static let ipadname = UIFont.systemFont(ofSize: 30, weight: UIFontWeightLight)
+            static let ipaddate = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let ipadaddress = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
+            static let ipadAmount = UIFont.systemFont(ofSize: 60, weight: UIFontWeightRegular)
+            
+            static let textname = UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)
+            static let textdate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            static let textaddress = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
+            static let textAmount = UIFont.systemFont(ofSize: 30, weight: UIFontWeightRegular)
+            
+            static let Vtextname = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+            static let Vtextdate = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+            static let VtextAmount = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
+            
+            static let celltitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightSemibold)
+            static let cellsubtitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+            static let celltitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightSemibold)
+            static let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
+            
+            static let ipadnewstitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightSemibold)
+            static let ipadnewssubtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+            static let ipadnewsdetail = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            
+            static let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightSemibold)
+            static let newssubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+            static let newsdetail = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            
+            static let textbutton = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
         }
     }
 

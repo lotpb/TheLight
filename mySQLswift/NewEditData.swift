@@ -53,7 +53,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 110
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = .white //UIColor(white:0.90, alpha:1.0)
+        self.tableView!.backgroundColor = .white
         self.tableView!.tableFooterView = UIView(frame: .zero)
         self.automaticallyAdjustsScrollViewInsets = false
         

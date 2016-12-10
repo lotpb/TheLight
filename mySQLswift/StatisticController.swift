@@ -85,8 +85,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 44
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-        //self.automaticallyAdjustsScrollViewInsets = false
+        self.tableView!.backgroundColor = Color.LGrayColor        //self.automaticallyAdjustsScrollViewInsets = false
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(StatisticController.searchButton))
         navigationItem.rightBarButtonItems = [searchButton]

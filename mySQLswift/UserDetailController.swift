@@ -97,8 +97,8 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         self.userimageView?.image = self.userimage
         self.userimageView?.backgroundColor = .black
         self.userimageView!.isUserInteractionEnabled = true
-        self.mainView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-        self.view.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        self.mainView!.backgroundColor = Color.LGrayColor
+        self.view.backgroundColor = Color.LGrayColor
         
         let topBorder = CALayer()
         let width = CGFloat(2.0)

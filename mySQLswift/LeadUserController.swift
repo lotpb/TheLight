@@ -240,7 +240,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let vw = UIView()
-        vw.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        vw.backgroundColor = Color.LGrayColor
         //tableView.tableHeaderView = vw
         
         let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 70, width: self.tableView!.frame.size.width-20, height: 50))
