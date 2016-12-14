@@ -39,6 +39,9 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         self.stepView.font = cellsteps
         self.stepView.isSelectable = false
         

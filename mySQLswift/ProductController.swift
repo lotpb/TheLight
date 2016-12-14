@@ -31,12 +31,11 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Products", for: UIControlState())
-        } else {
-            titleButton.setTitle("Products", for: UIControlState())
-        }
+        titleButton.setTitle("Products", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -47,7 +46,6 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.tableView!.estimatedRowHeight = 65
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = Color.LGrayColor
-        self.automaticallyAdjustsScrollViewInsets = false
 
         foundUsers = []
         resultsController = UITableViewController(style: .plain)
@@ -157,14 +155,14 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
             
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
+        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         myLabel.backgroundColor = Color.Table.labelColor
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
         myLabel.text = "Prod"
         myLabel.font = Font.headtitle
-        myLabel.layer.cornerRadius = 20.0
+        myLabel.layer.cornerRadius = 25.0
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
@@ -391,19 +389,22 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         if segue.identifier == "prodDetailSegue" {
             
-            let VC = segue.destination as? NewEditData
-            VC!.formController = "Product"
+            let VC = (segue.destination as! UINavigationController).topViewController as! NewEditData
+            VC.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            VC.navigationItem.leftItemsSupplementBackButton = true
+            
+            VC.formController = "Product"
             if (isFormStat == true) {
-                VC!.formStatus = "New"
+                VC.formStatus = "New"
             } else {
-                VC!.formStatus = "Edit"
+                VC.formStatus = "Edit"
                 let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-                VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
-                VC!.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
-                VC!.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "ProductNo") as? String
-                VC!.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Products") as? String
-                VC!.frm14 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Price") as? Int
-                VC!.image = self.selectedImage
+                VC.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
+                VC.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
+                VC.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "ProductNo") as? String
+                VC.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Products") as? String
+                VC.frm14 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Price") as? Int
+                VC.image = self.selectedImage
             }
         }
     }

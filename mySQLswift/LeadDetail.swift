@@ -120,8 +120,15 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle(String(format: "%@ %@", "TheLight Software - \(self.formController!)", "Profile"), for: UIControlState())
+        } else {
+            titleButton.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -178,17 +185,14 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.mySwitch!.tintColor = .lightGray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+
             /*
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.mainView?.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-            }, completion: nil) */
-            
             UIView.animate(withDuration: 2, animations: {
                 self.mainView?.frame =
                     CGRect(x: 100, y: 100, width: 100, height: 50)
-            })
+            }) */
             
-            photoImage = UIImageView(frame:CGRect(x: self.view.frame.width/2-50, y: 60, width: self.view.frame.width/2-335, height: 160))
+            photoImage = UIImageView(frame:CGRect(x: self.view.frame.width-755, y: 60, width: 340, height: 160))
         } else {
             photoImage = UIImageView(frame:CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110))
         }

@@ -92,7 +92,7 @@ import UIKit
         //buttonFontSize,  labelFontSize, systemFontSize
         
         static let celltitle = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
-        static let celltitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
+        static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
         static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular)
         static let celllabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         static let celllabel2 = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
@@ -115,7 +115,16 @@ import UIKit
         }
         
         struct Snapshot {
-            static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
+            static let celltitlePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
+            static let cellsubtitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            
+        }
+        
+        struct Stat {
+            static let celltitlePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
+ 
         }
         
         struct Detail {

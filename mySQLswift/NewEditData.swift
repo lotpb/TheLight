@@ -42,8 +42,15 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle(String(format: "%@", "TheLight Software - \(self.formStatus!) \(self.formController!)"), for: UIControlState())
+        } else {
+            titleButton.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -55,7 +62,6 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = .white
         self.tableView!.tableFooterView = UIView(frame: .zero)
-        self.automaticallyAdjustsScrollViewInsets = false
         
         foundUsers = []
         resultsController = UITableViewController(style: .plain)
@@ -146,11 +152,12 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         activeImage = UIImageView(frame:CGRect(x: 130, y: 10, width: 18, height: 22))
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            
-            self.salesman?.font = Font.celltitle
-            self.salesNo?.font = Font.celltitle
-            self.price?.font = Font.celltitle
+            cell.textLabel!.font = Font.Edittitle
+            self.salesman?.font = Font.Edittitle
+            self.salesNo?.font = Font.Edittitle
+            self.price?.font = Font.Edittitle
         } else {
+            cell.textLabel!.font = Font.celltitle
             self.salesman?.font = Font.celltitle
             self.salesNo?.font = Font.celltitle
             self.price?.font = Font.celltitle

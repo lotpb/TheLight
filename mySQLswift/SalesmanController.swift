@@ -34,12 +34,11 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Salesman", for: UIControlState())
-        } else {
-            titleButton.setTitle("Salesman", for: UIControlState())
-        }
+        titleButton.setTitle("Salesman", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -50,7 +49,6 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.estimatedRowHeight = 65
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = Color.LGrayColor
-        self.automaticallyAdjustsScrollViewInsets = false
         
         foundUsers = []
         resultsController = UITableViewController(style: .plain)
@@ -394,18 +392,21 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         if segue.identifier == "salesDetailSegue" {
             
-            let VC = segue.destination as? NewEditData
-            VC!.formController = "Salesman"
+            let VC = (segue.destination as! UINavigationController).topViewController as! NewEditData
+            VC.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            VC.navigationItem.leftItemsSupplementBackButton = true
+            
+            VC.formController = "Salesman"
             if (isFormStat == true) {
-                VC!.formStatus = "New"
+                VC.formStatus = "New"
             } else {
-                VC!.formStatus = "Edit"
+                VC.formStatus = "Edit"
                 let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-                VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
-                VC!.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
-                VC!.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "SalesNo") as? String
-                VC!.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Salesman") as? String
-                VC!.image = self.selectedImage
+                VC.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
+                VC.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
+                VC.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "SalesNo") as? String
+                VC.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Salesman") as? String
+                VC.image = self.selectedImage
             }
         }
     }

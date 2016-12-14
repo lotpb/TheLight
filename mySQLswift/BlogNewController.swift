@@ -50,7 +50,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     let kPickerAnimationDuration = 0.40 // duration for the animation to slide the date picker
     let kDatePickerTag           = 99   // view tag identifiying the date picker view
-    
+ 
     let kTitleKey = "title" // key for obtaining the data source item's title
     let kDateKey  = "date"  // key for obtaining the data source item's date value
     
@@ -74,12 +74,16 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("New Message", for: UIControlState())
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
-        self.navigationItem.titleView = titleButton
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleLabel.text = "TheLight Software - New Message"
+        } else {
+            titleLabel.text = "New Message"
+        }
+        titleLabel.textColor = .white
+        titleLabel.font = Font.navlabel
+        titleLabel.textAlignment = NSTextAlignment.center
+        navigationItem.titleView = titleLabel
         
         parseData() //load image
         configureTextView()

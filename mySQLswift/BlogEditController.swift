@@ -51,12 +51,16 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Edit Message", for: UIControlState())
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
-        self.navigationItem.titleView = titleButton
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleLabel.text = "TheLight Software - Edit Message"
+        } else {
+            titleLabel.text = "Edit Message"
+        }
+        titleLabel.textColor = .white
+        titleLabel.font = Font.navlabel
+        titleLabel.textAlignment = NSTextAlignment.center
+        navigationItem.titleView = titleLabel
         
         self.tableView!.delegate = self
         self.tableView!.dataSource = self

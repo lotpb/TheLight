@@ -34,6 +34,9 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             titleButton.setTitle("TheLight - Contacts", for: UIControlState())

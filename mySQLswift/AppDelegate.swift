@@ -390,6 +390,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 
+
 /*
 // MARK: CLLocationManagerDelegate - Beacons
 extension AppDelegate: CLLocationManagerDelegate {

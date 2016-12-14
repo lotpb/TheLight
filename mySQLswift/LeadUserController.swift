@@ -46,6 +46,9 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle(formController, for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
@@ -59,7 +62,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = .white
         tableView!.tableFooterView = UIView(frame: .zero)
-        self.automaticallyAdjustsScrollViewInsets = false
         
         self.parseData()
         

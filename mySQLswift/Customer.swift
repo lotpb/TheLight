@@ -35,12 +35,11 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Customers", for: UIControlState())
-        } else {
-            titleButton.setTitle("Customers", for: UIControlState())
-        }
+        titleButton.setTitle("Customers", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -51,7 +50,6 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.automaticallyAdjustsScrollViewInsets = false
         
         users = []
         foundUsers = []
@@ -63,10 +61,6 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Customer.newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Customer.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
 
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.Cust.navColor
@@ -121,13 +115,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         self.performSegue(withIdentifier: "newcustSegue", sender: self)
         
     }
-    
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
-    }
-    
+
     // MARK: - Table View
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -478,95 +466,99 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let formatter = NumberFormatter()
             formatter.numberStyle = .none
             
-            let controller = segue.destination as? LeadDetail
-            controller!.formController = "Customer"
+            let controller = (segue.destination as! UINavigationController).topViewController as! LeadDetail
+            
+            controller.formController = "Customer"
             let indexPath = self.tableView!.indexPathForSelectedRow!.row
-            controller?.objectId = (_feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
+            controller.objectId = (_feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
+            
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
             
             var CustNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "CustNo") as? Int
             if CustNo == nil {
                 CustNo = 0
             }
-            controller?.custNo = formatter.string(from: CustNo! as NSNumber)
+            controller.custNo = formatter.string(from: CustNo! as NSNumber)
             
             var LeadNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "LeadNo") as? Int
             if LeadNo == nil {
                 LeadNo = 0
             }
-            controller?.leadNo = formatter.string(from: LeadNo! as NSNumber)
+            controller.leadNo = formatter.string(from: LeadNo! as NSNumber)
             
             var Zip:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Zip")as? Int
             if Zip == nil {
                 Zip = 0
             }
-            controller?.zip = formatter.string(from: Zip! as NSNumber)
+            controller.zip = formatter.string(from: Zip! as NSNumber)
             
             var Amount:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Amount")as? Int
             if Amount == nil {
                 Amount = 0
             }
-            controller?.amount = formatter.string(from: Amount! as NSNumber)
+            controller.amount = formatter.string(from: Amount! as NSNumber)
             
             var SalesNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "SalesNo")as? Int
             if SalesNo == nil {
                 SalesNo = 0
             }
-            controller?.tbl22 = formatter.string(from: SalesNo! as NSNumber)
+            controller.tbl22 = formatter.string(from: SalesNo! as NSNumber)
             
             var JobNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "JobNo")as? Int
             if JobNo == nil {
                 JobNo = 0
             }
-            controller?.tbl23 = formatter.string(from: JobNo! as NSNumber)
+            controller.tbl23 = formatter.string(from: JobNo! as NSNumber)
             
             var AdNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "ProductNo")as? Int
             if AdNo == nil {
                 AdNo = 0
             }
-            controller?.tbl24 = formatter.string(from: AdNo! as NSNumber)
+            controller.tbl24 = formatter.string(from: AdNo! as NSNumber)
             
             var Quan:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Quan")as? Int
             if Quan == nil {
                 Quan = 0
             }
-            controller?.tbl25 = formatter.string(from: Quan! as NSNumber)
+            controller.tbl25 = formatter.string(from: Quan! as NSNumber)
             
             var Active:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Active")as? Int
             if Active == nil {
                 Active = 0
             }
-            controller?.active = formatter.string(from: Active! as NSNumber)
+            controller.active = formatter.string(from: Active! as NSNumber)
             
-            controller?.date = (_feedItems[indexPath] as AnyObject).value(forKey: "Date") as? String
-            controller?.name = (_feedItems[indexPath] as AnyObject).value(forKey: "LastName") as? String
-            controller?.address = (_feedItems[indexPath] as AnyObject).value(forKey: "Address") as? String
-            controller?.city = (_feedItems[indexPath] as AnyObject).value(forKey: "City") as? String
-            controller?.state = (_feedItems[indexPath] as AnyObject).value(forKey: "State") as? String
-            controller?.tbl11 = (_feedItems[indexPath] as AnyObject).value(forKey: "Contractor") as? String
-            controller?.tbl12 = (_feedItems[indexPath] as AnyObject).value(forKey: "Phone") as? String
-            controller?.tbl13 = (_feedItems[indexPath] as AnyObject).value(forKey: "First") as? String
-            controller?.tbl14 = (_feedItems[indexPath] as AnyObject).value(forKey: "Spouse") as? String
-            controller?.tbl15 = (_feedItems[indexPath] as AnyObject).value(forKey: "Email") as? NSString
-            controller?.tbl21 = (_feedItems[indexPath] as AnyObject).value(forKey: "Start") as? NSString
+            controller.date = (_feedItems[indexPath] as AnyObject).value(forKey: "Date") as? String
+            controller.name = (_feedItems[indexPath] as AnyObject).value(forKey: "LastName") as? String
+            controller.address = (_feedItems[indexPath] as AnyObject).value(forKey: "Address") as? String
+            controller.city = (_feedItems[indexPath] as AnyObject).value(forKey: "City") as? String
+            controller.state = (_feedItems[indexPath] as AnyObject).value(forKey: "State") as? String
+            controller.tbl11 = (_feedItems[indexPath] as AnyObject).value(forKey: "Contractor") as? String
+            controller.tbl12 = (_feedItems[indexPath] as AnyObject).value(forKey: "Phone") as? String
+            controller.tbl13 = (_feedItems[indexPath] as AnyObject).value(forKey: "First") as? String
+            controller.tbl14 = (_feedItems[indexPath] as AnyObject).value(forKey: "Spouse") as? String
+            controller.tbl15 = (_feedItems[indexPath] as AnyObject).value(forKey: "Email") as? NSString
+            controller.tbl21 = (_feedItems[indexPath] as AnyObject).value(forKey: "Start") as? NSString
 
             let dateUpdated = (_feedItems[indexPath] as AnyObject).value(forKey: "updatedAt") as! Date
             let dateFormat = DateFormatter()
             dateFormat.dateFormat = "MMM dd yy"
-            controller?.tbl16 = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
+            controller.tbl16 = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
             
-            controller?.tbl26 = (_feedItems[indexPath] as AnyObject).value(forKey: "Rate") as? NSString
-            controller?.complete = (_feedItems[indexPath] as AnyObject).value(forKey: "Completion") as? String
-            controller?.photo = (_feedItems[indexPath] as AnyObject).value(forKey: "Photo") as? String
-            controller?.comments = (_feedItems[indexPath] as AnyObject).value(forKey: "Comments") as? String
+            controller.tbl26 = (_feedItems[indexPath] as AnyObject).value(forKey: "Rate") as? NSString
+            controller.complete = (_feedItems[indexPath] as AnyObject).value(forKey: "Completion") as? String
+            controller.photo = (_feedItems[indexPath] as AnyObject).value(forKey: "Photo") as? String
+            controller.comments = (_feedItems[indexPath] as AnyObject).value(forKey: "Comments") as? String
             
-            controller?.l11 = "Contractor"; controller?.l12 = "Phone"
-            controller?.l13 = "First"; controller?.l14 = "Spouse"
-            controller?.l15 = "Email"; controller?.l21 = "Start date"
-            controller?.l22 = "Salesman"; controller?.l23 = "Job"
-            controller?.l24 = "Product"; controller?.l25 = "Quan"
-            controller?.l16 = "Last Updated"; controller?.l26 = "Rate"
-            controller?.l1datetext = "Sale Date:"
-            controller?.lnewsTitle = Config.NewsCust
+            controller.l11 = "Contractor"; controller.l12 = "Phone"
+            controller.l13 = "First"; controller.l14 = "Spouse"
+            controller.l15 = "Email"; controller.l21 = "Start date"
+            controller.l22 = "Salesman"; controller.l23 = "Job"
+            controller.l24 = "Product"; controller.l25 = "Quan"
+            controller.l16 = "Last Updated"; controller.l26 = "Rate"
+            controller.l1datetext = "Sale Date:"
+            controller.lnewsTitle = Config.NewsCust
         }
         
         if segue.identifier == "custuserSeque" {

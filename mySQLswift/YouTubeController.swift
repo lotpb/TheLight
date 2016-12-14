@@ -5,7 +5,7 @@
 //  Created by Peter Balsamo on 1/17/16.
 //  Copyright © 2016 Peter Balsamo. All rights reserved.
 //
-/*
+
 import UIKit
 
 class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -34,6 +34,9 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+     // MARK: - SplitView Fix
+     self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
  
      let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
      if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -46,7 +49,6 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
      titleButton.setTitleColor(.white, for: UIControlState())
      self.navigationItem.titleView = titleButton
 
- 
         tblVideos.delegate = self
         tblVideos.dataSource = self
         txtSearch.delegate = self
@@ -61,11 +63,11 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+        /*
         if segue.identifier == "idSeguePlayer" {
             let playerViewController = segue.destination as! PlayerViewController
             playerViewController.videoID = videosArray[selectedVideoIndex]["videoID"] as! String
-        }
+        } */
     }
     
     
@@ -94,8 +96,9 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell!
         
+        var cell: UITableViewCell!
+        /*
         if segDisplayedContent.selectedSegmentIndex == 0 {
             cell = tableView.dequeueReusableCell(withIdentifier: "idCellChannel", for: indexPath)
             
@@ -117,7 +120,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             let videoDetails = videosArray[indexPath.row]
             videoTitle.text = videoDetails["title"] as? String
             videoThumbnail.image = UIImage(data: try! Data(contentsOf: URL(string: (videoDetails["thumbnail"] as? String)!)!))
-        }
+        } */
         
         return cell
     }
@@ -155,6 +158,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     // MARK: UITextFieldDelegate method implementation
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        /*
         textField.resignFirstResponder()
         viewWait.isHidden = false
         
@@ -222,7 +226,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             // Hide the activity indicator.
             self.viewWait.isHidden = true
-        })
+        }) */
         
         
         return true
@@ -232,7 +236,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     // MARK: Custom method implementation
     
     func performGetRequest(_ targetURL: URL!, completion: @escaping (_ data: Data?, _ HTTPStatusCode: Int, _ error: NSError?) -> Void) {
-        
+        /*
         let request = NSMutableURLRequest(url: targetURL)
         request.httpMethod = "GET"
         
@@ -246,11 +250,12 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             })
         })
         
-        task.resume()
+        task.resume() */
     }
     
     
     func getChannelDetails(_ useChannelIDParam: Bool) {
+        /*
         var urlString: String!
         if !useChannelIDParam {
             urlString = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet&forUsername=\(desiredChannelsArray[channelIndex])&key=\(apiKey)"
@@ -308,11 +313,12 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
                 print("HTTP Status Code = \(HTTPStatusCode)")
                 print("Error while loading channel details: \(error)")
             }
-        })
+        }) */
     }
     
     
     func getVideosForChannelAtIndex(_ index: Int!) {
+        /*
         // Get the selected channel's playlistID value from the channelsDataArray array and use it for fetching the proper video playlst.
         let playlistID = channelsDataArray[index]["playlistID"] as! String
         
@@ -360,6 +366,6 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             // Hide the activity indicator.
             self.viewWait.isHidden = true
-        })
+        }) */
     }
-} */
+}

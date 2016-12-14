@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11761" systemVersion="16C60b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11761" systemVersion="16C63a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="ipad12_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -21,42 +21,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TheLight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xBt-T0-GeL">
-                                <rect key="frame" x="307" y="633" width="410" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="410" id="2NQ-Jf-XCe"/>
-                                    <constraint firstAttribute="height" constant="100" id="8CT-1Y-nwL"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="oV6-fC-7cm">
+                                <rect key="frame" x="411.5" y="608" width="201" height="150"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TheLight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xBt-T0-GeL">
+                                        <rect key="frame" x="0.0" y="0.0" width="201" height="75"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="75" id="Zdt-Ix-9IU"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-167.png" translatesAutoresizingMaskIntoConstraints="NO" id="iWP-o0-OTa">
+                                        <rect key="frame" x="63" y="75" width="75" height="75"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="75" id="K8W-Cs-1H3"/>
+                                            <constraint firstAttribute="height" constant="75" id="Lrk-Ax-pxA"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright (c) 2016 Peter Balsamo. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FJh-jX-JkY" userLabel="Copyright (c) 2014 Peter Balsamo. All rights reserved.">
-                                <rect key="frame" x="307" y="1316" width="410" height="30"/>
+                                <rect key="frame" x="331" y="1326" width="362.5" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="ojc-mF-UC4"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="Q4k-43-6l7"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-167.png" translatesAutoresizingMaskIntoConstraints="NO" id="iWP-o0-OTa">
-                                <rect key="frame" x="307" y="733" width="410" height="75"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="75" id="rdG-Ht-AER"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="iWP-o0-OTa" firstAttribute="leading" secondItem="xBt-T0-GeL" secondAttribute="leading" id="5Bu-3D-nkm"/>
-                            <constraint firstItem="iWP-o0-OTa" firstAttribute="leading" secondItem="FJh-jX-JkY" secondAttribute="leading" id="ExI-F0-kJp"/>
-                            <constraint firstItem="xBt-T0-GeL" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="M6A-Sy-HGN"/>
-                            <constraint firstItem="iWP-o0-OTa" firstAttribute="top" secondItem="xBt-T0-GeL" secondAttribute="bottom" id="MsW-Ll-ZJA"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="FJh-jX-JkY" secondAttribute="bottom" constant="20" id="Ok7-lP-43X"/>
+                            <constraint firstItem="oV6-fC-7cm" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="4uv-fk-ZfH"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="FJh-jX-JkY" secondAttribute="bottom" id="Ok7-lP-43X"/>
                             <constraint firstItem="FJh-jX-JkY" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="RLp-zu-9fZ"/>
-                            <constraint firstItem="iWP-o0-OTa" firstAttribute="trailing" secondItem="xBt-T0-GeL" secondAttribute="trailing" id="sgb-lQ-Ytx"/>
-                            <constraint firstItem="xBt-T0-GeL" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="yfm-WK-p7j"/>
+                            <constraint firstItem="oV6-fC-7cm" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="fEc-H0-hD0"/>
                         </constraints>
                     </view>
                 </viewController>

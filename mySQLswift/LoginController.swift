@@ -329,7 +329,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         view.addSubview(twitterButton)
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            twitterButton.frame = CGRect(x: self.view.frame.width/2 - 250, y: 325, width: 110, height: 40)
+            twitterButton.frame = CGRect(x: self.view.frame.width/2 - 90, y: 325, width: 180, height: 40)
         } else {
             twitterButton.frame = CGRect(x: self.view.frame.width/2 - 55, y: 325, width: 110, height: 40)
         }

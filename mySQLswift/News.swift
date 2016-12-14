@@ -223,6 +223,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         
         if let titleLabel = navigationItem.titleView as? UILabel {
             titleLabel.text = "\(titles[index])"
+          //titleLabel.textAlignment = NSTextAlignment.left //dont work
         }
     }
     

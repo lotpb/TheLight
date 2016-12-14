@@ -27,6 +27,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     var langNum : Int!
     //var langRate : Float!
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak private var startRecordingButton: UIButton!
     @IBOutlet weak private var stopRecordingButton: UIButton!
     @IBOutlet weak private var processingView: UIActivityIndicatorView!
@@ -56,21 +57,14 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
             //self.configureView()
         }
     }
-    
-/*
-    func configureView() {
-        // Update the user interface for the detail item.
-        if let detail = self.detailItem {
-            if let label = self.detailDescriptionLabel {
-                label.text = detail.description
-            }
-        }
-    } */
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             titleButton.setTitle("TheLight - Detail", for: UIControlState())
@@ -100,18 +94,18 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         buttonEnabledControl(recorder.isRecording)
 
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 20, y: 70, width: 60, height: 60))
+        let myLabel:UILabel = UILabel(frame: CGRect(x: 20, y: 135, width: 60, height: 60))
         myLabel.backgroundColor = .orange
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
         myLabel.text = "Speak"
-        myLabel.font = headtitle
+        myLabel.font = Font.Stat.celltitlePad
         myLabel.layer.cornerRadius = 30.0
         myLabel.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.speak))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(speak))
         myLabel.addGestureRecognizer(tap)
-        self.view.addSubview(myLabel)
+        self.scrollView.addSubview(myLabel)
         
         self.subject!.text = textviewText
         
@@ -119,6 +113,18 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         languagePick!.selectRow(langNum, inComponent: 0, animated: true)
         //langRate = 0.4
         //ratetext!.text = langRate as String
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.volume?.font = Font.Weathertitle
+            self.pitch?.font = Font.Weathertitle
+            self.ratetext?.font = Font.Weathertitle
+            self.subject?.font = Font.Edittitle
+        } else {
+            self.volume?.font = Font.headtitle
+            self.pitch?.font = Font.headtitle
+            self.ratetext?.font = Font.headtitle
+            self.subject?.font = Font.headtitle
+        }
         
     }
     
@@ -287,23 +293,24 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     
     func toggleTorch(on: Bool) {
         
-        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
-        if ((device?.hasTorch) != nil) {
+        guard let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) else { return }
+        
+        if device.hasTorch {
             do {
-                try device?.lockForConfiguration()
+                try device.lockForConfiguration()
                 
                 if on == true {
-                    device?.torchMode = .on
+                    device.torchMode = .on
                 } else {
-                    device?.torchMode = .off
+                    device.torchMode = .off
                 }
                 
-                device?.unlockForConfiguration()
+                device.unlockForConfiguration()
             } catch {
                 print("Torch could not be used")
             }
         } else {
-            print("Torch is not available")
+            self.simpleAlert(title: "Alert!", message: "Torch is not available")
         }
     }
     
@@ -312,9 +319,10 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     
     @IBAction func speech(_ sender: AnyObject) {
         
-        //"King Solomon the wisest of men. for i found one righteous man in a thousand and not one righteous woman"
+        //"The words of King Solomon the wisest of men. for i found one righteous man in a thousand and not one righteous woman"
         //"Hello world!!! my name is Peter Balsamo")
-        let utterance = AVSpeechUtterance(string: "Hello world!!! It's time too kiss the feet of Peter Balsamo")
+        //"Hello world!!! It's time too kiss the feet of Peter Balsamo"
+        let utterance = AVSpeechUtterance(string: "The words of King Solomon the wisest of men. for i found one righteous man in a thousand and not one righteous woman")
         utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
         utterance.rate = 0.3
         

@@ -30,12 +30,11 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Jobs", for: UIControlState())
-        } else {
-            titleButton.setTitle("Jobs", for: UIControlState())
-        }
+        titleButton.setTitle("Jobs", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
@@ -46,7 +45,6 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         self.tableView!.estimatedRowHeight = 65
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-        self.automaticallyAdjustsScrollViewInsets = false
         
         //users = []
         foundUsers = []
@@ -381,17 +379,20 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         if segue.identifier == "jobDetailSegue" {
             
-            let VC = segue.destination as? NewEditData
-            VC!.formController = "Jobs"
+            let VC = (segue.destination as! UINavigationController).topViewController as! NewEditData
+            VC.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            VC.navigationItem.leftItemsSupplementBackButton = true
+            
+            VC.formController = "Jobs"
             if (isFormStat == true) {
-                VC!.formStatus = "New"
+                VC.formStatus = "New"
             } else {
-                VC!.formStatus = "Edit"
+                VC.formStatus = "Edit"
                 let myIndexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-                VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
-                VC!.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
-                VC!.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "JobNo") as? String
-                VC!.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Description") as? String
+                VC.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
+                VC.frm11 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Active") as? String
+                VC.frm12 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "JobNo") as? String
+                VC.frm13 = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Description") as? String
             }
         }
     }

@@ -16,7 +16,7 @@ import FirebaseAnalytics
 
 class MasterViewController: UITableViewController, UISplitViewControllerDelegate, UISearchResultsUpdating {
 
-  //var detailViewController: DetailViewController? = nil
+    //var detailViewController: DetailViewController? = nil
     
     var menuItems:NSMutableArray = ["Snapshot","Statistics","Leads","Customers","Vendors","Employee","Advertising","Product","Job","Salesman","Show Detail","Music","YouTube","Spot Beacon","Transmit Beacon","Contacts"]
     var currentItem = "Snapshot"
@@ -63,14 +63,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         resultsController.tableView.delegate = self
         
         // MARK: - SplitView
-        
-        self.splitViewController?.delegate = self //added
-        self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.automatic //added
-        /*
-        if let split = self.splitViewController {
-            let controllers = split.viewControllers
-            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
-        } */
+        self.splitViewController?.maximumPrimaryColumnWidth = 400
+        //fix - remove bottom bar
+        self.splitViewController!.delegate = self;
+        self.splitViewController!.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
+        self.extendedLayoutIncludesOpaqueBars = true
         
         // MARK: - Sound
         
@@ -123,7 +120,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     
     func refreshData() {
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
         self.updateYahoo()
+        }
         self.tableView!.reloadData()
         self.refreshControl?.endRefreshing()
     }
@@ -533,6 +533,16 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showleadSegue" {
+           /*
+            let controller = (segue.leadController
+                as UINavigationController).topViewController
+                as! DetailViewController
+
+                controller.navigationItem.leftBarButtonItem =
+                    splitViewController?.displayModeButtonItem()
+                controller.navigationItem.leftItemsSupplementBackButton = true */
+        }
 
     }
 

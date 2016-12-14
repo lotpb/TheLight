@@ -15,10 +15,13 @@ import CoreBluetooth
 class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     
     @IBOutlet weak var btnAction: UIButton!
-    @IBOutlet weak var lblStatus: UILabel!
-    @IBOutlet weak var lblBTStatus: UILabel!
     @IBOutlet weak var txtMajor: UITextField!
     @IBOutlet weak var txtMinor: UITextField!
+    @IBOutlet weak var lblStatus: UILabel!
+    @IBOutlet weak var lblBTStatus: UILabel!
+    @IBOutlet weak var majorLabel: UILabel!
+    @IBOutlet weak var minorLabel: UILabel!
+    @IBOutlet weak var beaconBroadlabel: UILabel!
     
     var localBeaconUUID = "F34A1A1F-500F-48FB-AFAA-9584D641D7B1"
     
@@ -34,6 +37,9 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             titleButton.setTitle("TheLight - Transmit Beacon", for: UIControlState())
@@ -44,8 +50,27 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
+        }
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.lblStatus?.font = Font.Snapshot.celltitlePad
+            self.lblBTStatus?.font = Font.Snapshot.celltitlePad
+            self.txtMajor?.font = Font.Snapshot.celltitlePad
+            self.txtMinor?.font = Font.Snapshot.celltitlePad
+            self.majorLabel?.font = Font.Snapshot.celltitlePad
+            self.minorLabel?.font = Font.Snapshot.celltitlePad
+            self.beaconBroadlabel?.font = Font.Snapshot.celltitlePad
+        } else {
+            //self.lblStatus?.font = Font.Snapshot.celltitlePad
+            //self.lblBTStatus?.font = Font.Snapshot.celltitlePad
+            //self.txtMajor?.font = Font.Snapshot.celltitlePad
+            //self.txtMinor?.font = Font.Snapshot.celltitlePad
+            //self.majorLabel?.font = Font.Snapshot.celltitlePad
+            //self.minorLabel?.font = Font.Snapshot.celltitlePad
+            //self.beaconBroadlabel?.font = Font.Snapshot.celltitlePad
         }
         
         btnAction.layer.cornerRadius = btnAction.frame.size.width/2
@@ -97,6 +122,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             txtMajor.isEnabled = false
             txtMinor.isEnabled = false
             isBroadcasting = true
+            self.view.backgroundColor = .lightGray
 
         } else {
             
@@ -110,6 +136,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             txtMajor.isEnabled = true
             txtMinor.isEnabled = true
             isBroadcasting = false
+            self.view.backgroundColor = .white
         } 
     }
     

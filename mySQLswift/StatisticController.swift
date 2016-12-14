@@ -70,6 +70,9 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle("TheLight Software", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel //UIFont(name: "HelveticaNeue-Thin", size: 25.0)
@@ -85,7 +88,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 44
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.LGrayColor        //self.automaticallyAdjustsScrollViewInsets = false
+        self.tableView!.backgroundColor = Color.LGrayColor 
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(StatisticController.searchButton))
         navigationItem.rightBarButtonItems = [searchButton]
@@ -191,32 +194,34 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)! as UITableViewCell
         
-        label1 = UILabel(frame: CGRect(x: tableView.frame.width-155, y: 5, width: 77, height: 25))
-        label1.textColor = .black
-        label1.textAlignment = NSTextAlignment.right
-        
-        label2 = UILabel(frame: CGRect(x: tableView.frame.width-70, y: 5, width: 60, height: 25))
-        label2.textColor = .white
-        label2.textAlignment = NSTextAlignment.right
-        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel!.font = Font.Edittitle
-            cell.detailTextLabel!.font = Font.celllabel1
-            label1.font = Font.celllabel1
-            label2.font = Font.celllike
+            cell.textLabel!.font = Font.Stat.celltitlePad
+            cell.detailTextLabel!.font = Font.Stat.celltitlePad
+            label1 = UILabel(frame: CGRect(x: tableView.frame.width-170, y: 5, width: 82, height: 25))
+            label2 = UILabel(frame: CGRect(x: tableView.frame.width-80, y: 5, width: 65, height: 25))
+            label1.font = Font.Stat.celltitlePad
+            label2.font = Font.Stat.celltitlePad
         } else {
             cell.textLabel!.font = Font.celllabel1
             cell.detailTextLabel!.font = Font.celllabel1
+            label1 = UILabel(frame: CGRect(x: tableView.frame.width-155, y: 5, width: 77, height: 25))
+            label2 = UILabel(frame: CGRect(x: tableView.frame.width-70, y: 5, width: 60, height: 25))
             label1.font = Font.celllabel1
             label2.font = Font.celllike
         }
         
-        cell.textLabel!.textColor = .black
-        cell.detailTextLabel!.textColor = .black
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         cell.accessoryType = UITableViewCellAccessoryType.none
+        cell.textLabel!.textColor = .black
+        cell.detailTextLabel!.textColor = .black
+        label1.textColor = .black
+        label1.textAlignment = NSTextAlignment.right
+        label2.textColor = .white
+        label2.textAlignment = NSTextAlignment.right
 
         if (indexPath.section == 0) {
+            
+            cell.detailTextLabel!.text = ""
             
             if (indexPath.row == 0) {
                 if ((changeYQL[0] as AnyObject).contains("-")) {

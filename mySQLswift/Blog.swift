@@ -37,7 +37,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
 
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
-        titleLabel.text = "myBlog"
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleLabel.text = "TheLight Software - Blog"
+        } else {
+            titleLabel.text = "Blog"
+        }
         titleLabel.textColor = .white
         titleLabel.font = Font.navlabel
         titleLabel.textAlignment = NSTextAlignment.center

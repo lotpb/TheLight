@@ -13,9 +13,6 @@ import MobileCoreServices
 import AVFoundation
 
 class SnapshotController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    let celltitle1 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-    let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -104,7 +101,11 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         setupTableView()
         setupNavBarButtons()
         
+        // MARK: - SplitView
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -272,13 +273,13 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         cell.collectionView.backgroundColor = .white
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel!.font = Font.Snapshot.celltitle
-            cell.snaptitleLabel.font = cellsubtitle
-            cell.snapdetailLabel.font = celltitle1
+            cell.textLabel!.font = Font.Snapshot.cellsubtitlePad //Font.celltitle
+            cell.snaptitleLabel.font = Font.Snapshot.cellsubtitlePad
+            cell.snapdetailLabel.font = Font.Snapshot.celltitlePad
         } else {
-            cell.textLabel!.font = Font.Snapshot.celltitle
-            cell.snaptitleLabel.font = cellsubtitle
-            cell.snapdetailLabel.font = celltitle1
+            cell.textLabel!.font = Font.celltitle
+            cell.snaptitleLabel.font = Font.Snapshot.cellsubtitle
+            cell.snapdetailLabel.font = Font.Snapshot.celltitle
         }
         
         cell.accessoryType = UITableViewCellAccessoryType.none

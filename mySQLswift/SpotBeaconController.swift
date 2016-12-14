@@ -16,6 +16,8 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var btnSwitchSpotting: UIButton!
     @IBOutlet weak var lblBeaconReport: UILabel!
     @IBOutlet weak var lblBeaconDetails: UILabel!
+    @IBOutlet weak var beaconspotLabel: UILabel!
+    @IBOutlet weak var beaconlocateLabel: UILabel!
     
     var beaconRegion: CLBeaconRegion!
     var locationManager: CLLocationManager!
@@ -26,6 +28,9 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -48,6 +53,22 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
         
         lblBeaconDetails.isHidden = true
         btnSwitchSpotting.layer.cornerRadius = 30.0
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            //self.btnSwitchSpotting?.font = Font.Snapshot.celltitlePad
+            self.lblBeaconReport?.font = Font.Snapshot.celltitlePad
+            self.lblBeaconDetails?.font = Font.Snapshot.celltitlePad
+            //self.beaconspotLabel?.font = Font.Snapshot.celltitlePad
+            self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
+        } else {
+            //self.btnSwitchSpotting?.font = Font.Snapshot.celltitlePad
+            //self.lblBTStatus?.font = Font.Snapshot.celltitlePad
+            //self.lblBeaconReport?.font = Font.Snapshot.celltitlePad
+            //self.lblBeaconDetails?.font = Font.Snapshot.celltitlePad
+            //self.beaconspotLabel?.font = Font.Snapshot.celltitlePad
+            //self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
+
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -119,19 +140,43 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
             switch distance {
             case .unknown:
                 proximityMessage = "Where's the beacon?"
-                self.view.backgroundColor = UIColor.gray
+                self.view.backgroundColor = .gray
+                self.btnSwitchSpotting?.titleLabel?.textColor = .white
+                self.btnSwitchSpotting?.backgroundColor = .orange
+                self.beaconspotLabel.textColor = .orange
+                self.lblBeaconReport.textColor = .white
+                self.lblBeaconDetails.textColor = .white
+                self.beaconlocateLabel.textColor = .black
                 
             case .far:
                 proximityMessage = "Far"
-                self.view.backgroundColor = UIColor.blue
+                self.view.backgroundColor = .blue
+                self.btnSwitchSpotting?.titleLabel?.textColor = .white
+                self.btnSwitchSpotting?.backgroundColor = .orange
+                self.beaconspotLabel.textColor = .orange
+                self.lblBeaconReport.textColor = .white
+                self.lblBeaconDetails.textColor = .white
+                self.beaconlocateLabel.textColor = .white
                 
             case .near:
                 proximityMessage = "Near"
-                self.view.backgroundColor = UIColor.orange
+                self.view.backgroundColor = .orange
+                self.btnSwitchSpotting?.titleLabel?.textColor = .orange
+                self.btnSwitchSpotting?.backgroundColor = .white
+                self.beaconspotLabel.textColor = .white
+                self.lblBeaconReport.textColor = .white
+                self.lblBeaconDetails.textColor = .white
+                self.beaconlocateLabel.textColor = .black
                 
             case .immediate:
                 proximityMessage = "Very close"
-                self.view.backgroundColor = UIColor.red
+                self.view.backgroundColor = .red
+                self.btnSwitchSpotting?.titleLabel?.textColor = .white
+                self.btnSwitchSpotting?.backgroundColor = .orange
+                self.beaconspotLabel.textColor = .orange
+                self.lblBeaconReport.textColor = .white
+                self.lblBeaconDetails.textColor = .white
+                self.beaconlocateLabel.textColor = .black
             }
         }
         lblBeaconDetails.text = "Beacon Details:\nMajor = " + proximityMessage

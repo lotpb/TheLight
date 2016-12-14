@@ -92,6 +92,9 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
         clearFormData()
         observeKeyboardNotifications() //Move Keyboard
         
@@ -143,15 +146,17 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
-      //navigationController?.hidesBarsOnSwipe = true
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
          NotificationCenter.default.removeObserver(self)
-       //navigationController?.hidesBarsOnSwipe = false
     }
     
     override func didReceiveMemoryWarning() {

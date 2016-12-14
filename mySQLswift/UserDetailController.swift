@@ -62,13 +62,24 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
 
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("TheLight Software", for: UIControlState())
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - User Profile", for: UIControlState())
+        } else {
+            titleButton.setTitle("Profile", for: UIControlState())
+        }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
+        
+        let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(getter: selectCamera))
+        let videoButton = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(selectVideo))
+        navigationItem.rightBarButtonItems = [cameraButton, videoButton]
         
         mapView.delegate = self
         mapView!.layer.borderColor = UIColor.lightGray.cgColor
@@ -97,38 +108,40 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         self.userimageView?.image = self.userimage
         self.userimageView?.backgroundColor = .black
         self.userimageView!.isUserInteractionEnabled = true
-        self.mainView!.backgroundColor = Color.LGrayColor
-        self.view.backgroundColor = Color.LGrayColor
+        self.userimageView!.layer.masksToBounds = true
+        self.userimageView!.layer.cornerRadius = 60.0
+        self.mainView!.backgroundColor = UIColor(white:0.99, alpha:1.0)
+        self.view.backgroundColor = .white //Color.LGrayColor
         
+        /*
         let topBorder = CALayer()
         let width = CGFloat(2.0)
         topBorder.borderColor = UIColor.darkGray.cgColor
-        topBorder.frame = CGRect(x: 0, y: 175, width:  self.mainView!.frame.size.width, height: 0.5)
+        topBorder.frame = CGRect(x: 0, y: 175, width: view.frame.size.width, height: 0.5)
         topBorder.borderWidth = width
-        self.mainView!.layer.addSublayer(topBorder)
         self.mainView!.layer.masksToBounds = true
+        self.mainView!.layer.addSublayer(topBorder) */
         
         let bottomBorder = CALayer()
         let width1 = CGFloat(2.0)
         bottomBorder.borderColor = UIColor.darkGray.cgColor
-        bottomBorder.frame = CGRect(x: 0, y: 370, width:self.mainView!.frame.size.width, height: 0.5)
+        bottomBorder.frame = CGRect(x: 0, y: self.mainView!.frame.size.height-1, width: view.frame.size.width, height: 0.5)
         bottomBorder.borderWidth = width1
-        self.mainView!.layer.addSublayer(bottomBorder)
         self.mainView!.layer.masksToBounds = true
-        
+        self.mainView!.layer.addSublayer(bottomBorder)
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.usernameField!.font = ipadtitle
             self.emailField!.font = ipadtitle
             self.phoneField!.font = ipadtitle
             self.createLabel!.font = ipadlabel
-            self.mapLabel!.font = Font.Snapshot.celltitle
+            self.mapLabel!.font = Font.celltitle
         } else {
             self.usernameField!.font = celltitle
             self.emailField!.font = celltitle
             self.phoneField!.font = celltitle
             self.createLabel!.font = celllabel
-            self.mapLabel!.font = Font.Snapshot.celltitle
+            self.mapLabel!.font = Font.celltitle
         }
         
         let query = PFUser.query()
@@ -137,7 +150,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             let location = userquery!.value(forKey: "currentLocation") as! PFGeoPoint
             
             let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-            let span = MKCoordinateSpanMake(0.005, 0.005)
+            let span = MKCoordinateSpanMake(0.02, 0.02)
             let region = MKCoordinateRegion(center: coordinate, span: span)
             self.mapView!.setRegion(region, animated: true)
             
@@ -164,7 +177,8 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     // MARK: - Button
     
-    @IBAction func selectCamera(_ sender: AnyObject) {
+    @IBAction func selectVideo(_ sender: AnyObject) {
+    //func selectCamera() {
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             
@@ -182,7 +196,8 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     }
     
     
-    @IBAction func selectImage(_ sender: AnyObject) {
+    @IBAction func selectCamera(_ sender: AnyObject) {
+    //func selectImage() {
         
         imagePicker = UIImagePickerController()
         imagePicker.sourceType = .savedPhotosAlbum
