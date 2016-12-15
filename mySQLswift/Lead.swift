@@ -602,9 +602,11 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         }
         
         if segue.identifier == "newleadSegue" {
-            let controller = segue.destination as? EditData
-            controller!.formController = "Leads"
-            controller!.status = "New"
+            let controller = (segue.destination as! UINavigationController).topViewController as! EditData
+            controller.formController = "Leads"
+            controller.status = "New"
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
         
     }

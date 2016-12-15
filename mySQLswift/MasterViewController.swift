@@ -53,7 +53,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         navigationItem.rightBarButtonItems = [addButton, searchButton]
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
         
-        self.tableView!.backgroundColor = .black
+        self.tableView!.backgroundColor = Color.LGrayColor //.black
         self.tableView!.tableFooterView = UIView(frame: .zero)
         
         foundUsers = []
@@ -186,16 +186,25 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     // MARK: - Table View
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
+        if (section == 0) {
+            return 2
+        } else if (section == 1) {
+            return 8
+        } else if (section == 2) {
+            return 6
+        }
+        return 0
+        /*
         if tableView == self.tableView {
             return menuItems.count
         }
         return foundUsers.count
-        //return filteredString.count
+        //return filteredString.count */
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -209,6 +218,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
@@ -221,7 +231,50 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         if (tableView == self.tableView) {
             
-            cell.textLabel!.text = menuItems[indexPath.row] as? String
+            if (indexPath.section == 0) {
+                
+                if (indexPath.row == 0) {
+                    cell.textLabel!.text = menuItems[0] as? String
+                } else if (indexPath.row == 1) {
+                    cell.textLabel!.text = menuItems[1] as? String
+                }
+                
+            } else if (indexPath.section == 1) {
+                
+                if (indexPath.row == 0) {
+                    cell.textLabel!.text = menuItems[2] as? String
+                } else if (indexPath.row == 1) {
+                    cell.textLabel!.text = menuItems[3] as? String
+                } else if (indexPath.row == 2) {
+                    cell.textLabel!.text = menuItems[4] as? String
+                } else if (indexPath.row == 3) {
+                    cell.textLabel!.text = menuItems[5] as? String
+                } else if (indexPath.row == 4) {
+                    cell.textLabel!.text = menuItems[6] as? String
+                } else if (indexPath.row == 5) {
+                    cell.textLabel!.text = menuItems[7] as? String
+                } else if (indexPath.row == 6) {
+                    cell.textLabel!.text = menuItems[8] as? String
+                } else if (indexPath.row == 7) {
+                    cell.textLabel!.text = menuItems[9] as? String
+                }
+                
+            } else if (indexPath.section == 2) {
+                
+                if (indexPath.row == 0) {
+                    cell.textLabel!.text = menuItems[10] as? String
+                } else if (indexPath.row == 1) {
+                    cell.textLabel!.text = menuItems[11] as? String
+                } else if (indexPath.row == 2) {
+                    cell.textLabel!.text = menuItems[12] as? String
+                } else if (indexPath.row == 3) {
+                    cell.textLabel!.text = menuItems[13] as? String
+                } else if (indexPath.row == 4) {
+                    cell.textLabel!.text = menuItems[14] as? String
+                } else if (indexPath.row == 5) {
+                    cell.textLabel!.text = menuItems[15] as? String
+                }
+            }
             
         } else {
             
@@ -232,136 +285,138 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            return 145.0
-        } else {
-            return 0.0
+        
+        if (section == 0) {
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+                return 145.0
+            } else {
+                return 0.0
+            }
+        } else if (section == 1) {
+            return 10
+        } else if (section == 2) {
+            return 10
         }
+        return 0
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        let vw = UIView()
-        tableView.tableHeaderView = vw
-        
-        photoImage = UIImageView(frame:CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 135))
-        photoImage.image = UIImage(named:"IMG_1133.jpg")
-        photoImage.layer.masksToBounds = true
-        photoImage.contentMode = .scaleAspectFill
-        vw.addSubview(photoImage)
-        
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.frame = photoImage.bounds
-        photoImage.addSubview(visualEffectView)
-
-        
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 80, height: 80))
-        myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
-        myLabel1.textAlignment = NSTextAlignment.center
-        myLabel1.layer.masksToBounds = true
-        myLabel1.text = String(format: "%@%d", "COUNT\n", menuItems.count)
-        myLabel1.font = Font.headtitle
-        myLabel1.layer.cornerRadius = 40.0
-        myLabel1.isUserInteractionEnabled = true
-        vw.addSubview(myLabel1)
-        
-        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 110, width: 80, height: 3.5))
-        separatorLineView1.backgroundColor = .green
-        vw.addSubview(separatorLineView1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: 110, y: 10, width: 80, height: 80))
-        myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
-        myLabel2.textAlignment = NSTextAlignment.center
-        myLabel2.layer.masksToBounds = true
-        myLabel2.text = "NASDAQ \n \(tradeYQL![0])"
-        myLabel2.font = Font.headtitle
-        myLabel2.layer.cornerRadius = 40.0
-        myLabel2.isUserInteractionEnabled = true
-        vw.addSubview(myLabel2)
-        
-        let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 90, width: 80, height: 20))
-        myLabel25.numberOfLines = 1
-        myLabel25.textAlignment = NSTextAlignment.center
-        myLabel25.text = changeYQL[0] as? String //" \(changeYQL![0])"
-        myLabel25.font = Font.headtitle
-        vw.addSubview(myLabel25)
-        
-        
-        let separatorLineView2 = UIView(frame: CGRect(x: 110, y: 110, width: 80, height: 3.5))
-        if (changeYQL![0] as AnyObject).contains("-") {
-            separatorLineView2.backgroundColor = .red
-            myLabel25.textColor = .red
-        } else {
-            separatorLineView2.backgroundColor = .green
-            myLabel25.textColor = .green
-        }
-        vw.addSubview(separatorLineView2)
-        
-        
-        let myLabel3:UILabel = UILabel(frame: CGRect(x: 210, y: 10, width: 80, height: 80))
-        myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = .white
-        myLabel3.textColor = .black
-        myLabel3.textAlignment = NSTextAlignment.center
-        myLabel3.layer.masksToBounds = true
-        myLabel3.text = "S&P 500 \n \(tradeYQL![1])"
-        myLabel3.font = Font.headtitle
-        myLabel3.layer.cornerRadius = 40.0
-        myLabel3.isUserInteractionEnabled = true
-        vw.addSubview(myLabel3)
-        
-        let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 90, width: 80, height: 20))
-        myLabel35.numberOfLines = 1
-        myLabel35.textAlignment = NSTextAlignment.center
-        myLabel35.text = changeYQL[1] as? String //" \(changeYQL![1])"
-        myLabel35.font = Font.headtitle
-        vw.addSubview(myLabel35)
-        
-        let separatorLineView3 = UIView(frame: CGRect(x: 210, y: 110, width: 80, height: 3.5))
-        /*
-        if (changeYQL?[1] != nil) {
-            separatorLineView3.backgroundColor = .red
-            myLabel35.textColor = .red
-        } else */
+        if (section == 0) {
+            let vw = UIView()
+            tableView.tableHeaderView = vw
+            
+            photoImage = UIImageView(frame:CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 135))
+            photoImage.image = UIImage(named:"IMG_1133.jpg")
+            photoImage.layer.masksToBounds = true
+            photoImage.contentMode = .scaleAspectFill
+            vw.addSubview(photoImage)
+            
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.frame = photoImage.bounds
+            photoImage.addSubview(visualEffectView)
+            
+            let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 80, height: 80))
+            myLabel1.numberOfLines = 0
+            myLabel1.backgroundColor = .white
+            myLabel1.textColor = .black
+            myLabel1.textAlignment = NSTextAlignment.center
+            myLabel1.layer.masksToBounds = true
+            myLabel1.text = String(format: "%@%d", "COUNT\n", menuItems.count)
+            myLabel1.font = Font.headtitle
+            myLabel1.layer.cornerRadius = 40.0
+            myLabel1.isUserInteractionEnabled = true
+            vw.addSubview(myLabel1)
+            
+            let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 110, width: 80, height: 3.5))
+            separatorLineView1.backgroundColor = .green
+            vw.addSubview(separatorLineView1)
+            
+            let myLabel2:UILabel = UILabel(frame: CGRect(x: 110, y: 10, width: 80, height: 80))
+            myLabel2.numberOfLines = 0
+            myLabel2.backgroundColor = .white
+            myLabel2.textColor = .black
+            myLabel2.textAlignment = NSTextAlignment.center
+            myLabel2.layer.masksToBounds = true
+            myLabel2.text = "NASDAQ \n \(tradeYQL[0] as? String)"
+            myLabel2.font = Font.headtitle
+            myLabel2.layer.cornerRadius = 40.0
+            myLabel2.isUserInteractionEnabled = true
+            vw.addSubview(myLabel2)
+            
+            let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 90, width: 80, height: 20))
+            myLabel25.numberOfLines = 1
+            myLabel25.textAlignment = NSTextAlignment.center
+            myLabel25.text = changeYQL[0] as? String
+            myLabel25.font = Font.headtitle
+            vw.addSubview(myLabel25)
+            
+            let separatorLineView2 = UIView(frame: CGRect(x: 110, y: 110, width: 80, height: 3.5))
+            if (changeYQL?[0] as AnyObject).contains("-") {
+                separatorLineView2.backgroundColor = .red
+                myLabel25.textColor = .red
+            } else {
+                separatorLineView2.backgroundColor = .green
+                myLabel25.textColor = .green
+            }
+            vw.addSubview(separatorLineView2)
+            
+            let myLabel3:UILabel = UILabel(frame: CGRect(x: 210, y: 10, width: 80, height: 80))
+            myLabel3.numberOfLines = 0
+            myLabel3.backgroundColor = .white
+            myLabel3.textColor = .black
+            myLabel3.textAlignment = NSTextAlignment.center
+            myLabel3.layer.masksToBounds = true
+            myLabel3.text = "S&P 500 \n \(tradeYQL![1])"
+            myLabel3.font = Font.headtitle
+            myLabel3.layer.cornerRadius = 40.0
+            myLabel3.isUserInteractionEnabled = true
+            vw.addSubview(myLabel3)
+            
+            let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 90, width: 80, height: 20))
+            myLabel35.numberOfLines = 1
+            myLabel35.textAlignment = NSTextAlignment.center
+            myLabel35.text = changeYQL[1] as? String //" \(changeYQL![1])"
+            myLabel35.font = Font.headtitle
+            vw.addSubview(myLabel35)
+            
+            let separatorLineView3 = UIView(frame: CGRect(x: 210, y: 110, width: 80, height: 3.5))
             
             if (changeYQL![1] as AnyObject).contains("-") {
-            separatorLineView3.backgroundColor = .red
-            myLabel35.textColor = .red
-        } else {
-            separatorLineView3.backgroundColor = .green
-            myLabel35.textColor = .green
+                separatorLineView3.backgroundColor = .red
+                myLabel35.textColor = .red
+            } else {
+                separatorLineView3.backgroundColor = .green
+                myLabel35.textColor = .green
+            }
+            vw.addSubview(separatorLineView3)
+            
+            let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 120, width: 280, height: 20))
+            myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
+            myLabel4.font = Font.Weathertitle
+            if (textYQL!.contains("Rain") ||
+                textYQL!.contains("Snow") ||
+                textYQL!.contains("Thunderstorms") ||
+                textYQL!.contains("Showers")) {
+                myLabel4.textColor = .red
+            } else {
+                myLabel4.textColor = .green
+            }
+            vw.addSubview(myLabel4)
+            
+            /* //Statistic Button
+             let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.width-100, y: 95, width: 90, height: 30))
+             statButton.setTitle("Statistics", for: UIControlState())
+             statButton.backgroundColor = Color.MGrayColor
+             statButton.setTitleColor(UIColor.white, for: UIControlState())
+             statButton.addTarget(self, action:#selector(MasterViewController.statButton), for: UIControlEvents.touchUpInside)
+             statButton.layer.cornerRadius = 15.0
+             statButton.layer.borderColor = UIColor.black.cgColor
+             statButton.layer.borderWidth = 1.0
+             vw.addSubview(statButton) */
+            
+            return vw
         }
-        vw.addSubview(separatorLineView3)
-        
-        let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 120, width: 280, height: 20))
-        myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
-        myLabel4.font = Font.Weathertitle
-        if (textYQL!.contains("Rain") ||
-            textYQL!.contains("Snow") ||
-            textYQL!.contains("Thunderstorms") ||
-            textYQL!.contains("Showers")) {
-            myLabel4.textColor = .red
-        } else {
-            myLabel4.textColor = .green
-        }
-        vw.addSubview(myLabel4) 
-        
-        /* //Statistic Button
-        let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.width-100, y: 95, width: 90, height: 30))
-        statButton.setTitle("Statistics", for: UIControlState())
-        statButton.backgroundColor = Color.MGrayColor
-        statButton.setTitleColor(UIColor.white, for: UIControlState())
-        statButton.addTarget(self, action:#selector(MasterViewController.statButton), for: UIControlEvents.touchUpInside)
-        statButton.layer.cornerRadius = 15.0
-        statButton.layer.borderColor = UIColor.black.cgColor
-        statButton.layer.borderWidth = 1.0
-        vw.addSubview(statButton) */
- 
-        return vw
+        return nil
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -486,46 +541,51 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        /*
         if let selectedIndexPath = tableView.indexPathForSelectedRow {
             currentItem = menuItems[(selectedIndexPath as NSIndexPath).row] as! String
-        }
+        } */
+        
+        let indexPath = tableView.indexPathForSelectedRow!
+        let currentItem = tableView.cellForRow(at: indexPath)! as UITableViewCell
+        print(currentItem.textLabel!.text!)
         
         if tableView == resultsController.tableView {
             //userDetails = foundUsers[indexPath.row]
             //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
         } else {
             
-            if (currentItem == "Snapshot") {
+            if (currentItem.textLabel!.text! == "Snapshot") {
                 self.performSegue(withIdentifier: "snapshotSegue", sender: self)
-            } else if (currentItem == "Statistics") {
+            } else if (currentItem.textLabel!.text! == "Statistics") {
                 self.performSegue(withIdentifier: "statisticSegue", sender: self)
-            } else if (currentItem == "Leads") {
+            } else if (currentItem.textLabel!.text! == "Leads") {
                 self.performSegue(withIdentifier: "showleadSegue", sender: self)
-            } else if (currentItem == "Customers") {
+            } else if (currentItem.textLabel!.text! == "Customers") {
                 self.performSegue(withIdentifier: "showcustSegue", sender: self)
-            } else if (currentItem == "Vendors") {
+            } else if (currentItem.textLabel!.text! == "Vendors") {
                 self.performSegue(withIdentifier: "showvendSegue", sender: self)
-            } else if (currentItem == "Employee") {
+            } else if (currentItem.textLabel!.text! == "Employee") {
                 self.performSegue(withIdentifier: "showemployeeSegue", sender: self)
-            } else if (currentItem == "Advertising") {
+            } else if (currentItem.textLabel!.text! == "Advertising") {
                 self.performSegue(withIdentifier: "showadSegue", sender: self)
-            } else if (currentItem == "Product") {
+            } else if (currentItem.textLabel!.text! == "Product") {
                 self.performSegue(withIdentifier: "showproductSegue", sender: self)
-            } else if (currentItem == "Job") {
+            } else if (currentItem.textLabel!.text! == "Job") {
                 self.performSegue(withIdentifier: "showjobSegue", sender: self)
-            } else if (currentItem == "Salesman") {
+            } else if (currentItem.textLabel!.text! == "Salesman") {
                 self.performSegue(withIdentifier: "showsalesmanSegue", sender: self)
-            } else if (currentItem == "Show Detail") {
+            } else if (currentItem.textLabel!.text! == "Show Detail") {
                 self.performSegue(withIdentifier: "showDetail", sender: self)
-            } else if (currentItem == "Music") {
+            } else if (currentItem.textLabel!.text! == "Music") {
                 self.performSegue(withIdentifier: "musicSegue", sender: self)
-            } else if (currentItem == "YouTube") {
+            } else if (currentItem.textLabel!.text! == "YouTube") {
                 self.performSegue(withIdentifier: "youtubeSegue", sender: self)
-            } else if (currentItem == "Spot Beacon") {
+            } else if (currentItem.textLabel!.text! == "Spot Beacon") {
                 self.performSegue(withIdentifier: "spotbeaconSegue", sender: self)
-            } else if (currentItem == "Transmit Beacon") {
+            } else if (currentItem.textLabel!.text! == "Transmit Beacon") {
                 self.performSegue(withIdentifier: "transmitbeaconSegue", sender: self)
-            } else if (currentItem == "Contacts") {
+            } else if (currentItem.textLabel!.text! == "Contacts") {
                 self.performSegue(withIdentifier: "contactSegue", sender: self)
             }
         }
@@ -533,15 +593,45 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showleadSegue" {
-           /*
-            let controller = (segue.leadController
-                as UINavigationController).topViewController
-                as! DetailViewController
-
-                controller.navigationItem.leftBarButtonItem =
-                    splitViewController?.displayModeButtonItem()
-                controller.navigationItem.leftItemsSupplementBackButton = true */
+        if segue.identifier == "snapshotSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! SnapshotController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "statisticSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "showDetail" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "musicSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! MusicController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "youtubeSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! YouTubeController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "spotbeaconSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! SpotBeaconController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "transmitbeaconSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! TransmitBeaconController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "contactSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! ContactController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
 
     }

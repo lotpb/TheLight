@@ -467,9 +467,11 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource, UISe
         }
         
         if segue.identifier == "newvendSegue" {
-            let controller = segue.destination as? EditData
-            controller?.formController = "Vendor"
-            controller?.status = "New"
+            let controller = (segue.destination as! UINavigationController).topViewController as! EditData
+            controller.formController = "Vendor"
+            controller.status = "New"
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
         
     }

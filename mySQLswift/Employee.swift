@@ -499,9 +499,11 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
         
         if segue.identifier == "newemploySegue" {
-            let controller = segue.destination as? EditData
-            controller!.formController = "Employee"
-            controller!.status = "New"
+            let controller = (segue.destination as! UINavigationController).topViewController as! EditData
+            controller.formController = "Employee"
+            controller.status = "New"
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
         
     }

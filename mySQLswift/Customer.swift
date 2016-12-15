@@ -570,9 +570,11 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
         
         if segue.identifier == "newcustSegue" {
-            let controller = segue.destination as? EditData
-            controller!.formController = "Customer"
-            controller!.status = "New"
+            let controller = (segue.destination as! UINavigationController).topViewController as! EditData
+            controller.formController = "Customer"
+            controller.status = "New"
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
         
     }

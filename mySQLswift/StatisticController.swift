@@ -30,13 +30,13 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     var tradeYQL: NSArray!
     var changeYQL: NSArray!
     
-    var tempYQL: String?
-    var weathYQL: String?
-    var riseYQL: String?
-    var setYQL: String?
-    var humYQL: String?
-    var cityYQL: String?
-    var updateYQL: String?
+    var tempYQL: String!
+    var weathYQL: String!
+    var riseYQL: String!
+    var setYQL: String!
+    var humYQL: String!
+    var cityYQL: String!
+    var updateYQL: String!
     
     var dayYQL: NSArray!
     var textYQL: NSArray!
@@ -382,6 +382,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
                 return cell
             }
+            
         } else if (indexPath.section == 1) {
             
             if (indexPath.row == 0) {
@@ -717,7 +718,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         //let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
         let results = YQL.query(statement: String(format: "%@%@", "select * from weather.forecast where woeid=", self.defaults.string(forKey: "weatherKey")!))
         
-        let queryResults = results?.value(forKeyPath: "query.results.channel") as! NSDictionary?
+        let queryResults = results?.value(forKeyPath: "query.results.channel") as? NSDictionary
         if queryResults != nil {
             
             let arr = queryResults!.value(forKeyPath: "item.condition") as? NSDictionary
