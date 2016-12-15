@@ -343,7 +343,7 @@ class NotificationController: UIViewController {
             self.promoNotification()
         })
         let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
-            //print("Cancel Button Pressed")
+            
         }
         
         alertController.addAction(buttonSix)

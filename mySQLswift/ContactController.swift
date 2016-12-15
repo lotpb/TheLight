@@ -48,10 +48,6 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
-        
         checkAuthorization()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: kCellID)
@@ -148,12 +144,6 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     }
     
     // MARK: - Button
-    
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
-    }
     
     
     // =========================================================================
