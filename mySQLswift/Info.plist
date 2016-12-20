@@ -97,7 +97,7 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Can we use to your contacts?</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Can we use your location?</string>
+	<string>Geotify requires access to your phone’s location to notify you when you enter or leave a geofence.</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Can we use your location?</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

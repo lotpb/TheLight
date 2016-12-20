@@ -60,10 +60,10 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(SalesmanController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-        
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
+        } */
         
         parseData()
         
@@ -109,12 +109,12 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         isFormStat = true
         self.performSegue(withIdentifier: "salesDetailSegue", sender: self)
     }
-    
+    /*
     func goHome() {
         let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
         let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
         self.present(initialViewController, animated: true)
-    }
+    } */
     
     // MARK: - Table View
     

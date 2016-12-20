@@ -75,6 +75,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar'
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             titleButton.setTitle("TheLight Software - Snapshot", for: UIControlState())
@@ -96,9 +99,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         parseData()
         setupTableView()
         setupNavBarButtons()
-        
-        // MARK: - SplitView
-        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
     }
     
@@ -126,8 +126,10 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.LGrayColor
+        self.tableView!.backgroundColor = Color.Snap.backColor //Color.LGrayColor
         self.tableView!.tableFooterView = UIView(frame: .zero)
+      //self.tableView!.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.tableView!.separatorColor = Color.Snap.lineColor //.clear
     }
     
     func setupNavBarButtons() {
@@ -138,8 +140,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - refresh
     
-    func refreshData(_ sender:AnyObject)
-    {
+    func refreshData(_ sender:AnyObject) {
         parseData()
         self.refreshControl?.endRefreshing()
     }
@@ -263,42 +264,51 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
+
+        //cell.layoutMargins = UIEdgeInsets.zero
+        //cell.separatorInset = UIEdgeInsets.zero
         
+        cell.backgroundColor = Color.Snap.backColor
+        cell.accessoryType = UITableViewCellAccessoryType.none
         cell.collectionView.delegate = nil
         cell.collectionView.dataSource = nil
-        cell.collectionView.backgroundColor = .white
+        cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
+        /*
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        cell.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout) */
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel!.font = Font.Snapshot.cellsubtitlePad //Font.celltitle
+            cell.textLabel!.font = Font.Snapshot.celltitlePad
             cell.snaptitleLabel.font = Font.Snapshot.cellsubtitlePad
-            cell.snapdetailLabel.font = Font.Snapshot.celltitlePad
+            cell.snapdetailLabel.font = Font.Snapshot.cellsubtitlePad
         } else {
-            cell.textLabel!.font = Font.celltitle
+            cell.textLabel!.font = Font.Snapshot.celltitle
             cell.snaptitleLabel.font = Font.Snapshot.cellsubtitle
-            cell.snapdetailLabel.font = Font.Snapshot.celltitle
+            cell.snapdetailLabel.font = Font.Snapshot.cellsubtitle
         }
         
-        cell.accessoryType = UITableViewCellAccessoryType.none
+        cell.textLabel!.textColor = Color.Snap.textColor
+        cell.snaptitleLabel?.textColor = Color.Snap.textColor1
+        cell.snapdetailLabel?.textColor = Color.Snap.textColor
+ 
         cell.textLabel?.text = ""
-        
-        cell.snaptitleLabel?.numberOfLines = 1
         cell.snaptitleLabel?.text = ""
-        cell.snaptitleLabel?.textColor = .lightGray
-        
-        cell.snapdetailLabel?.numberOfLines = 3
         cell.snapdetailLabel?.text = ""
-        cell.snapdetailLabel?.textColor = .black
-        
+
+        cell.snaptitleLabel?.numberOfLines = 1
+        cell.snapdetailLabel?.numberOfLines = 3
+
         let date2 = Date()
         let calendar = Calendar.current
         
         if (indexPath.section == 0) {
             
             if (indexPath.row == 0) {
-                
+                cell.collectionView.tag = 10
+                //cell.collectionView.delegate = nil
+                //cell.collectionView.dataSource = nil
+                cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
                 cell.textLabel!.text = String(format: "%@%d", "Top News ", _feedItems.count)
-                //cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                //cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 
                 return cell
                 
@@ -312,25 +322,25 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
             } else if (indexPath.row == 2) {
                 
-                cell.textLabel!.text = "myNews"
+                cell.collectionView.tag = 10
+                cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
+                cell.textLabel!.text = "See the full gallery"
                 
                 return cell
             }
             
         } else if (indexPath.section == 1) {
-            //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
-            
-            //cell.collectionView.delegate = nil
-            //cell.collectionView.dataSource = nil
-            //cell.collectionView.backgroundColor = .white
             
             if (indexPath.row == 0) {
                 
-                cell.textLabel!.text = "Top News Story"
-                
+                cell.textLabel!.text = "Latest News"
+                cell.collectionView.tag = 10
                 return cell
                 
             } else if (indexPath.row == 1) {
+
+                cell.collectionView.backgroundColor = .clear
+                cell.collectionView.tag = 10
                 
                 let date1 = (_feedItems.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
@@ -339,16 +349,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                     let newsString : String? = (_feedItems.firstObject as AnyObject).value(forKey: "newsDetail") as? String
                     if newsString != nil {
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
+                    } else {
+                        cell.snaptitleLabel?.text = "none"
                     }
                 }
                 cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String
-                cell.snaptitleLabel?.text = "none"
-                cell.snapdetailLabel?.text = "none"
-                cell.collectionView.backgroundColor = .white
-                cell.collectionView.delegate = self
-                cell.collectionView.dataSource = self
-                cell.collectionView.tag = 10
- 
+                
                 return cell
             }
             
@@ -356,29 +362,27 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             if (indexPath.row == 0) {
                 
-                cell.textLabel!.text = "Top Blog Story"
-                //cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                //cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-                
+                cell.textLabel!.text = "Latest Blog"
+                cell.collectionView.tag = 10  
                 return cell
+                
             } else if (indexPath.row == 1) {
                 
-                let date1 = (_feedItems6.firstObject as AnyObject).value(forKey: "createdAt") as? Date
-                if date1 != nil {
-                    let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
-                    let daysCount = diffDateComponents.day
+                cell.collectionView.backgroundColor = .clear
+                cell.collectionView.tag = 10
+                
+                let date11 = (_feedItems6.firstObject as AnyObject).value(forKey: "createdAt") as? Date
+                if date11 != nil {
+                    let diffDateComponents = calendar.dateComponents([.day], from: date11!, to: date2)
+                    let daysCount1 = diffDateComponents.day
                     let newsString : String? = (_feedItems6.firstObject as AnyObject).value(forKey: "PostBy") as? String
                     if newsString != nil {
-                        cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
+                        cell.snaptitleLabel?.text = "\(newsString!), \(daysCount1!) days ago"
+                    } else {
+                        cell.snaptitleLabel?.text = "none"
                     }
                 }
                 cell.snapdetailLabel?.text = (_feedItems6.firstObject as AnyObject).value(forKey: "Subject") as? String
-                cell.snaptitleLabel?.text = "none"
-                cell.snapdetailLabel?.text = "none"
-                cell.collectionView.backgroundColor = .white
-                cell.collectionView.delegate = self
-                cell.collectionView.dataSource = self
-                cell.collectionView.tag = 10
  
                 return cell
             }
@@ -398,6 +402,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.collectionView.delegate = self
                 cell.collectionView.dataSource = self
                 cell.collectionView.tag = 1
+                
+                return cell
+            } else if (indexPath.row == 2) {
+
+                //cell.collectionView.backgroundColor = .clear
+                cell.textLabel!.text = "myJobs"
                 
                 return cell
             }
@@ -512,12 +522,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                     
                     let formatter:DateFormatter = DateFormatter()
                     formatter.dateFormat = "yyyy-MM-dd"
-                    if let dueDate = reminder.dueDateComponents?.date{
+                    if let dueDate = reminder.dueDateComponents?.date {
                         cell.snaptitleLabel?.text = formatter.string(from: dueDate)
                     }
                 }
-                return cell
             }
+            return cell
         }
         return cell
     }
@@ -551,16 +561,18 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! CollectionViewCell
         
+        cell.user2ImageView?.image = nil
+        
         let myLabel1:UILabel = UILabel(frame: CGRect(x: 0, y: 110, width: cell.bounds.size.width, height: 20))
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
+        myLabel1.backgroundColor = Color.Snap.backColor //.white
+        myLabel1.textColor = Color.Snap.textColor
         myLabel1.textAlignment = NSTextAlignment.center
         myLabel1.clipsToBounds = true
-        myLabel1.font = Font.headtitle
-        //myLabel1.adjustsFontSizeToFitWidth = true
+        myLabel1.font = Font.Snapshot.cellLabel
+      //myLabel1.adjustsFontSizeToFitWidth = true
 
         cell.playButton2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 30, height: 30)
-        //cell.activityIndicatorView2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 50, height: 50)
+      //cell.activityIndicatorView2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 50, height: 50)
         
         if (collectionView.tag == 0) {
             
@@ -668,8 +680,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.addSubview(myLabel1)
             
             return cell
+        } else if (collectionView.tag == 10) {
+            
+            cell.user2ImageView?.image = nil
+            
+           return cell
         }
-        
         return cell
     }
     
@@ -683,6 +699,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         }
         return CGSize(width: 90, height: 130)
     }
+    
     
 //---- below Creates Instagram thin Line spacing between cells---
     @objc(collectionView:layout:minimumLineSpacingForSectionAtIndex:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout , minimumLineSpacingForSectionAt section: Int) -> CGFloat {

@@ -16,11 +16,9 @@ class PlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
         //playerView.load(videoId: videoID)
-        //playerView.load(videoId: videoID)
+        playerView.load(withVideoId: videoID)
     }
 
     override func didReceiveMemoryWarning() {

@@ -101,19 +101,10 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         self.refreshControl.addTarget(self, action: #selector(StatisticController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
         
-        //self.refreshData()
-        
-        /*
-         foundUsers = []
-         resultsController = UITableViewController(style: .Plain)
-         resultsController.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
-         resultsController.tableView.dataSource = self
-         resultsController.tableView.delegate = self */
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //navigationController?.hidesBarsOnSwipe = true
         
         self.navigationController?.navigationBar.tintColor = .white
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -121,11 +112,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.Stat.navColor
         }
-        
         self.refreshData()
-        
-        //self.mytimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(refreshData), userInfo: nil, repeats: true)
-      
     }
     
     override func viewWillDisappear(_ animated: Bool) {

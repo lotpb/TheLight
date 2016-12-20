@@ -71,6 +71,15 @@ import UIKit
             //static let buttonColor = BlueColor
         }
         
+        enum Snap {
+            static let backColor = UIColor(white:0.25, alpha:1.0)
+            static let textColor = UIColor.white
+            static let textColor1 = UIColor.lightGray
+            static let lineColor = UIColor.darkGray
+
+            //static let buttonColor = BlueColor
+        }
+        
         enum Table {
             static let navColor = UIColor.black
             static let labelColor = UIColor(red: 0.28, green: 0.50, blue: 0.49, alpha: 1.0)
@@ -91,9 +100,9 @@ import UIKit
         static let Weathertitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
         //buttonFontSize,  labelFontSize, systemFontSize
         
-        static let celltitle = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
+        static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
         static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
-        static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular)
+        static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         static let celllabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         static let celllabel2 = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
         static let cellreply = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
@@ -115,10 +124,12 @@ import UIKit
         }
         
         struct Snapshot {
-            static let celltitlePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
-            static let cellsubtitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-            static let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let celltitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
+            static let cellsubtitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
+            
+            static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
             static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            static let cellLabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
             
         }
         

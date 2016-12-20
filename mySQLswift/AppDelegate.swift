@@ -158,6 +158,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
          navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
          splitViewController.delegate = self */
         
+        
         return true
     }
 
@@ -314,6 +315,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         backgroundSessionCompletionHandler = completionHandler
     }
     
+    // MARK: - Geotify
+    
+    func handleEvent(forRegion region: CLRegion!) {
+        // Show an alert if application is active
+        if UIApplication.shared.applicationState == .active {
+            guard let message = note(fromRegionIdentifier: region.identifier) else { return }
+            window?.rootViewController?.showAlert(withTitle: nil, message: message)
+        } else {
+            
+            let content = UNMutableNotificationContent()
+            content.title = note(fromRegionIdentifier: region.identifier)!
+            content.body = note(fromRegionIdentifier: region.identifier)!
+            content.badge = 1
+            content.sound = UNNotificationSound.default()
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let request = UNNotificationRequest(identifier: "Geotify-id-123", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }
+    }
+    
+    func note(fromRegionIdentifier identifier: String) -> String? {
+        let savedItems = UserDefaults.standard.array(forKey: PreferencesKeys.savedItems) as? [NSData]
+        let geotifications = savedItems?.map { NSKeyedUnarchiver.unarchiveObject(with: $0 as Data) as? Geotification }
+        let index = geotifications?.index { $0?.identifier == identifier }
+        return index != nil ? geotifications?[index!]?.note : nil
+    }
+    
+    
+    // MARK: - App Theme Customization
+    
+    private func customizeAppearance() {
+        
+        UIApplication.shared.statusBarStyle = .lightContent
+        
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        UINavigationBar.appearance().barTintColor = .black
+        UINavigationBar.appearance().tintColor = .gray
+        UINavigationBar.appearance().isTranslucent = false
+        
+        UITabBar.appearance().barTintColor = .black
+        UITabBar.appearance().tintColor = .white
+        UITabBar.appearance().isTranslucent = false
+        //UITabBar.appearance().unselectedItemTintColor = UIColor.yellow
+        
+        UIToolbar.appearance().barTintColor = Color.DGrayColor
+        UIToolbar.appearance().tintColor = .white
+        
+        UISearchBar.appearance().barTintColor = .black
+        UISearchBar.appearance().tintColor = .white
+        
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
+    }
+    
     // MARK:
     
     func applicationWillResignActive(_ application: UIApplication) {
@@ -344,33 +398,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    
-    // MARK: - App Theme Customization
-    
-    private func customizeAppearance() {
-        
-        UIApplication.shared.statusBarStyle = .lightContent
-        
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
-        UINavigationBar.appearance().barTintColor = .black
-        UINavigationBar.appearance().tintColor = .gray
-        UINavigationBar.appearance().isTranslucent = false
-        
-        UITabBar.appearance().barTintColor = .black
-        UITabBar.appearance().tintColor = .white
-        UITabBar.appearance().isTranslucent = false
-      //UITabBar.appearance().unselectedItemTintColor = UIColor.yellow
-        
-        UIToolbar.appearance().barTintColor = Color.DGrayColor
-        UIToolbar.appearance().tintColor = .white
-        
-        UISearchBar.appearance().barTintColor = .black
-        UISearchBar.appearance().tintColor = .white
-        
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
-    }
-    
-
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
@@ -389,34 +416,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
     }
 }
-
-
-/*
-// MARK: CLLocationManagerDelegate - Beacons
+// add for Geotify
 extension AppDelegate: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        
-        if #available(iOS 10.0, *) {
-            let content = UNMutableNotificationContent()
-            content.title = "Are you forgetting something?"
-            //content.subtitle = "米花兒"
-            content.body = "Are you forgetting something?"
-            content.badge = 1 //UIApplication.shared.applicationIconBadgeNumber + 1
-            content.sound = UNNotificationSound.default()
-            
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-            let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            
-        } else {
-            
-            if let _ = region as? CLBeaconRegion {
-                let notification = UILocalNotification()
-                notification.alertBody = "Are you forgetting something?"
-                notification.soundName = "Default"
-                UIApplication.shared.presentLocalNotificationNow(notification)
-            }
+    
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        if region is CLCircularRegion {
+            handleEvent(forRegion: region)
         }
     }
-} */
+    
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        if region is CLCircularRegion {
+            handleEvent(forRegion: region)
+        }
+    }
+}
+
 

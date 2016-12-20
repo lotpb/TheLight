@@ -56,10 +56,10 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(ProductController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-        
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
+        } */
         
         parseData()
         
@@ -103,12 +103,12 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         isFormStat = true
         self.performSegue(withIdentifier: "prodDetailSegue", sender: self)
     }
-    
+    /*
     func goHome() {
         let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
         let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
         self.present(initialViewController, animated: true)
-    }
+    } */
     
     // MARK: - Table View
     

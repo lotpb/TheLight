@@ -1,4 +1,4 @@
-//
+ //
 //  DetailViewController.swift
 //  mySQLswift
 //
@@ -8,47 +8,53 @@
 
 import UIKit
 import ReplayKit
-//import AVFoundation
 import UIKit
 import CoreLocation
-import iAd //added iAd
 import CoreSpotlight //added CoreSpotlight
 import CoreBluetooth
 import MobileCoreServices //added CoreSpotlight
+//import iAd //added iAd
+//import AVFoundation
 
 class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, AVSpeechSynthesizerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RPScreenRecorderDelegate {
     
-    let headtitle = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+    //let headtitle = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
     let textviewText = "Chadi sucks in Basketball, he has no picks and certainly has no rolls"
     
+    @IBOutlet weak var subject: UITextView?
+    @IBOutlet weak private var processingView: UIActivityIndicatorView!
     @IBOutlet weak var languagePick: UIPickerView?
+    @IBOutlet weak var mainView: UIView!
+    
     let languageList = ["Hindi", "Russian", "Greek", "United States", "United Kingdom", "Italy", "Israel", "Arabic", "China", "French", "German"]
     let languageCodeList = ["hi-IN", "ru-RU", "el-GR", "en-US", "en-GB", "it-IT", "he-IL", "ar-SA", "zh-CN", "fr-FR", "de-DE"]
+    
     var langNum : Int!
     //var langRate : Float!
     
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak private var startRecordingButton: UIButton!
-    @IBOutlet weak private var stopRecordingButton: UIButton!
-    @IBOutlet weak private var processingView: UIActivityIndicatorView!
     private let recorder = RPScreenRecorder.shared()
-    
     private var locationManager = CLLocationManager()
     private let identifier = "com.TheLight" //added CoreSpotlight
     private let domainIdentifier = "com.lotpb.github.io/UnitedWebPage/index.html"
     private var activity: NSUserActivity!
     
-    @IBOutlet weak var latitudeText: UILabel!
-    @IBOutlet weak var longitudeText: UILabel!
-    @IBOutlet weak var speechButton: UIButton!
-    @IBOutlet weak var lightoff: UIButton!
-    
-    @IBOutlet weak var volume: UITextField?
     @IBOutlet weak var pitch: UITextField?
-    @IBOutlet weak var ratetext: UITextField?
-    @IBOutlet weak var subject: UITextView?
-
-    //var defaults = NSUserDefaults.standardUserDefaults()
+    @IBOutlet weak var rate: UITextField!
+    @IBOutlet weak var volume: UITextField?
+    
+    @IBOutlet weak var pitchLabel: UILabel!
+    @IBOutlet weak var rateLabel: UILabel!
+    @IBOutlet weak var volumeLabel: UILabel!
+    
+    @IBOutlet weak var speechButton: UIButton!
+    @IBOutlet weak var lightoffButton: UIButton!
+    @IBOutlet weak var spotlightButton: UIButton!
+    @IBOutlet weak var nospotButton: UIButton!
+    @IBOutlet weak private var startRecordingButton: UIButton!
+    @IBOutlet weak private var stopRecordingButton: UIButton!
+    
+    @IBOutlet weak var latitudeLabel: UILabel!
+    @IBOutlet weak var longitudeLabel: UILabel!
     
     //below has nothing
     var detailItem: AnyObject? { //dont delete for splitview
@@ -67,7 +73,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Detail", for: UIControlState())
+            titleButton.setTitle("TheLight Software - Detail", for: UIControlState())
         } else {
             titleButton.setTitle("Detail", for: UIControlState())
         }
@@ -90,18 +96,18 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         buttonEnabledControl(recorder.isRecording)
 
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 20, y: 135, width: 60, height: 60))
+        let myLabel:UILabel = UILabel(frame: CGRect(x: 20, y: 71, width: 60, height: 60))
         myLabel.backgroundColor = .orange
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
         myLabel.text = "Speak"
-        myLabel.font = Font.Stat.celltitlePad
+        myLabel.font = Font.Detail.textaddress
         myLabel.layer.cornerRadius = 30.0
         myLabel.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(speak))
         myLabel.addGestureRecognizer(tap)
-        self.scrollView.addSubview(myLabel)
+        self.mainView.addSubview(myLabel)
         
         self.subject!.text = textviewText
         
@@ -111,15 +117,33 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         //ratetext!.text = langRate as String
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.volume?.font = Font.Weathertitle
-            self.pitch?.font = Font.Weathertitle
-            self.ratetext?.font = Font.Weathertitle
-            self.subject?.font = Font.Edittitle
+            self.subject?.font = Font.Detail.VtextAmount
+            self.volume?.font = Font.Detail.VtextAmount
+            self.pitch?.font = Font.Detail.VtextAmount
+            self.rate?.font = Font.Detail.VtextAmount
+            self.pitchLabel?.font = Font.Detail.VtextAmount
+            self.rateLabel?.font = Font.Detail.VtextAmount
+            self.volumeLabel?.font = Font.Detail.VtextAmount
+            self.latitudeLabel?.font = Font.Detail.VtextAmount
+            self.longitudeLabel?.font = Font.Detail.VtextAmount
+            self.speechButton?.titleLabel?.font = Font.Detail.VtextAmount
+            self.lightoffButton?.titleLabel?.font = Font.Detail.VtextAmount
+            self.spotlightButton?.titleLabel?.font = Font.Detail.VtextAmount
+            self.nospotButton?.titleLabel?.font = Font.Detail.VtextAmount
         } else {
-            self.volume?.font = Font.headtitle
-            self.pitch?.font = Font.headtitle
-            self.ratetext?.font = Font.headtitle
-            self.subject?.font = Font.headtitle
+            self.subject?.font = Font.Detail.textdate
+            self.volume?.font = Font.Detail.textdate
+            self.pitch?.font = Font.Detail.textdate
+            self.rate?.font = Font.Detail.textdate
+            self.pitchLabel?.font = Font.Detail.textdate
+            self.rateLabel?.font = Font.Detail.textdate
+            self.volumeLabel?.font = Font.Detail.textdate
+            self.latitudeLabel?.font = Font.Detail.textdate
+            self.longitudeLabel?.font = Font.Detail.textdate
+            self.speechButton?.titleLabel?.font = Font.Detail.textdate
+            self.lightoffButton?.titleLabel?.font = Font.Detail.textdate
+            self.spotlightButton?.titleLabel?.font = Font.Detail.textdate
+            self.nospotButton?.titleLabel?.font = Font.Detail.textdate
         }
         
     }
@@ -313,14 +337,15 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     
     // MARK: - speech
     
-    @IBAction func speech(_ sender: AnyObject) {
+    func speech(_ sender: AnyObject) {
         
-        //"The words of King Solomon the wisest of men. for i found one righteous man in a thousand and not one righteous woman"
+        //"The words of King Solomon the wisest of men. For i found one righteous man in a thousand and not one righteous woman"
         //"Hello world!!! my name is Peter Balsamo")
         //"Hello world!!! It's time too kiss the feet of Peter Balsamo"
-        let utterance = AVSpeechUtterance(string: "The words of King Solomon the wisest of men. for i found one righteous man in a thousand and not one righteous woman")
-        utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
-        utterance.rate = 0.3
+        let utterance = AVSpeechUtterance(string: "The words of King Solomon the wisest of men. For i found one righteous man in a thousand, and not one righteous woman")
+      //utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+        utterance.voice = AVSpeechSynthesisVoice(language: languageCodeList[langNum])
+        utterance.rate = 0.4
         
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
@@ -339,7 +364,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         subject!.attributedText = NSAttributedString(string: utterance.speechString)
     }
     
-    @IBAction func speak(_ sender: AnyObject) {
+    func speak() {
         let string = subject!.text
         let utterance = AVSpeechUtterance(string: string!)
         utterance.voice = AVSpeechSynthesisVoice(language: languageCodeList[langNum])
@@ -384,9 +409,9 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
 
         if let location = locations.first {
  
-            latitudeText!.text = String(format: "Lat: %.4f",
+            latitudeLabel!.text = String(format: "Lat: %.4f",
                 location.coordinate.latitude)
-            longitudeText!.text = String(format: "Lon: %.4f",
+            longitudeLabel!.text = String(format: "Lon: %.4f",
                 location.coordinate.longitude)
             
         }

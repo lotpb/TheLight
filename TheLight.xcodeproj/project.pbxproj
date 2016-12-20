@@ -53,6 +53,12 @@
 		AF9A87821C1862900091B0E3 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF9A87811C1862900091B0E3 /* libsqlite3.dylib */; };
 		AF9A87841C18645C0091B0E3 /* Web.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9A87831C18645C0091B0E3 /* Web.swift */; };
 		AF9EE4C71C2771D70057B7DB /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9EE4C61C2771D70057B7DB /* NotificationController.swift */; };
+		AFA0396F1E08327500E140E4 /* GeotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA0396E1E08327500E140E4 /* GeotificationsViewController.swift */; };
+		AFA039711E08328300E140E4 /* AddGeotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA039701E08328300E140E4 /* AddGeotificationViewController.swift */; };
+		AFA039731E08328E00E140E4 /* Geotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA039721E08328E00E140E4 /* Geotification.swift */; };
+		AFA039751E08329800E140E4 /* GetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA039741E08329800E140E4 /* GetAddress.swift */; };
+		AFA039771E0832A100E140E4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA039761E0832A100E140E4 /* Utilities.swift */; };
+		AFA039791E08B0CD00E140E4 /* TestLocations.gpx in Resources */ = {isa = PBXBuildFile; fileRef = AFA039781E08B0CD00E140E4 /* TestLocations.gpx */; };
 		AFB5A71E1C2C499200F8BC56 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB5A71D1C2C499200F8BC56 /* Vendor.swift */; };
 		AFB5A7201C2C4C7700F8BC56 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB5A71F1C2C4C7700F8BC56 /* Employee.swift */; };
 		AFBB9B7B1D2D398C00618586 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB9B7A1D2D398C00618586 /* MenuBar.swift */; };
@@ -172,6 +178,12 @@
 		AF9A87811C1862900091B0E3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		AF9A87831C18645C0091B0E3 /* Web.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Web.swift; sourceTree = "<group>"; };
 		AF9EE4C61C2771D70057B7DB /* NotificationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		AFA0396E1E08327500E140E4 /* GeotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeotificationsViewController.swift; sourceTree = "<group>"; };
+		AFA039701E08328300E140E4 /* AddGeotificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddGeotificationViewController.swift; sourceTree = "<group>"; };
+		AFA039721E08328E00E140E4 /* Geotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geotification.swift; sourceTree = "<group>"; };
+		AFA039741E08329800E140E4 /* GetAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAddress.swift; sourceTree = "<group>"; };
+		AFA039761E0832A100E140E4 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		AFA039781E08B0CD00E140E4 /* TestLocations.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = TestLocations.gpx; sourceTree = "<group>"; };
 		AFAEAE421C775CE700DF86B1 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		AFAEAE451C775CE700DF86B1 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		AFAEAE481C775CE700DF86B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -354,6 +366,7 @@
 				AFE263E11C17DBE9007BBB90 /* images */,
 				AF206E021C1B1F6A00EA60D6 /* Sounds */,
 				AFF5D5571D3AD59E00975055 /* GoogleService-Info.plist */,
+				AFA039781E08B0CD00E140E4 /* TestLocations.gpx */,
 				AF0369AD1C173DDC00137D7E /* Assets.xcassets */,
 				AF0369AF1C173DDC00137D7E /* LaunchScreen.storyboard */,
 				AF0369B21C173DDC00137D7E /* Info.plist */,
@@ -424,6 +437,18 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
+		AFA0396D1E08322300E140E4 /* Geotify */ = {
+			isa = PBXGroup;
+			children = (
+				AFA0396E1E08327500E140E4 /* GeotificationsViewController.swift */,
+				AFA039701E08328300E140E4 /* AddGeotificationViewController.swift */,
+				AFA039721E08328E00E140E4 /* Geotification.swift */,
+				AFA039761E0832A100E140E4 /* Utilities.swift */,
+				AFA039741E08329800E140E4 /* GetAddress.swift */,
+			);
+			name = Geotify;
+			sourceTree = "<group>";
+		};
 		AFA156391C514203000C3EB7 /* News */ = {
 			isa = PBXGroup;
 			children = (
@@ -492,6 +517,7 @@
 		AFD1A3101C1E367B00580F10 /* Acc Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				AFA0396D1E08322300E140E4 /* Geotify */,
 				AF4C1A291CEFF85D00F8B038 /* Weather */,
 				AFF3C8F01C4EC45100D9B7BD /* Beacons */,
 				AF5C01E51C493245009BB817 /* Music */,
@@ -661,6 +687,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AFE264291C17DC11007BBB90 /* menu.png in Resources */,
+				AFA039791E08B0CD00E140E4 /* TestLocations.gpx in Resources */,
 				AFE2640E1C17DC11007BBB90 /* calendar.png in Resources */,
 				AFE264161C17DC11007BBB90 /* photo.png in Resources */,
 				AFE0CEFD1D3EAB5700D6D3F0 /* Main.storyboard in Resources */,
@@ -765,10 +792,12 @@
 				AFF7BCE51C3230EA0051DDCB /* CodeGenController.swift in Sources */,
 				AF0C77A31C2245BA0055DDE4 /* CollectionViewCell.swift in Sources */,
 				AF0D6B311C4AC5E900334D03 /* YQL.swift in Sources */,
+				AFA039711E08328300E140E4 /* AddGeotificationViewController.swift in Sources */,
 				AF9A87841C18645C0091B0E3 /* Web.swift in Sources */,
 				AFE34A3E1D3277EB00C78D8B /* SubscriptionCell.swift in Sources */,
 				AF8CC3AB1C42B9FB004147F3 /* StatisticController.swift in Sources */,
 				AF0369A91C173DDC00137D7E /* DetailViewController.swift in Sources */,
+				AFA039751E08329800E140E4 /* GetAddress.swift in Sources */,
 				AF4C1A281CEFF85300F8B038 /* Weather.swift in Sources */,
 				AF011A741C40AAE2000EAF5D /* JobController.swift in Sources */,
 				AF2D051B1D359A4200AC2A43 /* News.swift in Sources */,
@@ -791,11 +820,14 @@
 				AFE263A21C176F15007BBB90 /* Lead.swift in Sources */,
 				AF56DFC31C28947400CD7EB9 /* SnapshotController.swift in Sources */,
 				AF0754861C4336E200B03D38 /* LookupData.swift in Sources */,
+				AFA0396F1E08327500E140E4 /* GeotificationsViewController.swift in Sources */,
 				AF7383EB1C302DD00049407C /* NotificationDetailController.swift in Sources */,
 				AFBB9B7D1D2D760300618586 /* FeedCell.swift in Sources */,
+				AFA039771E0832A100E140E4 /* Utilities.swift in Sources */,
 				AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */,
 				AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */,
 				AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */,
+				AFA039731E08328E00E140E4 /* Geotification.swift in Sources */,
 				AFE419D41D19EDA200A6F590 /* SettingsLauncher.swift in Sources */,
 				AF6DD0711D94454B00069D69 /* AccountCell.swift in Sources */,
 				AF5C01DE1C493199009BB817 /* MusicController.swift in Sources */,

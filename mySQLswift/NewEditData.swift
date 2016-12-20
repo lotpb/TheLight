@@ -152,10 +152,10 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         activeImage = UIImageView(frame:CGRect(x: 130, y: 10, width: 18, height: 22))
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel!.font = Font.Edittitle
-            self.salesman?.font = Font.Edittitle
-            self.salesNo?.font = Font.Edittitle
-            self.price?.font = Font.Edittitle
+            cell.textLabel!.font = Font.Stat.celltitlePad
+            self.salesman?.font = Font.Stat.celltitlePad
+            self.salesNo?.font = Font.Stat.celltitlePad
+            self.price?.font = Font.Stat.celltitlePad
         } else {
             cell.textLabel!.font = Font.celltitle
             self.salesman?.font = Font.celltitle

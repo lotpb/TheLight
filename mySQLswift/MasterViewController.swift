@@ -16,9 +16,9 @@ import FirebaseAnalytics
 
 class MasterViewController: UITableViewController, UISplitViewControllerDelegate, UISearchResultsUpdating {
 
-    //var detailViewController: DetailViewController? = nil
+  //var detailViewController: DetailViewController? = nil
     
-    var menuItems:NSMutableArray = ["Snapshot","Statistics","Leads","Customers","Vendors","Employee","Advertising","Product","Job","Salesman","Show Detail","Music","YouTube","Spot Beacon","Transmit Beacon","Contacts"]
+    var menuItems:NSMutableArray = ["Snapshot","Statistics","Leads","Customers","Vendors","Employee","Advertising","Product","Job","Salesman","Geotify","Show Detail","Music","YouTube","Spot Beacon","Transmit Beacon","Contacts"]
     var currentItem = "Snapshot"
     
     var player : AVAudioPlayer! = nil
@@ -65,7 +65,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         // MARK: - SplitView
         self.splitViewController?.maximumPrimaryColumnWidth = 400
         //fix - remove bottom bar
-        self.splitViewController!.delegate = self;
+        self.splitViewController!.delegate = self
         self.splitViewController!.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
         self.extendedLayoutIncludesOpaqueBars = true
         
@@ -83,9 +83,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl!)
         
-        symYQL = nil
-        tradeYQL = nil
-        changeYQL = nil
+        //symYQL = nil
+        //tradeYQL = nil
+        //changeYQL = nil
         self.versionCheck()
         self.refreshData()
         
@@ -195,7 +195,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         } else if (section == 1) {
             return 8
         } else if (section == 2) {
-            return 6
+            return 7
         }
         return 0
         /*
@@ -269,6 +269,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                     cell.textLabel!.text = menuItems[14] as? String
                 } else if (indexPath.row == 5) {
                     cell.textLabel!.text = menuItems[15] as? String
+                } else if (indexPath.row == 6) {
+                    cell.textLabel!.text = menuItems[16] as? String
                 }
             }
             
@@ -302,7 +304,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let vw = UIView()
                 tableView.tableHeaderView = vw
                 
-                photoImage = UIImageView(frame:CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 135))
+                photoImage = UIImageView(frame:CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 145))
                 photoImage.image = UIImage(named:"IMG_1133.jpg")
                 photoImage.layer.masksToBounds = true
                 photoImage.contentMode = .scaleAspectFill
@@ -584,6 +586,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 self.performSegue(withIdentifier: "transmitbeaconSegue", sender: self)
             } else if (currentItem.textLabel!.text! == "Contacts") {
                 self.performSegue(withIdentifier: "contactSegue", sender: self)
+            } else if (currentItem.textLabel!.text! == "Geotify") {
+                self.performSegue(withIdentifier: "geotifySegue", sender: self)
             }
         }
     }
@@ -597,6 +601,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         if segue.identifier == "statisticSegue" {
             let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+        if segue.identifier == "geotifySegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! GeotificationsViewController
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
         }
