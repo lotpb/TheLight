@@ -137,13 +137,12 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? VideoCell else { fatalError("Unexpected Index Path") }
-        //let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! VideoCell
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.titleLabelnew.font = Font.News.newstitle
-            cell.subtitlelabel.font = Font.News.newssource
-            cell.numberLabel.font = Font.News.newslabel1
-            cell.uploadbylabel.font = Font.News.newslabel2
+            cell.titleLabelnew.font = Font.News.newstitlePad
+            cell.subtitlelabel.font = Font.News.newssourcePad
+            cell.numberLabel.font = Font.News.newslabel1Pad
+            cell.uploadbylabel.font = Font.News.newslabel2Pad
             
         } else {
             cell.titleLabelnew.font = Font.News.newstitle
@@ -229,10 +228,14 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height = (frame.width - 16 - 16) * 9 / 16
-        return CGSize(width: frame.width, height: height + 16 + 88)
-        //let size = CGSize.init(width: UIScreen.main.bounds.width, height: 300)
-        //return size
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            let size = CGSize.init(width: UIScreen.main.bounds.width, height: 275)
+            return size
+        } else {
+            let height = (frame.width - 16 - 16) * 9 / 16
+            return CGSize(width: frame.width, height: height + 16 + 88)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

@@ -117,6 +117,11 @@ import UIKit
         }
         
         struct News {
+            static let newstitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightRegular)
+            static let newssourcePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
+            static let newslabel1Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
+            static let newslabel2Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+            
             static let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
             static let newssource = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
             static let newslabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
@@ -126,6 +131,7 @@ import UIKit
         struct Snapshot {
             static let celltitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
             static let cellsubtitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
+            static let celllabelPad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
             
             static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
             static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)

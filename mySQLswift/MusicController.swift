@@ -448,7 +448,7 @@ extension MusicController: UITableViewDataSource {
 
 extension MusicController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 62.0
+        return 65.0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

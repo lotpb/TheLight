@@ -156,7 +156,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
                 request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude), addressDictionary: nil))
                 
         // MARK:  AlternateRoutes
-                request.requestsAlternateRoutes = false
+                request.requestsAlternateRoutes = true
         // MARK:  transportType
                 request.transportType = .automobile
                 
@@ -230,33 +230,45 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         
-        let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
-        
-        if mapView.overlays.count == 1 {
-            renderer.strokeColor = UIColor.blue.withAlphaComponent(0.75)
-        } else if mapView.overlays.count == 2 {
-            renderer.strokeColor = UIColor.green.withAlphaComponent(0.75)
-        } else if mapView.overlays.count == 3 {
-            renderer.strokeColor = UIColor.red.withAlphaComponent(0.75)
+        if overlay is MKCircle {
+            let renderer = MKCircleRenderer(overlay: overlay)
+            renderer.fillColor = UIColor.black.withAlphaComponent(0.5)
+            renderer.strokeColor = UIColor.blue
+            renderer.lineWidth = 2
+            return renderer
+            
+        } else if overlay is MKPolyline {
+            let renderer = MKPolylineRenderer(overlay: overlay)
+            if mapView.overlays.count == 1 {
+                renderer.strokeColor = UIColor.blue.withAlphaComponent(0.75)
+            } else if mapView.overlays.count == 2 {
+                renderer.strokeColor = UIColor.orange.withAlphaComponent(0.75)
+            } else if mapView.overlays.count == 3 {
+                renderer.strokeColor = UIColor.red.withAlphaComponent(0.75)
+            }
+            renderer.lineWidth = 3
+            return renderer
+        } else if overlay is MKPolygon {
+            let renderer = MKPolygonRenderer(polygon: overlay as! MKPolygon)
+            renderer.fillColor = UIColor.black.withAlphaComponent(0.5)
+            renderer.strokeColor = UIColor.orange
+            renderer.lineWidth = 2
+            return renderer
         }
-        renderer.lineWidth = 3
-        return renderer
+        return MKOverlayRenderer()
     }
     
     // MARK: - SegmentedControl
 
     @IBAction func mapTypeChanged(_ sender: AnyObject) {
         
-        if(mapTypeSegmentedControl.selectedSegmentIndex == 0)
-        {
+        if(mapTypeSegmentedControl.selectedSegmentIndex == 0) {
             self.mapView.mapType = MKMapType.standard
         }
-        else if(mapTypeSegmentedControl.selectedSegmentIndex == 1)
-        {
+        else if(mapTypeSegmentedControl.selectedSegmentIndex == 1) {
             self.mapView.mapType = MKMapType.hybridFlyover
         }
-        else if(mapTypeSegmentedControl.selectedSegmentIndex == 2)
-        {
+        else if(mapTypeSegmentedControl.selectedSegmentIndex == 2) {
             self.mapView.mapType = MKMapType.satellite
         }
     }
@@ -264,50 +276,59 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     // MARK: - Button
     
     func trafficBtnTapped(_ sender: AnyObject) {
- 
-        mapView.showsTraffic = !mapView.showsTraffic
         
-        /*
         if mapView.showsTraffic == mapView.showsTraffic {
-            sender.setTitle("Hide Traffic", for: UIControlState.normal)
+            mapView.showsTraffic = !mapView.showsTraffic
+            //sender.setTitle("Hide Traffic", for: UIControlState.normal)
         } else {
-            sender.setTitle("Show Traffic", for: UIControlState.normal)
-        }*/
+            mapView.showsTraffic = mapView.showsTraffic
+            //sender.setTitle("Show Traffic", for: UIControlState.normal)
+        }
     }
     
     func scaleBtnTapped() {
         
-        mapView.showsScale = !mapView.showsScale
-        
-        // shown
-        if mapView.showsScale {
-            //sender.setTitle("Hide Scale", forState: UIControlState.Normal)
-        }
-            // hidden
-        else {
-            //sender.setTitle("Show Scale", forState: UIControlState.Normal)
+        if mapView.showsScale == mapView.showsScale {
+            mapView.showsScale = !mapView.showsScale
+        } else {
+            mapView.showsScale = !mapView.showsScale
         }
     }
     
     func compassBtnTapped() {
-        //displayInFlyoverMode()
-        mapView.showsCompass = !mapView.showsCompass
+        
+        if mapView.showsCompass == mapView.showsCompass {
+            mapView.showsCompass = !mapView.showsCompass
+        } else {
+            mapView.showsCompass = mapView.showsCompass
+        }
     }
     
     func buildingBtnTapped() {
         
-        mapView.showsBuildings = !mapView.showsBuildings
+        if mapView.showsBuildings == mapView.showsBuildings {
+            mapView.showsBuildings = !mapView.showsBuildings
+        } else {
+            mapView.showsBuildings = mapView.showsBuildings
+        }
     }
     
     func userlocationBtnTapped() {
         
-        mapView.showsUserLocation = !mapView.showsUserLocation
+        if mapView.showsUserLocation == mapView.showsUserLocation {
+            mapView.showsUserLocation = !mapView.showsUserLocation
+        } else {
+            mapView.showsUserLocation = mapView.showsUserLocation
+        }
     }
     
     func pointsofinterestBtnTapped() {
         
-        mapView.showsPointsOfInterest = !mapView.showsPointsOfInterest
-        
+        if mapView.showsPointsOfInterest == mapView.showsPointsOfInterest {
+            mapView.showsPointsOfInterest = !mapView.showsPointsOfInterest
+        } else {
+            mapView.showsPointsOfInterest = mapView.showsPointsOfInterest
+        }
     }
     
     func requestsAlternateRoutesBtnTapped() {
@@ -332,14 +353,18 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     
     func displayInFlyoverMode() {
         
-        mapView.mapType = .satelliteFlyover
-        mapView.showsBuildings = true
-        let location = CLLocationCoordinate2D(latitude: 51.50722, longitude: -0.12750)
-        let altitude: CLLocationDistance  = 500
-        let heading: CLLocationDirection = 90
-        let pitch = CGFloat(45)
-        let camera = MKMapCamera(lookingAtCenter: location, fromDistance: altitude, pitch: pitch, heading: heading)
-        mapView.setCamera(camera, animated: true)
+        if mapView.mapType == .satelliteFlyover {
+            mapView.mapType = .standard
+        } else {
+            mapView.mapType = .satelliteFlyover
+            mapView.showsBuildings = true
+            let location = CLLocationCoordinate2D(latitude: 51.50722, longitude: -0.12750)
+            let altitude: CLLocationDistance  = 500
+            let heading: CLLocationDirection = 90
+            let pitch = CGFloat(45)
+            let camera = MKMapCamera(lookingAtCenter: location, fromDistance: altitude, pitch: pitch, heading: heading)
+            mapView.setCamera(camera, animated: true)
+        }
     }
     
     func shareButton(_ sender: AnyObject) {

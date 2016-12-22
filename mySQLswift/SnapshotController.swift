@@ -53,6 +53,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     var maintitle : UILabel!
     var datetitle : UILabel!
+    var myLabel1 : UILabel!
 
     var _feedItems : NSMutableArray = NSMutableArray() //news
     var _feedItems2 : NSMutableArray = NSMutableArray() //job
@@ -152,11 +153,17 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     {
         let result:CGFloat = 140
         if (indexPath.section == 0) {
-        
+            
             switch (indexPath.row % 4)
             {
             case 0:
                 return 44
+            case 1:
+                if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                    return 190
+                } else {
+                    return 140
+                }
             case 2:
                 return 44
             default:
@@ -267,20 +274,21 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
         //cell.layoutMargins = UIEdgeInsets.zero
         //cell.separatorInset = UIEdgeInsets.zero
+        /*
+         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+         cell.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout) */
         
         cell.backgroundColor = Color.Snap.backColor
         cell.accessoryType = UITableViewCellAccessoryType.none
         cell.collectionView.delegate = nil
         cell.collectionView.dataSource = nil
         cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
-        /*
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        cell.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout) */
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.textLabel!.font = Font.Snapshot.celltitlePad
             cell.snaptitleLabel.font = Font.Snapshot.cellsubtitlePad
             cell.snapdetailLabel.font = Font.Snapshot.cellsubtitlePad
+
         } else {
             cell.textLabel!.font = Font.Snapshot.celltitle
             cell.snaptitleLabel.font = Font.Snapshot.cellsubtitle
@@ -290,7 +298,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         cell.textLabel!.textColor = Color.Snap.textColor
         cell.snaptitleLabel?.textColor = Color.Snap.textColor1
         cell.snapdetailLabel?.textColor = Color.Snap.textColor
- 
+        
         cell.textLabel?.text = ""
         cell.snaptitleLabel?.text = ""
         cell.snapdetailLabel?.text = ""
@@ -304,10 +312,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         if (indexPath.section == 0) {
             
             if (indexPath.row == 0) {
-                cell.collectionView.tag = 10
-                //cell.collectionView.delegate = nil
-                //cell.collectionView.dataSource = nil
-                cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
+                
+                //cell.collectionView.tag = 10
+                //cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
                 cell.textLabel!.text = String(format: "%@%d", "Top News ", _feedItems.count)
                 
                 return cell
@@ -322,8 +329,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
             } else if (indexPath.row == 2) {
                 
-                cell.collectionView.tag = 10
-                cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
+                cell.textLabel!.font = Font.Snapshot.celllabelPad
                 cell.textLabel!.text = "See the full gallery"
                 
                 return cell
@@ -405,9 +411,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 return cell
             } else if (indexPath.row == 2) {
-
-                //cell.collectionView.backgroundColor = .clear
-                cell.textLabel!.text = "myJobs"
+                
+                cell.textLabel!.font = Font.Snapshot.celllabelPad
+                cell.textLabel!.text = "See the full gallery"
                 
                 return cell
             }
@@ -430,11 +436,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 return cell
                 
-            } else if (indexPath.row == 2) {
-                
-                cell.textLabel!.text = "myUser"
-                
-                return cell
             }
             
         } else if (indexPath.section == 5) {
@@ -561,9 +562,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! CollectionViewCell
         
-        cell.user2ImageView?.image = nil
+        //cell.user2ImageView?.image = nil
+        //cell.activityIndicatorView2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 50, height: 50)
         
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 0, y: 110, width: cell.bounds.size.width, height: 20))
+        cell.user2ImageView!.backgroundColor = .black
+        cell.backgroundColor = Color.Snap.backColor //UIColor.white
+        
+        myLabel1 = UILabel(frame: CGRect(x: 0, y: 110, width: cell.bounds.size.width, height: 20))
+        if (collectionView.tag == 0) {
+            myLabel1 = UILabel(frame: CGRect(x: 0, y: 160, width: cell.bounds.size.width, height: 20))
+        }
         myLabel1.backgroundColor = Color.Snap.backColor //.white
         myLabel1.textColor = Color.Snap.textColor
         myLabel1.textAlignment = NSTextAlignment.center
@@ -572,10 +580,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
       //myLabel1.adjustsFontSizeToFitWidth = true
 
         cell.playButton2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 30, height: 30)
-      //cell.activityIndicatorView2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 50, height: 50)
         
         if (collectionView.tag == 0) {
-            
+
             imageObject = _feedItems.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             
@@ -584,7 +591,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView!.backgroundColor = .black
                 cell.user2ImageView?.image = UIImage(data: imageData!)
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -610,7 +616,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView!.backgroundColor = .black
                 cell.user2ImageView?.image = UIImage(data: imageData!)
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -629,8 +634,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.startAnimating()
             
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-                
-                cell.user2ImageView!.backgroundColor = .black
+
                 cell.user2ImageView?.image = UIImage(data: imageData!)
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -650,7 +654,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView!.backgroundColor = .black
                 cell.user2ImageView?.image = UIImage(data: imageData!)
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -670,7 +673,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView!.backgroundColor = .black
                 cell.user2ImageView?.image = UIImage(data: imageData!)
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -691,7 +693,11 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if (collectionView.tag == 0) {
-            return CGSize(width: 150, height: 130)
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                return CGSize(width: 240, height: 180) //w150 h130
+            } else {
+                return CGSize(width: 150, height: 130)
+            }
         } else if (collectionView.tag == 1) {
             return CGSize(width: 150, height: 130)
         } else if (collectionView.tag == 2) {

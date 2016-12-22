@@ -574,6 +574,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 self.performSegue(withIdentifier: "showjobSegue", sender: self)
             } else if (currentItem.textLabel!.text! == "Salesman") {
                 self.performSegue(withIdentifier: "showsalesmanSegue", sender: self)
+            } else if (currentItem.textLabel!.text! == "Geotify") {
+                self.performSegue(withIdentifier: "geotifySegue", sender: self)
             } else if (currentItem.textLabel!.text! == "Show Detail") {
                 self.performSegue(withIdentifier: "showDetail", sender: self)
             } else if (currentItem.textLabel!.text! == "Music") {
@@ -586,14 +588,13 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 self.performSegue(withIdentifier: "transmitbeaconSegue", sender: self)
             } else if (currentItem.textLabel!.text! == "Contacts") {
                 self.performSegue(withIdentifier: "contactSegue", sender: self)
-            } else if (currentItem.textLabel!.text! == "Geotify") {
-                self.performSegue(withIdentifier: "geotifySegue", sender: self)
             }
         }
     }
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         if segue.identifier == "snapshotSegue" {
             let controller = (segue.destination as! UINavigationController).topViewController as! SnapshotController
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem

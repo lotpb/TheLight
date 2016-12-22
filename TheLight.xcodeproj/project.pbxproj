@@ -37,6 +37,7 @@
 		AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */; };
 		AF4C1A281CEFF85300F8B038 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A271CEFF85300F8B038 /* Weather.swift */; };
 		AF56DFC31C28947400CD7EB9 /* SnapshotController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */; };
+		AF5BCEF11E0A2830007A9093 /* CreateContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5BCEF01E0A2830007A9093 /* CreateContactViewController.swift */; };
 		AF5C01DE1C493199009BB817 /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01DD1C493199009BB817 /* MusicController.swift */; };
 		AF5C01E01C4931EE009BB817 /* TrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01DF1C4931EE009BB817 /* TrackCell.swift */; };
 		AF5C01E21C493204009BB817 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01E11C493204009BB817 /* Track.swift */; };
@@ -158,6 +159,7 @@
 		AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherGetter.swift; sourceTree = "<group>"; };
 		AF4C1A271CEFF85300F8B038 /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotController.swift; sourceTree = "<group>"; };
+		AF5BCEF01E0A2830007A9093 /* CreateContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateContactViewController.swift; sourceTree = "<group>"; };
 		AF5C01DD1C493199009BB817 /* MusicController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
 		AF5C01DF1C4931EE009BB817 /* TrackCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackCell.swift; sourceTree = "<group>"; };
 		AF5C01E11C493204009BB817 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
@@ -348,6 +350,15 @@
 			name = Weather;
 			sourceTree = "<group>";
 		};
+		AF5BCEF21E0A2AB6007A9093 /* Contacts */ = {
+			isa = PBXGroup;
+			children = (
+				AFD754F11C4FCBF200021F97 /* ContactController.swift */,
+				AF5BCEF01E0A2830007A9093 /* CreateContactViewController.swift */,
+			);
+			name = Contacts;
+			sourceTree = "<group>";
+		};
 		AF5C01E51C493245009BB817 /* Music */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,6 +528,7 @@
 		AFD1A3101C1E367B00580F10 /* Acc Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				AF5BCEF21E0A2AB6007A9093 /* Contacts */,
 				AFA0396D1E08322300E140E4 /* Geotify */,
 				AF4C1A291CEFF85D00F8B038 /* Weather */,
 				AFF3C8F01C4EC45100D9B7BD /* Beacons */,
@@ -524,7 +536,6 @@
 				AF0754871C4344F400B03D38 /* Lookup */,
 				AFC400281C60249F0095333E /* YouTube */,
 				AFD1A2FF1C1CCFCF00580F10 /* SocialController.swift */,
-				AFD754F11C4FCBF200021F97 /* ContactController.swift */,
 				AFF7BCE41C3230EA0051DDCB /* CodeGenController.swift */,
 				AF9EE4C61C2771D70057B7DB /* NotificationController.swift */,
 				AF7383EA1C302DD00049407C /* NotificationDetailController.swift */,
@@ -839,6 +850,7 @@
 				AF1E6D561C1920FC0009230E /* CustomTableCell.swift in Sources */,
 				AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */,
 				AF74E4601D1BFF58004DE7D6 /* SettingCell.swift in Sources */,
+				AF5BCEF11E0A2830007A9093 /* CreateContactViewController.swift in Sources */,
 				AF5C01E01C4931EE009BB817 /* TrackCell.swift in Sources */,
 				AF8CC3A71C4153AF004147F3 /* NewEditData.swift in Sources */,
 				AF1931491D12DCCD00F826B2 /* YTPlayerView.m in Sources */,

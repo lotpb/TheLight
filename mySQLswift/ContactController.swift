@@ -188,10 +188,15 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     
     // fetch the contact of matching names
     private func fetchContacts(_ name: String) -> [CNContact] {
+        
         let store = CNContactStore()
         
         do {
             let request = CNContactFetchRequest(keysToFetch: [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
+            
+            
+            
+            
             if name.isEmpty { // all search
                 request.predicate = nil
             } else {
@@ -220,5 +225,21 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         DispatchQueue.main.async(execute: { [unowned self] () in
             self.present(alert, animated: true, completion: nil)
             })
+    }
+    
+    // MARK: - Segues
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+      
+            self.performSegue(withIdentifier: "CreateContact", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "CreateContact" {
+            if let dvc = segue.destination as? CreateContactViewController {
+                dvc.type = .cnContact
+            }
+        }
     }
 }

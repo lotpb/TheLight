@@ -13,19 +13,21 @@ import GoogleSignIn
 import FBSDKCoreKit
 import Firebase
 import SwiftKeychainWrapper
+import CoreLocation
 
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
-    var backgroundSessionCompletionHandler: (() -> Void)?
+    
     var window: UIWindow?
+    let locationManager = CLLocationManager()
     var defaults = UserDefaults.standard
+    var backgroundSessionCompletionHandler: (() -> Void)?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
         // MARK: - Register Settings
-        
         defaults.register(defaults: [
             "soundKey": false,
             "parsedataKey": true,
@@ -44,9 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "weatherKey": "2446726"
             ])
         
-        
         // MARK: - Parse
-        
         if (defaults.bool(forKey: "parsedataKey"))  {
             
         Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
@@ -54,41 +54,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
 
         // MARK: - prevent Autolock
-        
         if (defaults.bool(forKey: "autolockKey"))  {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
         // MARK: - RegisterUserNotification
-        
-        if #available(iOS 10.0, *) {
-            
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {(accepted, error) in
-                if !accepted {
-                    print("Request Authorization Failed (\(error), \(error?.localizedDescription))")
-                }
-            }
-            
-            let action = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: [])
-            let category = UNNotificationCategory(identifier: "myCategory", actions: [action], intentIdentifiers: [], options: [])
-            UNUserNotificationCenter.current().setNotificationCategories([category])
-            
+        // iOS 10 support
+        if #available(iOS 10, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
+            application.registerForRemoteNotifications()
         } else {
-            
-            let mySettings = UIUserNotificationSettings(types:[.badge, .sound, .alert], categories: nil)
-            UIApplication.shared.registerUserNotificationSettings(mySettings)
+            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
+            UIApplication.shared.registerForRemoteNotifications()
         }
-        
         application.applicationIconBadgeNumber = 0
         
-        
         // MARK: - Background Fetch
-        
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
 
-        
         // MARK: - Register login
-
         if (!(defaults.bool(forKey: "registerKey")) || defaults.bool(forKey: "loginKey")) {
             
             self.window = UIWindow(frame: UIScreen.main.bounds)
@@ -99,14 +83,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         
         // MARK: - Login
-        
         let userId:String = defaults.object(forKey: "usernameKey") as! String!
         let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
         let userSuccessful: Bool = KeychainWrapper.standard.set(userId, forKey: "usernameKey")
         let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
         
-        //Keychain
-        
+        // MARK: - Keychain
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
         if (userSuccessful == true) && (passSuccessful == true) {
             print("Keychain successful")
@@ -114,8 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             print("Keychain failed")
         }
         
-        //Parse
-        
+        // MARK: - Parse
         PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
             if error != nil {
                 print("Error: \(error) \(error!._userInfo)")
@@ -123,33 +104,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             }
         }
         
-        
         // MARK: - Customize Appearance
-        
         customizeAppearance()
 
-        
         // MARK: - Facebook Sign-in
-        
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
-        
        
         // MARK: - Firebase
-        
         FIRApp.configure()
         
         // MARK: - 3D Touch
-        
         let firstItemIcon:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .share)
         let firstItem = UIMutableApplicationShortcutItem(type: "1", localizedTitle: "Share", localizedSubtitle: "Share an item.", icon: firstItemIcon, userInfo: nil)
         
         let firstItemIcon1:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
         let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "Add", localizedSubtitle: "Add an item.", icon: firstItemIcon1, userInfo: nil)
         
-        
         application.shortcutItems = [firstItem,firstItem1]
-  
         
+        // MARK: - AddGeotification
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+  
         // MARK: - SplitViewController
         /*
          // Override point for customization after application launch.
@@ -157,7 +133,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
          let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
          navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
          splitViewController.delegate = self */
-        
         
         return true
     }
@@ -173,13 +148,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         return handled
     }
-    
-
-    /*
-    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        
-        return (FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation) || GIDSignIn.sharedInstance().handle(url as URL!, sourceApplication: sourceApplication, annotation: annotation))
-    } */
 
     
     // MARK: - 3D Touch
@@ -315,7 +283,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         backgroundSessionCompletionHandler = completionHandler
     }
     
-    // MARK: - Geotify
+    // MARK: - Geotify AddGeotification
     
     func handleEvent(forRegion region: CLRegion!) {
         // Show an alert if application is active
@@ -323,7 +291,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             guard let message = note(fromRegionIdentifier: region.identifier) else { return }
             window?.rootViewController?.showAlert(withTitle: nil, message: message)
         } else {
-            
             let content = UNMutableNotificationContent()
             content.title = note(fromRegionIdentifier: region.identifier)!
             content.body = note(fromRegionIdentifier: region.identifier)!
@@ -416,7 +383,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
     }
 }
-// add for Geotify
+// Geotify AddGeotification
 extension AppDelegate: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {

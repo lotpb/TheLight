@@ -101,18 +101,28 @@ class MenuCell: CollectionViewCell {
     let imageView1: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "home")?.withRenderingMode(.alwaysTemplate)
-        iv.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            iv.tintColor = .darkGray
+        } else {
+            iv.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
+        }
         return iv
     }()
     
     override var isHighlighted: Bool {
         didSet {
-            imageView1.tintColor = isHighlighted ? UIColor.white : UIColor.rgb(red: 91, green: 14, blue: 13)
+            
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                imageView1.tintColor = isHighlighted ? UIColor.white : .darkGray
+            } else {
+                imageView1.tintColor = isHighlighted ? UIColor.white : UIColor.rgb(red: 91, green: 14, blue: 13)
+            }
         }
     }
     
     override var isSelected: Bool {
         didSet {
+            
             imageView1.tintColor = isSelected ? UIColor.white : UIColor.rgb(red: 91, green: 14, blue: 13)
         }
     }

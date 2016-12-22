@@ -11,44 +11,37 @@ import UIKit
 class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     @IBOutlet weak var tblVideos: UITableView!
-    
     @IBOutlet weak var segDisplayedContent: UISegmentedControl!
-    
     @IBOutlet weak var viewWait: UIView!
-    
     @IBOutlet weak var txtSearch: UITextField!
-    
     
     var apiKey = "AIzaSyB11hJ5EOIBKeaeRPeRXK5eEA0pYMndcVw"
     
     var desiredChannelsArray = ["lotpb", "Apple", "Google", "Microsoft", "HOWARDTV", "VeaSoftware", "CodeWithChris", "SergeyKargopolov", "Lifehacker", "JimmyKimmelLive", "latenight"]
     
     var channelIndex = 0
-    
     var channelsDataArray: Array<Dictionary<String, AnyObject>> = []
-    
     var videosArray: Array<Dictionary<String, AnyObject>> = []
-    
     var selectedVideoIndex: Int!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-     // MARK: - SplitView Fix
-     self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
- 
-     let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-     if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-     titleButton.setTitle("TheLight - YouTube", for: UIControlState())
-     } else {
-     titleButton.setTitle("YouTube", for: UIControlState())
-     }
-     titleButton.titleLabel?.font = Font.navlabel
-     titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-     titleButton.setTitleColor(.white, for: UIControlState())
-     self.navigationItem.titleView = titleButton
-
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
+        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            titleButton.setTitle("TheLight - YouTube", for: UIControlState())
+        } else {
+            titleButton.setTitle("YouTube", for: UIControlState())
+        }
+        titleButton.titleLabel?.font = Font.navlabel
+        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
+        titleButton.setTitleColor(.white, for: UIControlState())
+        self.navigationItem.titleView = titleButton
+        
         tblVideos.delegate = self
         tblVideos.dataSource = self
         txtSearch.delegate = self
@@ -133,20 +126,14 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if segDisplayedContent.selectedSegmentIndex == 0 {
-            // In this case the channels are the displayed content.
-            // The videos of the selected channel should be fetched and displayed.
-            
-            // Switch the segmented control to "Videos".
+ 
             segDisplayedContent.selectedSegmentIndex = 1
-            
-            // Show the activity indicator.
+ 
             viewWait.isHidden = false
-            
-            // Remove all existing video details from the videosArray array.
+ 
             videosArray.removeAll(keepingCapacity: false)
-            
-            // Fetch the video details for the tapped channel.
-            getVideosForChannelAtIndex(indexPath.row)
+
+            getVideosForChannelAtIndex(index: indexPath.row)
         }
         else {
             selectedVideoIndex = indexPath.row
@@ -205,8 +192,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
                             
                             // Append the desiredPlaylistItemDataDict dictionary to the videos array.
                             self.videosArray.append(videoDetailsDict as [String : AnyObject])
-                            
-                            // Reload the tableview.
+   
                             self.tblVideos.reloadData()
                         }
                     }
@@ -222,13 +208,12 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             }
             else {
                 print("HTTP Status Code = \(HTTPStatusCode)")
-                print("Error while loading channel videos: \(error)")
+                print("Error crap while loading channel videos: \(error)")
             }
             
             // Hide the activity indicator.
             self.viewWait.isHidden = true
         })
-        
         
         return true
     }
@@ -242,16 +227,13 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         request.httpMethod = "GET"
         
         let sessionConfiguration = URLSessionConfiguration.default
-        
         let session = URLSession(configuration: sessionConfiguration)
-
         let task = session.dataTask(with: request) { data, response, error in DispatchQueue.main.async { completion(data, (response as! HTTPURLResponse).statusCode, error as? NSError) } }
         
         task.resume()
         
     }
 
-    
     
     func getChannelDetails(_ useChannelIDParam: Bool) {
         
@@ -269,33 +251,22 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             if HTTPStatusCode == 200 && error == nil {
                 
                 do {
-                    // Convert the JSON data to a dictionary.
                     let resultsDict = try JSONSerialization.jsonObject(with: data!, options: []) as! Dictionary<String, AnyObject>
-                    
-                    // Get the first dictionary item from the returned items (usually there's just one item).
+
                     let items: AnyObject! = resultsDict["items"] as AnyObject!
                     let firstItemDict = (items as! Array<AnyObject>)[0] as! Dictionary<String, AnyObject>
-                    
-                    // Get the snippet dictionary that contains the desired data.
+
                     let snippetDict = firstItemDict["snippet"] as! Dictionary<String, AnyObject>
-                    
-                    // Create a new dictionary to store only the values we care about.
+ 
                     var desiredValuesDict: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                     desiredValuesDict["title"] = snippetDict["title"]
                     desiredValuesDict["description"] = snippetDict["description"]
                     desiredValuesDict["thumbnail"] = ((snippetDict["thumbnails"] as! Dictionary<String, AnyObject>)["default"] as! Dictionary<String, AnyObject>)["url"]
 
-                    
-                    // Save the channel's uploaded videos playlist ID.
                     desiredValuesDict["playlistID"] = ((firstItemDict["contentDetails"] as! Dictionary<String, AnyObject>)["relatedPlaylists"] as! Dictionary<String, AnyObject>)["uploads"]
-                    
-                    
-                    // Append the desiredValuesDict dictionary to the following array.
+
                     self.channelsDataArray.append(desiredValuesDict as [String : AnyObject])
 
-                    
-                    
-                    // Reload the tableview.
                     self.tblVideos.reloadData()
                     
                     // Load the next channel data (if exist).
@@ -317,38 +288,29 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         })
     }
     
-    
-    func getVideosForChannelAtIndex(_ index: Int!) {
-        
+    func getVideosForChannelAtIndex(index: Int!) {
+        //added &maxResults=10 to get 10 videos in statement below
         let playlistID = channelsDataArray[index]["playlistID"] as! String
-        let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=\(playlistID)&key=\(apiKey)"
-        let targetURL = URL(string: urlString)
-        var url = URLRequest(url: targetURL!)
-        url.httpMethod = "GET"
-        let req = NSMutableURLRequest(url: targetURL!)
+        let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=20&playlistId=\(playlistID)&key=\(apiKey)"
         
-        URLSession.shared.dataTask(with: req as URLRequest) { (data, response, error) in
-            let httpStatus = response as? HTTPURLResponse
-            
-            if httpStatus!.statusCode == 200 && error != nil {
-                
-                
-                
+        let targetURL = NSURL(string: urlString)
+        
+        performGetRequest(targetURL as URL!, completion: { (data, HTTPStatusCode, error) -> Void in
+            if HTTPStatusCode == 200 && error == nil {
                 do {
                     let resultsDict = try JSONSerialization.jsonObject(with: data!, options: []) as! Dictionary<String, AnyObject>
-                    
+    
                     let items: Array<Dictionary<String, AnyObject>> = resultsDict["items"] as! Array<Dictionary<String, AnyObject>>
                     
                     for i in 0 ..< items.count {
                         let playlistSnippetDict = (items[i] as Dictionary<String, AnyObject>)["snippet"] as! Dictionary<String, AnyObject>
                         
                         var desiredPlaylistItemDataDict = Dictionary<String, AnyObject>()
-                        
                         desiredPlaylistItemDataDict["title"] = playlistSnippetDict["title"]
                         desiredPlaylistItemDataDict["thumbnail"] = ((playlistSnippetDict["thumbnails"] as! Dictionary<String, AnyObject>)["default"] as! Dictionary<String, AnyObject>)["url"]
                         desiredPlaylistItemDataDict["videoID"] = (playlistSnippetDict["resourceId"] as! Dictionary<String, AnyObject>)["videoId"]
                         
-                        self.videosArray.append(desiredPlaylistItemDataDict as [String : AnyObject])
+                        self.videosArray.append(desiredPlaylistItemDataDict )
                         
                         self.tblVideos.reloadData()
                     }
@@ -357,10 +319,11 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
                 }
             }
             else {
+                print("HTTP Status Code = \(HTTPStatusCode)")
                 print("Error while loading channel videos: \(error)")
             }
-            
             self.viewWait.isHidden = true
-            }.resume()
+        })
     }
+
 }

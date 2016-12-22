@@ -33,17 +33,25 @@ class GeotificationsViewController: UIViewController {
     var country: String?
     var ISOcountryCode: String?
     
+    //below has nothing
+    var detailItem: AnyObject? { //dont delete for splitview
+        didSet {
+            
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
+        // MARK: - AddGeotification
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
         loadAllGeotifications()
         
-        // setup Eatery
+        // Setup Eatery
         locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
         locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         mapView.delegate = self //added
@@ -51,7 +59,7 @@ class GeotificationsViewController: UIViewController {
         mapView.userTrackingMode = .follow //added
         setupEatery()
         
-        // setup GetAddress
+        // Setup GetAddress
         locationManager.startUpdatingLocation()
         
         // Float Button
@@ -67,7 +75,7 @@ class GeotificationsViewController: UIViewController {
         
     }
     
-    // MARK: - Add Address
+    // MARK: - AddGeotification
     
     func maptype() {
         
@@ -237,32 +245,6 @@ class GeotificationsViewController: UIViewController {
         self.performSegue(withIdentifier: "getaddressSegue", sender: self)
     }
     
-    
-    // MARK: Segues
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "addGeotification" {
-            let navigationController = segue.destination as! UINavigationController
-            let vc = navigationController.viewControllers.first as! AddGeotificationViewController
-            vc.delegate = self
-        }
-        
-        if segue.identifier == "getaddressSegue" {
-            
-            let VC = segue.destination as? GetAddress
-            VC!.thoroughfare = self.thoroughfare
-            VC!.subThoroughfare = self.subThoroughfare
-            VC!.locality = self.locality
-            VC!.sublocality = self.sublocality
-            VC!.postalCode = self.postalCode
-            VC!.administrativeArea = self.administrativeArea
-            VC!.subAdministrativeArea = self.subAdministrativeArea
-            VC!.country = self.country
-            VC!.ISOcountryCode = self.ISOcountryCode
-        }
-    }
-    
     //---------------------------------------------------------------------
     
     // MARK: - Setup Eatery
@@ -295,25 +277,6 @@ class GeotificationsViewController: UIViewController {
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        updateRegionsWithLocation(locations[0]) //added
-        CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: {(placemarks, error)->Void in
-            
-            if (error != nil) {
-                //self.locationLabel.text = "Reverse geocoder failed with error" + error!.localizedDescription
-                return
-            }
-            
-            if placemarks!.count > 0 {
-                let pm = placemarks![0]
-                self.displayLocationInfo(pm)
-            } else {
-                //self.locationLabel.text = "Problem with the data received from geocoder"
-            }
-        })
-    }
-    
     func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
         showAlert(withTitle:"Alert", message: "enter \(region.identifier)")
         monitoredRegions[region.identifier] = NSDate()
@@ -324,9 +287,6 @@ class GeotificationsViewController: UIViewController {
         monitoredRegions.removeValue(forKey: region.identifier)
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        updateRegionsWithLocation(locations[0])
-    }
     
     func updateRegionsWithLocation(location: CLLocation) {
         
@@ -344,10 +304,36 @@ class GeotificationsViewController: UIViewController {
             monitoredRegions.removeValue(forKey: regionIdentifier)
         }
     }
+    
+    // MARK: - Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "addGeotification" {
+            let navigationController = segue.destination as! UINavigationController
+            let vc = navigationController.viewControllers.first as! AddGeotificationViewController
+            vc.delegate = self
+        }
+        
+        if segue.identifier == "getaddressSegue" {
+            
+            let VC = segue.destination as? GetAddress
+            VC!.thoroughfare = self.thoroughfare
+            VC!.subThoroughfare = self.subThoroughfare
+            VC!.locality = self.locality
+            VC!.sublocality = self.sublocality
+            VC!.postalCode = self.postalCode
+            VC!.administrativeArea = self.administrativeArea
+            VC!.subAdministrativeArea = self.subAdministrativeArea
+            VC!.country = self.country
+            VC!.ISOcountryCode = self.ISOcountryCode
+        }
+    }
     //---------------------------------------------------------------------
 }
 
-// MARK: Add GeotificationViewControllerDelegate
+// MARK: - Extensions
+//AddGeotification
 extension GeotificationsViewController: AddGeotificationsViewControllerDelegate {
     
     func addGeotificationViewController(controller: AddGeotificationViewController, didAddCoordinate coordinate: CLLocationCoordinate2D, radius: Double, identifier: String, note: String, eventType: EventType) {
@@ -362,9 +348,10 @@ extension GeotificationsViewController: AddGeotificationsViewControllerDelegate 
     }
     
 }
-
+//AddGeotification and GetAddress
 extension GeotificationsViewController: CLLocationManagerDelegate {
     
+    //AddGeotification
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         mapView.showsUserLocation = status == .authorizedAlways
     }
@@ -376,8 +363,30 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location Manager failed with the following error: \(error)")
     }
+     //GetAddress
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        //Setup Eatery
+        updateRegionsWithLocation(locations[0])
+        
+        //GetAddress
+        CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: {(placemarks, error)->Void in
+            
+            if (error != nil) {
+                //self.locationLabel.text = "Reverse geocoder failed with error" + error!.localizedDescription
+                return
+            }
+            
+            if placemarks!.count > 0 {
+                let pm = placemarks![0]
+                self.displayLocationInfo(pm)
+            } else {
+                //self.locationLabel.text = "Problem with the data received from geocoder"
+            }
+        })
+    }
 }
-
+//AddGeotification
 extension GeotificationsViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -401,11 +410,16 @@ extension GeotificationsViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKCircle {
-            let circleRenderer = MKCircleRenderer(overlay: overlay)
-            circleRenderer.lineWidth = 1.0
-            circleRenderer.strokeColor = .red
-            circleRenderer.fillColor = UIColor.red.withAlphaComponent(0.4)
-            return circleRenderer
+            let renderer = MKCircleRenderer(overlay: overlay)
+            renderer.lineWidth = 1.0
+            renderer.strokeColor = .blue
+            renderer.fillColor = UIColor.blue.withAlphaComponent(0.4)
+            return renderer
+        } else if overlay is MKPolyline {
+            let renderer = MKPolylineRenderer(overlay: overlay)
+            renderer.strokeColor = UIColor.orange
+            renderer.lineWidth = 3
+            return renderer
         }
         return MKOverlayRenderer(overlay: overlay)
     }
