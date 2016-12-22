@@ -124,6 +124,11 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         }
         let image: UIImage = self.selectedImage!
         let activityViewController = UIActivityViewController (activityItems: [(image), socialText!], applicationActivities: nil)
+
+        activityViewController.popoverPresentationController?.sourceView = (sender)
+        activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
+        activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
+        
         UIApplication.shared.keyWindow?.rootViewController?.present(activityViewController, animated: true, completion: nil)
     }
     

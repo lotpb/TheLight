@@ -103,7 +103,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -127,7 +126,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.Snap.backColor //Color.LGrayColor
+        self.tableView!.backgroundColor = Color.Snap.tablebackColor //Color.Snap.backColor
         self.tableView!.tableFooterView = UIView(frame: .zero)
       //self.tableView!.separatorStyle = UITableViewCellSeparatorStyle.none
         self.tableView!.separatorColor = Color.Snap.lineColor //.clear

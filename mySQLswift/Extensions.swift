@@ -72,6 +72,7 @@ import UIKit
         }
         
         enum Snap {
+            static let tablebackColor = UIColor.black
             static let backColor = UIColor(white:0.25, alpha:1.0)
             static let textColor = UIColor.white
             static let textColor1 = UIColor.lightGray
