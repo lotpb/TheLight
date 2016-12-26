@@ -157,12 +157,12 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((_feedItems[indexPath.row] as AnyObject).value(forKey: "First") as? String)!,
                 ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Last") as? String)!,
-                ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Company") as? String)!)
+                ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Company") as? String)!).removeWhiteSpace()
             cell.employsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Title") as? String
             
         } else {
 
-            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((filteredString[indexPath.row] as AnyObject).value(forKey: "First") as? String)!, ((filteredString[indexPath.row] as AnyObject).value(forKey: "Last") as? String)!, ((filteredString[indexPath.row] as AnyObject).value(forKey: "Company") as? String)!)
+            cell.employtitleLabel!.text = String(format: "%@ %@ %@", ((filteredString[indexPath.row] as AnyObject).value(forKey: "First") as? String)!, ((filteredString[indexPath.row] as AnyObject).value(forKey: "Last") as? String)!, ((filteredString[indexPath.row] as AnyObject).value(forKey: "Company") as? String)!).removeWhiteSpace()
             cell.employsubtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Title") as? String
         }
         
@@ -461,7 +461,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             controller.active = formatter.string(from: Active! as NSNumber)
             
             controller.date = (_feedItems[indexPath] as AnyObject).value(forKey: "Email") as? String
-            controller.name = String(format: "%@ %@ %@", ((_feedItems[indexPath] as AnyObject).value(forKey: "First") as? String)!, ((_feedItems[indexPath] as AnyObject).value(forKey: "Last") as? String)!, ((_feedItems[indexPath] as AnyObject).value(forKey: "Company") as? String)!)
+            controller.name = String(format: "%@ %@ %@", ((_feedItems[indexPath] as AnyObject).value(forKey: "First") as? String)!, ((_feedItems[indexPath] as AnyObject).value(forKey: "Last") as? String)!, ((_feedItems[indexPath] as AnyObject).value(forKey: "Company") as? String)!).removeWhiteSpace()
             controller.address = (_feedItems[indexPath] as AnyObject).value(forKey: "Street") as? String
             controller.city = (_feedItems[indexPath] as AnyObject).value(forKey: "City") as? String
             controller.state = (_feedItems[indexPath] as AnyObject).value(forKey: "State") as? String

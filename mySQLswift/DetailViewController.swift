@@ -55,6 +55,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     
     @IBOutlet weak var latitudeLabel: UILabel!
     @IBOutlet weak var longitudeLabel: UILabel!
+    @IBOutlet weak var altitudeLabel: UILabel!
     
     //below has nothing
     var detailItem: AnyObject? { //dont delete for splitview
@@ -413,6 +414,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
                 location.coordinate.latitude)
             longitudeLabel!.text = String(format: "Lon: %.4f",
                 location.coordinate.longitude)
+            altitudeLabel!.text = String(format: "Alt: %.2f", location.altitude)
             
         }
     }

@@ -121,7 +121,7 @@ import UIKit
             static let newstitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightRegular)
             static let newssourcePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
             static let newslabel1Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let newslabel2Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+            static let newslabel2Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
             
             static let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
             static let newssource = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
@@ -273,7 +273,7 @@ func requestSuggestionsURL(text: String) -> URL {
 
 //------------------------------------
 
-//not used - valid email
+//valid email
 extension String {
     var isValidEmailAddress: Bool {
         let types: NSTextCheckingResult.CheckingType = [.link]
@@ -283,15 +283,6 @@ extension String {
         let scheme = result?.url?.scheme ?? ""
         return scheme == "mailto" && result?.range.length == self.characters.count
     }
-    
-    // for a login screen...
-//    let text = emailTextField.text ?? ""
-//    let valid = text.isValidEmailAddress
-//    
-//    // to see differences...
-//    let goodEmail = “foo@bar.com”.isValidEmailAddress // true
-//    let badEmail = "foo bar@baz.com".isValidEmailAddress // false
-
 }
 
 //----------------------------

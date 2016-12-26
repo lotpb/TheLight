@@ -190,10 +190,10 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         
         if (tableView == self.tableView) {
             
-            cell.leadtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
-            cell.leadsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String
-            myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String
-            myLabel2.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String
+            cell.leadtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String ?? ""
+            cell.leadsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""
+            myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String ?? ""
+            myLabel2.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String ?? ""
         
         } else {
 

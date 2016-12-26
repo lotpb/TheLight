@@ -19,7 +19,6 @@ import CoreLocation
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
-    
     var window: UIWindow?
     let locationManager = CLLocationManager()
     var defaults = UserDefaults.standard
@@ -57,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if (defaults.bool(forKey: "autolockKey"))  {
             UIApplication.shared.isIdleTimerDisabled = true
         }
-        
+
         // MARK: - RegisterUserNotification
         // iOS 10 support
         if #available(iOS 10, *) {
@@ -292,11 +291,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             window?.rootViewController?.showAlert(withTitle: nil, message: message)
         } else {
             let content = UNMutableNotificationContent()
-            content.title = note(fromRegionIdentifier: region.identifier)!
             content.body = note(fromRegionIdentifier: region.identifier)!
             content.badge = 1
             content.sound = UNNotificationSound.default()
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
             let request = UNNotificationRequest(identifier: "Geotify-id-123", content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
         }

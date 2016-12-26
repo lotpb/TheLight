@@ -320,7 +320,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel1.textColor = .black
                 myLabel1.textAlignment = NSTextAlignment.center
                 myLabel1.layer.masksToBounds = true
-                myLabel1.text = String(format: "%@%d", "COUNT\n", menuItems.count)
+                myLabel1.text = String(format: "%@%d", "COUNT\n", menuItems.count )
                 myLabel1.font = Font.headtitle
                 myLabel1.layer.cornerRadius = 40.0
                 myLabel1.isUserInteractionEnabled = true
@@ -482,8 +482,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         if queryResults != nil {
             
             let weatherInfo = queryResults!["condition"] as? NSDictionary
-            tempYQL = weatherInfo?.object(forKey: "temp") as? String
-            textYQL = weatherInfo?.object(forKey: "text") as? String
+            tempYQL = weatherInfo?.object(forKey: "temp") as? String ?? ""
+            textYQL = weatherInfo?.object(forKey: "text") as? String ?? ""
         }
         //stocks
         let stockresults = YQL.query(statement: "select * from yahoo.finance.quote where symbol in (\"^IXIC\",\"SPY\")")

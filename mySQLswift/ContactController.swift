@@ -8,31 +8,43 @@
 
 import UIKit
 import Contacts
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l > r
+    default:
+        return rhs < lhs
+    }
+}
+
 
 class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
+    // data
+    var contactStore = CNContactStore()
+    private var contacts = [ContactEntry]()
+    //private var contacts = [CNContact]()
+    
     @IBOutlet weak private var tableView: UITableView!
+    @IBOutlet weak var noContactsLabel: UILabel!
     @IBOutlet weak private var searchBar: UISearchBar!
-    private var contacts = [CNContact]()
-    private var authStatus: CNAuthorizationStatus = .denied {
-        didSet { // switch enabled search bar, depending contacts permission
-            searchBar.isUserInteractionEnabled = authStatus == .authorized
-            
-            if authStatus == .authorized { // all search
-                contacts = fetchContacts("")
-                tableView.reloadData()
-            }
-        }
-    }
-    
-    private let kCellID = "Cell"
-    
-    
-    // =========================================================================
-    // MARK: - View lifecycle
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.register(UINib(nibName: "ContactTableViewCell", bundle: nil), forCellReuseIdentifier: "ContactTableViewCell")
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
@@ -48,21 +60,103 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        checkAuthorization()
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.backgroundColor = Color.LGrayColor
+        self.tableView!.estimatedRowHeight = 65
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: kCellID)
+        //checkAuthorization()
+        
+        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: kCellID)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.isHidden = true
+        noContactsLabel.isHidden = false
+        noContactsLabel.text = "Retrieving contacts..."
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        requestAccessToContacts { (success) in
+            if success {
+                self.retrieveContacts({ (success, contacts) in
+                    self.tableView.isHidden = !success
+                    self.noContactsLabel.isHidden = success
+                    if success && contacts?.count > 0 {
+                        self.contacts = contacts!
+                        self.tableView.reloadData()
+                    } else {
+                        self.noContactsLabel.text = "Unable to get contacts..."
+                    }
+                })
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    func requestAccessToContacts(_ completion: @escaping (_ success: Bool) -> Void) {
+        let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+        
+        switch authorizationStatus {
+        case .authorized: completion(true) // authorized previously
+        case .denied, .notDetermined: // needs to ask for authorization
+            self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (accessGranted, error) -> Void in
+                completion(accessGranted)
+            })
+        default: // not authorized.
+            completion(false)
+        }
+    }
+    
+    func retrieveContacts(_ completion: (_ success: Bool, _ contacts: [ContactEntry]?) -> Void) {
+        var contacts = [ContactEntry]()
+        do {
+            let contactsFetchRequest = CNContactFetchRequest(keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor, CNContactOrganizationNameKey as CNKeyDescriptor, CNContactImageDataKey as CNKeyDescriptor, CNContactImageDataAvailableKey as CNKeyDescriptor, CNContactPhoneNumbersKey as CNKeyDescriptor, CNContactEmailAddressesKey as CNKeyDescriptor])
+            try contactStore.enumerateContacts(with: contactsFetchRequest, usingBlock: { (cnContact, error) in
+                if let contact = ContactEntry(cnContact: cnContact) { contacts.append(contact) }
+            })
+            completion(true, contacts)
+        } catch {
+            completion(false, nil)
+        }
+    }
+    /*
+    private func fetchContacts(_ name: String) -> [CNContact] {
+        
+        let contactStore = CNContactStore()
+        
+        do {
+            let request = CNContactFetchRequest(keysToFetch: [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
+            
+            if name.isEmpty { // all search
+                request.predicate = nil
+            } else {
+                request.predicate = CNContact.predicateForContacts(matchingName: name)
+            }
+            
+            var contacts = [CNContact]()
+            try contactStore.enumerateContacts(with: request, usingBlock: { (contact, error) in
+                contacts.append(contact)
+            })
+            
+            return contacts
+        } catch let error as NSError {
+            NSLog("Fetch error \(error.localizedDescription)")
+            return []
+        }
+    } */
     
     // =========================================================================
     // MARK: - UISearchBarDelegate
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        contacts = fetchContacts(searchText)
+        //contacts = fetchContacts(searchText)
         tableView.reloadData()
     }
     
@@ -78,22 +172,38 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: kCellID, for: indexPath)
-        let contact = contacts[indexPath.row]
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel?.font = Font.celltitlePad
-        } else {
-            cell.textLabel?.font = Font.celltitle
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ContactTableViewCell", for: indexPath) as! ContactTableViewCell
         
-        // get the full name
-        let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"
-        cell.textLabel?.text = fullName
+        let entry = contacts[(indexPath as NSIndexPath).row]
+        cell.configureWithContactEntry(entry)
+        cell.layoutIfNeeded()
+
+         /*
+         // get the full name
+         let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"
+         cell.textLabel?.text = fullName */
         
         return cell
     }
     
+    // MARK: - Segues
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "CreateContact", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "CreateContact" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! CreateContactViewController
+            controller.type = .cnContact
+            /*
+            if let controller = segue.destination as? CreateContactViewController {
+                controller.type = .cnContact
+            } */
+        }
+    }
     
     // =========================================================================
     //MARK: - UITableViewDelegate
@@ -133,59 +243,17 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         }
         
         return [UITableViewRowAction(style: UITableViewRowActionStyle(), title: "Delete", handler: deleteActionHandler)]
-    } */
+    }
     
     
-    // =========================================================================
     // MARK: - IBAction
     
     @IBAction func tapped(_ sender: AnyObject) {
         view.endEditing(true)
-    }
-    
-    // MARK: - Button
+    } */
     
     
-    // =========================================================================
-    // MARK: - Helpers
-    
-    private func checkAuthorization() {
-        // get current status
-        let status = CNContactStore.authorizationStatus(for: .contacts)
-        authStatus = status
-        
-        switch status {
-        case .notDetermined: // case of first access
-            CNContactStore().requestAccess(for: .contacts) { [unowned self] (granted, error) in
-                if granted {
-                    NSLog("Permission allowed")
-                    self.authStatus = .authorized
-                } else {
-                    NSLog("Permission denied")
-                    self.authStatus = .denied
-                }
-            }
-        case .restricted, .denied:
-            NSLog("Unauthorized")
-            
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-            let settingsAction = UIAlertAction(title: "Settings", style: .default, handler: { (action: UIAlertAction) in
-                let url = URL(string: UIApplicationOpenSettingsURLString)
-                
-                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-                //UIApplication.shared.openURL(url!)
-                
-            })
-            showAlert(
-                title: "Permission Denied",
-                message: "You have not permission to access contacts. Please allow the access the Settings screen.",
-                actions: [okAction, settingsAction])
-        case .authorized:
-            NSLog("Authorized")
-        }
-    }
-    
-    
+    /*
     // fetch the contact of matching names
     private func fetchContacts(_ name: String) -> [CNContact] {
         
@@ -193,10 +261,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         
         do {
             let request = CNContactFetchRequest(keysToFetch: [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
-            
-            
-            
-            
+
             if name.isEmpty { // all search
                 request.predicate = nil
             } else {
@@ -213,33 +278,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
             NSLog("Fetch error \(error.localizedDescription)")
             return []
         }
-    }
+    } */
     
-    private func showAlert(title: String, message: String, actions: [UIAlertAction]) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        for action in actions {
-            alert.addAction(action)
-        }
-        
-        DispatchQueue.main.async(execute: { [unowned self] () in
-            self.present(alert, animated: true, completion: nil)
-            })
-    }
-    
-    // MARK: - Segues
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-      
-            self.performSegue(withIdentifier: "CreateContact", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "CreateContact" {
-            if let dvc = segue.destination as? CreateContactViewController {
-                dvc.type = .cnContact
-            }
-        }
-    }
-}
+
+} 

@@ -20,9 +20,10 @@ class GeotificationsViewController: UIViewController {
     @IBOutlet weak var getAddressButton: UIBarButtonItem!
     
     var geotifications: [Geotification] = []
-    var locationManager = CLLocationManager()
-    var monitoredRegions: Dictionary<String, NSDate> = [:] //Added
+    var locationManager = CLLocationManager() //Setup Eatery
+    var monitoredRegions: Dictionary<String, NSDate> = [:] //Setup Eatery
     
+    //Get Address
     var thoroughfare: String?
     var subThoroughfare: String?
     var locality: String?
@@ -96,7 +97,6 @@ class GeotificationsViewController: UIViewController {
             guard let geotification = NSKeyedUnarchiver.unarchiveObject(with: savedItem as! Data) as? Geotification else { continue }
             add(geotification: geotification)
         }
-        
     }
     
     func saveAllGeotifications() {
@@ -208,35 +208,7 @@ class GeotificationsViewController: UIViewController {
             
         }
     }
-    
-    
-    func stopMonitoringGeotification(_ geotification: Geotification) {
-        for region in locationManager.monitoredRegions {
-            if let circularRegion = region as? CLCircularRegion {
-                if circularRegion.identifier == geotification.identifier {
-                    locationManager.stopMonitoring(for: circularRegion)
-                }
-            }
-        }
-    }
-    
-    func updateRegionsWithLocation(_ location: CLLocation) {
-        
-        let regionMaxVisiting = 10.0
-        var regionsToDelete: [String] = []
-        
-        for regionIdentifier in monitoredRegions.keys {
-            if Date().timeIntervalSince(monitoredRegions[regionIdentifier]! as Date) > regionMaxVisiting {
-                
-                self.simpleAlert(title: "Info", message: "Thanks for visiting our restaurant")
-                regionsToDelete.append(regionIdentifier)
-            }
-        }
-        
-        for regionIdentifier in regionsToDelete {
-            monitoredRegions.removeValue(forKey: regionIdentifier)
-        }
-    }
+
     
     // MARK:  GetAddressButton
     
@@ -277,25 +249,16 @@ class GeotificationsViewController: UIViewController {
         }
     }
     
-    func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        showAlert(withTitle:"Alert", message: "enter \(region.identifier)")
-        monitoredRegions[region.identifier] = NSDate()
-    }
     
-    func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
-        showAlert(withTitle:"Alert", message: "exit \(region.identifier)")
-        monitoredRegions.removeValue(forKey: region.identifier)
-    }
-    
-    
-    func updateRegionsWithLocation(location: CLLocation) {
+    func updateRegionsWithLocation(_ location: CLLocation) {
         
         let regionMaxVisiting = 10.0
         var regionsToDelete: [String] = []
         
         for regionIdentifier in monitoredRegions.keys {
             if Date().timeIntervalSince(monitoredRegions[regionIdentifier]! as Date) > regionMaxVisiting {
-                showAlert(withTitle:"Alert", message: "Thanks for visiting our restaurant")
+                self.simpleAlert(title: "Balsamo's Eatery", message: "Thanks for visiting our restaurant")
+                showAlert(withTitle: "Balsamo's Eatery", message: "Thanks for visiting our restaurant")
                 regionsToDelete.append(regionIdentifier)
             }
         }
@@ -303,6 +266,15 @@ class GeotificationsViewController: UIViewController {
         for regionIdentifier in regionsToDelete {
             monitoredRegions.removeValue(forKey: regionIdentifier)
         }
+    }
+    
+    func showAlert(_ title: String) {
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+        
     }
     
     // MARK: - Segues
@@ -348,6 +320,7 @@ extension GeotificationsViewController: AddGeotificationsViewControllerDelegate 
     }
     
 }
+
 //AddGeotification and GetAddress
 extension GeotificationsViewController: CLLocationManagerDelegate {
     
@@ -385,7 +358,19 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
             }
         })
     }
+    
+    //Setup Eatery
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        showAlert(withTitle:"Alert", message: "enter \(region.identifier)")
+        monitoredRegions[region.identifier] = NSDate()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        showAlert(withTitle:"Alert", message: "exit \(region.identifier)")
+        monitoredRegions.removeValue(forKey: region.identifier)
+    }
 }
+
 //AddGeotification
 extension GeotificationsViewController: MKMapViewDelegate {
     

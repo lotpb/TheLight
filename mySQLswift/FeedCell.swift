@@ -145,18 +145,20 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.titleLabelnew.font = Font.News.newstitlePad
-            cell.subtitlelabel.font = Font.News.newssourcePad
+            cell.subtitleLabel.font = Font.News.newssourcePad
             cell.numberLabel.font = Font.News.newslabel1Pad
             cell.uploadbylabel.font = Font.News.newslabel2Pad
+            cell.storyLabel.font = Font.News.newslabel2Pad
             
         } else {
             cell.titleLabelnew.font = Font.News.newstitle
-            cell.subtitlelabel.font = Font.News.newssource
+            cell.subtitleLabel.font = Font.News.newssource
             cell.numberLabel.font = Font.News.newslabel1
             cell.uploadbylabel.font = Font.News.newslabel2
+            //cell.storyLabel.font = Font.News.newslabel1
         }
         
-        cell.subtitlelabel.textColor = Color.DGrayColor
+        cell.subtitleLabel.textColor = Color.DGrayColor
         cell.uploadbylabel.textColor = Color.DGrayColor
         
         imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
@@ -194,7 +196,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         let date2 = Date()
         let calendar = Calendar.current
         let diffDateComponents = calendar.dateComponents([.day], from: date1, to: date2)
-        cell.subtitlelabel.text = String(format: "%@, %d%@" , ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, diffDateComponents.day!," days ago" )
+        cell.subtitleLabel.text = String(format: "%@, %d%@" , ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, diffDateComponents.day!," days ago" )
         
         let updated:Date = date1
         let dateFormatter = DateFormatter()
@@ -226,6 +228,11 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             cell.numberLabel.textColor = Color.News.buttonColor
         } else {
             cell.numberLabel.text! = ""
+        }
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            cell.storyLabel.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "storyText") as? String
+        } else {
+            cell.storyLabel.text = ""
         }
         
         return cell

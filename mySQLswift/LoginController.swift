@@ -501,8 +501,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.emailField!.isHidden = false
         
         let email = self.emailField!.text
-        let finalEmail = email!.trimmingCharacters(in: CharacterSet.whitespaces)
-        
+        let finalEmail = email!.removeWhiteSpace()        
         PFUser.requestPasswordResetForEmail(inBackground: finalEmail) { (success, error) -> Void in
             if success {
                 self.simpleAlert(title: "Alert", message: "Link to reset the password has been send to specified email")

@@ -23,6 +23,7 @@ class MusicController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var noContactsLabel: UILabel!
     
     lazy var tapRecognizer: UITapGestureRecognizer = {
         var recognizer = UITapGestureRecognizer(target:self, action: #selector(MusicController.dismissKeyboard))
@@ -58,6 +59,14 @@ class MusicController: UIViewController {
         _ = self.downloadsSession
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.isHidden = true
+        noContactsLabel.isHidden = false
+        noContactsLabel.text = "Search to Retrieving Music..."
+    }
+
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -72,6 +81,7 @@ class MusicController: UIViewController {
                 
                 // Get the results array
                 if let array: AnyObject = response["results"] {
+                    
                     for trackDictonary in array as! [AnyObject] {
                         if let trackDictonary = trackDictonary as? [String: AnyObject], let previewUrl = trackDictonary["previewUrl"] as? String {
                             // Parse the search result
@@ -93,6 +103,8 @@ class MusicController: UIViewController {
         }
         
         DispatchQueue.main.async {
+            self.tableView.isHidden = false //added
+            self.noContactsLabel.isHidden = true //added
             self.tableView.reloadData()
             self.tableView.setContentOffset(CGPoint.zero, animated: false)
         }
@@ -332,6 +344,7 @@ extension MusicController: UISearchBarDelegate {
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         self.updateSearchResults(data)
+
                     }
                 }
             }

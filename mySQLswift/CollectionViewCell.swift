@@ -26,11 +26,6 @@ class CollectionViewCell: UICollectionViewCell {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
     }
-
-    /*
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    } */
     
     lazy var playButton2: UIButton = {
         let button = UIButton(type: .system)
@@ -137,12 +132,6 @@ class VideoCell: CollectionViewCell {
         return imageView
     }()
     
-    let separatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        return view
-    }()
-    
     let titleLabelnew: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -151,11 +140,34 @@ class VideoCell: CollectionViewCell {
         return label
     }()
     
-    let subtitlelabel: UILabel = {
+    let subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = ""
         label.textColor = .lightGray
+        return label
+    }()
+    
+    let storyLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Comment by:"
+        label.numberOfLines = 3
+        return label
+    }()
+    
+    let numberLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "10"
+        label.textColor = .blue
+        return label
+    }()
+    
+    let uploadbylabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Uploaded by:"
         return label
     }()
     
@@ -178,19 +190,10 @@ class VideoCell: CollectionViewCell {
         return button
     }()
     
-    let numberLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "10"
-        label.textColor = .blue
-        return label
-    }()
-    
-    let uploadbylabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Uploaded by:"
-        return label
+    let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        return view
     }()
     
     let activityIndicatorView: UIActivityIndicatorView = {
@@ -246,11 +249,12 @@ class VideoCell: CollectionViewCell {
         addSubview(separatorView)
         addSubview(userProfileImageView)
         addSubview(titleLabelnew)
-        addSubview(subtitlelabel)
+        addSubview(subtitleLabel)
         addSubview(actionButton)
         addSubview(likeBtn)
         addSubview(numberLabel)
         addSubview(uploadbylabel)
+        addSubview(storyLabel)
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             //width constraints
@@ -259,7 +263,8 @@ class VideoCell: CollectionViewCell {
             addConstraintsWithFormat(format: "H:|-435-[v0(25)]", views: actionButton)
             
             addConstraintsWithFormat(format: "H:|-490-[v0]-16-|", views: titleLabelnew)
-            addConstraintsWithFormat(format: "H:|-490-[v0]-16-|", views: subtitlelabel)
+            addConstraintsWithFormat(format: "H:|-490-[v0]-16-|", views: subtitleLabel)
+            addConstraintsWithFormat(format: "H:|-490-[v0]-16-|", views: storyLabel)
             
             //vertical constraints
             addConstraintsWithFormat(format: "V:|-16-[v0(240)]|", views: thumbnailImageView)
@@ -271,22 +276,25 @@ class VideoCell: CollectionViewCell {
             addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .top, relatedBy: .equal, toItem: userProfileImageView, attribute: .top, multiplier: 1, constant: 0))
 
             //top constraint
-            addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .top, relatedBy: .equal, toItem: subtitlelabel, attribute: .bottom, multiplier: 1, constant: 5))
+            addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .top, relatedBy: .equal, toItem: subtitleLabel, attribute: .bottom, multiplier: 1, constant: 5))
             //left constraint
             addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .left, relatedBy: .equal, toItem: actionButton, attribute: .right, multiplier: 1, constant: 30))
  
             //top constraint
-            addConstraint(NSLayoutConstraint(item: numberLabel, attribute: .top, relatedBy: .equal, toItem: subtitlelabel, attribute: .bottom, multiplier: 1, constant: 5))
+            addConstraint(NSLayoutConstraint(item: numberLabel, attribute: .top, relatedBy: .equal, toItem: subtitleLabel, attribute: .bottom, multiplier: 1, constant: 5))
 
             //top constraint
-            addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .top, relatedBy: .equal, toItem: subtitlelabel, attribute: .bottom, multiplier: 1, constant: 5))
+            addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .top, relatedBy: .equal, toItem: subtitleLabel, attribute: .bottom, multiplier: 1, constant: 5))
+            
+            //top constraint
+            addConstraint(NSLayoutConstraint(item: storyLabel, attribute: .top, relatedBy: .equal, toItem: likeBtn, attribute: .bottom, multiplier: 1, constant: 5))
+
+            addConstraint(NSLayoutConstraint(item: storyLabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 65))
 
         } else {
             
             addConstraintsWithFormat(format: "H:|-16-[v0]-16-|", views: thumbnailImageView)
-            
             addConstraintsWithFormat(format: "H:|-16-[v0(44)]", views: userProfileImageView)
-            
             addConstraintsWithFormat(format: "H:|-26-[v0(25)]", views: actionButton)
             
             //vertical constraints
@@ -296,15 +304,15 @@ class VideoCell: CollectionViewCell {
             addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .top, relatedBy: .equal, toItem: thumbnailImageView, attribute: .bottom, multiplier: 1, constant: 6))
 
             //top constraint
-            addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .top, relatedBy: .equal, toItem: subtitlelabel, attribute: .bottom, multiplier: 1, constant: 1))
+            addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .top, relatedBy: .equal, toItem: subtitleLabel, attribute: .bottom, multiplier: 1, constant: 1))
             //left constraint
             addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .left, relatedBy: .equal, toItem: actionButton, attribute: .right, multiplier: 1, constant: 14))
             
             //top constraint
-            addConstraint(NSLayoutConstraint(item: numberLabel, attribute: .top, relatedBy: .equal, toItem: subtitlelabel, attribute: .bottom, multiplier: 1, constant: 1))
+            addConstraint(NSLayoutConstraint(item: numberLabel, attribute: .top, relatedBy: .equal, toItem: subtitleLabel, attribute: .bottom, multiplier: 1, constant: 1))
             
             //top constraint
-            addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .top, relatedBy: .equal, toItem: subtitlelabel, attribute: .bottom, multiplier: 1, constant: 1))
+            addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .top, relatedBy: .equal, toItem: subtitleLabel, attribute: .bottom, multiplier: 1, constant: 1))
         }
         
         addConstraintsWithFormat(format: "H:|[v0]|", views: separatorView)
@@ -333,13 +341,13 @@ class VideoCell: CollectionViewCell {
         addConstraint(titleLabelHeightConstraint!)
         
         //top constraint
-        addConstraint(NSLayoutConstraint(item: subtitlelabel, attribute: .top, relatedBy: .equal, toItem: titleLabelnew, attribute: .bottom, multiplier: 1, constant: 1))
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: .top, relatedBy: .equal, toItem: titleLabelnew, attribute: .bottom, multiplier: 1, constant: 1))
         //left constraint
-        addConstraint(NSLayoutConstraint(item: subtitlelabel, attribute: .left, relatedBy: .equal, toItem: userProfileImageView, attribute: .right, multiplier: 1, constant: 8))
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: .left, relatedBy: .equal, toItem: userProfileImageView, attribute: .right, multiplier: 1, constant: 8))
         //right constraint
-        addConstraint(NSLayoutConstraint(item: subtitlelabel, attribute: .right, relatedBy: .equal, toItem: thumbnailImageView, attribute: .right, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: .right, relatedBy: .equal, toItem: thumbnailImageView, attribute: .right, multiplier: 1, constant: 0))
         //height constraint
-        addConstraint(NSLayoutConstraint(item: subtitlelabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 21))
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 21))
         
         //right constraint
         //addConstraint(NSLayoutConstraint(item: likeBtn, attribute: .Right, relatedBy: .Equal, toItem: thumbnailImageView, attribute: .Right, multiplier: 1, constant: 0))

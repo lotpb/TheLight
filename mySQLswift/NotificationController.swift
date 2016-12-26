@@ -234,10 +234,10 @@ class NotificationController: UIViewController {
     }
     
     func HeyYouNotification() {
-        
+        //setup for 2:30PM
         if #available(iOS 10.0, *) {
             let content = UNMutableNotificationContent()
-            content.title = "work-out and be awesome!"
+            content.title = "Work-Out and be awesome!"
             content.body = "Hey you! Yeah you! Time to Workout!"
             content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
@@ -252,7 +252,6 @@ class NotificationController: UIViewController {
             dateComponents.hour = 14
             dateComponents.minute = 30
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-            
           //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "heyYou-id-123", content: content, trigger: trigger)
             

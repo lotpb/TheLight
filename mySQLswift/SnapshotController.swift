@@ -277,11 +277,11 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
          let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
          cell.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout) */
         
-        cell.backgroundColor = Color.Snap.backColor
-        cell.accessoryType = UITableViewCellAccessoryType.none
         cell.collectionView.delegate = nil
         cell.collectionView.dataSource = nil
         cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
+        cell.backgroundColor = Color.Snap.backColor
+        cell.accessoryType = UITableViewCellAccessoryType.none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.textLabel!.font = Font.Snapshot.celltitlePad

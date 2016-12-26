@@ -52,28 +52,30 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         navigationItem.rightBarButtonItems = [editItem]
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
+        
+        self.newsImageview.isUserInteractionEnabled = true
+        
 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
+            self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
+            self.newsImageview.clipsToBounds = true
             
             self.titleLabel.font = ipadtitle
             self.detailLabel.font = ipadsubtitle
             self.newsTextview.isEditable = true //bug fix
             self.newsTextview.font = ipadtextview
-            //self.newsTextview.isEditable = false //bug fix
         } else {
+            self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
+    
             self.titleLabel.font = Font.News.newstitle
             self.detailLabel.font = Font.celllabel1
             self.newsTextview.isEditable = true//bug fix
             self.newsTextview.font = Font.News.newssource
-            //self.newsTextview.isEditable = false //bug fix
         }
-        
-        self.newsImageview.isUserInteractionEnabled = true
-        self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
         UIView.transition(with: self.newsImageview, duration: 0.5, options: .transitionCrossDissolve, animations: {
             self.newsImageview.image = self.image
-            }, completion: nil)
-        
+        }, completion: nil)
         self.titleLabel.text = self.newsTitle
         self.titleLabel.numberOfLines = 2
         

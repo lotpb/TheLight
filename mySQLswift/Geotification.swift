@@ -62,7 +62,6 @@ class Geotification: NSObject, NSCoding, MKAnnotation {
         note = decoder.decodeObject(forKey: GeoKey.note) as! String
         eventType = EventType(rawValue: decoder.decodeObject(forKey: GeoKey.eventType) as! String)!
     }
-
     
     func encode(with coder: NSCoder) {
         coder.encode(coordinate.latitude, forKey: GeoKey.latitude)
@@ -70,7 +69,7 @@ class Geotification: NSObject, NSCoding, MKAnnotation {
         coder.encode(radius, forKey: GeoKey.radius)
         coder.encode(identifier, forKey: GeoKey.identifier)
         coder.encode(note, forKey: GeoKey.note)
-        coder.encode(eventType.rawValue, forKey: GeoKey.eventType)
+        coder.encode(eventType, forKey: GeoKey.eventType)
     }
     
 }

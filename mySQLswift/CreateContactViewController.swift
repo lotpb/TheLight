@@ -67,7 +67,6 @@ class CreateContactViewController: UIViewController, UIImagePickerControllerDele
             let contactPhone = CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: phone!))
             newContact.phoneNumbers = [contactPhone]
         }
-        
         // image
         if image != nil {
             newContact.imageData = UIImageJPEGRepresentation(image!, 0.9)
@@ -79,7 +78,7 @@ class CreateContactViewController: UIViewController, UIImagePickerControllerDele
             try CNContactStore().execute(newContactRequest)
             self.presentingViewController?.dismiss(animated: true, completion: nil)
         } catch {
-            //self.showAlertMessage("I was unable to create the new contact. An error occurred.")
+            self.simpleAlert(title: "Oops!", message: "I was unable to create the new contact. An error occurred.")
         }
     }
     
@@ -91,18 +90,10 @@ class CreateContactViewController: UIViewController, UIImagePickerControllerDele
             let email = emailAddressTextfield.text
             let phone = phoneNumberTextfield.text
             
-            if type == .addressBookContact {
-                //createAddressBookContactWithFirstName(firstName, lastName: lastName, email: email, phone: phone, image: contactImage)
-            } else if type == .cnContact {
-                if #available(iOS 9, *) {
-                    createCNContactWithFirstName(firstName, lastName: lastName, email: email, phone: phone, image: contactImage)
-                } else {
-                    //self.showAlertMessage("Sorry, you can only use the Contacts framework from iOS 9.")
-                }
+            createCNContactWithFirstName(firstName, lastName: lastName, email: email, phone: phone, image: contactImage)
 
-            }
         } else {
-            //self.showAlertMessage("Please, insert at least a first and last name for the contact.")
+            self.simpleAlert(title: "Oops!", message: "Please, insert at least a first and last name for the contact.")
         }
     }
     

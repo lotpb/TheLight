@@ -185,7 +185,11 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     func setupMenuBar() {
         
         let redView = UIView()
-        redView.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            redView.backgroundColor = .black
+        } else {
+            redView.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
+        }
         view.addSubview(redView)
         view.addConstraintsWithFormat(format: "H:|[v0]|", views: redView)
         view.addConstraintsWithFormat(format: "V:[v0(50)]", views: redView)
