@@ -88,11 +88,10 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             
             let content = UNMutableNotificationContent()
-            //content.title = "Test"
             content.body = customMessage.text!
             content.badge = 1
             content.sound = UNNotificationSound.default()
-            content.categoryIdentifier = "status"
+            content.categoryIdentifier = "myCategory"
             
             if let path = Bundle.main.path(forResource: "calendar", ofType: "png") {
                 let url = URL(fileURLWithPath: path)
@@ -168,7 +167,7 @@ class NotificationController: UIViewController {
             content.body = "Our system has detected that your membership is inactive."
             content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
-            content.categoryIdentifier = "status"
+            content.categoryIdentifier = "myCategory"
             
             let imageURL = Bundle.main.url(forResource: "map", withExtension: "png")
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
@@ -208,7 +207,7 @@ class NotificationController: UIViewController {
             content.body = "TheLight just posted a new message"
             content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
-            content.categoryIdentifier = "status"
+            content.categoryIdentifier = "myCategory"
             
             let imageURL = Bundle.main.url(forResource: "comments", withExtension: "png")
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
@@ -241,7 +240,7 @@ class NotificationController: UIViewController {
             content.body = "Hey you! Yeah you! Time to Workout!"
             content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado.caf")
-            content.categoryIdentifier = "status"
+            content.categoryIdentifier = "myCategory"
             
             let imageURL = Bundle.main.url(forResource: "news", withExtension: "png")
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
@@ -280,7 +279,7 @@ class NotificationController: UIViewController {
             content.body = "Forget Something? Come back and SAVE 15% with Promo Code MYCART"
             content.badge = 1
             content.sound = UNNotificationSound(named: "Tornado")
-            content.categoryIdentifier = "status"
+            content.categoryIdentifier = "myCategory"
             
             let imageURL = Bundle.main.url(forResource: "calendar", withExtension: "png")
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)

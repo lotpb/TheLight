@@ -47,6 +47,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         txtSearch.delegate = self
         
         getChannelDetails(false)
+        self.segDisplayedContent.apportionsSegmentWidthsByContent = true
     }
     
     override func didReceiveMemoryWarning() {

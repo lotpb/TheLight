@@ -200,12 +200,12 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            cell.titleLabel.font =  Font.celllabel1
+            cell.titleLabel.font =  Font.cellsubtitle
             cell.detailLabel.font =  Font.News.newslabel2
             
         } else {
             
-            cell.titleLabel.font =  Font.celllabel1
+            cell.titleLabel.font =  Font.cellsubtitle
             cell.detailLabel.font =  Font.News.newslabel2
 
         }

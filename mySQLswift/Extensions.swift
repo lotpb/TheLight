@@ -11,6 +11,8 @@
 //import Foundation
 import UIKit
 
+var searchController: UISearchController!
+
     enum Config {
         static let NewsLead = "Company to expand to a new web advertising directive this week."
         static let NewsCust = "Check out or new line of fabulous windows and siding."
@@ -68,7 +70,6 @@ import UIKit
         
         enum Stat {
             static let navColor = UIColor.red
-            //static let buttonColor = BlueColor
         }
         
         enum Snap {
@@ -77,8 +78,6 @@ import UIKit
             static let textColor = UIColor.white
             static let textColor1 = UIColor.lightGray
             static let lineColor = UIColor.darkGray
-
-            //static let buttonColor = BlueColor
         }
         
         enum Table {
@@ -92,39 +91,56 @@ import UIKit
     UIFontTextStyleTitle1 UIFontTextStyleTitle2 UIFontTextStyleTitle3
     UIFontTextStyleHeadline UIFontTextStyleSubheadline UIFontTextStyleBody
     UIFontTextStyleFootnote UIFontTextStyleCaption1 UIFontTextStyleCaption2
+   //buttonFontSize,  labelFontSize, systemFontSize
     */
 
     struct Font {
         static let navlabel = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         static let headtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
-        static let Edittitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
-        static let Weathertitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-        //buttonFontSize,  labelFontSize, systemFontSize
+        static let labeltitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+        
+        static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
         
         static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
-        static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
+        static let celltitle2 = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
         static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-        static let celllabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-        static let celllabel2 = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
-        static let cellreply = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-        static let celllike = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        static let celllabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        static let celllabel1 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+        static let celllabel2 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+        
         
         struct Blog {
             static let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
             static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightLight)
-            static let celldate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            static let celldate = cellsubtitle
             static let cellLabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightBold)
-            static let cellsubject = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+            static let cellsubject = celllabel2
+        }
+        
+        struct BlogEdit {
+            static let celltitlePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightBold)
+            static let cellsubtitlePad = celltitle
+            static let celldatePad = labeltitle
+            
+            static let replytitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
+            static let replysubtitlePad = cellsubtitle
+            static let replydatePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
+            static let replylabelPad = cellsubtitle
+            
+            static let replytitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
+            static let replysubtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+            static let replydate = UIFont.systemFont(ofSize: 14, weight: UIFontWeightBold)
+            static let replylabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
         }
         
         struct News {
             static let newstitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightRegular)
-            static let newssourcePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
+            static let newssourcePad = celltitle2
             static let newslabel1Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let newslabel2Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let newslabel2Pad = celllabel1
             
-            static let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-            static let newssource = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+            static let newstitle = celllabel1
+            static let newssource = labeltitle
             static let newslabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
             static let newslabel2 = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
         }
@@ -132,48 +148,44 @@ import UIKit
         struct Snapshot {
             static let celltitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
             static let cellsubtitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
-            static let celllabelPad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-            
-            static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
-            static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            static let celllabelPad = celllabel1
+
             static let cellLabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
-            
         }
         
         struct Stat {
             static let celltitlePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
- 
         }
         
         struct Detail {
             static let ipadname = UIFont.systemFont(ofSize: 30, weight: UIFontWeightLight)
-            static let ipaddate = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let ipaddate = celllabel1
             static let ipadaddress = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
             static let ipadAmount = UIFont.systemFont(ofSize: 60, weight: UIFontWeightRegular)
             
             static let textname = UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)
-            static let textdate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-            static let textaddress = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
+            static let textdate = cellsubtitle
+            static let textaddress = celltitle2
             static let textAmount = UIFont.systemFont(ofSize: 30, weight: UIFontWeightRegular)
             
-            static let Vtextname = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+            static let Vtextname = celllabel2
             static let Vtextdate = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
             static let VtextAmount = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
             
             static let celltitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightSemibold)
-            static let cellsubtitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+            static let cellsubtitlePad = labeltitle
             static let celltitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightSemibold)
             static let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
             
             static let ipadnewstitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightSemibold)
-            static let ipadnewssubtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
-            static let ipadnewsdetail = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let ipadnewssubtitle = celllabel2
+            static let ipadnewsdetail = celllabel1
             
             static let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightSemibold)
-            static let newssubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-            static let newsdetail = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            static let newssubtitle = labeltitle
+            static let newsdetail = cellsubtitle
             
-            static let textbutton = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+            static let textbutton = celllabel1
         }
     }
 
@@ -185,7 +197,6 @@ public extension String {
     func removeWhiteSpace() -> String {
         return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
-    
 }
 
 
@@ -193,7 +204,7 @@ public extension String {
 
 public extension UIViewController {
     
-    func simpleAlert (title:String, message:String) {
+    func simpleAlert (title:String?, message:String?) { //withTitle:
  
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -229,42 +240,31 @@ let imageCache = NSCache<NSString, UIImage>()
 class CustomImageView: UIImageView {
     
     var imageUrlString: String?
-    
     func loadImageUsingUrlString(urlString: String) {
-        
         imageUrlString = urlString
         let url = URL(string: urlString)
         image = nil
-        
         if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
-            
             self.image = imageFromCache
             return
         }
-        
         URLSession.shared.dataTask(with: url!, completionHandler: { (data, respones, error) in
-            
             if error != nil {
                 print(error as Any)
                 return
             }
-            
             DispatchQueue.main.async(execute: {
-                
                 let imageToCache = UIImage(data: data!)
-                
                 if self.imageUrlString == urlString {
                     self.image = imageToCache
                 }
-                
                 imageCache.setObject(imageToCache!, forKey: urlString as NSString)
             })
-            
         }).resume()
     }
 }
 
-//declared in search
+//declared in News search
 func requestSuggestionsURL(text: String) -> URL {
     let netText = text.addingPercentEncoding(withAllowedCharacters: CharacterSet())!
     let url = URL.init(string: "https://api.bing.com/osjson.aspx?query=\(netText)")!
@@ -273,8 +273,22 @@ func requestSuggestionsURL(text: String) -> URL {
 
 //------------------------------------
 
+public extension UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController.searchBar.searchBarStyle = .prominent
+        searchController.searchBar.showsBookmarkButton = false
+        searchController.searchBar.showsCancelButton = true
+        searchController.searchBar.placeholder = "Search here..."
+        searchController.searchBar.sizeToFit()
+        searchController.dimsBackgroundDuringPresentation = true
+        searchController.hidesNavigationBarDuringPresentation = true
+    }
+}
+
 //valid email
-extension String {
+public extension String {
+    
     var isValidEmailAddress: Bool {
         let types: NSTextCheckingResult.CheckingType = [.link]
         let linkDetector = try? NSDataDetector(types: types.rawValue)

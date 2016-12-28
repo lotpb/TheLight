@@ -14,7 +14,7 @@ import GoogleSignIn
 import FirebaseAnalytics
 
 
-class MasterViewController: UITableViewController, UISplitViewControllerDelegate, UISearchResultsUpdating {
+class MasterViewController: UITableViewController, UISplitViewControllerDelegate {
 
   //var detailViewController: DetailViewController? = nil
     
@@ -41,6 +41,13 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: - SplitView
+        self.splitViewController?.maximumPrimaryColumnWidth = 400
+        //fix - remove bottom bar
+        self.splitViewController!.delegate = self
+        self.splitViewController!.preferredDisplayMode = .automatic //.allVisible
+        self.extendedLayoutIncludesOpaqueBars = true
+        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle("Main Menu", for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
@@ -52,22 +59,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
         navigationItem.rightBarButtonItems = [addButton, searchButton]
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
-        
-        self.tableView!.backgroundColor = Color.LGrayColor //.black
-        self.tableView!.tableFooterView = UIView(frame: .zero)
-        
-        foundUsers = []
-        resultsController = UITableViewController(style: .plain)
-        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
-        resultsController.tableView.dataSource = self
-        resultsController.tableView.delegate = self
-        
-        // MARK: - SplitView
-        self.splitViewController?.maximumPrimaryColumnWidth = 400
-        //fix - remove bottom bar
-        self.splitViewController!.delegate = self
-        self.splitViewController!.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
-        self.extendedLayoutIncludesOpaqueBars = true
         
         // MARK: - Sound
         
@@ -83,12 +74,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl!)
         
-        //symYQL = nil
-        //tradeYQL = nil
-        //changeYQL = nil
-        self.versionCheck()
-        self.refreshData()
-        
         // yahoo bad weather warning
         if (defaults.bool(forKey: "weatherKey"))  {
             if (textYQL!.contains("Rain") ||
@@ -99,9 +84,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             }
         }
 
+        self.versionCheck()
+        self.refreshData()
+        setupTableView()
     }
     
-
     override func viewWillAppear(_ animated: Bool) {
       //self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
@@ -109,13 +96,21 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.barTintColor = .black
         self.refreshData()
-        
     }
     
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.backgroundColor = Color.LGrayColor //.black
+        self.tableView!.tableFooterView = UIView(frame: .zero)
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
     }
     
     
@@ -190,27 +185,25 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if (section == 0) {
-            return 2
-        } else if (section == 1) {
-            return 8
-        } else if (section == 2) {
-            return 7
+        if tableView == self.tableView {
+            if (section == 0) {
+                return 2
+            } else if (section == 1) {
+                return 8
+            } else if (section == 2) {
+                return 7
+            }
+        } else {
+            return foundUsers.count
         }
         return 0
-        /*
-        if tableView == self.tableView {
-            return menuItems.count
-        }
-        return foundUsers.count
-        //return filteredString.count */
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         var cellIdentifier: String!
         
-        if tableView == self.tableView{
+        if tableView == self.tableView {
             cellIdentifier = "Cell"
         } else {
             cellIdentifier = "UserFoundCell"
@@ -391,7 +384,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 
                 let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 120, width: 280, height: 20))
                 myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
-                myLabel4.font = Font.Weathertitle
+                myLabel4.font = Font.labeltitle
                 if (textYQL!.contains("Rain") ||
                     textYQL!.contains("Snow") ||
                     textYQL!.contains("Thunderstorms") ||
@@ -446,7 +439,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             self.simpleAlert(title: "Alert", message: "Something bad happened. Try catching specific errors to narrow things down")
         }
         player.play()
-        
     }
     
     
@@ -503,37 +495,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         FBSDKLoginManager().logOut()
         GIDSignIn.sharedInstance().signOut()
         self.performSegue(withIdentifier: "showLogin", sender: self)
-        
-    }
-    
-    
-    // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-        
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchBar.searchBarStyle = .prominent
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
-        //tableView!.tableHeaderView = searchController.searchBar
-        tableView!.tableFooterView = UIView(frame: .zero)
-        UISearchBar.appearance().barTintColor = .black
-        self.present(searchController, animated: true, completion: nil)
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        
-        self.foundUsers.removeAll(keepingCapacity: false)
-        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (self.menuItems as NSArray).filtered(using: searchPredicate)
-        self.foundUsers = array as! [String]
-        self.resultsController.tableView.reloadData()
     }
 
     
@@ -549,10 +510,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let indexPath = tableView.indexPathForSelectedRow!
         let currentItem = tableView.cellForRow(at: indexPath)! as UITableViewCell
         
-        if tableView == resultsController.tableView {
-            //userDetails = foundUsers[indexPath.row]
-            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
-        } else {
+        if (tableView == self.tableView) {
             
             if (currentItem.textLabel!.text! == "Snapshot") {
                 self.performSegue(withIdentifier: "snapshotSegue", sender: self)
@@ -589,6 +547,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             } else if (currentItem.textLabel!.text! == "Contacts") {
                 self.performSegue(withIdentifier: "contactSegue", sender: self)
             }
+        } else {
+            //if tableView == resultsController.tableView {
+            //userDetails = foundUsers[indexPath.row]
+            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
         }
     }
     
@@ -596,9 +558,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "snapshotSegue" {
+            /*
             let controller = (segue.destination as! UINavigationController).topViewController as! SnapshotController
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            controller.navigationItem.leftItemsSupplementBackButton = true
+            controller.navigationItem.leftItemsSupplementBackButton = true */
         }
         if segue.identifier == "statisticSegue" {
             let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController
@@ -643,5 +606,30 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
     }
 
+}
+//-----------------------end------------------------------
+
+// MARK: - UISearchBar Delegate
+extension MasterViewController: UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.barTintColor = .black
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
+    }
+}
+
+extension MasterViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        self.foundUsers.removeAll(keepingCapacity: false)
+        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
+        let array = (self.menuItems as NSArray).filtered(using: searchPredicate)
+        self.foundUsers = array as! [String]
+        self.resultsController.tableView.reloadData()
+    }
 }
 

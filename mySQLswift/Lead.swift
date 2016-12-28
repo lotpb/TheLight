@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
+class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let searchScope = ["name","city","phone","date","active"]
     
@@ -46,18 +46,6 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
-
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.backgroundColor = Color.LGrayColor
-        self.tableView!.estimatedRowHeight = 100
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        
-        foundUsers = []
-        resultsController = UITableViewController(style: .plain)
-        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
-        resultsController.tableView.dataSource = self
-        resultsController.tableView.delegate = self
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Lead.searchButton))
@@ -72,7 +60,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         self.tableView!.addSubview(refreshControl)
         
         parseData()
-        
+        setupTableView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -102,6 +90,19 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         // Dispose of any resources that can be recreated.
     }
     
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.backgroundColor = Color.LGrayColor
+        self.tableView!.estimatedRowHeight = 100
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
+    }
+    
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
@@ -127,12 +128,9 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == self.tableView {
-            
-            return _feedItems.count 
-  
+            return _feedItems.count
         } else {
-            
-            return filteredString.count
+            return foundUsers.count
         }
     }
     
@@ -142,10 +140,8 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         
         if tableView == self.tableView {
             cellIdentifier = "Cell"
-
         } else {
             cellIdentifier = "UserFoundCell"
-
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
@@ -173,19 +169,19 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
             
             cell.leadtitleLabel!.font = Font.celltitlePad
             cell.leadsubtitleLabel!.font = Font.cellsubtitle
-            cell.leadreplyLabel.font = Font.cellreply
-            cell.leadlikeLabel.font = Font.celllike
-            myLabel1.font = Font.celllabel1
-            myLabel2.font = Font.celllabel2
+            cell.leadreplyLabel.font = Font.cellsubtitle
+            cell.leadlikeLabel.font = Font.celllabel
+            myLabel1.font = Font.cellsubtitle
+            myLabel2.font = Font.celllabel
             
         } else {
             
             cell.leadtitleLabel!.font = Font.celltitle
             cell.leadsubtitleLabel!.font = Font.cellsubtitle
-            cell.leadreplyLabel.font = Font.cellreply
-            cell.leadlikeLabel.font = Font.celllike
-            myLabel1.font = Font.celllabel1
-            myLabel2.font = Font.celllabel2
+            cell.leadreplyLabel.font = Font.cellsubtitle
+            cell.leadlikeLabel.font = Font.celllabel
+            myLabel1.font = Font.cellsubtitle
+            myLabel2.font = Font.celllabel
         }
         
         if (tableView == self.tableView) {
@@ -374,83 +370,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
     }
-    
-    // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-        
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchBar.searchBarStyle = .prominent
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.scopeButtonTitles = searchScope
-        //tableView!.tableHeaderView = searchController.searchBar
-        tableView!.tableFooterView = UIView(frame: .zero)
-        UISearchBar.appearance().barTintColor = Color.Lead.navColor
-        
-        self.present(searchController, animated: true, completion: nil)
-    }
-    
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        
-        /*
-        let searchString = self.searchController.searchBar.text
-        let selectedScopeButtonIndex = self.searchController.searchBar.selectedScopeButtonIndex
-        self.foundUsers(searchString, scope: selectedScopeButtonIndex)
-        self.tableView!.reloadData() */
-        
-        /*
-        self.foundUsers.removeAll(keepCapacity: false)
-        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (self._feedItems as NSArray).filteredArrayUsingPredicate(searchPredicate)
-        self.foundUsers = array as! [String]
-        self.resultsController.tableView.reloadData() */
-        
-        let firstNameQuery = PFQuery(className:"Leads")
-        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
-        
-        let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
-        
-        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
 
-            if error != nil {
-                
-                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
-                
-                return
-            }
-            
-            if let objects = results {
-                
-                self.foundUsers.removeAll(keepingCapacity: false)
-                
-                for object in objects {
-                    let firstName = object.object(forKey: "First") as! String
-                    let lastName = object.object(forKey: "LastName") as! String
-                    let fullName = firstName + " " + lastName
-                    
-                    self.foundUsers.append(fullName)
-                    print(fullName)
-                }
-                
-                DispatchQueue.main.async {
-                    self.resultsController.tableView.reloadData()
-                    self.searchController.resignFirstResponder()
-                    
-                }
-            }
-        }
-    }
 
     // MARK: - Parse
 
@@ -498,11 +418,12 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if tableView == resultsController.tableView {
+        if (tableView == self.tableView) {
+            self.performSegue(withIdentifier: "leaddetailSegue", sender: self)
+        } else {
+            //if tableView == resultsController.tableView {
             //userDetails = foundUsers[indexPath.row]
             //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
-        } else {
-            self.performSegue(withIdentifier: "leaddetailSegue", sender: self)
         }
     }
     
@@ -613,4 +534,54 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISear
     
 }
 //-----------------------end------------------------------
+
+// MARK: - UISearchBar Delegate
+extension Lead: UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.scopeButtonTitles = searchScope
+        searchController.searchBar.barTintColor = Color.Lead.navColor
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
+    }
+}
+
+extension Lead: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        let firstNameQuery = PFQuery(className:"Leads")
+        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
+        
+        let lastNameQuery = PFQuery(className:"Leads")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        
+        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+            
+            if error != nil {
+                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
+                return
+            }
+            if let objects = results {
+                self.foundUsers.removeAll(keepingCapacity: false)
+                for object in objects {
+                    let firstName = object.object(forKey: "First") as! String
+                    let lastName = object.object(forKey: "LastName") as! String
+                    let fullName = firstName + " " + lastName
+                    
+                    self.foundUsers.append(fullName)
+                    print(fullName)
+                }
+                DispatchQueue.main.async {
+                    self.resultsController.tableView.reloadData()
+                    self.searchController.resignFirstResponder()
+                }
+            }
+        }
+    }
+}
 

@@ -84,12 +84,6 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 44
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.LGrayColor 
-        
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(StatisticController.searchButton))
         navigationItem.rightBarButtonItems = [searchButton]
         
@@ -101,6 +95,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         self.refreshControl.addTarget(self, action: #selector(StatisticController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
         
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -124,6 +119,14 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.estimatedRowHeight = 44
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor = Color.LGrayColor
     }
     
     
@@ -183,12 +186,12 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             label1.font = Font.Stat.celltitlePad
             label2.font = Font.Stat.celltitlePad
         } else {
-            cell.textLabel!.font = Font.celllabel1
-            cell.detailTextLabel!.font = Font.celllabel1
+            cell.textLabel!.font = Font.cellsubtitle
+            cell.detailTextLabel!.font = Font.cellsubtitle
             label1 = UILabel(frame: CGRect(x: tableView.frame.width-155, y: 5, width: 77, height: 25))
             label2 = UILabel(frame: CGRect(x: tableView.frame.width-70, y: 5, width: 60, height: 25))
-            label1.font = Font.celllabel1
-            label2.font = Font.celllike
+            label1.font = Font.cellsubtitle
+            label2.font = Font.celllabel
         }
         
         cell.selectionStyle = UITableViewCellSelectionStyle.none

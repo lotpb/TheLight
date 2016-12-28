@@ -68,7 +68,6 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
       //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
-
         webView.load(URLRequest(url:URL(string: SegAddress[0])!))
         
         backButton.isEnabled = false

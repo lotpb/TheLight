@@ -25,13 +25,16 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var buttonView: UIView?
     var likeButton: UIButton?
     var refreshControl: UIRefreshControl!
-    let searchController = UISearchController(searchResultsController: nil)
 
     var isReplyClicked = true
     var posttoIndex: String?
     var userIndex: String?
     var titleLabel = String()
     var defaults = UserDefaults.standard
+    
+    var searchController: UISearchController!
+    var resultsController: UITableViewController!
+    var foundUsers = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,7 +66,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // get rid of black bar underneath navbar
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        
 
     }
 
@@ -101,6 +103,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView!.sectionFooterHeight = UITableViewAutomaticDimension;
         self.tableView!.estimatedSectionFooterHeight = 0
         self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
     }
     
     func setupNavBarButtons() {
@@ -127,11 +134,10 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if searchController.isActive {
-            return filteredString.count
-        }
-        else {
+        if tableView == self.tableView {
             return _feedItems.count
+        } else {
+            return filteredString.count
         }
     }
     
@@ -204,13 +210,8 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             dateFormatter.dateFormat = "EEE"
         }
 
-        if searchController.isActive {
-            cell.blogtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
-            cell.blogsubtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
-            cell.blogmsgDateLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"MsgDate") as? String
-            cell.numLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Liked") as? String
-            cell.commentLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? String
-        } else {
+        if (tableView == self.tableView) {
+            
             cell.blogtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
             cell.blogsubtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
             cell.blogmsgDateLabel?.text = dateFormatter.string(from: date as Date)as String!
@@ -226,6 +227,15 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 CommentCount = 0
             }
             cell.commentLabel?.text = "\(CommentCount!)"
+            
+        } else {
+            
+            cell.blogtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
+            cell.blogsubtitleLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
+            cell.blogmsgDateLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"MsgDate") as? String
+            cell.numLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Liked") as? String
+            cell.commentLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? String
+            
         }
         
         cell.replyButton.tintColor = .lightGray
@@ -295,10 +305,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let underlinedRange = text.range(of: NSLocalizedString("Lost", comment: ""))
             attributedText.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.styleSingle.rawValue, range: underlinedRange)
             
-            // Add tint.
-            //let tintedRange = text.range(of: NSLocalizedString("eunited@verizon.com", comment: ""))
-            //attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.emaillinkText, range: tintedRange)
-            //let tintedRange1 = text.range(of: NSLocalizedString("http://www.eunited.com", comment: ""))
+            
             let tintedRange1 = text.range(of: NSLocalizedString(url, comment: ""))
             attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: tintedRange1)
             
@@ -307,6 +314,19 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
              let appendedSpace = NSMutableAttributedString.init(string: " ")
              appendedSpace.addAttribute(NSFontAttributeName, value: boldFont, range: NSMakeRange(0, 1))
              attributedText.append(appendedSpace) */
+            
+            // Add tint.
+            //let tintedRange = text.range(of: NSLocalizedString("eunited@verizon.com", comment: ""))
+            //attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.emaillinkText, range: tintedRange)
+            //let tintedRange1 = text.range(of: NSLocalizedString("http://www.eunited.com", comment: ""))
+            
+            // create our NSTextAttachment
+            let image1Attachment = NSTextAttachment()
+            image1Attachment.image = UIImage(named: "DeleteGeotification.png")
+
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            attributedText.append(image1String)
+            attributedText.append(NSAttributedString(string: " End of text"))
             
             cell.blogsubtitleLabel!.attributedText = attributedText
         }
@@ -550,30 +570,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
  
 //-----------------------------------------
     
-    // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-        //UIApplication.sharedApplication().statusBarHidden = true
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.searchBarStyle = UISearchBarStyle.prominent
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.scopeButtonTitles = searchScope
-        searchController.searchBar.barTintColor = Color.Blog.navColor
-        tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true, completion: nil)
-    }
-    
-    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
- 
-    }
-    
     // MARK: - Parse
 
     func parseData() {
@@ -772,16 +768,49 @@ extension NSRange {
 
     // MARK: - UISearchBar Delegate
 extension Blog: UISearchBarDelegate {
-
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        filterContentForSearchText(searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.scopeButtonTitles = searchScope
+        searchController.searchBar.barTintColor = Color.Blog.navColor
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
     }
 }
 
 extension Blog: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        let searchBar = searchController.searchBar
-        let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
-        filterContentForSearchText(searchController.searchBar.text!, scope: scope)
+        
+        let firstNameQuery = PFQuery(className:"Leads")
+        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
+        
+        let lastNameQuery = PFQuery(className:"Leads")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        
+        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+            
+            if error != nil {
+                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
+                return
+            }
+            if let objects = results {
+                self.foundUsers.removeAll(keepingCapacity: false)
+                for object in objects {
+                    let firstName = object.object(forKey: "First") as! String
+                    let lastName = object.object(forKey: "LastName") as! String
+                    let fullName = firstName + " " + lastName
+                    
+                    self.foundUsers.append(fullName)
+                    print(fullName)
+                }
+                DispatchQueue.main.async {
+                    self.resultsController.tableView.reloadData()
+                    self.searchController.resignFirstResponder()
+                }
+            }
+        }
     }
 } 

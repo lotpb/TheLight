@@ -167,12 +167,12 @@ class GeotificationsViewController: UIViewController {
     func startMonitoring(geotification: Geotification) {
         
         if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
-            showAlert(withTitle:"Error", message: "Geofencing is not supported on this device!")
+            self.simpleAlert(title: "Error", message: "Geofencing is not supported on this device!")
             return
         }
         
         if CLLocationManager.authorizationStatus() != .authorizedAlways {
-            showAlert(withTitle:"Warning", message: "Your geotification is saved but will only be activated once you grant Geotify permission to access the device location.")
+            self.simpleAlert(title: "Warning", message: "Your geotification is saved but will only be activated once you grant Geotify permission to access the device location.")
         }
         
         let region = self.region(withGeotification: geotification)
@@ -258,7 +258,6 @@ class GeotificationsViewController: UIViewController {
         for regionIdentifier in monitoredRegions.keys {
             if Date().timeIntervalSince(monitoredRegions[regionIdentifier]! as Date) > regionMaxVisiting {
                 self.simpleAlert(title: "Balsamo's Eatery", message: "Thanks for visiting our restaurant")
-                showAlert(withTitle: "Balsamo's Eatery", message: "Thanks for visiting our restaurant")
                 regionsToDelete.append(regionIdentifier)
             }
         }
@@ -361,12 +360,12 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
     
     //Setup Eatery
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        showAlert(withTitle:"Alert", message: "enter \(region.identifier)")
+        self.simpleAlert(title: "Info", message: "enter \(region.identifier)")
         monitoredRegions[region.identifier] = NSDate()
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        showAlert(withTitle:"Alert", message: "exit \(region.identifier)")
+        self.simpleAlert(title: "Info", message: "exit \(region.identifier)")
         monitoredRegions.removeValue(forKey: region.identifier)
     }
 }
@@ -416,4 +415,12 @@ extension GeotificationsViewController: MKMapViewDelegate {
         saveAllGeotifications()
     }
     
+}
+
+extension MKMapView {
+    func zoomToUserLocation() {
+        guard let coordinate = userLocation.location?.coordinate else { return }
+        let region = MKCoordinateRegionMakeWithDistance(coordinate, 10000, 10000)
+        setRegion(region, animated: true)
+    }
 }

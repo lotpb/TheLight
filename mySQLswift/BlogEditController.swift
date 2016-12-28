@@ -11,20 +11,6 @@ import Parse
 
 class BlogEditController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightBold)
-    let ipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-    let ipaddate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-    
-    let replyipadtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-    let replyipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    let replyipaddate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-    let replyipadlabel = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    
-    let replytitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-    let replysubtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
-    let replydate = UIFont.systemFont(ofSize: 14, weight: UIFontWeightBold)
-    let replylabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
-    
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var listTableView: UITableView?
     @IBOutlet weak var toolBar: UIToolbar?
@@ -165,9 +151,9 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
-                cell?.titleLabel!.font = ipadtitle
-                cell?.subtitleLabel!.font = ipadsubtitle
-                cell?.msgDateLabel.font = ipaddate
+                cell?.titleLabel!.font = Font.BlogEdit.celltitlePad
+                cell?.subtitleLabel!.font = Font.BlogEdit.cellsubtitlePad
+                cell?.msgDateLabel.font = Font.BlogEdit.celldatePad
                 
             } else {
                 
@@ -257,17 +243,17 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
-                cell?.replytitleLabel!.font = replyipadtitle
-                cell?.replysubtitleLabel!.font = replyipadsubtitle
-                cell?.replynumLabel!.font = replyipaddate
-                cell?.replydateLabel!.font = replyipadlabel
+                cell?.replytitleLabel!.font = Font.BlogEdit.replytitlePad
+                cell?.replysubtitleLabel!.font = Font.BlogEdit.cellsubtitlePad
+                cell?.replynumLabel!.font = Font.BlogEdit.celldatePad
+                cell?.replydateLabel!.font = Font.BlogEdit.replylabel
                 
             } else {
                 
-                cell?.replytitleLabel!.font = replytitle
-                cell?.replysubtitleLabel!.font = replysubtitle
-                cell?.replynumLabel.font = replydate
-                cell?.replydateLabel.font = replylabel
+                cell?.replytitleLabel!.font = Font.BlogEdit.replytitle
+                cell?.replysubtitleLabel!.font = Font.BlogEdit.replysubtitle
+                cell?.replynumLabel.font = Font.BlogEdit.replydate
+                cell?.replydateLabel.font = Font.BlogEdit.replylabel
             }
 
             let date1 = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date

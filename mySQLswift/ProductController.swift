@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class ProductController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
+class ProductController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let searchScope = ["product","productNo","active"]
     
@@ -41,27 +41,9 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 65
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.LGrayColor
-
-        foundUsers = []
-        resultsController = UITableViewController(style: .plain)
-        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
-        resultsController.tableView.dataSource = self
-        resultsController.tableView.delegate = self
-        
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(ProductController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-        /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        } */
-        
-        parseData()
         
         self.refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.Table.navColor
@@ -71,6 +53,8 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.refreshControl.addTarget(self, action: #selector(ProductController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
         
+        parseData()
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -88,6 +72,20 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.estimatedRowHeight = 65
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor = Color.LGrayColor
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
+
     }
     
     // MARK: - Refresh
@@ -300,33 +298,6 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         pasteBoard.string = cell!.textLabel?.text
     }
     
-    // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-        
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchBar.searchBarStyle = .prominent
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.scopeButtonTitles = searchScope
-        //tableView!.tableHeaderView = searchController.searchBar
-        tableView!.tableFooterView = UIView(frame: .zero)
-        UISearchBar.appearance().barTintColor = Color.Table.navColor
-        
-        self.present(searchController, animated: true, completion: nil)
-    }
-    
-    
-    func updateSearchResults(for searchController: UISearchController) {
-
-    }
-    
     // MARK: - Parse
     
     func parseData() {
@@ -365,23 +336,21 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         self.selectedImage = nil
-        if tableView == resultsController.tableView {
-            //userDetails = foundUsers[indexPath.row]
-            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
-        } else {
-            
+        if (tableView == self.tableView) {
             isFormStat = false
             let imageObject = _feedItems.object(at: indexPath.row) as? PFObject
             if let imageFile = imageObject!.object(forKey: "imageFile") as? PFFile {
-                
                 imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-                    
                     self.selectedImage = UIImage(data: imageData!)
                     self.performSegue(withIdentifier: "prodDetailSegue", sender: self)
                 }
             } else {
                 self.performSegue(withIdentifier: "prodDetailSegue", sender: self)
             }
+        } else {
+            //if tableView == resultsController.tableView {
+            //userDetails = foundUsers[indexPath.row]
+            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
         }
     }
     
@@ -411,3 +380,52 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     
 }
 //-----------------------end------------------------------
+
+// MARK: - UISearchBar Delegate
+extension ProductController: UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.scopeButtonTitles = searchScope
+        searchController.searchBar.barTintColor = Color.Table.navColor
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
+    }
+}
+
+extension ProductController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        let firstNameQuery = PFQuery(className:"Leads")
+        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
+        
+        let lastNameQuery = PFQuery(className:"Leads")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        
+        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+            
+            if error != nil {
+                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
+                return
+            }
+            if let objects = results {
+                self.foundUsers.removeAll(keepingCapacity: false)
+                for object in objects {
+                    let firstName = object.object(forKey: "First") as! String
+                    let lastName = object.object(forKey: "LastName") as! String
+                    let fullName = firstName + " " + lastName
+                    
+                    self.foundUsers.append(fullName)
+                    print(fullName)
+                }
+                DispatchQueue.main.async {
+                    self.resultsController.tableView.reloadData()
+                    self.searchController.resignFirstResponder()
+                }
+            }
+        }
+    }
+}

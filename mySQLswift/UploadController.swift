@@ -73,9 +73,9 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             self.commentSorce.font = ipadtitle
             
         } else {
-            self.commentTitle!.font = Font.celllabel1
-            self.commentDetail!.font = Font.celllabel1
-            self.commentSorce.font = Font.celllabel1
+            self.commentTitle!.font = Font.cellsubtitle
+            self.commentDetail!.font = Font.cellsubtitle
+            self.commentSorce.font = Font.cellsubtitle
             
         }
         

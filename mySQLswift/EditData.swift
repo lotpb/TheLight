@@ -95,22 +95,12 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        clearFormData()
-        observeKeyboardNotifications() //Move Keyboard
-        
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle(String(format: "%@ %@", self.status!, self.formController!), for: UIControlState())
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
-        
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 44
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = .white
-        self.tableView!.tableFooterView = UIView(frame: .zero)
         
         self.pickerView.delegate = self
         self.pickerView.dataSource = self
@@ -133,6 +123,9 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         profileImageView!.layer.borderWidth = 2.0
         profileImageView!.layer.masksToBounds = true
         
+        clearFormData()
+        observeKeyboardNotifications() //Move Keyboard
+        setupTableView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -162,6 +155,15 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.estimatedRowHeight = 44
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor = .white
+        self.tableView!.tableFooterView = UIView(frame: .zero)
     }
     
     
@@ -207,18 +209,18 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             textframe = UITextField(frame:CGRect(x: 118, y: 7, width: 250, height: 30))
             textviewframe = UITextView(frame:CGRect(x: 118, y: 7, width: 250, height: 85))
             activeImage = UIImageView(frame:CGRect(x: 118, y: 10, width: 18, height: 22))
-            textframe!.font = Font.Edittitle
-            aptframe!.font = Font.Edittitle
-            textviewframe!.font = Font.Edittitle
+            textframe!.font = Font.celltitle
+            aptframe!.font = Font.celltitle
+            textviewframe!.font = Font.celltitle
 
         } else {
             
             textframe = UITextField(frame:CGRect(x: 118, y: 7, width: 205, height: 30))
             textviewframe = UITextView(frame:CGRect(x: 118, y: 7, width: 240, height: 85))
             activeImage = UIImageView(frame:CGRect(x: 118, y: 10, width: 18, height: 22))
-            textframe!.font = Font.Edittitle
-            aptframe!.font = Font.Edittitle
-            textviewframe!.font = Font.Edittitle
+            textframe!.font = Font.celltitle
+            aptframe!.font = Font.celltitle
+            textviewframe!.font = Font.celltitle
         }
         
         textframe!.autocorrectionType = UITextAutocorrectionType.no
@@ -772,9 +774,9 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func passFieldData() {
         
-        self.first.font = Font.Edittitle
-        self.last.font = Font.Edittitle
-        self.company.font = Font.Edittitle
+        self.first.font = Font.celltitle
+        self.last.font = Font.celltitle
+        self.company.font = Font.celltitle
         
         if (self.formController == "Leads" || self.formController == "Customer") {
             self.last.borderStyle = UITextBorderStyle.roundedRect

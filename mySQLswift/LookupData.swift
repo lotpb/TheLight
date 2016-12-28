@@ -21,7 +21,7 @@ protocol LookupDataDelegate: class {
     func productNameFromController(_ passedData: String)
 }
 
-class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
+class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     weak var delegate:LookupDataDelegate?
     
@@ -52,30 +52,20 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.barTintColor = Color.DGrayColor
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
+        
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 44
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = Color.LGrayColor
         self.automaticallyAdjustsScrollViewInsets = false
-        
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchBar.searchBarStyle = .prominent
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = false
-        //tableView!.tableHeaderView = searchController.searchBar
-        tableView!.tableFooterView = UIView(frame: .zero)
-        UISearchBar.appearance().barTintColor = Color.DGrayColor
-        self.present(searchController, animated: true, completion: nil)
        
-        //users = []
-        //foundUsers = []
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
         resultsController.tableView.dataSource = self
@@ -198,26 +188,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
 
         return cell
     }
-    
-    // MARK: - Search
-    
-    func filterContentForSearchText(_ searchText: String) {
-        
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        /*
-        let searchString = searchController.searchBar.text
-        
-        // Filter the data array and get only those countries that match the search text.
-        filteredString = zipArray.filter({ (str.objectForKey("City")) -> Bool in
-            let countryText: NSString = country
-            
-            return (countryText.rangeOfString(searchString, options: NSStringCompareOptions.CaseInsensitiveSearch).location) != NSNotFound
-        })
-        self.resultsController.tableView.reloadData() */
 
-    }
     
     // MARK: - Parse
     
@@ -296,7 +267,6 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 }
             }
         }
-        
     }
     
     // MARK: - Segues
@@ -372,10 +342,25 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }
         let _ = navigationController?.popViewController(animated: true)
     }
-    
-    
 }
 //-----------------------end------------------------------
+
+extension LookupData: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        /*
+         let searchString = searchController.searchBar.text
+         
+         // Filter the data array and get only those countries that match the search text.
+         filteredString = zipArray.filter({ (str.objectForKey("City")) -> Bool in
+         let countryText: NSString = country
+         
+         return (countryText.rangeOfString(searchString, options: NSStringCompareOptions.CaseInsensitiveSearch).location) != NSNotFound
+         })
+         self.resultsController.tableView.reloadData() */
+    }
+}
+
 
 
 

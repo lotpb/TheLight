@@ -45,6 +45,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "weatherKey": "2446726"
             ])
         
+        // MARK: - RegisterUserNotification
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) {(accepted, error) in
+            if !accepted {
+                print("Notification access denied.")
+            }
+        }
+        /*
+         UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
+         application.registerForRemoteNotifications() */
+        application.applicationIconBadgeNumber = 0
+        
+        // Schedule Notification set in NotificationController
+        let action = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: [])
+        let category = UNNotificationCategory(identifier: "myCategory", actions: [action], intentIdentifiers: [], options: [])
+        UNUserNotificationCenter.current().setNotificationCategories([category])
+        
         // MARK: - Parse
         if (defaults.bool(forKey: "parsedataKey"))  {
             
@@ -56,17 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if (defaults.bool(forKey: "autolockKey"))  {
             UIApplication.shared.isIdleTimerDisabled = true
         }
-
-        // MARK: - RegisterUserNotification
-        // iOS 10 support
-        if #available(iOS 10, *) {
-            UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
-            application.registerForRemoteNotifications()
-        } else {
-            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
-            UIApplication.shared.registerForRemoteNotifications()
-        }
-        application.applicationIconBadgeNumber = 0
         
         // MARK: - Background Fetch
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
@@ -88,12 +93,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
         
         // MARK: - Keychain
-        //KeychainWrapper.accessGroup = "group.TheLightGroup"
         if (userSuccessful == true) && (passSuccessful == true) {
             print("Keychain successful")
         } else {
             print("Keychain failed")
         }
+        //KeychainWrapper.accessGroup = "group.TheLightGroup"
         
         // MARK: - Parse
         PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
@@ -118,20 +123,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         let firstItemIcon1:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
         let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "Add", localizedSubtitle: "Add an item.", icon: firstItemIcon1, userInfo: nil)
-        
         application.shortcutItems = [firstItem,firstItem1]
         
         // MARK: - AddGeotification
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
-  
-        // MARK: - SplitViewController
-        /*
-         // Override point for customization after application launch.
-         let splitViewController = self.window!.rootViewController as! UISplitViewController
-         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-         splitViewController.delegate = self */
         
         return true
     }
@@ -187,7 +183,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     
-    // MARK: - Schedule Notification
+    // MARK: - Schedule Notification set in NotificationController
     
     func scheduleNotification(at date: Date) {
         
@@ -198,16 +194,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
         
         let content = UNMutableNotificationContent()
-        content.title = "Membership Status"
-        content.body = "Our system has detected that your membership is inactive.!"
+        content.title = "Tutorial Reminder"
+        content.body = "Just a reminder to read your tutorial over at appcoda.com!"
         content.sound = UNNotificationSound(named: "Tornado.caf")
-        content.categoryIdentifier = "status"
+        content.categoryIdentifier = "myCategory"
         
-        if let path = Bundle.main.path(forResource: "wishlist", ofType: "png") {
+        if let path = Bundle.main.path(forResource: "profile-rabbit-toy", ofType: "png") {
             let url = URL(fileURLWithPath: path)
             
             do {
-                let attachment = try UNNotificationAttachment(identifier: "wishlist", url: url, options: nil)
+                let attachment = try UNNotificationAttachment(identifier: "logo", url: url, options: nil)
                 content.attachments = [attachment]
             } catch {
                 print("The attachment was not loaded.")
@@ -288,7 +284,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Show an alert if application is active
         if UIApplication.shared.applicationState == .active {
             guard let message = note(fromRegionIdentifier: region.identifier) else { return }
-            window?.rootViewController?.showAlert(withTitle: nil, message: message)
+            window?.rootViewController?.simpleAlert(title: "", message: message)
+          //window?.rootViewController?.showAlert(withTitle: nil, message: message)
         } else {
             let content = UNMutableNotificationContent()
             content.body = note(fromRegionIdentifier: region.identifier)!
@@ -369,16 +366,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
-        completionHandler([.alert])
+        completionHandler([.alert,.sound])
     }
     
-    
+    // Schedule Notification
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         if response.actionIdentifier == "remindLater" {
-            let newDate = Date(timeInterval: 5, since: Date())
+            let newDate = Date(timeInterval: 900, since: Date())
             scheduleNotification(at: newDate)
         }
+        completionHandler()
     }
 }
 // Geotify AddGeotification

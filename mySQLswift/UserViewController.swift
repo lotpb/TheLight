@@ -178,7 +178,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel1.backgroundColor = .clear
         myLabel1.textColor = .white
         myLabel1.text = String(format: "%@%d", "Users ", _feedItems.count)
-        myLabel1.font = Font.celllabel2
+        myLabel1.font = Font.celllabel
         vw.addSubview(myLabel1)
         
         return vw

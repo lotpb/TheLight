@@ -40,8 +40,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     
     var formController : String?
     
-    //var selectedImage : UIImage?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,16 +54,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 110
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = .white
-        tableView!.tableFooterView = UIView(frame: .zero)
-        
-        self.parseData()
-        
-        //self.selectedImage = UIImage(named:"profile-rabbit-toy.png")
         if (self.formController == "Blog") {
         self.comments = "90 percent of my picks made $$$. The stock whisper has traded over 1000 traders worldwide"
         }
@@ -82,6 +70,8 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         emptyLabel!.textColor = .lightGray
         emptyLabel!.text = "You have no customer data :)"
         
+        parseData()
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,6 +90,15 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.estimatedRowHeight = 110
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor = .white
+        tableView!.tableFooterView = UIView(frame: .zero)
     }
     
     // MARK: - refresh

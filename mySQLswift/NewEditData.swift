@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UISearchResultsUpdating {
+class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     @IBOutlet weak var tableView: UITableView?
     
@@ -56,19 +56,6 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 110
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = .white
-        self.tableView!.tableFooterView = UIView(frame: .zero)
-        
-        foundUsers = []
-        resultsController = UITableViewController(style: .plain)
-        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
-        resultsController.tableView.dataSource = self
-        resultsController.tableView.delegate = self
-        
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
         navigationItem.rightBarButtonItems = [saveButton]
 
@@ -83,6 +70,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             self.frm11 = "Active"
         }
         
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,6 +92,20 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.estimatedRowHeight = 110
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor = .white
+        self.tableView!.tableFooterView = UIView(frame: .zero)
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
     }
     
     // MARK: - Refresh
@@ -333,38 +335,6 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         pasteBoard.string = cell!.textLabel?.text
     }
     
-    // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-        
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchBar.searchBarStyle = .prominent
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.scopeButtonTitles = ["name", "city", "phone", "date", "active"]
-        //tableView!.tableHeaderView = searchController.searchBar
-        tableView!.tableFooterView = UIView(frame: .zero)
-        UISearchBar.appearance().barTintColor = .brown
-        
-        self.present(searchController, animated: true, completion: nil)
-    }
-    
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        /*
-        self.foundUsers.removeAll(keepCapacity: false)
-        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (self._feedItems as NSArray).filteredArrayUsingPredicate(searchPredicate)
-        self.foundUsers = array as! [String]
-        self.resultsController.tableView.reloadData() */
-    }
-    
     
     // MARK: - Switch
     
@@ -566,5 +536,33 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             self.show(vc!, sender: self)
             //self.present(vc!, animated: true)
         }
+    }
+}
+//-----------------------end------------------------------
+
+// MARK: - UISearchBar Delegate
+extension NewEditData: UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.scopeButtonTitles = ["name", "city", "phone", "date", "active"]
+        //searchController.searchBar.scopeButtonTitles = searchScope
+        searchController.searchBar.barTintColor = .brown
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
+    }
+}
+
+extension NewEditData: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        /*
+         self.foundUsers.removeAll(keepCapacity: false)
+         let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
+         let array = (self._feedItems as NSArray).filteredArrayUsingPredicate(searchPredicate)
+         self.foundUsers = array as! [String]
+         self.resultsController.tableView.reloadData() */
     }
 }

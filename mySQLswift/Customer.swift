@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
+class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let searchScope = ["name","city","phone","date", "active"]
     
@@ -20,10 +20,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var users:[[String:AnyObject]]!
     var foundUsers:[String] = []
-
-    var userDetails:[String:AnyObject]!
     
     var refreshControl:UIRefreshControl!
     
@@ -44,19 +41,6 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
-
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-        self.tableView!.estimatedRowHeight = 100
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        
-        users = []
-        foundUsers = []
-        resultsController = UITableViewController(style: .plain)
-        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
-        resultsController.tableView.dataSource = self
-        resultsController.tableView.delegate = self
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Customer.newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Customer.searchButton))
@@ -71,7 +55,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         self.tableView!.addSubview(refreshControl)
         
         parseData()
-        
+        setupTableView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -98,6 +82,19 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        self.tableView!.estimatedRowHeight = 100
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
     }
     
     // MARK: - refresh
@@ -167,19 +164,19 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             cell.custtitleLabel!.font = Font.celltitlePad
             cell.custsubtitleLabel!.font = Font.cellsubtitle
-            cell.custreplyLabel.font = Font.cellreply
-            cell.custlikeLabel.font = Font.celllike
-            myLabel1.font = Font.celllabel1
-            myLabel2.font = Font.celllabel2
+            cell.custreplyLabel.font = Font.cellsubtitle
+            cell.custlikeLabel.font = Font.celllabel
+            myLabel1.font = Font.cellsubtitle
+            myLabel2.font = Font.celllabel
             
         } else {
             
             cell.custtitleLabel!.font = Font.celltitle
             cell.custsubtitleLabel!.font =  Font.cellsubtitle
-            cell.custreplyLabel.font = Font.cellreply
-            cell.custlikeLabel.font = Font.celllike
-            myLabel1.font = Font.celllabel1
-            myLabel2.font = Font.celllabel2
+            cell.custreplyLabel.font = Font.cellsubtitle
+            cell.custlikeLabel.font = Font.celllabel
+            myLabel1.font = Font.cellsubtitle
+            myLabel2.font = Font.celllabel
         }
         
         if (tableView == self.tableView) {
@@ -366,46 +363,6 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
     }
     
-    
-    // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-        
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchBar.searchBarStyle = .prominent
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.showsBookmarkButton = false
-        searchController.searchBar.showsCancelButton = true
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.scopeButtonTitles = searchScope
-        //tableView!.tableHeaderView = searchController.searchBar
-        tableView!.tableFooterView = UIView(frame: .zero)
-        UISearchBar.appearance().barTintColor = Color.Cust.navColor
-        
-        self.present(searchController, animated: true, completion: nil)
-    }
-    
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        /*
-        self.foundUsers.removeAll(keepCapacity: false)
-        
-        let searchPredicate = NSPredicate(format: "SELF CONTAINS[cd] %@", searchController.searchBar.text!)
-        
-        let array = (_feedItems as NSArray).filteredArrayUsingPredicate(searchPredicate)
-        
-        self.foundUsers = array as! [String]
-        //print(self.foundUsers)
-        dispatch_async(dispatch_get_main_queue()) {
-            //self.resultsController.tableView.reloadData()
-            self.searchController.resignFirstResponder()
-        } */
-    }
-    
     // MARK: - Parse
     
     func parseData() {
@@ -451,11 +408,12 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if tableView == resultsController.tableView {
-            userDetails = filteredString[indexPath.row] as! [String : AnyObject]
-            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
-        } else {
+        if (tableView == self.tableView) {
             self.performSegue(withIdentifier: "custdetailSegue", sender: self)
+        } else {
+            //if tableView == resultsController.tableView {
+            //userDetails = filteredString[indexPath.row] as! [String : AnyObject]
+            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
         }
     }
     
@@ -581,5 +539,55 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
 }
 //-----------------------end------------------------------
+
+// MARK: - UISearchBar Delegate
+extension Customer: UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.scopeButtonTitles = searchScope
+        searchController.searchBar.barTintColor = Color.Cust.navColor
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
+    }
+}
+
+extension Customer: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        let firstNameQuery = PFQuery(className:"Customer")
+        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
+        
+        let lastNameQuery = PFQuery(className:"Customer")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        
+        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+            
+            if error != nil {
+                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
+                return
+            }
+            if let objects = results {
+                self.foundUsers.removeAll(keepingCapacity: false)
+                for object in objects {
+                    let firstName = object.object(forKey: "First") as! String
+                    let lastName = object.object(forKey: "LastName") as! String
+                    let fullName = firstName + " " + lastName
+                    
+                    self.foundUsers.append(fullName)
+                    print(fullName)
+                }
+                DispatchQueue.main.async {
+                    self.resultsController.tableView.reloadData()
+                    self.searchController.resignFirstResponder()
+                }
+            }
+        }
+    }
+}
 
 

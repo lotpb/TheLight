@@ -47,26 +47,23 @@ class MusicController: UIViewController {
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             titleButton.setTitle("TheLight - Music", for: UIControlState())
+            self.noContactsLabel.font = Font.celltitle
         } else {
             titleButton.setTitle("Music", for: UIControlState())
+            self.noContactsLabel.font = Font.cellsubtitle
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
+        noContactsLabel.isHidden = false
+        noContactsLabel.text = "Search to Retrieve Apple Music Library..."
+        tableView.isHidden = true
         tableView.tableFooterView = UIView()
         _ = self.downloadsSession
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.isHidden = true
-        noContactsLabel.isHidden = false
-        noContactsLabel.text = "Search to Retrieving Music..."
-    }
 
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

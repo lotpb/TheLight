@@ -31,20 +31,28 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
-    // data
-    var contactStore = CNContactStore()
-    private var contacts = [ContactEntry]()
-    //private var contacts = [CNContact]()
-    
     @IBOutlet weak private var tableView: UITableView!
     @IBOutlet weak var noContactsLabel: UILabel!
     @IBOutlet weak private var searchBar: UISearchBar!
-
+    
+    // data
+    private var contactStore = CNContactStore()
+    private var contacts = [CNContact]()
+    private var contactEntry = [ContactEntry]()
+    
+    private var authStatus: CNAuthorizationStatus = .denied {
+        didSet { // switch enabled search bar, depending contacts permission
+            searchBar.isUserInteractionEnabled = authStatus == .authorized
+            if authStatus == .authorized { // all search
+                contacts = fetchContacts("")
+                tableView.reloadData()
+            }
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.register(UINib(nibName: "ContactTableViewCell", bundle: nil), forCellReuseIdentifier: "ContactTableViewCell")
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
@@ -60,15 +68,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         titleButton.setTitleColor(.white, for: UIControlState())
         self.navigationItem.titleView = titleButton
         
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.backgroundColor = Color.LGrayColor
-        self.tableView!.estimatedRowHeight = 65
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        
-        //checkAuthorization()
-        
-        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: kCellID)
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +86,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
                     self.tableView.isHidden = !success
                     self.noContactsLabel.isHidden = success
                     if success && contacts?.count > 0 {
-                        self.contacts = contacts!
+                        self.contactEntry = contacts!
                         self.tableView.reloadData()
                     } else {
                         self.noContactsLabel.text = "Unable to get contacts..."
@@ -100,11 +100,22 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         super.didReceiveMemoryWarning()
     }
     
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.backgroundColor = Color.LGrayColor
+        self.tableView!.estimatedRowHeight = 65
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView.register(UINib(nibName: "ContactTableViewCell", bundle: nil), forCellReuseIdentifier: "ContactTableViewCell")
+    }
+    
     func requestAccessToContacts(_ completion: @escaping (_ success: Bool) -> Void) {
         let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
         
         switch authorizationStatus {
-        case .authorized: completion(true) // authorized previously
+        case .authorized:
+            self.authStatus = .authorized //added
+            completion(true) // authorized previously
         case .denied, .notDetermined: // needs to ask for authorization
             self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (accessGranted, error) -> Void in
                 completion(accessGranted)
@@ -115,34 +126,31 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     }
     
     func retrieveContacts(_ completion: (_ success: Bool, _ contacts: [ContactEntry]?) -> Void) {
-        var contacts = [ContactEntry]()
+ 
         do {
             let contactsFetchRequest = CNContactFetchRequest(keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor, CNContactOrganizationNameKey as CNKeyDescriptor, CNContactImageDataKey as CNKeyDescriptor, CNContactImageDataAvailableKey as CNKeyDescriptor, CNContactPhoneNumbersKey as CNKeyDescriptor, CNContactEmailAddressesKey as CNKeyDescriptor])
+ 
             try contactStore.enumerateContacts(with: contactsFetchRequest, usingBlock: { (cnContact, error) in
-                if let contact = ContactEntry(cnContact: cnContact) { contacts.append(contact) }
+                if let contact = ContactEntry(cnContact: cnContact) { self.contactEntry.append(contact) }
             })
-            completion(true, contacts)
+            completion(true, contactEntry)
         } catch {
             completion(false, nil)
         }
     }
-    /*
+    
     private func fetchContacts(_ name: String) -> [CNContact] {
-        
-        let contactStore = CNContactStore()
         
         do {
             let request = CNContactFetchRequest(keysToFetch: [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
-            
             if name.isEmpty { // all search
                 request.predicate = nil
             } else {
                 request.predicate = CNContact.predicateForContacts(matchingName: name)
             }
             
-            var contacts = [CNContact]()
             try contactStore.enumerateContacts(with: request, usingBlock: { (contact, error) in
-                contacts.append(contact)
+                self.contacts.append(contact)
             })
             
             return contacts
@@ -150,13 +158,13 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
             NSLog("Fetch error \(error.localizedDescription)")
             return []
         }
-    } */
+    }
     
     // =========================================================================
     // MARK: - UISearchBarDelegate
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        //contacts = fetchContacts(searchText)
+        contacts = fetchContacts(searchText)
         tableView.reloadData()
     }
     
@@ -168,21 +176,22 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contacts.count
+        return contactEntry.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactTableViewCell", for: indexPath) as! ContactTableViewCell
         
-        let entry = contacts[(indexPath as NSIndexPath).row]
+        let entry = contactEntry[(indexPath as NSIndexPath).row]
         cell.configureWithContactEntry(entry)
         cell.layoutIfNeeded()
-
-         /*
+        /*
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let contact = contacts[indexPath.row]
          // get the full name
-         let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"
-         cell.textLabel?.text = fullName */
+        let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"
+        cell.textLabel?.text = fullName */
         
         return cell
     }

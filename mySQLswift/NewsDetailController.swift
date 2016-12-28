@@ -69,7 +69,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
             self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
     
             self.titleLabel.font = Font.News.newstitle
-            self.detailLabel.font = Font.celllabel1
+            self.detailLabel.font = Font.cellsubtitle
             self.newsTextview.isEditable = true//bug fix
             self.newsTextview.font = Font.News.newssource
         }

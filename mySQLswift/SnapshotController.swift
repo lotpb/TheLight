@@ -16,6 +16,10 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var tableView: UITableView!
     
+    var searchController: UISearchController!
+    var resultsController: UITableViewController!
+    var foundUsers = [String]()
+    
     var selectedImage : UIImage!
     var eventStore: EKEventStore!
     var reminders: [EKReminder]!
@@ -78,6 +82,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
         // MARK: - SplitView
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar'
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+        navigationItem.leftItemsSupplementBackButton = true
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -100,7 +106,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         parseData()
         setupTableView()
         setupNavBarButtons()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -130,11 +135,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.tableFooterView = UIView(frame: .zero)
       //self.tableView!.separatorStyle = UITableViewCellSeparatorStyle.none
         self.tableView!.separatorColor = Color.Snap.lineColor //.clear
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
     }
     
     func setupNavBarButtons() {
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(SnapshotController.searchButton))
-        navigationItem.rightBarButtonItems = [searchButton]
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        navigationItem.rightBarButtonItems = [searchBtn]
     }
     
     
@@ -289,9 +299,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.snapdetailLabel.font = Font.Snapshot.cellsubtitlePad
 
         } else {
-            cell.textLabel!.font = Font.Snapshot.celltitle
-            cell.snaptitleLabel.font = Font.Snapshot.cellsubtitle
-            cell.snapdetailLabel.font = Font.Snapshot.cellsubtitle
+            cell.textLabel!.font = Font.celltitle
+            cell.snaptitleLabel.font = Font.cellsubtitle
+            cell.snapdetailLabel.font = Font.cellsubtitle
         }
         
         cell.textLabel!.textColor = Color.Snap.textColor
@@ -312,8 +322,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             if (indexPath.row == 0) {
                 
-                //cell.collectionView.tag = 10
-                //cell.collectionView.backgroundColor = .clear //Color.Snap.backColor
+                //cell.selectionStyle = UITableViewCellSelectionStyle.gray
+                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 cell.textLabel!.text = String(format: "%@%d", "Top News ", _feedItems.count)
                 
                 return cell
@@ -929,11 +939,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-     // MARK: - Search
-    
-    func searchButton(_ sender: AnyObject) {
-
-    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -1001,4 +1006,54 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     }
 }
 //-----------------------end------------------------------
+
+// MARK: - UISearchBar Delegate
+extension SnapshotController: UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        //searchController.searchBar.scopeButtonTitles = searchScope
+        searchController.searchBar.barTintColor = .black //Color.Lead.navColor
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true, completion: nil)
+    }
+}
+
+extension SnapshotController: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        let firstNameQuery = PFQuery(className:"Leads")
+        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
+        
+        let lastNameQuery = PFQuery(className:"Leads")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        
+        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+            
+            if error != nil {
+                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
+                return
+            }
+            if let objects = results {
+                self.foundUsers.removeAll(keepingCapacity: false)
+                for object in objects {
+                    let firstName = object.object(forKey: "First") as! String
+                    let lastName = object.object(forKey: "LastName") as! String
+                    let fullName = firstName + " " + lastName
+                    
+                    self.foundUsers.append(fullName)
+                    print(fullName)
+                }
+                DispatchQueue.main.async {
+                    self.resultsController.tableView.reloadData()
+                    self.searchController.resignFirstResponder()
+                }
+            }
+        }
+    }
+}
 
