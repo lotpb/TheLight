@@ -26,6 +26,8 @@ target 'TheLight' do
     
     pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'
     
+    pod 'YouTubePlayer'
+    
     #pod 'Alamofire', '~> 4.0'
     #pod 'JSQMessagesViewController'
 end

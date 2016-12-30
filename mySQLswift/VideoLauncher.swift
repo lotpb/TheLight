@@ -11,8 +11,6 @@ import AVFoundation
 
 class VideoPlayerView: UIView {
     
-    var videoURL : String?
-    
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         aiv.translatesAutoresizingMaskIntoConstraints = false
@@ -158,10 +156,6 @@ class VideoPlayerView: UIView {
         //tableView.rowHeight = UITableViewAutomaticDimension
         //tableView.addSubview(refreshControl)
         
-        setupPlayerView()
-        
-        setupGradientLayer()
-        
         controlsContainerView.frame = frame
         addSubview(controlsContainerView)
         //addSubview(tableView)
@@ -198,58 +192,45 @@ class VideoPlayerView: UIView {
         addConstraintsWithFormat(format: "H:|-16-[v0(30)]", views: closeButton)
         closeButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         closeButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        /*
-        controlsContainerView.addSubview(settingButton)
-        addConstraintsWithFormat(format: "H:|-16-[v0(30)]", views: settingButton)
-        settingButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        settingButton.heightAnchor.constraint(equalToConstant: 30).isActive = true */
         
-        //addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: tableView)
-        //addConstraintsWithFormat(format: "V:|-200-[v0]-0-|", views: tableView)
+        //let videoURL: String?
         
+        //let videoURL = "https://files.parsetfss.com/6ab2bd45-dd6b-4dda-afde-ee839ccbdc32/tfss-9c23838b-c434-49fa-9f6d-54e0631366c5-movie.mp4"
+        
+        //let videoURL = "https://firebasestorage.googleapis.com/v0/b/gameofchats-762ca.appspot.com/o/message_movies%2F12323439-9729-4941-BA07-2BAE970967C7.mov?alt=media&token=3e37a093-3bc8-410f-84d3-38332af9c726"
+        
+        let videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+        loadVideoID(videoURL: videoURL)
+        
+        setupGradientLayer()
         
     }
     
     var player: AVPlayer?
     
-    private func setupPlayerView() {
- 
-        //warning: use your own video url here, the bandwidth for google firebase storage will run out as more and more people use this file
+    open func loadVideoID(videoURL: String) {
         
-        //let urlString: String = videoURL
-        
-        //let urlString = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
-  
-        //let urlString = "https://files.parsetfss.com/6ab2bd45-dd6b-4dda-afde-ee839ccbdc32/tfss-9c23838b-c434-49fa-9f6d-54e0631366c5-movie.mp4"
-        
-        let urlString = "https://firebasestorage.googleapis.com/v0/b/gameofchats-762ca.appspot.com/o/message_movies%2F12323439-9729-4941-BA07-2BAE970967C7.mov?alt=media&token=3e37a093-3bc8-410f-84d3-38332af9c726"
-        
+        let urlString: String = videoURL
+
         if let url = NSURL(string: urlString) {
-            player = AVPlayer(url: url as URL)
             
+            player = AVPlayer(url: url as URL)
             let playerLayer = AVPlayerLayer(player: player)
             self.layer.addSublayer(playerLayer)
             playerLayer.frame = self.frame
-            
             player?.play()
-            
             player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
             
             //track player progress
-            
             let interval = CMTime(value: 1, timescale: 2)
             player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
-                
                 let seconds = CMTimeGetSeconds(progressTime)
                 let secondsString = String(format: "%02d", Int(seconds.truncatingRemainder(dividingBy: 60)))
                 let minutesString = String(format: "%02d", Int(seconds / 60))
-                
                 self.currentTimeLabel.text = "\(minutesString):\(secondsString)"
-                
                 //lets move the slider thumb
                 if let duration = self.player?.currentItem?.duration {
                     let durationSeconds = CMTimeGetSeconds(duration)
-                    
                     self.videoSlider.value = Float(seconds / durationSeconds)
                 }
             })
@@ -292,12 +273,10 @@ class VideoPlayerView: UIView {
 
 class VideoLauncher: NSObject {
     
-    var videoURL : String?
+    var videoURL: String?
     
     func showVideoPlayer() {
         print("Showing video player animation....")
-        //print(videoURL)
-        //VideoPlayerView.videoURL = self.videoURL
         
         if let keyWindow = UIApplication.shared.keyWindow {
             let view = UIView(frame: keyWindow.frame)

@@ -39,13 +39,13 @@ class CollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-    /*
-    let activityIndicatorView2: UIActivityIndicatorView = {
+    
+    let activityIndicatorView1: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         //aiv.translatesAutoresizingMaskIntoConstraints = false
         aiv.hidesWhenStopped = true
         return aiv
-    }() */
+    }()
     
     var playerLayer2: AVPlayerLayer?
     var player2: AVPlayer?
@@ -102,12 +102,6 @@ class CollectionViewCell: UICollectionViewCell {
 }
 
 class VideoCell: CollectionViewCell {
-    /*
-    var video: Video? {
-        didSet {
-     
-        }
-    } */
  
     let thumbnailImageView: CustomImageView = {
         let imageView = CustomImageView()

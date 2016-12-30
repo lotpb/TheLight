@@ -26,6 +26,7 @@ var searchController: UISearchController!
         static let DGrayColor = UIColor(white:0.45, alpha:1.0)
         static let LGrayColor = UIColor(white:0.90, alpha:1.0)
         static let DGreenColor = UIColor(red:0.16, green:0.54, blue:0.13, alpha: 1.0)
+        static let RedColor = UIColor.rgb(red: 230, green: 32, blue: 31)
         
         enum Blog {
             static let navColor = UIColor.red
@@ -37,16 +38,16 @@ var searchController: UISearchController!
         }
         enum Lead {
             static let navColor = UIColor.black
-            static let labelColor = DGrayColor
+            static let labelColor = Color.DGrayColor
             static let labelColor1 = UIColor.red
             static let buttonColor = UIColor.red
         }
         
         enum Cust {
             static let navColor = UIColor.black //UIColor(red: 0.21, green: 0.60, blue: 0.86, alpha: 1.0)
-            static let labelColor = DGrayColor //UIColor(red: 0.20, green: 0.29, blue: 0.37, alpha: 1.0)
-            static let labelColor1 = BlueColor //UIColor(red: 0.20, green: 0.29, blue: 0.37, alpha: 1.0)
-            static let buttonColor = BlueColor
+            static let labelColor = Color.DGrayColor //UIColor(red: 0.20, green: 0.29, blue: 0.37, alpha: 1.0)
+            static let labelColor1 = Color.BlueColor //UIColor(red: 0.20, green: 0.29, blue: 0.37, alpha: 1.0)
+            static let buttonColor = Color.BlueColor
         }
         
         enum Vend {
@@ -64,8 +65,8 @@ var searchController: UISearchController!
         }
         
         enum News {
-            static let navColor = UIColor.rgb(red: 230, green: 32, blue: 31)
-            static let buttonColor = BlueColor
+            static let navColor = Color.RedColor
+            static let buttonColor = Color.BlueColor
         }
         
         enum Stat {
@@ -74,7 +75,7 @@ var searchController: UISearchController!
         
         enum Snap {
             static let tablebackColor = UIColor.black
-            static let backColor = UIColor(white:0.25, alpha:1.0)
+            static let collectbackColor = UIColor(white:0.25, alpha:1.0)
             static let textColor = UIColor.white
             static let textColor1 = UIColor.lightGray
             static let lineColor = UIColor.darkGray
@@ -100,9 +101,11 @@ var searchController: UISearchController!
         static let labeltitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
         
         static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
+        static let celltitlePad1 = UIFont.systemFont(ofSize: 20, weight: UIFontWeightBold)
         
         static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
         static let celltitle2 = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
+        
         static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         static let celllabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
         static let celllabel1 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
@@ -110,37 +113,37 @@ var searchController: UISearchController!
         
         
         struct Blog {
+            static let celltitlePad = Font.celltitlePad1
+            static let cellsubtitlePad = Font.celltitle
+            static let celldatePad = Font.celllabel2
+            
             static let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
             static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightLight)
-            static let celldate = cellsubtitle
+            static let celldate = Font.cellsubtitle
             static let cellLabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightBold)
-            static let cellsubject = celllabel2
+            static let cellsubject = Font.celllabel2
         }
         
         struct BlogEdit {
-            static let celltitlePad = UIFont.systemFont(ofSize: 20, weight: UIFontWeightBold)
-            static let cellsubtitlePad = celltitle
-            static let celldatePad = labeltitle
+            static let replytitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
+            static let replysubtitlePad = Font.celllabel1
+            static let replydatePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
+            static let replylabelPad = Font.celllabel1
             
-            static let replytitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-            static let replysubtitlePad = cellsubtitle
-            static let replydatePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-            static let replylabelPad = cellsubtitle
-            
-            static let replytitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let replysubtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
-            static let replydate = UIFont.systemFont(ofSize: 14, weight: UIFontWeightBold)
-            static let replylabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+            static let replytitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
+            static let replysubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            static let replydate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
+            static let replylabel = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         }
         
         struct News {
             static let newstitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightRegular)
-            static let newssourcePad = celltitle2
+            static let newssourcePad = Font.celltitle2
             static let newslabel1Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let newslabel2Pad = celllabel1
+            static let newslabel2Pad = Font.celllabel1
             
-            static let newstitle = celllabel1
-            static let newssource = labeltitle
+            static let newstitle = Font.celllabel1
+            static let newssource = Font.labeltitle
             static let newslabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
             static let newslabel2 = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
         }
@@ -148,7 +151,7 @@ var searchController: UISearchController!
         struct Snapshot {
             static let celltitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
             static let cellsubtitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
-            static let celllabelPad = celllabel1
+            static let celllabelPad = Font.celllabel1
 
             static let cellLabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
         }
@@ -159,33 +162,33 @@ var searchController: UISearchController!
         
         struct Detail {
             static let ipadname = UIFont.systemFont(ofSize: 30, weight: UIFontWeightLight)
-            static let ipaddate = celllabel1
+            static let ipaddate = Font.celllabel1
             static let ipadaddress = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
             static let ipadAmount = UIFont.systemFont(ofSize: 60, weight: UIFontWeightRegular)
             
             static let textname = UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)
-            static let textdate = cellsubtitle
-            static let textaddress = celltitle2
+            static let textdate = Font.cellsubtitle
+            static let textaddress = Font.celltitle2
             static let textAmount = UIFont.systemFont(ofSize: 30, weight: UIFontWeightRegular)
             
-            static let Vtextname = celllabel2
+            static let Vtextname = Font.celllabel2
             static let Vtextdate = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
             static let VtextAmount = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
             
             static let celltitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightSemibold)
-            static let cellsubtitlePad = labeltitle
+            static let cellsubtitlePad = Font.labeltitle
             static let celltitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightSemibold)
             static let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
             
             static let ipadnewstitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightSemibold)
-            static let ipadnewssubtitle = celllabel2
-            static let ipadnewsdetail = celllabel1
+            static let ipadnewssubtitle = Font.celllabel2
+            static let ipadnewsdetail = Font.celllabel1
             
             static let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightSemibold)
-            static let newssubtitle = labeltitle
-            static let newsdetail = cellsubtitle
+            static let newssubtitle = Font.labeltitle
+            static let newsdetail = Font.cellsubtitle
             
-            static let textbutton = celllabel1
+            static let textbutton = Font.celllabel1
         }
     }
 
@@ -296,6 +299,17 @@ public extension String {
         let result = linkDetector?.firstMatch(in: self, options: .reportCompletion, range: range)
         let scheme = result?.url?.scheme ?? ""
         return scheme == "mailto" && result?.range.length == self.characters.count
+    }
+}
+
+// MARK: Helper Extensions
+extension UIViewController {
+    
+    func showAlert(withTitle title: String?, message: String?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
     }
 }
 

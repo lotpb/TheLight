@@ -64,7 +64,14 @@ class GeotificationsViewController: UIViewController {
         locationManager.startUpdatingLocation()
         
         // Float Button
-        let floatingButton = UIButton(frame: CGRect(x: self.view.frame.size.width - 65, y: self.view.frame.size.height - 180, width: 50, height: 50))
+        var floatingButton = UIButton()
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            floatingButton = UIButton(frame: CGRect(x: self.view.frame.size.width-480, y: self.view.frame.size.height-190, width: 60, height: 60))
+            floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: 60)
+        } else {
+            floatingButton = UIButton(frame: CGRect(x: self.view.frame.size.width-65, y: self.view.frame.size.height-180, width: 50, height: 50))
+            floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: 50)
+        }
         floatingButton.backgroundColor = UIColor.red
         floatingButton.layer.cornerRadius = floatingButton.frame.size.width / 2
         floatingButton.setTitle("+", for: UIControlState.normal)
@@ -127,7 +134,13 @@ class GeotificationsViewController: UIViewController {
     }
     
     func updateGeotificationsCount() {
-        title = "Geotifications (\(geotifications.count))"
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            //title.font = Font.navlabel
+            title = "TheLight Software - Geotifications (\(geotifications.count))"
+        } else {
+            title = "Geotifications (\(geotifications.count))"
+        }
         navigationItem.rightBarButtonItem?.isEnabled = (geotifications.count < 20)
     }
     
@@ -163,20 +176,19 @@ class GeotificationsViewController: UIViewController {
         return region
     }
     
-    
     func startMonitoring(geotification: Geotification) {
-        
+        // 1
         if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
-            self.simpleAlert(title: "Error", message: "Geofencing is not supported on this device!")
+            showAlert(withTitle:"Error", message: "Geofencing is not supported on this device!")
             return
         }
-        
+        // 2
         if CLLocationManager.authorizationStatus() != .authorizedAlways {
-            self.simpleAlert(title: "Warning", message: "Your geotification is saved but will only be activated once you grant Geotify permission to access the device location.")
+            showAlert(withTitle:"Warning", message: "Your geotification is saved but will only be activated once you grant Geotify permission to access the device location.")
         }
-        
+        // 3
         let region = self.region(withGeotification: geotification)
-        
+        // 4
         locationManager.startMonitoring(for: region)
     }
     
@@ -189,7 +201,7 @@ class GeotificationsViewController: UIViewController {
     }
     
     
-    // MARK: - Get Address
+    // MARK: - GetAddress
     
     func displayLocationInfo(_ placemark: CLPlacemark?) {
         if let containsPlacemark = placemark {
@@ -210,7 +222,7 @@ class GeotificationsViewController: UIViewController {
     }
 
     
-    // MARK:  GetAddressButton
+    // MARK: GetAddressButton
     
     @IBAction func getAddressButton(_ sender: UIBarButtonItem) {
         
@@ -266,7 +278,7 @@ class GeotificationsViewController: UIViewController {
             monitoredRegions.removeValue(forKey: regionIdentifier)
         }
     }
-    
+    /*
     func showAlert(_ title: String) {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
@@ -274,7 +286,7 @@ class GeotificationsViewController: UIViewController {
         }))
         self.present(alert, animated: true, completion: nil)
         
-    }
+    } */
     
     // MARK: - Segues
     
@@ -395,9 +407,9 @@ extension GeotificationsViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKCircle {
             let renderer = MKCircleRenderer(overlay: overlay)
-            renderer.lineWidth = 1.0
+            renderer.lineWidth = 2.0
             renderer.strokeColor = .blue
-            renderer.fillColor = UIColor.blue.withAlphaComponent(0.4)
+            renderer.fillColor = UIColor.black.withAlphaComponent(0.5) //UIColor.blue.withAlphaComponent(0.4)
             return renderer
         } else if overlay is MKPolyline {
             let renderer = MKPolylineRenderer(overlay: overlay)

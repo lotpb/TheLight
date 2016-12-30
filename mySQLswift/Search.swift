@@ -96,7 +96,7 @@ class Search: UIView, UITableViewDelegate, UITableViewDataSource, UITextFieldDel
         if (self.searchField.text == "" || self.searchField.text == nil) {
             self.items = []
             self.tableView.removeFromSuperview()
-        } else{
+        } else {
             let _  = URLSession.shared.dataTask(with: requestSuggestionsURL(text: self.searchField.text!), completionHandler: { (data, response, error) in
                 if error == nil {
                     do {

@@ -55,17 +55,20 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         setupNavBarButtons()
         
         self.refreshControl = UIRefreshControl()
-        self.refreshControl.backgroundColor = Color.Blog.navColor
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.refreshControl.backgroundColor = .black
+        } else {
+            self.refreshControl.backgroundColor = Color.Blog.navColor
+            // get rid of black bar underneath navbar
+            UINavigationBar.appearance().shadowImage = UIImage()
+            UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        }
         self.refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
         //self.refreshControl.attributedTitle = NSAttributedString(string: "Last updated on \(NSDate())", attributes: attributes)
         self.refreshControl.addTarget(self, action: #selector(Blog.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
-        
-        // get rid of black bar underneath navbar
-        UINavigationBar.appearance().shadowImage = UIImage()
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
 
     }
 
@@ -154,9 +157,9 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            cell.blogtitleLabel!.font =  Font.Blog.celltitle
-            cell.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
-            cell.blogmsgDateLabel.font = Font.Blog.celldate
+            cell.blogtitleLabel!.font =  Font.Blog.celltitlePad
+            cell.blogsubtitleLabel!.font =  Font.Blog.cellsubtitlePad
+            cell.blogmsgDateLabel.font = Font.Blog.celldatePad
             cell.numLabel.font = Font.Blog.cellLabel
             cell.commentLabel.font = Font.Blog.cellLabel
             

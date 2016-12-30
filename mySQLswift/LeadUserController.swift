@@ -11,18 +11,6 @@ import Parse
 
 class LeadUserController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let cellHeadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightBold)
-    let cellHeadsubtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
-    let cellHeadlabel = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-    
-    let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
-    let ipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    let ipadlabel = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    
-    let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    let celllabel = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    let headtitle = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
-    
     @IBOutlet weak var tableView: UITableView?
 
     var _feedItems : NSMutableArray = NSMutableArray()
@@ -98,7 +86,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.estimatedRowHeight = 110
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = .white
-        tableView!.tableFooterView = UIView(frame: .zero)
+        self.tableView!.tableFooterView = UIView(frame: .zero)
     }
     
     // MARK: - refresh
@@ -141,16 +129,15 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         cell.blogsubtitleLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.blogtitleLabel!.font = ipadtitle
-            cell.blogsubtitleLabel!.font = ipadsubtitle
-            cell.blogmsgDateLabel!.font = ipadlabel
-            cell.commentLabel!.font = ipadlabel
+            cell.blogtitleLabel!.font = Font.celltitle2
+            cell.blogsubtitleLabel!.font = Font.celllabel1
+            cell.blogmsgDateLabel!.font = Font.cellsubtitle
+            cell.commentLabel!.font = Font.cellsubtitle
         } else {
             cell.blogtitleLabel!.font = Font.celltitle
-            cell.blogsubtitleLabel!.font = cellsubtitle
-            cell.blogmsgDateLabel!.font = celllabel
-            cell.commentLabel!.font = celllabel
-
+            cell.blogsubtitleLabel!.font = Font.cellsubtitle
+            cell.blogmsgDateLabel!.font = Font.cellsubtitle
+            cell.commentLabel!.font = Font.cellsubtitle
         }
         
         let dateStr : String
@@ -214,18 +201,22 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+        
         if (self.formController == "Leads") {
             myLabel.text = "Cust"
+            myLabel.backgroundColor = Color.DGrayColor
         } else if (self.formController == "Customer") {
             myLabel.text = "Lead"
+            myLabel.backgroundColor = Color.BlueColor
         } else if (self.formController == "Blog") {
             myLabel.text = "Blog"
+            myLabel.backgroundColor = Color.RedColor
         }
-        myLabel.backgroundColor = UIColor(red: 0.02, green: 0.75, blue: 1.0, alpha: 1.0)
+
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
-        myLabel.font = headtitle
+        myLabel.font = Font.headtitle
         myLabel.layer.cornerRadius = 25.0
         myLabel.isUserInteractionEnabled = true
         cell.addSubview(myLabel)
@@ -249,13 +240,13 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         let myLabel6:UILabel = UILabel(frame: CGRect(x: 10, y: 140, width: self.tableView!.frame.size.width-20, height: 50))
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            myLabel4.font = cellHeadtitle
-            myLabel5.font = cellHeadsubtitle
-            myLabel6.font = cellHeadlabel
+            myLabel4.font = Font.celltitlePad1
+            myLabel5.font = Font.celllabel2
+            myLabel6.font = Font.celllabel1
         } else {
-            myLabel4.font = cellHeadtitle
-            myLabel5.font = cellHeadsubtitle
-            myLabel6.font = cellHeadlabel
+            myLabel4.font = Font.celltitlePad1
+            myLabel5.font = Font.celllabel2
+            myLabel6.font = Font.celllabel1
         }
         
         let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
@@ -265,7 +256,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel1.textAlignment = NSTextAlignment.center
         myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Count\n", _feedItems.count)
-        myLabel1.font = headtitle
+        myLabel1.font = Font.headtitle
         myLabel1.layer.cornerRadius = 25.0
         myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
@@ -281,7 +272,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel2.textAlignment = NSTextAlignment.center
         myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
-        myLabel2.font = headtitle
+        myLabel2.font = Font.headtitle
         myLabel2.layer.cornerRadius = 25.0
         myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
@@ -297,7 +288,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel3.textAlignment = NSTextAlignment.center
         myLabel3.layer.masksToBounds = true
         myLabel3.text = "Active"
-        myLabel3.font = headtitle
+        myLabel3.font = Font.headtitle
         myLabel3.layer.cornerRadius = 25.0
         myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
@@ -516,7 +507,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
                     } */
                 }
             }
-            
         }
     }
     

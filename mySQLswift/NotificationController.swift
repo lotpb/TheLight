@@ -88,21 +88,16 @@ class NotificationController: UIViewController {
         if #available(iOS 10.0, *) {
             
             let content = UNMutableNotificationContent()
+            content.title = "Message from TheLight"
             content.body = customMessage.text!
             content.badge = 1
             content.sound = UNNotificationSound.default()
             content.categoryIdentifier = "myCategory"
             
-            if let path = Bundle.main.path(forResource: "calendar", ofType: "png") {
-                let url = URL(fileURLWithPath: path)
-                
-                do {
-                    let attachment = try UNNotificationAttachment(identifier: "calendar", url: url, options: nil)
-                    content.attachments = [attachment]
-                } catch {
-                    print("The attachment was not loaded.")
-                }
-            }
+            let imageName = "calendar"
+            guard let imageURL = Bundle.main.url(forResource: imageName, withExtension: "png") else { return }
+            let attachment = try! UNNotificationAttachment(identifier: imageName, url: imageURL, options: .none)
+            content.attachments = [attachment]
             
             let month = datePicker.calendar.component(.month, from: datePicker.date)
             let day = datePicker.calendar.component(.day, from: datePicker.date)
@@ -117,10 +112,10 @@ class NotificationController: UIViewController {
             dateComponents.minute = minute
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-
             let request = UNNotificationRequest(identifier: "member-id-123", content: content, trigger: trigger)
-            
             UNUserNotificationCenter .current().add(request, withCompletionHandler: nil)
+            
+            self.customMessage.text! = ""
             
         } else {
         

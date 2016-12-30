@@ -38,22 +38,17 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         self.webView.navigationDelegate = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.hidesBarsOnSwipe = true
-        //changes segmented color
-        self.navigationController?.navigationBar.tintColor = .white
-        //self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.hidesBarsOnSwipe = false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // MARK: - SplitView
+        self.splitViewController?.maximumPrimaryColumnWidth = 300
+        self.splitViewController!.preferredDisplayMode = .primaryHidden //.allVisible
+        //fix - remove bottom bar
+        self.extendedLayoutIncludesOpaqueBars = true
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+        navigationItem.leftItemsSupplementBackButton = true
+        
         self.segControl? = UISegmentedControl(items: SegTitles)
         //self.segControl?.selectedSegmentIndex = 2
         //self.segControl?.layer.cornerRadius = 15.0
@@ -67,14 +62,27 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
-      //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
+        //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
         webView.load(URLRequest(url:URL(string: SegAddress[0])!))
         
         backButton.isEnabled = false
         forwardButton.isEnabled = false
-        recentPostsButton.isEnabled = false 
+        recentPostsButton.isEnabled = false
         
-}
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.hidesBarsOnSwipe = true
+        //changes segmented color
+        self.navigationController?.navigationBar.tintColor = .white
+        //self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.hidesBarsOnSwipe = false
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

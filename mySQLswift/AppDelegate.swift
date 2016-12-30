@@ -15,7 +15,6 @@ import Firebase
 import SwiftKeychainWrapper
 import CoreLocation
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
@@ -44,22 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "emailmessageKey": "<h3>Programming in Swift</h3>",
             "weatherKey": "2446726"
             ])
-        
-        // MARK: - RegisterUserNotification
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) {(accepted, error) in
-            if !accepted {
-                print("Notification access denied.")
-            }
-        }
-        /*
-         UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
-         application.registerForRemoteNotifications() */
-        application.applicationIconBadgeNumber = 0
-        
-        // Schedule Notification set in NotificationController
-        let action = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: [])
-        let category = UNNotificationCategory(identifier: "myCategory", actions: [action], intentIdentifiers: [], options: [])
-        UNUserNotificationCenter.current().setNotificationCategories([category])
         
         // MARK: - Parse
         if (defaults.bool(forKey: "parsedataKey"))  {
@@ -107,9 +90,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 return
             }
         }
-        
-        // MARK: - Customize Appearance
-        customizeAppearance()
 
         // MARK: - Facebook Sign-in
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -117,17 +97,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // MARK: - Firebase
         FIRApp.configure()
         
-        // MARK: - 3D Touch
-        let firstItemIcon:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .share)
-        let firstItem = UIMutableApplicationShortcutItem(type: "1", localizedTitle: "Share", localizedSubtitle: "Share an item.", icon: firstItemIcon, userInfo: nil)
-        
-        let firstItemIcon1:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
-        let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "Add", localizedSubtitle: "Add an item.", icon: firstItemIcon1, userInfo: nil)
-        application.shortcutItems = [firstItem,firstItem1]
-        
         // MARK: - AddGeotification
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
+        
+        customizeAppearance()
+        setUserNotifications()
+        set3DTouch()
         
         return true
     }
@@ -187,38 +163,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func scheduleNotification(at date: Date) {
         
-        let calendar = Calendar(identifier: .gregorian)
-        let components = calendar.dateComponents(in: .current, from: date)
-        let newComponents = DateComponents(calendar: calendar, timeZone: .current, month: components.month, day: components.day, hour: components.hour, minute: components.minute)
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
-        
         let content = UNMutableNotificationContent()
         content.title = "Tutorial Reminder"
         content.body = "Just a reminder to read your tutorial over at appcoda.com!"
         content.sound = UNNotificationSound(named: "Tornado.caf")
         content.categoryIdentifier = "myCategory"
         
-        if let path = Bundle.main.path(forResource: "profile-rabbit-toy", ofType: "png") {
-            let url = URL(fileURLWithPath: path)
-            
-            do {
-                let attachment = try UNNotificationAttachment(identifier: "logo", url: url, options: nil)
-                content.attachments = [attachment]
-            } catch {
-                print("The attachment was not loaded.")
-            }
-        }
+        let imageName = "profile-rabbit-toy"
+        guard let imageURL = Bundle.main.url(forResource: imageName, withExtension: "png") else { return }
+        let attachment = try! UNNotificationAttachment(identifier: imageName, url: imageURL, options: .none)
+        content.attachments = [attachment]
         
-        let request = UNNotificationRequest(identifier: "textNotification", content: content, trigger: trigger)
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents(in: .current, from: date)
+        let newComponents = DateComponents(calendar: calendar, timeZone: .current, month: components.month, day: components.day, hour: components.hour, minute: components.minute)
         
-        UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        UNUserNotificationCenter.current().add(request) {(error) in
-            if let error = error {
-                print("Uh oh! We had an error: \(error)")
-            }
-        }
+        let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
     
     // MARK: - Background Fetch
@@ -233,12 +195,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             content.body = "Background transfer service: Download complete!"
             content.badge = 1
             content.sound = UNNotificationSound.default()
-            content.categoryIdentifier = "Background Fetch"
+            content.categoryIdentifier = "myCategory"
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-            
             let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
-            
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
         } else {
@@ -259,51 +219,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
         
-        /*
-         guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-         guard let topAsDetailController = secondaryAsNavController.topViewController as? SnapshotController else { return false }
-         
-         if topAsDetailController.detailItem == nil {
-         // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-         return true
-         } */
-        
         return false
     }
-    
     
      // MARK: - Music Controller
     
     internal func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         backgroundSessionCompletionHandler = completionHandler
     }
-    
-    // MARK: - Geotify AddGeotification
-    
-    func handleEvent(forRegion region: CLRegion!) {
-        // Show an alert if application is active
-        if UIApplication.shared.applicationState == .active {
-            guard let message = note(fromRegionIdentifier: region.identifier) else { return }
-            window?.rootViewController?.simpleAlert(title: "", message: message)
-          //window?.rootViewController?.showAlert(withTitle: nil, message: message)
-        } else {
-            let content = UNMutableNotificationContent()
-            content.body = note(fromRegionIdentifier: region.identifier)!
-            content.badge = 1
-            content.sound = UNNotificationSound.default()
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-            let request = UNNotificationRequest(identifier: "Geotify-id-123", content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        }
-    }
-    
-    func note(fromRegionIdentifier identifier: String) -> String? {
-        let savedItems = UserDefaults.standard.array(forKey: PreferencesKeys.savedItems) as? [NSData]
-        let geotifications = savedItems?.map { NSKeyedUnarchiver.unarchiveObject(with: $0 as Data) as? Geotification }
-        let index = geotifications?.index { $0?.identifier == identifier }
-        return index != nil ? geotifications?[index!]?.note : nil
-    }
-    
     
     // MARK: - App Theme Customization
     
@@ -360,17 +283,82 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
+    // MARK: - Geotify AddGeotification
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
-        completionHandler([.alert,.sound])
+    func handleEvent(forRegion region: CLRegion!) {
+        if UIApplication.shared.applicationState == .active {
+            guard let message = note(fromRegionIdentifier: region.identifier) else { return }
+            window?.rootViewController?.showAlert(withTitle: nil, message: message)
+            
+        } else {
+            
+            let content = UNMutableNotificationContent()
+            content.title = "Tutorial Reminder"
+            content.body = note(fromRegionIdentifier: region.identifier)!
+            content.badge = 1
+            content.sound = UNNotificationSound.default()
+            content.categoryIdentifier = "myCategory"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+            let request = UNNotificationRequest(identifier: "AddGeotification", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            //UNUserNotificationCenter.current().delegate = self
+            //UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        }
     }
     
-    // Schedule Notification
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func note(fromRegionIdentifier identifier: String) -> String? {
+        let savedItems = UserDefaults.standard.array(forKey: PreferencesKeys.savedItems) as? [NSData]
+        let geotifications = savedItems?.map { NSKeyedUnarchiver.unarchiveObject(with: $0 as Data) as? Geotification }
+        let index = geotifications?.index { $0?.identifier == identifier }
+        return index != nil ? geotifications?[index!]?.note : nil
+    }
+    
+}
+// MARK: - setup RegisterUserNotification, 3DTouch
+extension AppDelegate {
+    
+    func setUserNotifications() {
+        
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        //setup actions categories
+        let action = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: [])
+        let category = UNNotificationCategory(identifier: "myCategory", actions: [action], intentIdentifiers: [], options: [])
+        center.setNotificationCategories([category])
+        
+        center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in
+            if granted {
+                UIApplication.shared.registerForRemoteNotifications()
+                UIApplication.shared.applicationIconBadgeNumber = 0
+                center.removeAllDeliveredNotifications()
+                center.removeAllPendingNotificationRequests()
+            }
+        }
+    }
+    
+    func set3DTouch() {
+
+        let firstItemIcon:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .share)
+        let firstItem = UIMutableApplicationShortcutItem(type: "1", localizedTitle: "Share", localizedSubtitle: "Share an item.", icon: firstItemIcon, userInfo: nil)
+        
+        let firstItemIcon1:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
+        let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "Add", localizedSubtitle: "Add an item.", icon: firstItemIcon1, userInfo: nil)
+        UIApplication.shared.shortcutItems = [firstItem,firstItem1]
+        
+    }
+}
+
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Swift.Void) {
+        
+        window?.rootViewController?.showAlert(withTitle: nil, message: "Crap")
+        completionHandler([.alert, .badge, .sound])
+    }
+    
+    // Schedule Notification Action
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
         
         if response.actionIdentifier == "remindLater" {
             let newDate = Date(timeInterval: 900, since: Date())

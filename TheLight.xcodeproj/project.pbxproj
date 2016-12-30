@@ -22,8 +22,6 @@
 		AF0D6B331C4C554300334D03 /* YouTubeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0D6B321C4C554300334D03 /* YouTubeController.swift */; };
 		AF0DACA11C1F43DB00B23CE5 /* BlogEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0DACA01C1F43DB00B23CE5 /* BlogEditController.swift */; };
 		AF0DACA41C1F47A500B23CE5 /* BlogNewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0DACA31C1F47A500B23CE5 /* BlogNewController.swift */; };
-		AF1931491D12DCCD00F826B2 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1931481D12DCCD00F826B2 /* YTPlayerView.m */; };
-		AF19314B1D12DDB500F826B2 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = AF19314A1D12DDB500F826B2 /* Assets */; };
 		AF1DE4B11C19CDBC002B24C5 /* LeadDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1DE4B01C19CDBC002B24C5 /* LeadDetail.swift */; };
 		AF1E6D561C1920FC0009230E /* CustomTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1E6D551C1920FC0009230E /* CustomTableCell.swift */; };
 		AF206E051C1B1FA800EA60D6 /* Tornado.caf in Resources */ = {isa = PBXBuildFile; fileRef = AF206E031C1B1FA800EA60D6 /* Tornado.caf */; };
@@ -68,6 +66,7 @@
 		AFBA8BB41E0D72A2000A7517 /* RegionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBA8BB31E0D72A2000A7517 /* RegionProtocol.swift */; };
 		AFBB9B7B1D2D398C00618586 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB9B7A1D2D398C00618586 /* MenuBar.swift */; };
 		AFBB9B7D1D2D760300618586 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB9B7C1D2D760300618586 /* FeedCell.swift */; };
+		AFC001EC1E15488F00192DD3 /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC001EB1E15488F00192DD3 /* Favorite.swift */; };
 		AFC4002E1C6025700095333E /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC4002D1C6025700095333E /* PlayerViewController.swift */; };
 		AFCAACE81C40961E00A52073 /* AdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCAACE71C40961E00A52073 /* AdController.swift */; };
 		AFD1A3001C1CCFCF00580F10 /* SocialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD1A2FF1C1CCFCF00580F10 /* SocialController.swift */; };
@@ -147,9 +146,6 @@
 		AF0D6B321C4C554300334D03 /* YouTubeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeController.swift; sourceTree = "<group>"; };
 		AF0DACA01C1F43DB00B23CE5 /* BlogEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogEditController.swift; sourceTree = "<group>"; };
 		AF0DACA31C1F47A500B23CE5 /* BlogNewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogNewController.swift; sourceTree = "<group>"; };
-		AF1931471D12DCC100F826B2 /* YTPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
-		AF1931481D12DCCD00F826B2 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
-		AF19314A1D12DDB500F826B2 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
 		AF1DE4B01C19CDBC002B24C5 /* LeadDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadDetail.swift; sourceTree = "<group>"; };
 		AF1E6D551C1920FC0009230E /* CustomTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTableCell.swift; sourceTree = "<group>"; };
 		AF206E031C1B1FA800EA60D6 /* Tornado.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Tornado.caf; path = Music/Tornado.caf; sourceTree = "<group>"; };
@@ -206,7 +202,7 @@
 		AFBA8BB31E0D72A2000A7517 /* RegionProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionProtocol.swift; sourceTree = "<group>"; };
 		AFBB9B7A1D2D398C00618586 /* MenuBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		AFBB9B7C1D2D760300618586 /* FeedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
-		AFC400291C60250E0095333E /* mySQLswift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mySQLswift-Bridging-Header.h"; sourceTree = "<group>"; };
+		AFC001EB1E15488F00192DD3 /* Favorite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favorite.swift; sourceTree = "<group>"; };
 		AFC4002D1C6025700095333E /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		AFCAACE71C40961E00A52073 /* AdController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdController.swift; sourceTree = "<group>"; };
 		AFD1A2FF1C1CCFCF00580F10 /* SocialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialController.swift; sourceTree = "<group>"; };
@@ -445,6 +441,7 @@
 				AF011A731C40AAE2000EAF5D /* JobController.swift */,
 				AF011A751C40AB2F000EAF5D /* SalesmanController.swift */,
 				AF9A87831C18645C0091B0E3 /* Web.swift */,
+				AFC001EB1E15488F00192DD3 /* Favorite.swift */,
 				AF8CC3A81C41B317004147F3 /* Edit Controllers */,
 				AFD1A3101C1E367B00580F10 /* Acc Controllers */,
 			);
@@ -527,12 +524,8 @@
 		AFC400281C60249F0095333E /* YouTube */ = {
 			isa = PBXGroup;
 			children = (
-				AF19314A1D12DDB500F826B2 /* Assets */,
 				AF0D6B321C4C554300334D03 /* YouTubeController.swift */,
 				AFC4002D1C6025700095333E /* PlayerViewController.swift */,
-				AFC400291C60250E0095333E /* mySQLswift-Bridging-Header.h */,
-				AF1931471D12DCC100F826B2 /* YTPlayerView.h */,
-				AF1931481D12DCCD00F826B2 /* YTPlayerView.m */,
 			);
 			name = YouTube;
 			sourceTree = "<group>";
@@ -726,7 +719,6 @@
 				AFE2640D1C17DC11007BBB90 /* bookmark.png in Resources */,
 				AFF5D5581D3AD59E00975055 /* GoogleService-Info.plist in Resources */,
 				AFE2640F1C17DC11007BBB90 /* comments.png in Resources */,
-				AF19314B1D12DDB500F826B2 /* Assets in Resources */,
 				AFE264131C17DC11007BBB90 /* news.png in Resources */,
 				AF206E061C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 in Resources */,
 				AF206E051C1B1FA800EA60D6 /* Tornado.caf in Resources */,
@@ -856,6 +848,7 @@
 				AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */,
 				AFA039731E08328E00E140E4 /* Geotification.swift in Sources */,
 				AFE419D41D19EDA200A6F590 /* SettingsLauncher.swift in Sources */,
+				AFC001EC1E15488F00192DD3 /* Favorite.swift in Sources */,
 				AF6DD0711D94454B00069D69 /* AccountCell.swift in Sources */,
 				AF5C01DE1C493199009BB817 /* MusicController.swift in Sources */,
 				AF011A721C40A798000EAF5D /* ProductController.swift in Sources */,
@@ -869,7 +862,6 @@
 				AF5BCEF11E0A2830007A9093 /* CreateContactViewController.swift in Sources */,
 				AF5C01E01C4931EE009BB817 /* TrackCell.swift in Sources */,
 				AF8CC3A71C4153AF004147F3 /* NewEditData.swift in Sources */,
-				AF1931491D12DCCD00F826B2 /* YTPlayerView.m in Sources */,
 				AFF5D5561D3AC8E700975055 /* Message.swift in Sources */,
 				AFBB9B7B1D2D398C00618586 /* MenuBar.swift in Sources */,
 				AF011A761C40AB2F000EAF5D /* SalesmanController.swift in Sources */,
@@ -1065,7 +1057,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -1127,7 +1119,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "mySQLswift/mySQLswift-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};

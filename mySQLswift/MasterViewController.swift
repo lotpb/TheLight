@@ -502,11 +502,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        /*
-        if let selectedIndexPath = tableView.indexPathForSelectedRow {
-            currentItem = menuItems[(selectedIndexPath as NSIndexPath).row] as! String
-        } */
-        
         let indexPath = tableView.indexPathForSelectedRow!
         let currentItem = tableView.cellForRow(at: indexPath)! as UITableViewCell
         
@@ -558,10 +553,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "snapshotSegue" {
-            /*
-            let controller = (segue.destination as! UINavigationController).topViewController as! SnapshotController
-            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            controller.navigationItem.leftItemsSupplementBackButton = true */
+
         }
         if segue.identifier == "statisticSegue" {
             let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController

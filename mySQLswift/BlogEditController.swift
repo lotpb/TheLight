@@ -151,9 +151,9 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
-                cell?.titleLabel!.font = Font.BlogEdit.celltitlePad
-                cell?.subtitleLabel!.font = Font.BlogEdit.cellsubtitlePad
-                cell?.msgDateLabel.font = Font.BlogEdit.celldatePad
+                cell?.titleLabel!.font = Font.Blog.celltitlePad
+                cell?.subtitleLabel!.font = Font.Blog.cellsubtitlePad
+                cell?.msgDateLabel.font = Font.Blog.celldatePad
                 
             } else {
                 
@@ -244,9 +244,9 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
                 cell?.replytitleLabel!.font = Font.BlogEdit.replytitlePad
-                cell?.replysubtitleLabel!.font = Font.BlogEdit.cellsubtitlePad
-                cell?.replynumLabel!.font = Font.BlogEdit.celldatePad
-                cell?.replydateLabel!.font = Font.BlogEdit.replylabel
+                cell?.replysubtitleLabel!.font = Font.BlogEdit.replysubtitlePad
+                cell?.replynumLabel!.font = Font.BlogEdit.replydatePad
+                cell?.replydateLabel!.font = Font.BlogEdit.replylabelPad
                 
             } else {
                 

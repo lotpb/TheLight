@@ -7,17 +7,18 @@
 //
 
 import UIKit
+import YouTubePlayer
 
 class PlayerViewController: UIViewController {
 
-    @IBOutlet weak var playerView: YTPlayerView!
+    @IBOutlet var videoPlayer: YouTubePlayerView!
     
     var videoID: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        playerView.load(withVideoId: videoID)
+        videoPlayer.loadVideoID(videoID)
     }
 
     override func didReceiveMemoryWarning() {

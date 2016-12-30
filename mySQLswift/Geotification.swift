@@ -69,7 +69,7 @@ class Geotification: NSObject, NSCoding, MKAnnotation {
         coder.encode(radius, forKey: GeoKey.radius)
         coder.encode(identifier, forKey: GeoKey.identifier)
         coder.encode(note, forKey: GeoKey.note)
-        coder.encode(eventType, forKey: GeoKey.eventType)
+        coder.encode(eventType.rawValue, forKey: GeoKey.eventType)
     }
     
 }
