@@ -114,7 +114,17 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     var emailTitle :String?
     var messageBody:String?
     
-    var photoImage: UIImageView!
+    //var photoImage: UIImageView!
+    
+    let photoImage: CustomImageView = {
+        let imageView = CustomImageView()
+        imageView.image = UIImage(named:"IMG_1133.jpg")
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderWidth = 1.0
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     
     
     override func viewDidLoad() {
@@ -184,25 +194,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.mySwitch!.onTintColor = Color.BlueColor
         self.mySwitch!.tintColor = .lightGray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-
-            /*
-            UIView.animate(withDuration: 2, animations: {
-                self.mainView?.frame =
-                    CGRect(x: 100, y: 100, width: 100, height: 50)
-            }) */
-            
-            photoImage = UIImageView(frame:CGRect(x: self.view.frame.width-755, y: 60, width: 340, height: 160))
-        } else {
-            photoImage = UIImageView(frame:CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110))
-        }
-        photoImage!.image = UIImage(named:"IMG_1133.jpg")
-        photoImage!.layer.masksToBounds = true
-        photoImage!.layer.borderColor = UIColor.lightGray.cgColor
-        photoImage!.layer.borderWidth = 1.0
-        photoImage!.isUserInteractionEnabled = true
-        self.mainView!.addSubview(photoImage!) 
-        
         self.mapbutton!.backgroundColor = Color.BlueColor
         self.mapbutton!.setTitleColor(.white, for: UIControlState())
         self.mapbutton!.addTarget(self, action: #selector(LeadDetail.mapButton), for: UIControlEvents.touchUpInside)
@@ -225,6 +216,13 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         parseData()
         followButton()
         refreshData()
+        
+        self.mainView!.addSubview(photoImage)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            setupConstraints()
+        } else {
+            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
+        }
         
     }
     
@@ -259,6 +257,15 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.listTableView!.reloadData()
         self.listTableView2!.reloadData()
         self.newsTableView!.reloadData()
+    }
+    
+    func setupConstraints() {
+
+        photoImage.translatesAutoresizingMaskIntoConstraints = false
+        photoImage.topAnchor.constraint(equalTo: (following?.bottomAnchor)!, constant: +25).isActive = true
+      //photoImage.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
+        photoImage.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor, constant: +10).isActive = true
+        photoImage.bottomAnchor.constraint( equalTo: (mapbutton?.topAnchor)!, constant: -10).isActive = true
     }
     
     // MARK: - Button

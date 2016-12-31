@@ -321,11 +321,11 @@ extension GeotificationsViewController: AddGeotificationsViewControllerDelegate 
     
     func addGeotificationViewController(controller: AddGeotificationViewController, didAddCoordinate coordinate: CLLocationCoordinate2D, radius: Double, identifier: String, note: String, eventType: EventType) {
         controller.dismiss(animated: true, completion: nil)
-        // 1
+        
         let clampedRadius = min(radius, locationManager.maximumRegionMonitoringDistance)
         let geotification = Geotification(coordinate: coordinate, radius: clampedRadius, identifier: identifier, note: note, eventType: eventType)
         add(geotification: geotification)
-        // 2
+        
         startMonitoring(geotification: geotification)
         saveAllGeotifications()
     }

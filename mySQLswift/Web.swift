@@ -15,8 +15,8 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     private var webView: WKWebView
     var url: URL?
     
-    let SegTitles = ["CNN", "Drudge", "cnet", "United", "Cult of Mac", "Twits"]
-    let SegAddress = ["http://www.cnn.com",
+    let siteNames = ["CNN", "Drudge", "cnet", "United", "Cult of Mac", "Twits"]
+    let siteAddresses = ["http://www.cnn.com",
                       "http://www.Drudgereport.com",
                       "http://www.cnet.com",
                       "http://lotpb.github.io/UnitedWebPage/index.html",
@@ -38,6 +38,14 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         self.webView.navigationDelegate = self
     }
     
+    var detailItem: AnyObject? { //dont delete for splitview
+        didSet {
+        
+            self.configureView()
+            
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,7 +57,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
         
-        self.segControl? = UISegmentedControl(items: SegTitles)
+        self.segControl? = UISegmentedControl(items: siteNames)
         //self.segControl?.selectedSegmentIndex = 2
         //self.segControl?.layer.cornerRadius = 15.0
         
@@ -63,7 +71,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
-        webView.load(URLRequest(url:URL(string: SegAddress[0])!))
+        webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
         
         backButton.isEnabled = false
         forwardButton.isEnabled = false
@@ -133,9 +141,8 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     }
    
     private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: ((WKNavigationActionPolicy) -> Void)) {
-        if (navigationAction.navigationType == WKNavigationType.linkActivated && !(navigationAction.request as NSURLRequest).url!.host!.lowercased().hasPrefix(SegAddress[1])) {
+        if (navigationAction.navigationType == WKNavigationType.linkActivated && !(navigationAction.request as NSURLRequest).url!.host!.lowercased().hasPrefix(siteAddresses[1])) {
             
-          //UIApplication.shared.openURL(navigationAction.request.url!)
             UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
             
             decisionHandler(WKNavigationActionPolicy.cancel)
@@ -150,7 +157,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     
     @IBAction func didPressButton(_ sender: AnyObject) {
         
-        let safariVC = SFSafariViewController(url:URL(string: SegAddress[0])!, entersReaderIfAvailable: true) // Set to false if not interested in using reader
+        let safariVC = SFSafariViewController(url:URL(string: siteAddresses[0])!, entersReaderIfAvailable: true) // Set to false if not interested in using reader
         safariVC.delegate = self
         self.present(safariVC, animated: true, completion: nil)
     }
@@ -160,34 +167,44 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         
         switch sender.selectedSegmentIndex {
         case 0:
-             url = URL(string: SegAddress[0])!
+             url = URL(string: siteAddresses[0])!
              let request = URLRequest(url: url!)
              webView.load(request)
         case 1:
-             url = URL(string: SegAddress[1])!
+             url = URL(string: siteAddresses[1])!
              let request = URLRequest(url: url!)
              webView.load(request)
         case 2:
-             url = URL(string: SegAddress[2])!
+             url = URL(string: siteAddresses[2])!
              let request = URLRequest(url: url!)
              webView.load(request)
         case 3:
-            url = URL(string: SegAddress[3])!
+            url = URL(string: siteAddresses[3])!
             let request = URLRequest(url: url!)
             webView.load(request)
         case 4:
-            url = URL(string: SegAddress[4])!
+            url = URL(string: siteAddresses[4])!
             let request = URLRequest(url: url!)
             webView.load(request)
         case 5:
-            url = URL(string: SegAddress[5])!
+            url = URL(string: siteAddresses[5])!
             let request = URLRequest(url: url!)
             webView.load(request)
         default:
             break
         }
     }
-
+    
+    func configureView() {
+        /*
+        if let _: AnyObject = detailItem {
+   
+                let url = NSURL(string: detailItem as! String)
+                let request = NSURLRequest(url: url! as URL)
+                webView.load(request as URLRequest)
+            
+        } */
+    }
     
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         

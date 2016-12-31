@@ -16,13 +16,15 @@ class Favorite: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var refreshControl: UIRefreshControl!
     var objects = [AnyObject]()
     
-    let SegTitles = ["CNN", "Drudge", "cnet", "United", "Cult of Mac", "Twits"]
-    let SegAddress = ["http://www.cnn.com",
-                      "http://www.Drudgereport.com",
-                      "http://www.cnet.com",
-                      "http://lotpb.github.io/UnitedWebPage/index.html",
-                      "http://www.cultofmac.com/category/news/",
-                      "http://stocktwits.com/The_Stock_Whisperer"]
+    var detailViewController: DetailViewController? = nil
+    
+    let siteNames = ["CNN", "Drudge", "cnet", "United", "Cult of Mac", "Twits"]
+    let siteAddresses = ["http://www.cnn.com",
+                         "http://www.Drudgereport.com",
+                         "http://www.cnet.com",
+                         "http://lotpb.github.io/UnitedWebPage/index.html",
+                         "http://www.cultofmac.com/category/news/",
+                         "http://stocktwits.com/The_Stock_Whisperer"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +35,11 @@ class Favorite: UIViewController, UITableViewDelegate, UITableViewDataSource {
         //titleLabel.font = Font.navlabel
         titleLabel.textAlignment = NSTextAlignment.center
         navigationItem.titleView = titleLabel
-
+ 
+        if let split = self.splitViewController {
+            let controllers = split.viewControllers
+            detailViewController = controllers[controllers.count-1] as? DetailViewController
+        }
         setupTableView()
     }
 
@@ -58,14 +64,12 @@ class Favorite: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return SegTitles.count
+        return siteNames.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let CellIdentifier: String = "Cell"
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)! as UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.textLabel!.font = Font.celltitlePad
@@ -73,7 +77,8 @@ class Favorite: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.textLabel!.font = Font.celltitle
         }
         
-        cell.textLabel!.text = SegTitles[indexPath.row]
+        cell.isSelected = true
+        cell.textLabel!.text = siteNames[indexPath.row]
         
         return cell
     }
@@ -123,6 +128,33 @@ class Favorite: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.cellForRow(at: indexPath)
         pasteBoard.string = cell!.textLabel?.text
+    }
+    
+    // MARK: - Segues
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       /*
+        if (tableView == self.tableView) {
+            self.performSegue(withIdentifier: "showDetail", sender: self)
+        } else {
+            
+        } */
+    }
+    
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "showDetail" {
+            if let indexPath = self.tableView?.indexPathForSelectedRow {
+                let urlString = siteAddresses[indexPath.row]
+                
+                let controller = (segue.destination as! UINavigationController).topViewController as! Web
+                
+                controller.detailItem = urlString as AnyObject?
+                controller.navigationItem.leftBarButtonItem =
+                    splitViewController?.displayModeButtonItem
+                controller.navigationItem.leftItemsSupplementBackButton = true
+            }
+        }
     }
     
 

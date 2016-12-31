@@ -402,7 +402,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="D7v-n7-3ie">
-                                <rect key="frame" x="0.0" y="574" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <items>
                                     <barButtonItem systemItem="rewind" id="KpM-Cl-lSx">
                                         <connections>
@@ -3169,7 +3169,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="z40-Ry-qp1">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" rowHeight="88" id="pmf-fX-hWS" customClass="CustomTableCell" customModule="TheLight" customModuleProvider="target">
@@ -5567,6 +5567,7 @@
                     <navigationItem key="navigationItem" id="aYp-JF-sHg"/>
                     <connections>
                         <outlet property="tableView" destination="0zT-J4-Zfb" id="fK6-Zu-v9H"/>
+                        <segue destination="Mx6-lb-kZT" kind="showDetail" identifier="showDetail" id="vjW-Lr-DYW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X0g-13-HU9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5803,14 +5804,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yAv-6O-LNh">
-                                                    <rect key="frame" x="8" y="10" width="359" height="31.5"/>
+                                                    <rect key="frame" x="8" y="10" width="359" height="32"/>
                                                     <segments>
                                                         <segment title="Upon Entry"/>
                                                         <segment title="Upon Exit"/>
                                                     </segments>
                                                 </segmentedControl>
                                                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HVe-8V-7Fo">
-                                                    <rect key="frame" x="8" y="48.5" width="359" height="343"/>
+                                                    <rect key="frame" x="8" y="49" width="359" height="343"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="343" id="s9x-SM-ewM"/>
                                                     </constraints>
@@ -5819,7 +5820,7 @@
                                                     </connections>
                                                 </mapView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddPin" translatesAutoresizingMaskIntoConstraints="NO" id="YUw-Zv-JzW">
-                                                    <rect key="frame" x="150" y="182.5" width="75" height="75"/>
+                                                    <rect key="frame" x="150" y="183" width="75" height="75"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
@@ -6088,15 +6089,16 @@
         <image name="profile-rabbit-toy.png" width="300" height="300"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Dw5-mA-Z0d"/>
+        <segue reference="44k-b4-h7F"/>
+        <segue reference="hB9-3O-AVy"/>
+        <segue reference="vjW-Lr-DYW"/>
+        <segue reference="9ON-DX-ZP3"/>
+        <segue reference="e0c-fD-YZ8"/>
+        <segue reference="T0a-J2-ljk"/>
+        <segue reference="LRB-pN-dPg"/>
+        <segue reference="pJK-KM-WG6"/>
         <segue reference="7UQ-q7-hnl"/>
         <segue reference="1Wv-3R-kep"/>
-        <segue reference="YLj-JE-RKS"/>
-        <segue reference="9ON-DX-ZP3"/>
         <segue reference="xRX-GL-2KH"/>
-        <segue reference="e0c-fD-YZ8"/>
-        <segue reference="LRB-pN-dPg"/>
-        <segue reference="T0a-J2-ljk"/>
-        <segue reference="pJK-KM-WG6"/>
     </inferredMetricsTieBreakers>
 </document>

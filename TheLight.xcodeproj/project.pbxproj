@@ -1135,7 +1135,7 @@
 				AF0369CA1C173DDC00137D7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		AF0369CB1C173DDC00137D7E /* Build configuration list for PBXNativeTarget "TheLight" */ = {
 			isa = XCConfigurationList;
@@ -1144,7 +1144,7 @@
 				AF0369CD1C173DDC00137D7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
