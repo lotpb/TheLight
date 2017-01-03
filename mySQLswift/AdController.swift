@@ -236,6 +236,14 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         return vw
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row % 2 == 0 {
+            cell.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) // very light gray
+        } else {
+            cell.backgroundColor = UIColor.white
+        }
+    }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true

@@ -97,7 +97,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         buttonEnabledControl(recorder.isRecording)
 
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 20, y: 71, width: 60, height: 60))
+        let myLabel:UILabel = UILabel(frame: CGRect(x: 20, y: 88, width: 60, height: 60))
         myLabel.backgroundColor = .orange
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center

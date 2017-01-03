@@ -32,9 +32,19 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
     var newsDate: Date?
     var videoURL: String?
     
+    var newsViewHeight: CGFloat!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // MARK: - SplitView Fix
+        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            newsViewHeight = 450
+        } else {
+            newsViewHeight = 258
+        }
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         titleButton.setTitle("News Detail", for: UIControlState())
@@ -104,6 +114,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         self.newsTextview.dataDetectorTypes = UIDataDetectorTypes.link
         
         self.findFace()
+        setupConstraints()
         
     }
     
@@ -132,11 +143,18 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         return self.newsImageview
     }
     
-    func setbackButton() {
-    dismiss(animated: true, completion: nil)
+    func setupConstraints() {
+        //height newsImageview
+        let heightRouteConstraints = NSLayoutConstraint(item: newsImageview, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newsViewHeight)
+        view.addConstraints([heightRouteConstraints])
     }
     
+    
     // MARK: - Button
+    
+    func setbackButton() {
+        dismiss(animated: true, completion: nil)
+    }
     
     func editData(_ sender: AnyObject) {
         

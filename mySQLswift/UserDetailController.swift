@@ -168,11 +168,22 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         
         self.emailField!.keyboardType = .emailAddress
         self.phoneField!.keyboardType = .numbersAndPunctuation
+        
+        setupConstraints()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupConstraints() {
+        
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.topAnchor.constraint(equalTo: (mapLabel?.bottomAnchor)!, constant: +25).isActive = true
+        mapView.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
+        mapView.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
+        mapView.bottomAnchor.constraint( equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -16).isActive = true
     }
     
     // MARK: - Button

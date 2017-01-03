@@ -103,6 +103,16 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         // Dispose of any resources that can be recreated.
     }
     
+    
+    // MARK: - UISplitViewControllerDelegate
+    
+    //added MainController opens on startup
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
+        
+        return true
+    }
+    
+    
     func setupTableView() {
         self.tableView!.backgroundColor = Color.LGrayColor //.black
         self.tableView!.tableFooterView = UIView(frame: .zero)
@@ -121,14 +131,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         self.tableView!.reloadData()
         self.refreshControl?.endRefreshing()
-    }
-    
-    
-    // MARK: - UISplitViewControllerDelegate
-    
-    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool { //added
-        
-        return true
     }
 
     
@@ -543,9 +545,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 self.performSegue(withIdentifier: "contactSegue", sender: self)
             }
         } else {
-            //if tableView == resultsController.tableView {
-            //userDetails = foundUsers[indexPath.row]
-            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
+  
+            
         }
     }
     

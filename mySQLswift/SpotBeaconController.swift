@@ -47,13 +47,13 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
         
-        lblBeaconDetails.isHidden = true
+        lblBeaconDetails.isHidden = false
         btnSwitchSpotting.layer.cornerRadius = 30.0
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             //self.btnSwitchSpotting?.font = Font.Snapshot.celltitlePad
             self.lblBeaconReport?.font = Font.Snapshot.celltitlePad
-            self.lblBeaconDetails?.font = Font.Snapshot.celltitlePad
+            self.lblBeaconDetails?.font = Font.News.newstitlePad
             //self.beaconspotLabel?.font = Font.Snapshot.celltitlePad
             self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
         } else {
@@ -98,7 +98,7 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
             
             btnSwitchSpotting.setTitle("Start Spotting", for: UIControlState())
             lblBeaconReport.text = "Not running"
-            lblBeaconDetails.isHidden = true
+            lblBeaconDetails.isHidden = false
             self.view.backgroundColor = UIColor.white
         }
         
@@ -175,7 +175,7 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
                 self.beaconlocateLabel.textColor = .black
             }
         }
-        lblBeaconDetails.text = "Beacon Details:\nMajor = " + proximityMessage
+        lblBeaconDetails.text = "Beacon Details:\nDistance From iBeacon = " + proximityMessage
     }
     
     /*

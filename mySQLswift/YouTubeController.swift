@@ -80,10 +80,10 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         if segDisplayedContent.selectedSegmentIndex == 0 {
             return channelsDataArray.count
-        }
-        else {
+        } else {
             return videosArray.count
         }
     }
@@ -100,6 +100,10 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             let channelDescriptionLabel = cell.viewWithTag(11) as! UILabel
             let thumbnailImageView = cell.viewWithTag(12) as! UIImageView
             
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                channelDescriptionLabel.font = Font.Snapshot.cellLabel
+            }
+            
             let channelDetails = channelsDataArray[indexPath.row] as NSDictionary
             channelTitleLabel.text = channelDetails["title"] as? String
             channelDescriptionLabel.text = channelDetails["description"] as? String
@@ -115,7 +119,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             videoTitle.text = videoDetails["title"] as? String
             videoThumbnail.image = UIImage(data: try! Data(contentsOf: URL(string: (videoDetails["thumbnail"] as? String)!)!))
         }
-        
+
         return cell
     }
     
@@ -126,14 +130,12 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if segDisplayedContent.selectedSegmentIndex == 0 {
- 
+            
             segDisplayedContent.selectedSegmentIndex = 1
- 
             viewWait.isHidden = false
- 
             videosArray.removeAll(keepingCapacity: false)
-
             getVideosForChannelAtIndex(index: indexPath.row)
         }
         else {

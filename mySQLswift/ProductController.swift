@@ -153,14 +153,14 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
             
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
         myLabel.backgroundColor = Color.Table.labelColor
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
         myLabel.text = "Prod"
         myLabel.font = Font.headtitle
-        myLabel.layer.cornerRadius = 25.0
+        myLabel.layer.cornerRadius = 20.0
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
@@ -232,6 +232,14 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         vw.addSubview(separatorLineView3)
         
         return vw
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row % 2 == 0 {
+            cell.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) // very light gray
+        } else {
+            cell.backgroundColor = UIColor.white
+        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

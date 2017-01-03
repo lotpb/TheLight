@@ -20,8 +20,18 @@ class GeotificationsViewController: UIViewController {
     @IBOutlet weak var getAddressButton: UIBarButtonItem!
     
     var geotifications: [Geotification] = []
-    var locationManager = CLLocationManager() //Setup Eatery
-    var monitoredRegions: Dictionary<String, NSDate> = [:] //Setup Eatery
+    var locationManager = CLLocationManager() //Setup AddGeotification
+    
+    var floatingButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor.red
+        button.setTitle("+", for: UIControlState.normal)
+        button.setTitleColor(UIColor.white, for: UIControlState.normal)
+        button.titleEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, 0)
+        button.addTarget(self, action: #selector(maptype), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     //Get Address
     var thoroughfare: String?
@@ -33,6 +43,8 @@ class GeotificationsViewController: UIViewController {
     var subAdministrativeArea: String?
     var country: String?
     var ISOcountryCode: String?
+    
+    //var monitoredRegions: Dictionary<String, NSDate> = [:] //Setup Eatery
     
     //below has nothing
     var detailItem: AnyObject? { //dont delete for splitview
@@ -52,35 +64,50 @@ class GeotificationsViewController: UIViewController {
         locationManager.requestAlwaysAuthorization()
         loadAllGeotifications()
         
-        // Setup Eatery
-        locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        mapView.delegate = self //added
-        mapView.showsUserLocation = true //added
-        mapView.userTrackingMode = .follow //added
-        setupEatery()
         
-        // Setup GetAddress
-        locationManager.startUpdatingLocation()
         
         // Float Button
-        var floatingButton = UIButton()
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            floatingButton = UIButton(frame: CGRect(x: self.view.frame.size.width-480, y: self.view.frame.size.height-190, width: 60, height: 60))
-            floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: 60)
-        } else {
-            floatingButton = UIButton(frame: CGRect(x: self.view.frame.size.width-65, y: self.view.frame.size.height-180, width: 50, height: 50))
-            floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: 50)
-        }
-        floatingButton.backgroundColor = UIColor.red
-        floatingButton.layer.cornerRadius = floatingButton.frame.size.width / 2
-        floatingButton.setTitle("+", for: UIControlState.normal)
-        floatingButton.setTitleColor(UIColor.white, for: UIControlState.normal)
-        floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: 50)
-        floatingButton.titleEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, 0)
-        floatingButton.addTarget(self, action: #selector(maptype), for: .touchUpInside)
-        view.addSubview(floatingButton)
         
+        setupConstraints()
+        setCircularAvatar()
+        
+        
+         // Setup Eatery
+         locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
+         locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+         //mapView.delegate = self //added
+         //mapView.showsUserLocation = true //added
+         //mapView.userTrackingMode = .follow //added
+         //setupEatery()
+        
+    }
+    
+    func setCircularAvatar() {
+        floatingButton.layer.cornerRadius = floatingButton.bounds.size.width / 2.0
+        floatingButton.layer.masksToBounds = true
+    }
+    
+    
+    func setupConstraints() {
+        
+        self.view.addSubview(floatingButton)
+    
+        floatingButton.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
+        floatingButton.bottomAnchor.constraint( equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -85).isActive = true
+        
+        let buttonSize: CGFloat
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            buttonSize = 60
+            floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: buttonSize)
+        } else {
+            buttonSize = 50
+            floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: buttonSize)
+        }
+        let widthConstraint = NSLayoutConstraint(item: floatingButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonSize)
+        let heightConstraint  = NSLayoutConstraint(item: floatingButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonSize)
+        
+        view.addConstraints([widthConstraint, heightConstraint])
+
     }
     
     // MARK: - AddGeotification
@@ -116,7 +143,6 @@ class GeotificationsViewController: UIViewController {
     }
     
     // MARK: Functions that update the model/associated views with geotification changes
-    
     func add(geotification: Geotification) {
         geotifications.append(geotification)
         mapView.addAnnotation(geotification)
@@ -134,9 +160,7 @@ class GeotificationsViewController: UIViewController {
     }
     
     func updateGeotificationsCount() {
-        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            //title.font = Font.navlabel
             title = "TheLight Software - Geotifications (\(geotifications.count))"
         } else {
             title = "Geotifications (\(geotifications.count))"
@@ -173,22 +197,18 @@ class GeotificationsViewController: UIViewController {
         let region = CLCircularRegion(center: geotification.coordinate, radius: geotification.radius, identifier: geotification.identifier)
         region.notifyOnEntry = (geotification.eventType == .onEntry)
         region.notifyOnExit = !region.notifyOnEntry
-        return region
-    }
+        return region    }
     
     func startMonitoring(geotification: Geotification) {
-        // 1
+        
         if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
             showAlert(withTitle:"Error", message: "Geofencing is not supported on this device!")
             return
         }
-        // 2
         if CLLocationManager.authorizationStatus() != .authorizedAlways {
             showAlert(withTitle:"Warning", message: "Your geotification is saved but will only be activated once you grant Geotify permission to access the device location.")
         }
-        // 3
         let region = self.region(withGeotification: geotification)
-        // 4
         locationManager.startMonitoring(for: region)
     }
     
@@ -201,7 +221,7 @@ class GeotificationsViewController: UIViewController {
     }
     
     
-    // MARK: - GetAddress
+    // MARK: - Get Address Button
     
     func displayLocationInfo(_ placemark: CLPlacemark?) {
         if let containsPlacemark = placemark {
@@ -222,15 +242,18 @@ class GeotificationsViewController: UIViewController {
     }
 
     
-    // MARK: GetAddressButton
+    // MARK: Get Address Button
     
     @IBAction func getAddressButton(_ sender: UIBarButtonItem) {
+        
+        // Setup GetAddress
+        locationManager.startUpdatingLocation()
         
         self.performSegue(withIdentifier: "getaddressSegue", sender: self)
     }
     
     //---------------------------------------------------------------------
-    
+    /*
     // MARK: - Setup Eatery
     
     func setupEatery() {
@@ -278,6 +301,7 @@ class GeotificationsViewController: UIViewController {
             monitoredRegions.removeValue(forKey: regionIdentifier)
         }
     }
+    */
     /*
     func showAlert(_ title: String) {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
@@ -312,8 +336,9 @@ class GeotificationsViewController: UIViewController {
             VC!.ISOcountryCode = self.ISOcountryCode
         }
     }
-    //---------------------------------------------------------------------
+
 }
+//---------------------------------------------------------------------
 
 // MARK: - Extensions
 //AddGeotification
@@ -329,7 +354,6 @@ extension GeotificationsViewController: AddGeotificationsViewControllerDelegate 
         startMonitoring(geotification: geotification)
         saveAllGeotifications()
     }
-    
 }
 
 //AddGeotification and GetAddress
@@ -347,17 +371,14 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location Manager failed with the following error: \(error)")
     }
-     //GetAddress
+    
+    //Get Address Button
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        //Setup Eatery
-        updateRegionsWithLocation(locations[0])
-        
-        //GetAddress
+        //Get Address Button
         CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: {(placemarks, error)->Void in
             
             if (error != nil) {
-                //self.locationLabel.text = "Reverse geocoder failed with error" + error!.localizedDescription
+                self.simpleAlert(title: "Alert", message: "Reverse geocoder failed with error" + error!.localizedDescription)
                 return
             }
             
@@ -365,21 +386,24 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
                 let pm = placemarks![0]
                 self.displayLocationInfo(pm)
             } else {
-                //self.locationLabel.text = "Problem with the data received from geocoder"
+                self.simpleAlert(title: "Alert", message: "Problem with the data received from geocoder")
             }
         })
+        //Setup Eatery
+        //updateRegionsWithLocation(locations[0])
     }
     
-    //Setup Eatery
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        self.simpleAlert(title: "Info", message: "enter \(region.identifier)")
-        monitoredRegions[region.identifier] = NSDate()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        self.simpleAlert(title: "Info", message: "exit \(region.identifier)")
-        monitoredRegions.removeValue(forKey: region.identifier)
-    }
+    /*
+     //Setup Eatery
+     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+     self.simpleAlert(title: "Enter Balsamo's Eatery", message: "enter \(region.identifier)")
+     monitoredRegions[region.identifier] = NSDate()
+     }
+     
+     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+     self.simpleAlert(title: "Exit Balsamo's Eatery", message: "exit \(region.identifier)")
+     monitoredRegions.removeValue(forKey: region.identifier)
+     } */
 }
 
 //AddGeotification

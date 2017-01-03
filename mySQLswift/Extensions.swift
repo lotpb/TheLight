@@ -127,13 +127,9 @@ var searchController: UISearchController!
         struct BlogEdit {
             static let replytitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
             static let replysubtitlePad = Font.celllabel1
-            static let replydatePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let replylabelPad = Font.celllabel1
             
             static let replytitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
             static let replysubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-            static let replydate = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-            static let replylabel = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         }
         
         struct News {

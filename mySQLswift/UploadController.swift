@@ -95,7 +95,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             self.commentDetail.text = addText
         }
         
-      //self.imgToUpload.backgroundColor = .white
         self.imgToUpload.isUserInteractionEnabled = true
         
         self.clearButton.setTitle("Clear", for: UIControlState())
@@ -114,6 +113,10 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         self.commentDetail.autocorrectionType = UITextAutocorrectionType.yes
         self.commentDetail.dataDetectorTypes = UIDataDetectorTypes.all
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            setupConstraints()
+        }
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -131,6 +134,25 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        
+    }
+    
+    func setupConstraints() {
+        /*
+        commentTitle.widthAnchor.constraint(equalToConstant: 450).isActive = true
+
+        let widthContraints = NSLayoutConstraint(item: commentTitle, attribute:
+            .width, relatedBy: .equal, toItem: nil,
+                    attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
+                    constant: 450)
+         commentTitle.translatesAutoresizingMaskIntoConstraints = false
+        /*
+         let heightContraints = NSLayoutConstraint(item: self.mainView!, attribute:
+         .height, relatedBy: .equal, toItem: nil,
+         attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
+         constant: 550)
+         self.mainView?.translatesAutoresizingMaskIntoConstraints = false */
+        NSLayoutConstraint.activate([widthContraints]) */
         
     }
     

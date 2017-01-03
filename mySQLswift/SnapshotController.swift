@@ -131,10 +131,10 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.dataSource = self
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.Snap.tablebackColor //Color.Snap.backColor
+        self.tableView!.backgroundColor = Color.Snap.tablebackColor
         self.tableView!.tableFooterView = UIView(frame: .zero)
-      //self.tableView!.separatorStyle = UITableViewCellSeparatorStyle.none
         self.tableView!.separatorColor = Color.Snap.lineColor //.clear
+        //self.tableView!.separatorStyle = UITableViewCellSeparatorStyle.none
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -280,16 +280,15 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
-
-        //cell.layoutMargins = UIEdgeInsets.zero
-        //cell.separatorInset = UIEdgeInsets.zero
-        /*
-         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-         cell.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout) */
         
         cell.collectionView.delegate = nil
         cell.collectionView.dataSource = nil
         cell.collectionView.backgroundColor = Color.Snap.collectbackColor
+        
+      //cell.collectionView?.isPagingEnabled = true
+      //cell.collectionView?.isDirectionalLockEnabled = true
+      //cell.collectionView?.bounces = false
+        
         cell.backgroundColor = Color.Snap.collectbackColor
         cell.accessoryType = UITableViewCellAccessoryType.none
         
@@ -498,9 +497,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             } else if (indexPath.row == 1) {
                 
                 cell.collectionView.backgroundColor = .clear
-                
-                //cell.textLabel?.text = ""
-                //cell.snaptitleLabel?.text = ""
                 cell.snapdetailLabel?.text = "You have no pending notifications :)"
                 //cell.snaptitleLabel?.text = localNotification.fireDate?.description
                 //cell.snapdetailLabel?.text = localNotification.alertBody
@@ -574,9 +570,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
         cell.activityIndicatorView1.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 50, height: 50)
         
-        cell.user2ImageView!.backgroundColor = .black
         cell.backgroundColor = Color.Snap.collectbackColor
+        cell.user2ImageView!.backgroundColor = .black
+        
+        //cell.playButton2.center = (cell.user2ImageView?.center)!
         cell.playButton2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 30, height: 30)
+        //cell.playButton2.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad) && (collectionView.tag == 0) {
             myLabel1 = UILabel(frame: CGRect(x: 0, y: 160, width: cell.bounds.size.width, height: 20))
@@ -591,16 +590,18 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
       //myLabel1.adjustsFontSizeToFitWidth = true
 
         if (collectionView.tag == 0) {
-
-            imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
-            
+
+            imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView?.image = UIImage(data: imageData!)
+                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    cell.user2ImageView?.image = UIImage(data: imageData!)
+                }, completion: nil)
+
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
             }
@@ -617,15 +618,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             return cell
         } else if (collectionView.tag == 1) {
             
-            imageObject = _feedItems2.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
-            
+            imageObject = _feedItems2.object(at: indexPath.row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView?.image = UIImage(data: imageData!)
+                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    cell.user2ImageView?.image = UIImage(data: imageData!)
+                }, completion: nil)
+                
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
             }
@@ -636,15 +638,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             return cell
         } else if (collectionView.tag == 2) {
             
-            imageObject = _feedItems3.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
-            
+            imageObject = _feedItems3.object(at: indexPath.row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
 
-                cell.user2ImageView?.image = UIImage(data: imageData!)
+                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    cell.user2ImageView?.image = UIImage(data: imageData!)
+                }, completion: nil)
+                
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
             }
@@ -655,15 +658,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             return cell
         } else if (collectionView.tag == 3) {
             
-            imageObject = _feedItems4.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
-            
+            imageObject = _feedItems4.object(at: indexPath.row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView?.image = UIImage(data: imageData!)
+                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    cell.user2ImageView?.image = UIImage(data: imageData!)
+                }, completion: nil)
+                
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
             }
@@ -674,15 +678,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             return cell
         } else if (collectionView.tag == 4) {
             
-            imageObject = _feedItems5.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
-            
+            imageObject = _feedItems5.object(at: indexPath.row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                cell.user2ImageView?.image = UIImage(data: imageData!)
+                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    cell.user2ImageView?.image = UIImage(data: imageData!)
+                }, completion: nil)
+                
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
             }

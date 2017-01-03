@@ -8,12 +8,12 @@
 
 import UIKit
 import Parse
-import UserNotifications
 import GoogleSignIn
 import FBSDKCoreKit
 import Firebase
 import SwiftKeychainWrapper
 import CoreLocation
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -46,9 +46,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - Parse
         if (defaults.bool(forKey: "parsedataKey"))  {
+            /*
+            let configuration = ParseClientConfiguration {
+                $0.applicationId = "lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M"
+                $0.clientKey = "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX"
+                $0.server = "https://parseapi.back4app.com"
+                $0.localDatastoreEnabled = true // If you need to enable local data store
+            }
+            Parse.initializeWithConfiguration(configuration) */
             
-        Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
-        PFAnalytics.trackAppOpened(launchOptions: launchOptions)
+            Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
+            PFAnalytics.trackAppOpened(launchOptions: launchOptions)
         }
 
         // MARK: - prevent Autolock
@@ -180,6 +188,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
         let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
     
@@ -199,6 +209,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "notification1", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             
         } else {
@@ -301,9 +313,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
             let request = UNNotificationRequest(identifier: "AddGeotification", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            //UNUserNotificationCenter.current().delegate = self
-            //UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         }
     }
     
@@ -345,12 +357,11 @@ extension AppDelegate {
         let firstItemIcon1:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
         let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "Add", localizedSubtitle: "Add an item.", icon: firstItemIcon1, userInfo: nil)
         UIApplication.shared.shortcutItems = [firstItem,firstItem1]
-        
     }
 }
 
-
 extension AppDelegate: UNUserNotificationCenterDelegate {
+    
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Swift.Void) {
         
         window?.rootViewController?.showAlert(withTitle: nil, message: "Crap")
@@ -367,6 +378,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler()
     }
 }
+
 // Geotify AddGeotification
 extension AppDelegate: CLLocationManagerDelegate {
     

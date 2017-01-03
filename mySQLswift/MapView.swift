@@ -19,11 +19,9 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     @IBOutlet weak var travelTime: UILabel!
     @IBOutlet weak var travelDistance: UILabel!
     @IBOutlet weak var stepView: UITextView!
-    @IBOutlet weak var clearRoute: UIButton!
     @IBOutlet weak var routView: UIView!
     @IBOutlet weak var mapTypeSegmentedControl: UISegmentedControl!
-    
-    var activityIndicator: UIActivityIndicatorView?
+
     var mapaddress : NSString?
     var mapcity : NSString?
     var mapstate : NSString?
@@ -35,12 +33,39 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     var locationManager: CLLocationManager!
     var annotationPoint: MKPointAnnotation!
     
+    var activityIndicator: UIActivityIndicatorView = {
+        let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        aiv.hidesWhenStopped = true
+        return aiv
+    }()
+    
+    var floatingButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor.red
+        button.setTitle("+", for: UIControlState.normal)
+        button.setTitleColor(UIColor.white, for: UIControlState.normal)
+        button.titleEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, 0)
+        button.addTarget(self, action: #selector(hiderouteView), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont(name: button.titleLabel!.font.familyName , size: 50)
+        return button
+    }()
+    
+    var routeviewHeight: CGFloat!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            routeviewHeight = 350
+        } else {
+            routeviewHeight = 220
+        }
+        
+        self.routView.isHidden = false
         
         self.stepView.font = cellsteps
         self.stepView.isSelectable = false
@@ -54,37 +79,13 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         self.travelDistance.font = celllabel1
         self.routView.backgroundColor = Color.DGrayColor
         
-        self.clearRoute!.backgroundColor = .white
-        self.clearRoute!.setTitleColor(Color.DGrayColor, for: UIControlState())
-        let btnLayer3: CALayer = self.clearRoute!.layer
-        btnLayer3.masksToBounds = true
-        btnLayer3.cornerRadius = 9.0
-        
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(MapView.shareButton))
         navigationItem.rightBarButtonItems = [actionButton]
         
         addActivityIndicator()
+        setupConstraints() // Float Button
+        //setCircularAvatar() //dont work
         
-    }
-    
-    
-    func addActivityIndicator() {
-
-        //fix not centering on ipad
-        activityIndicator = UIActivityIndicatorView(frame: UIScreen.main.bounds)
-        //activityIndicator?.center = self.view.center
-        activityIndicator?.hidesWhenStopped = true
-        activityIndicator?.activityIndicatorViewStyle = .whiteLarge
-        activityIndicator?.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4) //UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
-        view.addSubview(activityIndicator!)
-        activityIndicator?.startAnimating()
-    }
-    
-    func hideActivityIndicator() {
-        if activityIndicator != nil {
-            activityIndicator?.stopAnimating()
-            activityIndicator?.removeFromSuperview()
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -95,6 +96,47 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    /* dont work
+    func setCircularAvatar() {
+        floatingButton.layer.cornerRadius = floatingButton.bounds.size.width / 2.0
+        floatingButton.layer.masksToBounds = true
+    } */
+    
+    
+    func setupConstraints() {
+        
+        mapView.addSubview(floatingButton)
+        
+        floatingButton.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
+        floatingButton.bottomAnchor.constraint( equalTo: mapView.layoutMarginsGuide.bottomAnchor, constant: -75).isActive = true
+        
+        let widthConstraint = NSLayoutConstraint(item: floatingButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
+        let heightConstraint  = NSLayoutConstraint(item: floatingButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
+        mapView.addConstraints([widthConstraint, heightConstraint])
+        
+        let heightRouteConstraints = NSLayoutConstraint(item: routView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: routeviewHeight)
+        view.addConstraints([heightRouteConstraints])
+    }
+    
+    // MARK: - ActivityIndicator
+    
+    func addActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(frame: UIScreen.main.bounds)
+        activityIndicator.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = .whiteLarge
+        activityIndicator.backgroundColor = UIColor(hue: 0/360, saturation: 0/100, brightness: 0/100, alpha: 0.4) //UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+    }
+    
+    func hideActivityIndicator() {
+        //if activityIndicator != nil {
+        activityIndicator.stopAnimating()
+        activityIndicator.removeFromSuperview()
+        //}
     }
     
     // MARK: - CLLocationManager
@@ -219,7 +261,6 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         }
         
         let annotationView = MKPinAnnotationView()
-        //annotationView.rightCalloutAccessoryView = UIButton(type: UIButtonType.InfoLight)
         annotationView.pinTintColor = .red
         annotationView.isDraggable = true
         annotationView.canShowCallout = true
@@ -275,6 +316,21 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     }
     
     // MARK: - Button
+    
+    func hiderouteView(_ sender: AnyObject) {
+        
+        if self.routView.isHidden == false {
+            self.routView.isHidden = true
+            mapView.translatesAutoresizingMaskIntoConstraints = false
+            mapView.bottomAnchor.constraint( equalTo: view.layoutMarginsGuide.bottomAnchor, constant: 0).isActive = true
+        } else {
+            self.routView.isHidden = false
+            mapView.translatesAutoresizingMaskIntoConstraints = true
+            mapView.bottomAnchor.constraint( equalTo: routView.layoutMarginsGuide.topAnchor, constant: 0).isActive = true
+            let heightConstraint  = NSLayoutConstraint(item: routView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: routeviewHeight)
+            self.view.addConstraints([heightConstraint])
+        }
+    }
     
     func trafficBtnTapped(_ sender: AnyObject) {
         

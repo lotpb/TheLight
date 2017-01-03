@@ -245,15 +245,15 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 cell?.replytitleLabel!.font = Font.BlogEdit.replytitlePad
                 cell?.replysubtitleLabel!.font = Font.BlogEdit.replysubtitlePad
-                cell?.replynumLabel!.font = Font.BlogEdit.replydatePad
-                cell?.replydateLabel!.font = Font.BlogEdit.replylabelPad
+                cell?.replynumLabel!.font = Font.BlogEdit.replytitlePad
+                cell?.replydateLabel!.font = Font.BlogEdit.replysubtitlePad
                 
             } else {
                 
                 cell?.replytitleLabel!.font = Font.BlogEdit.replytitle
                 cell?.replysubtitleLabel!.font = Font.BlogEdit.replysubtitle
-                cell?.replynumLabel.font = Font.BlogEdit.replydate
-                cell?.replydateLabel.font = Font.BlogEdit.replylabel
+                cell?.replynumLabel.font = Font.BlogEdit.replytitle
+                cell?.replydateLabel.font = Font.BlogEdit.replysubtitle
             }
 
             let date1 = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date

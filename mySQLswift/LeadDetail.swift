@@ -114,14 +114,20 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     var emailTitle :String?
     var messageBody:String?
     
-    //var photoImage: UIImageView!
+    /*
+    let mainView: UIView = {
+        let view = UIView()
+        view.frame = CGRect(x: 0, y: 0, width: 100, height: 200)
+        view.backgroundColor = UIColor.red
+        return view
+    }()*/
     
     let photoImage: CustomImageView = {
         let imageView = CustomImageView()
         imageView.image = UIImage(named:"IMG_1133.jpg")
         imageView.layer.masksToBounds = true
         imageView.layer.borderColor = UIColor.lightGray.cgColor
-        imageView.layer.borderWidth = 1.0
+        imageView.layer.borderWidth = 2.0
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -253,19 +259,31 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         // Dispose of any resources that can be recreated.
     }
     
+    func setupConstraints() {
+        
+        photoImage.translatesAutoresizingMaskIntoConstraints = false
+        photoImage.topAnchor.constraint(equalTo: (following?.bottomAnchor)!, constant: +25).isActive = true
+        photoImage.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor, constant: +10).isActive = true
+        photoImage.bottomAnchor.constraint( equalTo: (mapbutton?.topAnchor)!, constant: -10).isActive = true
+        //width constraint
+        let widthContraints = NSLayoutConstraint(item: photoImage, attribute:
+            .width, relatedBy: .equal, toItem: nil,
+                    attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
+                    constant: 350)
+        /*
+         let heightContraints = NSLayoutConstraint(item: self.mainView!, attribute:
+         .height, relatedBy: .equal, toItem: nil,
+         attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
+         constant: 550)
+         self.mainView?.translatesAutoresizingMaskIntoConstraints = false */
+        NSLayoutConstraint.activate([widthContraints])
+        
+    }
+    
     func refreshData() {
         self.listTableView!.reloadData()
         self.listTableView2!.reloadData()
         self.newsTableView!.reloadData()
-    }
-    
-    func setupConstraints() {
-
-        photoImage.translatesAutoresizingMaskIntoConstraints = false
-        photoImage.topAnchor.constraint(equalTo: (following?.bottomAnchor)!, constant: +25).isActive = true
-      //photoImage.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
-        photoImage.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor, constant: +10).isActive = true
-        photoImage.bottomAnchor.constraint( equalTo: (mapbutton?.topAnchor)!, constant: -10).isActive = true
     }
     
     // MARK: - Button
