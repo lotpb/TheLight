@@ -13,9 +13,9 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     
     
     @IBOutlet weak var tableView: UITableView?
-    @IBOutlet weak var collectionView: UICollectionView!
-    let cellId = "cellId"
-    let titles = ["Home", "Trending", "Subscriptions", "Account"]
+    //@IBOutlet weak var collectionView: UICollectionView!
+    //let cellId = "cellId"
+    //let titles = ["Home", "Trending", "Subscriptions", "Account"]
     let searchScope = ["salesman","salesNo","active"]
     var isFormStat = false
     var selectedImage: UIImage?
@@ -30,6 +30,17 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
+    
+    var userProfileImageView: UIImageView = {
+        var imageView = UIImageView()
+        imageView.backgroundColor = .black
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderWidth = 0.5
+        imageView.layer.masksToBounds = true
+        imageView.isUserInteractionEnabled = true
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,12 +115,6 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         isFormStat = true
         self.performSegue(withIdentifier: "salesDetailSegue", sender: self)
     }
-    /*
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
-    } */
     
     // MARK: - Table View
     
@@ -132,40 +137,52 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         if tableView == self.tableView {
             cellIdentifier = "Cell"
-        }else{
+        } else {
             cellIdentifier = "UserFoundCell"
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
         cell.selectionStyle = UITableViewCellSelectionStyle.none
-        
+
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.salestitleLabel!.font = Font.celltitlePad
         } else {
             cell.salestitleLabel!.font = Font.celltitle
         }
         
+        /*
+         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
+         myLabel.backgroundColor = Color.Table.labelColor
+         myLabel.textColor = .white
+         myLabel.textAlignment = NSTextAlignment.center
+         myLabel.layer.masksToBounds = true
+         myLabel.text = "Sale"
+         myLabel.font = Font.headtitle
+         myLabel.layer.cornerRadius = 20.0
+         myLabel.isUserInteractionEnabled = true
+         myLabel.tag = indexPath.row
+         cell.addSubview(myLabel) */
+        
         if (tableView == self.tableView) {
-            
+ 
             cell.salestitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Salesman") as? String
             
+            let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+            let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                
+                UIView.transition(with: (self.userProfileImageView), duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    self.userProfileImageView.image = UIImage(data: imageData!) ?? UIImage(named: "profile-rabbit-toy")
+                }, completion: nil)
+                
+            }
+            self.userProfileImageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
+            self.userProfileImageView.layer.cornerRadius = self.userProfileImageView.frame.size.width / 2.0
+            self.userProfileImageView.clipsToBounds = true
+            cell.addSubview(userProfileImageView)
         } else {
-            
             cell.salestitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Salesman") as? String
-            
         }
-        
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
-        myLabel.backgroundColor = Color.Table.labelColor
-        myLabel.textColor = .white
-        myLabel.textAlignment = NSTextAlignment.center
-        myLabel.layer.masksToBounds = true
-        myLabel.text = "Sale"
-        myLabel.font = Font.headtitle
-        myLabel.layer.cornerRadius = 20.0
-        myLabel.isUserInteractionEnabled = true
-        myLabel.tag = indexPath.row
-        cell.addSubview(myLabel)
         
         return cell
     }

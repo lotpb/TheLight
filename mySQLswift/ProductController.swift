@@ -101,12 +101,6 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         isFormStat = true
         self.performSegue(withIdentifier: "prodDetailSegue", sender: self)
     }
-    /*
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
-    } */
     
     // MARK: - Table View
     

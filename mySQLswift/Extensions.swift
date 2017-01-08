@@ -22,6 +22,7 @@ var searchController: UISearchController!
     }
 
     enum Color {
+        static let twitterBlue = UIColor(red: 61, green: 167, blue: 244, alpha: 1.0)
         static let BlueColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
         static let DGrayColor = UIColor(white:0.45, alpha:1.0)
         static let LGrayColor = UIColor(white:0.90, alpha:1.0)
@@ -121,7 +122,7 @@ var searchController: UISearchController!
             static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightLight)
             static let celldate = Font.cellsubtitle
             static let cellLabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightBold)
-            static let cellsubject = Font.celllabel2
+            static let cellsubject = Font.celltitle
         }
         
         struct BlogEdit {
@@ -297,6 +298,7 @@ public extension String {
         return scheme == "mailto" && result?.range.length == self.characters.count
     }
 }
+/*
 
 // MARK: Helper Extensions
 extension UIViewController {
@@ -307,7 +309,7 @@ extension UIViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
-}
+} */
 
 //----------------------------
 

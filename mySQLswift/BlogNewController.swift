@@ -14,7 +14,7 @@ import UserNotifications
 class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate {
     
     let ipadtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
-    let ipadsubject = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
+    let ipadsubject = UIFont.systemFont(ofSize: 22, weight: UIFontWeightLight)
     let CharacterLimit = 140
     
     @IBOutlet weak var tableView: UITableView?

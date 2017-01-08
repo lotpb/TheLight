@@ -12,13 +12,13 @@ import GoogleSignIn
 import FBSDKCoreKit
 import Firebase
 import SwiftKeychainWrapper
-import CoreLocation
+//import CoreLocation
 import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
-
     var window: UIWindow?
+    
     let locationManager = CLLocationManager()
     var defaults = UserDefaults.standard
     var backgroundSessionCompletionHandler: (() -> Void)?
@@ -106,8 +106,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         FIRApp.configure()
         
         // MARK: - AddGeotification
-        locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
+        //locationManager.delegate = self
+        //locationManager.requestAlwaysAuthorization()
         
         customizeAppearance()
         setUserNotifications()
@@ -227,7 +227,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     
-    // MARK: - Split view
+    // MARK: - Split view opens maincontroller
     
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
         
@@ -294,37 +294,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
-    // MARK: - Geotify AddGeotification
-    
-    func handleEvent(forRegion region: CLRegion!) {
-        if UIApplication.shared.applicationState == .active {
-            guard let message = note(fromRegionIdentifier: region.identifier) else { return }
-            window?.rootViewController?.showAlert(withTitle: nil, message: message)
-            
-        } else {
-            
-            let content = UNMutableNotificationContent()
-            content.title = "Tutorial Reminder"
-            content.body = note(fromRegionIdentifier: region.identifier)!
-            content.badge = 1
-            content.sound = UNNotificationSound.default()
-            content.categoryIdentifier = "myCategory"
-            
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-            let request = UNNotificationRequest(identifier: "AddGeotification", content: content, trigger: trigger)
-            UNUserNotificationCenter.current().delegate = self
-            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        }
-    }
-    
-    func note(fromRegionIdentifier identifier: String) -> String? {
-        let savedItems = UserDefaults.standard.array(forKey: PreferencesKeys.savedItems) as? [NSData]
-        let geotifications = savedItems?.map { NSKeyedUnarchiver.unarchiveObject(with: $0 as Data) as? Geotification }
-        let index = geotifications?.index { $0?.identifier == identifier }
-        return index != nil ? geotifications?[index!]?.note : nil
-    }
+
     
 }
 // MARK: - setup RegisterUserNotification, 3DTouch
@@ -343,7 +313,7 @@ extension AppDelegate {
             if granted {
                 UIApplication.shared.registerForRemoteNotifications()
                 UIApplication.shared.applicationIconBadgeNumber = 0
-                center.removeAllDeliveredNotifications()
+                //center.removeAllDeliveredNotifications()
                 center.removeAllPendingNotificationRequests()
             }
         }
@@ -364,13 +334,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Swift.Void) {
         
-        window?.rootViewController?.showAlert(withTitle: nil, message: "Crap")
+        print("Notification being triggered")
+
+        //window?.rootViewController?.showAlert(withTitle: nil, message: "Crap")
         completionHandler([.alert, .badge, .sound])
     }
     
     // Schedule Notification Action
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
-        
+        print("Tapped in notification")
         if response.actionIdentifier == "remindLater" {
             let newDate = Date(timeInterval: 900, since: Date())
             scheduleNotification(at: newDate)
@@ -379,20 +351,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 
-// Geotify AddGeotification
-extension AppDelegate: CLLocationManagerDelegate {
-    
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        if region is CLCircularRegion {
-            handleEvent(forRegion: region)
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        if region is CLCircularRegion {
-            handleEvent(forRegion: region)
-        }
-    }
-}
+
 
 

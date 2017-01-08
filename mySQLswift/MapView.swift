@@ -45,7 +45,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         button.setTitle("+", for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
         button.titleEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, 0)
-        button.addTarget(self, action: #selector(hiderouteView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(routehideView), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.font = UIFont(name: button.titleLabel!.font.familyName , size: 50)
         return button
@@ -317,18 +317,17 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     
     // MARK: - Button
     
-    func hiderouteView(_ sender: AnyObject) {
+    func routehideView(_ sender: AnyObject) {
         
         if self.routView.isHidden == false {
+            
+            mapView.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: 0).isActive = true
             self.routView.isHidden = true
-            mapView.translatesAutoresizingMaskIntoConstraints = false
-            mapView.bottomAnchor.constraint( equalTo: view.layoutMarginsGuide.bottomAnchor, constant: 0).isActive = true
+            
         } else {
+            
+            mapView.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: -routeviewHeight).isActive = true
             self.routView.isHidden = false
-            mapView.translatesAutoresizingMaskIntoConstraints = true
-            mapView.bottomAnchor.constraint( equalTo: routView.layoutMarginsGuide.topAnchor, constant: 0).isActive = true
-            let heightConstraint  = NSLayoutConstraint(item: routView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: routeviewHeight)
-            self.view.addConstraints([heightConstraint])
         }
     }
     

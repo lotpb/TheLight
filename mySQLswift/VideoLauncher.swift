@@ -11,6 +11,18 @@ import AVFoundation
 
 class VideoPlayerView: UIView {
     
+    lazy var closeButton: UIButton = {
+        let button = UIButton(type: .system)
+        let image = UIImage(named: "cancel")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = .white
+        button.isHidden = false
+        button.addTarget(self, action: #selector(handleClose), for: .touchUpInside)
+        
+        return button
+    }()
+    
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         aiv.translatesAutoresizingMaskIntoConstraints = false
@@ -30,18 +42,18 @@ class VideoPlayerView: UIView {
         return button
     }()
     
+    var isPlaying = false
     
-    lazy var closeButton: UIButton = {
-        let button = UIButton(type: .system)
-        let image = UIImage(named: "cancel")
-        button.setImage(image, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = .white
-        button.isHidden = true
-        button.addTarget(self, action: #selector(handleClose), for: .touchUpInside)
-        
-        return button
-    }()
+    func handlePause() {
+        if isPlaying {
+            player?.pause()
+            pausePlayButton.setImage(UIImage(named: "play"), for: .normal)
+        } else {
+            player?.play()
+            pausePlayButton.setImage(UIImage(named: "pause"), for: .normal)
+        }
+        isPlaying = !isPlaying
+    }
 
     
     let controlsContainerView: UIView = {
@@ -83,52 +95,6 @@ class VideoPlayerView: UIView {
         return slider
     }()
     
-    
-    /*
-     private lazy var tableView : UITableView = {
-     let tableView = UITableView()
-     tableView.backgroundColor = .blue
-     return tableView
-     }() */
-    
-    /*
-     lazy var settingButton: UIButton = {
-     let button = UIButton(type: .system)
-     let image = UIImage(named: "nav_more_icon")
-     button.setImage(image, for: .normal)
-     button.translatesAutoresizingMaskIntoConstraints = false
-     button.tintColor = .white
-     button.isHidden = true
-     
-     button.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
-     
-     return button
-     }() */
-    
-    func handleClose(_ VideoLauncher: VideoLauncher) {
-        
-        self.removeFromSuperview()
-    }
-    
-    func handleSettings(_ VideoLauncher: VideoLauncher) {
-        
-        self.removeFromSuperview()
-    }
-    
-    var isPlaying = false
-    
-    func handlePause() {
-        if isPlaying {
-            player?.pause()
-            pausePlayButton.setImage(UIImage(named: "play"), for: .normal)
-        } else {
-            player?.play()
-            pausePlayButton.setImage(UIImage(named: "pause"), for: .normal)
-        }
-        isPlaying = !isPlaying
-    }
-    
-    
     func handleSliderChange() {
         print(videoSlider.value)
         
@@ -145,24 +111,38 @@ class VideoPlayerView: UIView {
         }
     }
     
+    
+    func handleClose(_ VideoLauncher: VideoLauncher) {
+        
+        //self.removeFromSuperview()
+    }
+    
+    func handleSettings(_ VideoLauncher: VideoLauncher) {
+        
+        //self.removeFromSuperview()
+    }
+    
      override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .black
         
-        //tableView.delegate = self
-        //tableView.dataSource = self
-        //tableView.estimatedRowHeight = 44
-        //tableView.rowHeight = UITableViewAutomaticDimension
-        //tableView.addSubview(refreshControl)
+        setupPlayerView()
+        
+        setupGradientLayer()
         
         controlsContainerView.frame = frame
         addSubview(controlsContainerView)
-        //addSubview(tableView)
         
+ //--------------added------
         controlsContainerView.addSubview(activityIndicatorView)
         activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        controlsContainerView.addSubview(closeButton)
+        addConstraintsWithFormat(format: "H:|-16-[v0(30)]", views: closeButton)
+        closeButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        closeButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//----------------added------
         
         controlsContainerView.addSubview(pausePlayButton)
         pausePlayButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -188,40 +168,32 @@ class VideoPlayerView: UIView {
         videoSlider.leftAnchor.constraint(equalTo: currentTimeLabel.rightAnchor).isActive = true
         videoSlider.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        controlsContainerView.addSubview(closeButton)
-        addConstraintsWithFormat(format: "H:|-16-[v0(30)]", views: closeButton)
-        closeButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        closeButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        //let videoURL: String?
-        
-        //let videoURL = "https://files.parsetfss.com/6ab2bd45-dd6b-4dda-afde-ee839ccbdc32/tfss-9c23838b-c434-49fa-9f6d-54e0631366c5-movie.mp4"
-        
-        //let videoURL = "https://firebasestorage.googleapis.com/v0/b/gameofchats-762ca.appspot.com/o/message_movies%2F12323439-9729-4941-BA07-2BAE970967C7.mov?alt=media&token=3e37a093-3bc8-410f-84d3-38332af9c726"
-        
-        let videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
-        loadVideoID(videoURL: videoURL)
-        
-        setupGradientLayer()
-        
+        backgroundColor = .black
     }
     
     var player: AVPlayer?
     
-    open func loadVideoID(videoURL: String) {
+    fileprivate func setupPlayerView() {
         
-        let urlString: String = videoURL
+        //let urlString = "https://files.parsetfss.com/6ab2bd45-dd6b-4dda-afde-ee839ccbdc32/tfss-9c23838b-c434-49fa-9f6d-54e0631366c5-movie.mp4"
+        
+        //let urlString = "https://firebasestorage.googleapis.com/v0/b/gameofchats-762ca.appspot.com/o/message_movies%2F12323439-9729-4941-BA07-2BAE970967C7.mov?alt=media&token=3e37a093-3bc8-410f-84d3-38332af9c726"
+        
+        let urlString = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+        
 
         if let url = NSURL(string: urlString) {
-            
             player = AVPlayer(url: url as URL)
             let playerLayer = AVPlayerLayer(player: player)
             self.layer.addSublayer(playerLayer)
             playerLayer.frame = self.frame
+            
             player?.play()
+            
             player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
             
             //track player progress
+            
             let interval = CMTime(value: 1, timescale: 2)
             player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
                 let seconds = CMTimeGetSeconds(progressTime)
@@ -272,6 +244,13 @@ class VideoPlayerView: UIView {
 }
 
 class VideoLauncher: NSObject {
+    
+    /*
+    var detailItem: AnyObject? {
+        didSet {
+            VideoPlayerView(VideoPlayerView())
+        }
+    } */
     
     var videoURL: String?
     

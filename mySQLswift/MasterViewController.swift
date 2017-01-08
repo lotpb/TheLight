@@ -16,9 +16,9 @@ import FirebaseAnalytics
 
 class MasterViewController: UITableViewController, UISplitViewControllerDelegate {
 
-  //var detailViewController: DetailViewController? = nil
+    fileprivate var collapseDetailViewController = true
     
-    var menuItems:NSMutableArray = ["Snapshot","Statistics","Leads","Customers","Vendors","Employee","Advertising","Product","Job","Salesman","Geotify","Show Detail","Music","YouTube","Spot Beacon","Transmit Beacon","Contacts"]
+    var menuItems: NSMutableArray = ["Snapshot","Statistics","Leads","Customers","Vendors","Employee","Advertising","Product","Job","Salesman","Geotify","Show Detail","Music","YouTube","Spot Beacon","Transmit Beacon","Contacts"]
     var currentItem = "Snapshot"
     
     var player : AVAudioPlayer! = nil
@@ -558,11 +558,18 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         if segue.identifier == "statisticSegue" {
             let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController
+            collapseDetailViewController = false
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
         }
         if segue.identifier == "geotifySegue" {
-            let controller = (segue.destination as! UINavigationController).topViewController as! GeotificationsViewController
+            
+            guard let navController = segue.destination as? UINavigationController,
+                let controller = navController.topViewController as? GeotificationsViewController
+                else {
+                    fatalError("Expected DetailViewController")
+            }
+            //let controller = (segue.destination as! UINavigationController).topViewController as! GeotificationsViewController
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
         }
@@ -625,4 +632,6 @@ extension MasterViewController: UISearchResultsUpdating {
         self.resultsController.tableView.reloadData()
     }
 }
+
+
 

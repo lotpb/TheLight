@@ -114,14 +114,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     var emailTitle :String?
     var messageBody:String?
     
-    /*
-    let mainView: UIView = {
-        let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: 100, height: 200)
-        view.backgroundColor = UIColor.red
-        return view
-    }()*/
-    
     let photoImage: CustomImageView = {
         let imageView = CustomImageView()
         imageView.image = UIImage(named:"IMG_1133.jpg")
@@ -159,8 +151,11 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         emailTitle = defaults.string(forKey: "emailtitleKey")
         messageBody = defaults.string(forKey: "emailmessageKey")
         
+        self.mainView!.addSubview(photoImage)
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-
+            
+            setupConstraints()
             labelamount!.font = Font.Detail.ipadAmount
             labelname!.font = Font.Detail.ipadname
             labeldate!.font = Font.Detail.ipaddate
@@ -169,6 +164,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             mapbutton!.titleLabel?.font = Font.Detail.textbutton
             
         } else {
+            
+            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
             
             labeladdress!.font = Font.Detail.textaddress
             labelcity!.font = Font.Detail.textaddress
@@ -187,18 +184,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             } else {
                 labelname!.font = Font.Detail.textname
             }
+            
         }
-        
-        if (self.formController == "Leads") {
-            if (self.tbl11 == "Sold") {
-                self.mySwitch!.setOn(true, animated:true)
-            } else {
-                self.mySwitch!.setOn(false, animated:true)
-            }
-        }
-        
-        self.mySwitch!.onTintColor = Color.BlueColor
-        self.mySwitch!.tintColor = .lightGray
         
         self.mapbutton!.backgroundColor = Color.BlueColor
         self.mapbutton!.setTitleColor(.white, for: UIControlState())
@@ -219,17 +206,21 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         tableView!.layer.addSublayer(topBorder)
         tableView!.layer.masksToBounds = true
         
+        if (self.formController == "Leads") {
+            if (self.tbl11 == "Sold") {
+                self.mySwitch!.setOn(true, animated:true)
+            } else {
+                self.mySwitch!.setOn(false, animated:true)
+            }
+        }
+        
+        self.mySwitch!.onTintColor = Color.BlueColor
+        self.mySwitch!.tintColor = .lightGray
+        
         parseData()
         followButton()
         refreshData()
-        
-        self.mainView!.addSubview(photoImage)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            setupConstraints()
-        } else {
-            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
-        }
-        
+   
     }
     
     override func viewDidAppear(_ animated: Bool) {

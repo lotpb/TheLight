@@ -28,6 +28,7 @@ class CustomTableCell: UITableViewCell {
     
     // salesman Controller
     @IBOutlet weak var salestitleLabel: UILabel!
+    //@IBOutlet weak var salesImageView: UIImageView!
     
     // BUser Controller
     @IBOutlet weak var usertitleLabel: UILabel!

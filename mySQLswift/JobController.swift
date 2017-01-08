@@ -102,12 +102,6 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         isFormStat = true
         self.performSegue(withIdentifier: "jobDetailSegue", sender: self)
     }
-    /*
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
-    } */
     
     // MARK: - Table View
     

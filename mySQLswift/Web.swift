@@ -15,11 +15,11 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     private var webView: WKWebView
     var url: URL?
     
-    let siteNames = ["CNN", "Drudge", "cnet", "United", "Cult of Mac", "Twits"]
-    let siteAddresses = ["http://www.cnn.com",
+    let siteNames: Array<String> = ["CNN", "Drudge", "cnet", "Appcoda", "Cult of Mac", "Twits"]
+    let siteAddresses: Array<String> = ["http://www.cnn.com",
                       "http://www.Drudgereport.com",
                       "http://www.cnet.com",
-                      "http://lotpb.github.io/UnitedWebPage/index.html",
+                      "http://www.appcoda.com/tutorials/",
                       "http://www.cultofmac.com/category/news/",
                       "http://stocktwits.com/The_Stock_Whisperer"]
     
@@ -30,6 +30,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     @IBOutlet weak var recentPostsButton: UIBarButtonItem!
     @IBOutlet weak var safari: UIBarButtonItem!
     @IBOutlet weak var segControl: UISegmentedControl!
+
     
     required init?(coder aDecoder: NSCoder) {
         let config = WKWebViewConfiguration()
@@ -38,44 +39,40 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         self.webView.navigationDelegate = self
     }
     
-    var detailItem: AnyObject? { //dont delete for splitview
-        didSet {
-        
-            self.configureView()
-            
-        }
-    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // MARK: - SplitView
         self.splitViewController?.maximumPrimaryColumnWidth = 300
-        self.splitViewController!.preferredDisplayMode = .primaryHidden //.allVisible
+        self.splitViewController!.preferredDisplayMode = .primaryHidden
         //fix - remove bottom bar
         self.extendedLayoutIncludesOpaqueBars = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
         
         self.segControl? = UISegmentedControl(items: siteNames)
-        //self.segControl?.selectedSegmentIndex = 2
-        //self.segControl?.layer.cornerRadius = 15.0
         
         view.insertSubview(webView, belowSubview: progressView)
+        
+        backButton.isEnabled = false
+        forwardButton.isEnabled = false
+        recentPostsButton.isEnabled = false
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         let height = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 1, constant: -44)
         let width = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1, constant: 0)
         view.addConstraints([height, width])
         
+        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
-        webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
+        //webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
         
-        backButton.isEnabled = false
-        forwardButton.isEnabled = false
-        recentPostsButton.isEnabled = false
+        self.configureView()
         
     }
     
@@ -85,6 +82,8 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         //changes segmented color
         self.navigationController?.navigationBar.tintColor = .white
         //self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
+        //webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
+        //self.configureView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -94,6 +93,13 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    var detailItem: AnyObject? {
+        didSet {
+            //print(detailItem!)
+            self.configureView()
+        }
     }
     
     
@@ -196,15 +202,22 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     }
     
     func configureView() {
-        /*
-        if let _: AnyObject = detailItem {
-   
-                let url = NSURL(string: detailItem as! String)
-                let request = NSURLRequest(url: url! as URL)
-                webView.load(request as URLRequest)
+        
+        if let detail = self.detailItem {
             
-        } */
+            webView.load(URLRequest(url:URL(string: detail as! String)!))
+            /*
+            url = URL(string: detail as String)
+            let request = URLRequest(url: url!)
+            webView.load(request) */
+        } else {
+       
+           webView.load(URLRequest(url:URL(string: siteAddresses[0])!)) 
+        }
+
+        //webView.load(URLRequest(url: URL(string: detailItem as! String)!))
     }
+ 
     
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         

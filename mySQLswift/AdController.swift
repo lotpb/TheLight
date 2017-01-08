@@ -106,12 +106,6 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         isFormStat = true
         self.performSegue(withIdentifier: "adDetailSegue", sender: self)
     }
-    /*
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
-    } */
     
     // MARK: - Table View
     

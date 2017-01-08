@@ -60,13 +60,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             self.minorLabel?.font = Font.Snapshot.celltitlePad
             self.beaconBroadlabel?.font = Font.Snapshot.celltitlePad
         } else {
-            //self.lblStatus?.font = Font.Snapshot.celltitlePad
-            //self.lblBTStatus?.font = Font.Snapshot.celltitlePad
-            //self.txtMajor?.font = Font.Snapshot.celltitlePad
-            //self.txtMinor?.font = Font.Snapshot.celltitlePad
-            //self.majorLabel?.font = Font.Snapshot.celltitlePad
-            //self.minorLabel?.font = Font.Snapshot.celltitlePad
-            //self.beaconBroadlabel?.font = Font.Snapshot.celltitlePad
+            
         }
         
         btnAction.layer.cornerRadius = btnAction.frame.size.width/2
@@ -153,7 +147,5 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         lblBTStatus.text = statusMessage
     }
     
-    
-    // MARK: - Button
     
 }

@@ -12,7 +12,7 @@ import AVKit
 import AVFoundation
 //import MobileCoreServices //kUTTypeImage
 
-class NewsDetailController: UIViewController, UITextViewDelegate {
+class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewControllerDelegate {
     
     let ipadtitle = UIFont.systemFont(ofSize: 26, weight: UIFontWeightRegular)
     let ipadsubtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
@@ -37,8 +37,12 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // MARK: - SplitView Fix
-        self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
+        // MARK: - SplitView
+        /* self.splitViewController?.maximumPrimaryColumnWidth = 600
+        //fix - remove bottom bar
+        self.splitViewController!.delegate = self
+        self.splitViewController!.preferredDisplayMode = .automatic //.allVisible */
+        self.extendedLayoutIncludesOpaqueBars = true
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             newsViewHeight = 450
@@ -58,10 +62,11 @@ class NewsDetailController: UIViewController, UITextViewDelegate {
         self.newsImageview.backgroundColor = .black
         
         let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
+        let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
 
-        navigationItem.rightBarButtonItems = [editItem]
+        navigationItem.rightBarButtonItems = [editItem,backItem]
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
+        //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
         
         self.newsImageview.isUserInteractionEnabled = true
         

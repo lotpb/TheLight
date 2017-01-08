@@ -359,8 +359,8 @@ class NotificationController: UIViewController {
     
     func goHome() {
         let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let initialViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        self.present(initialViewController, animated: true)
+        let vc = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

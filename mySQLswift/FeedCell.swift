@@ -286,6 +286,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 
                 let videoLauncher = VideoLauncher()
                 videoLauncher.videoURL = self.imageFile.url
+                //videoLauncher.detailItem = self.imageFile.url as AnyObject?
                 videoLauncher.showVideoPlayer()
                 
             } else {
@@ -294,6 +295,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
 
                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
+                
 
                 vc.objectId = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
                 vc.newsTitle = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
@@ -305,17 +307,43 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 
                 let navigationController = UINavigationController(rootViewController: vc)
                 UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
-                
+
             }
         }
     }
     
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "newsdetailSeque"
-        {
-
+        guard let navController = segue.destination as? UINavigationController,
+            let viewController = navController.topViewController as? DetailViewController else {
+                fatalError("Expected DetailViewController")
         }
+        
+        // Manage the display mode button
+        //viewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+        viewController.navigationItem.leftItemsSupplementBackButton = true
+        
+        // Configure the secondary view controller
+        //viewController.detailItem = Date()
+        
+        
+        
+        
+        
+        /*
+        if segue.identifier == "newsdetailSeque" {
+            if let svc = self.window?.rootViewController as? UISplitViewController {
+                svc.preferredDisplayMode = .allVisible
+                if let nc = svc.viewControllers.last as? UINavigationController {
+                    nc.topViewController?.navigationItem.leftBarButtonItem = svc.displayModeButtonItem
+                }
+            }
+            /*
+            let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true */
+
+        } */
     }
 
 }

@@ -876,7 +876,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 self.selectedEmail = (self._feedItems3[indexPath.row] as AnyObject).value(forKey: "email") as? String
                 self.selectedPhone = (self._feedItems3[indexPath.row] as AnyObject).value(forKey: "phone") as? String
                 
-                let updated:Date = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
+                let updated:Date = (self._feedItems3[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMM dd, yyyy"
                 let createString = dateFormatter.string(from: updated)
@@ -900,7 +900,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
         } else if (collectionView.tag == 4) {
             
-            imageObject = _feedItems4.object(at: indexPath.row) as! PFObject
+            imageObject = _feedItems5.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
@@ -908,7 +908,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 self.selectedPhone = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "EmployeeNo") as? String
                 self.selectedCreate = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "Email") as? String
                 
-                self.selectedName = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "SalesNo") as? String
+                self.selectedName = String(format: "%@ %@ %@", ((self._feedItems5[indexPath.row] as AnyObject).value(forKey: "First") as? String)!, ((self._feedItems5[indexPath.row] as AnyObject).value(forKey: "Last") as? String)!, ((self._feedItems5[indexPath.row] as AnyObject).value(forKey: "Company") as? String)!).removeWhiteSpace()
                 
                 self.selectedTitle = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "Last") as? String
                 self.selectedEmail = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "Street") as? String
@@ -946,53 +946,53 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         if segue.identifier == "snapuploadSegue" {
             
             let VC = segue.destination as? NewsDetailController
-            VC!.objectId = self.selectedObjectId
-            VC!.newsTitle = self.selectedTitle
-            VC!.newsDetail = self.selectedEmail
-            VC!.newsDate = self.selectedDate
-            VC!.newsStory = self.selectedPhone
-            VC!.image = self.selectedImage
-            VC!.videoURL = self.imageDetailurl
+            VC!.objectId = self.selectedObjectId ?? ""
+            VC!.newsTitle = self.selectedTitle ?? ""
+            VC!.newsDetail = self.selectedEmail ?? ""
+            VC!.newsDate = self.selectedDate ?? Date()
+            VC!.newsStory = self.selectedPhone ?? ""
+            VC!.image = self.selectedImage ?? nil
+            VC!.videoURL = self.imageDetailurl ?? ""
             
         } else if segue.identifier == "userdetailSegue" {
             
             let VC = segue.destination as? UserDetailController
-            VC!.objectId = self.selectedObjectId
-            VC!.username = self.selectedName
-            VC!.create = self.selectedCreate
-            VC!.email = self.selectedEmail
-            VC!.phone = self.selectedPhone
-            VC!.userimage = self.selectedImage
+            VC!.objectId = self.selectedObjectId ?? ""
+            VC!.username = self.selectedName ?? ""
+            VC!.create = self.selectedCreate ?? ""
+            VC!.email = self.selectedEmail ?? ""
+            VC!.phone = self.selectedPhone ?? ""
+            VC!.userimage = self.selectedImage ?? nil
             
         } else if segue.identifier == "snapemployeeSegue" {
             
             let VC = segue.destination as? LeadDetail
             VC!.formController = "Employee"
-            VC!.objectId = self.selectedObjectId as String
-            VC!.leadNo = self.selectedPhone as String
-            VC!.date = self.selectedCreate as String
-            VC!.name = self.selectedName as String
-            VC!.custNo = self.selectedTitle as String
-            VC!.address = self.selectedEmail as String
-            VC!.city = self.imageDetailurl! as String
-            VC!.state = self.selectedState as String
-            VC!.zip = self.selectedZip as String
-            VC!.amount = self.selectedAmount as String
-            VC!.tbl11 = self.selected11
-            VC!.tbl12 = self.selected12
-            VC!.tbl13 = self.selected13
-            VC!.tbl14 = self.selected14
-            VC!.tbl15 = self.selected15
-            VC!.tbl21 = self.selected21
-            VC!.tbl22 = self.selected22
-            VC!.tbl23 = self.selected23
-            VC!.tbl24 = self.selected24
-            VC!.tbl25 = self.selected25
-            VC!.tbl16 = self.selected16
-            VC!.tbl26 = self.selected26
-            VC!.tbl27 = self.selected27
-            VC!.comments = self.selectedComments
-            VC!.active = self.selectedActive
+            VC!.objectId = self.selectedObjectId ?? ""
+            VC!.leadNo = self.selectedPhone ?? ""
+            VC!.date = self.selectedCreate ?? ""
+            VC!.name = self.selectedName ?? ""
+            VC!.custNo = self.selectedTitle ?? ""
+            VC!.address = self.selectedEmail ?? ""
+            VC!.city = self.imageDetailurl ?? ""
+            VC!.state = self.selectedState ?? ""
+            VC!.zip = self.selectedZip ?? ""
+            VC!.amount = self.selectedAmount ?? ""
+            VC!.tbl11 = self.selected11 ?? ""
+            VC!.tbl12 = self.selected12 ?? ""
+            VC!.tbl13 = self.selected13 ?? ""
+            VC!.tbl14 = self.selected14 ?? ""
+            VC!.tbl15 = self.selected15 ?? ""
+            VC!.tbl21 = self.selected21 ?? ""
+            VC!.tbl22 = self.selected22 ?? ""
+            VC!.tbl23 = self.selected23 ?? ""
+            VC!.tbl24 = self.selected24 ?? ""
+            VC!.tbl25 = self.selected25 ?? ""
+            VC!.tbl16 = self.selected16 ?? ""
+            VC!.tbl26 = self.selected26 ?? ""
+            VC!.tbl27 = self.selected27 ?? ""
+            VC!.comments = self.selectedComments ?? ""
+            VC!.active = self.selectedActive ?? ""
             
             VC!.l11 = "Home"; VC!.l12 = "Work"
             VC!.l13 = "Mobile"; VC!.l14 = "Social"

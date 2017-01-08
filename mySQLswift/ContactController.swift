@@ -199,18 +199,16 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
     // MARK: - Segues
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        //let indexPath = tableView.indexPathForSelectedRow!
+        //let currentItem = tableView.cellForRow(at: indexPath)! as UITableViewCell
+        
         self.performSegue(withIdentifier: "CreateContact", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "CreateContact" {
-            let controller = (segue.destination as! UINavigationController).topViewController as! CreateContactViewController
-            controller.type = .cnContact
-            /*
-            if let controller = segue.destination as? CreateContactViewController {
-                controller.type = .cnContact
-            } */
+        if let dvc = segue.destination as? CreateContactViewController {
+            dvc.type = .cnContact
         }
     }
     

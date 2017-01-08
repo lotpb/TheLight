@@ -8,22 +8,26 @@
 
 import UIKit
 import CoreLocation
+import CoreBluetooth
 //import QuartzCore
 
 
-class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
+class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPeripheralManagerDelegate {
     
     @IBOutlet weak var btnSwitchSpotting: UIButton!
     @IBOutlet weak var lblBeaconReport: UILabel!
     @IBOutlet weak var lblBeaconDetails: UILabel!
     @IBOutlet weak var beaconspotLabel: UILabel!
     @IBOutlet weak var beaconlocateLabel: UILabel!
+    @IBOutlet weak var lblBTStatus: UILabel!
+
     
     var beaconRegion: CLBeaconRegion!
     var locationManager: CLLocationManager!
     var isSearchingForBeacons = false
-    //var lastFoundBeacon: CLBeacon! = CLBeacon()
-    //var lastProximity: CLProximity! = CLProximity.unknown
+
+    var beaconPeripheralData: NSDictionary! //added bluetooth
+    var peripheralManager: CBPeripheralManager! //added bluetooth
     
     
     override func viewDidLoad() {
@@ -57,21 +61,17 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
             //self.beaconspotLabel?.font = Font.Snapshot.celltitlePad
             self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
         } else {
-            //self.btnSwitchSpotting?.font = Font.Snapshot.celltitlePad
-            //self.lblBTStatus?.font = Font.Snapshot.celltitlePad
-            //self.lblBeaconReport?.font = Font.Snapshot.celltitlePad
-            //self.lblBeaconDetails?.font = Font.Snapshot.celltitlePad
-            //self.beaconspotLabel?.font = Font.Snapshot.celltitlePad
-            //self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
+    
 
         }
+        
+        peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
     
     
     // MARK: IBAction method implementation
@@ -178,76 +178,20 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate {
         lblBeaconDetails.text = "Beacon Details:\nDistance From iBeacon = " + proximityMessage
     }
     
-    /*
-    func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
-        
-        var shouldHideBeaconDetails = true
-        let foundBeacons = beacons
-        
-        if foundBeacons.count > 0 {
-            //if let closestBeacon = beacons[0] as? CLBeacon {
-            let closestBeacon = beacons[0] as CLBeacon
-            
-            if closestBeacon != lastFoundBeacon || lastProximity != closestBeacon.proximity  {
-                lastFoundBeacon = closestBeacon
-                lastProximity = closestBeacon.proximity
-     
-                var proximityMessage: String!
-     
-                UIView.animate(withDuration: 0.8) {
-     
-                    switch self.lastFoundBeacon.proximity {
-                    case CLProximity.immediate:
-                        proximityMessage = "Very close"
-                        self.view.backgroundColor = .red
-                        self.lblBeaconReport.textColor = .white
-                        self.lblBeaconDetails.textColor = .white
-                        self.lblBeaconReport.textColor = .white
-                    case CLProximity.near:
-                        proximityMessage = "Near"
-                        self.view.backgroundColor = .purple
-                        self.lblBeaconReport.textColor = .white
-                        self.lblBeaconDetails.textColor = .white
-                        self.lblBeaconReport.textColor = .white
-                    case CLProximity.far:
-                        proximityMessage = "Far"
-                        self.view.backgroundColor = .blue
-                        self.lblBeaconReport.textColor = .white
-                        self.lblBeaconDetails.textColor = .white
-                        self.lblBeaconReport.textColor = .white
-                    case CLProximity.unknown:
-                        proximityMessage = "Where's the beacon?"
-                        self.view.backgroundColor = .green
-                        //lblBeaconReport.textColor = .white
-                        //lblBeaconDetails.textColor = .white
-                        //lblBeaconReport.textColor = .white
-                        /*
-                         default:
-                         proximityMessage = "Where's the beacon?"
-                         self.view.backgroundColor = .white */
-                    }
-                }
-                
-                shouldHideBeaconDetails = false
-                
-                lblBeaconDetails.text = "Beacon Details:\nMajor = " + String(closestBeacon.major.int32Value) + "\nMinor = " + String(closestBeacon.minor.int32Value) + "\nDistance: " + proximityMessage
-                /*
-                var makeString = "Beacon Details:\n"
-                makeString += "UUID = \(closestBeacon.proximityUUID.UUIDString)\n"
-                makeString += "Identifier = \(region.identifier)\n"
-                makeString += "Major Value = \(closestBeacon.major.intValue)\n"
-                makeString += "Minor Value = \(closestBeacon.minor.intValue)\n"
-                makeString += "Distance From iBeacon = \(proximityMessage)"
-                lblBeaconDetails.text = makeString */
-            }
-            //}
-        }
-        //}
-        
-        lblBeaconDetails.isHidden = shouldHideBeaconDetails
-    } */
-
+    // MARK: CBPeripheralManagerDelegate //added bluetooth
     
-    // MARK: - Button
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        var statusMessage = ""
+        if peripheral.state == .poweredOn {
+            peripheralManager.startAdvertising(beaconPeripheralData as! [String: AnyObject]!)
+            statusMessage = "Bluetooth Status: Turned On"
+        } else if peripheral.state == .poweredOff {
+            peripheralManager.stopAdvertising()
+            statusMessage = "Bluetooth Status: Turned Off"
+        } else if peripheral.state == .unsupported {
+            statusMessage = "Bluetooth Status: Not Supported"
+        }
+        lblBTStatus.text = statusMessage
+    }
     
 }

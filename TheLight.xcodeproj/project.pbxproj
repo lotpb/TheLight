@@ -32,9 +32,11 @@
 		AF2D42E01D6CA9200071115E /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */; };
 		AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */; };
 		AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF46FA831C2313EE00C27445 /* UserViewController.swift */; };
+		AF4A56721E1F098A00AF6B9E /* Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A56711E1F098A00AF6B9E /* Cells.swift */; };
 		AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */; };
 		AF4C1A281CEFF85300F8B038 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A271CEFF85300F8B038 /* Weather.swift */; };
 		AF56DFC31C28947400CD7EB9 /* SnapshotController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */; };
+		AF58C8831E1E8E9000F50CA6 /* RegionsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58C8821E1E8E9000F50CA6 /* RegionsListController.swift */; };
 		AF5BCEF11E0A2830007A9093 /* CreateContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5BCEF01E0A2830007A9093 /* CreateContactViewController.swift */; };
 		AF5C01DE1C493199009BB817 /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01DD1C493199009BB817 /* MusicController.swift */; };
 		AF5C01E01C4931EE009BB817 /* TrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C01DF1C4931EE009BB817 /* TrackCell.swift */; };
@@ -107,6 +109,7 @@
 		AFF3C8ED1C4E86B000D9B7BD /* SpotBeaconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF3C8EC1C4E86B000D9B7BD /* SpotBeaconController.swift */; };
 		AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF3C8EE1C4E8A0100D9B7BD /* TransmitBeaconController.swift */; };
 		AFF3C8F21C4F38D500D9B7BD /* NewsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF3C8F11C4F38D500D9B7BD /* NewsDetailController.swift */; };
+		AFF4FB311E1D805500037697 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF4FB301E1D805500037697 /* Utilities.swift */; };
 		AFF5D5561D3AC8E700975055 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF5D5551D3AC8E700975055 /* Message.swift */; };
 		AFF5D5581D3AD59E00975055 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AFF5D5571D3AD59E00975055 /* GoogleService-Info.plist */; };
 		AFF5D55A1D3AD96400975055 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF5D5591D3AD96400975055 /* User.swift */; };
@@ -156,9 +159,11 @@
 		AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoLauncher.swift; sourceTree = "<group>"; };
 		AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
 		AF46FA831C2313EE00C27445 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
+		AF4A56711E1F098A00AF6B9E /* Cells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
 		AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherGetter.swift; sourceTree = "<group>"; };
 		AF4C1A271CEFF85300F8B038 /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotController.swift; sourceTree = "<group>"; };
+		AF58C8821E1E8E9000F50CA6 /* RegionsListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionsListController.swift; sourceTree = "<group>"; };
 		AF5BCEF01E0A2830007A9093 /* CreateContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateContactViewController.swift; sourceTree = "<group>"; };
 		AF5C01DD1C493199009BB817 /* MusicController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
 		AF5C01DF1C4931EE009BB817 /* TrackCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackCell.swift; sourceTree = "<group>"; };
@@ -244,6 +249,7 @@
 		AFF3C8EC1C4E86B000D9B7BD /* SpotBeaconController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotBeaconController.swift; sourceTree = "<group>"; };
 		AFF3C8EE1C4E8A0100D9B7BD /* TransmitBeaconController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransmitBeaconController.swift; sourceTree = "<group>"; };
 		AFF3C8F11C4F38D500D9B7BD /* NewsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailController.swift; sourceTree = "<group>"; };
+		AFF4FB301E1D805500037697 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		AFF5D5551D3AC8E700975055 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		AFF5D5571D3AD59E00975055 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AFF5D5591D3AD96400975055 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -397,6 +403,7 @@
 			children = (
 				AF1E6D551C1920FC0009230E /* CustomTableCell.swift */,
 				AF0C77A21C2245BA0055DDE4 /* CollectionViewCell.swift */,
+				AF4A56711E1F098A00AF6B9E /* Cells.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -462,9 +469,11 @@
 				AFA0396E1E08327500E140E4 /* GeotificationsViewController.swift */,
 				AFA039701E08328300E140E4 /* AddGeotificationViewController.swift */,
 				AFA039721E08328E00E140E4 /* Geotification.swift */,
+				AFF4FB301E1D805500037697 /* Utilities.swift */,
 				AFA039741E08329800E140E4 /* GetAddress.swift */,
 				AFBA8BB31E0D72A2000A7517 /* RegionProtocol.swift */,
 				AFBA8BB11E0D728D000A7517 /* RegionDelegateProtocol.swift */,
+				AF58C8821E1E8E9000F50CA6 /* RegionsListController.swift */,
 			);
 			name = Geotify;
 			sourceTree = "<group>";
@@ -813,6 +822,7 @@
 				AF9A87841C18645C0091B0E3 /* Web.swift in Sources */,
 				AF647ED01E100C9B004DDEA3 /* ContactTableViewCell.swift in Sources */,
 				AFE34A3E1D3277EB00C78D8B /* SubscriptionCell.swift in Sources */,
+				AF58C8831E1E8E9000F50CA6 /* RegionsListController.swift in Sources */,
 				AF8CC3AB1C42B9FB004147F3 /* StatisticController.swift in Sources */,
 				AF0369A91C173DDC00137D7E /* DetailViewController.swift in Sources */,
 				AFA039751E08329800E140E4 /* GetAddress.swift in Sources */,
@@ -844,6 +854,7 @@
 				AFBB9B7D1D2D760300618586 /* FeedCell.swift in Sources */,
 				AF647ED21E100D4B004DDEA3 /* ContactEntry.swift in Sources */,
 				AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */,
+				AF4A56721E1F098A00AF6B9E /* Cells.swift in Sources */,
 				AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */,
 				AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */,
 				AFA039731E08328E00E140E4 /* Geotification.swift in Sources */,
@@ -854,6 +865,7 @@
 				AF011A721C40A798000EAF5D /* ProductController.swift in Sources */,
 				AFF5D55A1D3AD96400975055 /* User.swift in Sources */,
 				AFB5A71E1C2C499200F8BC56 /* Vendor.swift in Sources */,
+				AFF4FB311E1D805500037697 /* Utilities.swift in Sources */,
 				AFC4002E1C6025700095333E /* PlayerViewController.swift in Sources */,
 				AFD754F41C4FFEB200021F97 /* UploadController.swift in Sources */,
 				AF1E6D561C1920FC0009230E /* CustomTableCell.swift in Sources */,
@@ -1058,7 +1070,7 @@
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
