@@ -26,7 +26,7 @@ class ContactEntry: NSObject {
     @available(iOS 9.0, *)
     init?(cnContact: CNContact) {
         // name
-        if !cnContact.isKeyAvailable(CNContactGivenNameKey) && !cnContact.isKeyAvailable(CNContactFamilyNameKey) { return nil }
+        if !cnContact.isKeyAvailable(CNContactGivenNameKey), !cnContact.isKeyAvailable(CNContactFamilyNameKey) { return nil }
         self.name = (cnContact.givenName + " " + cnContact.familyName + " " + cnContact.organizationName).removeWhiteSpace()
         // image
         self.image = (cnContact.isKeyAvailable(CNContactImageDataKey) && cnContact.imageDataAvailable) ? UIImage(data: cnContact.imageData!) : nil

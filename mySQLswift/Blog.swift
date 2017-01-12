@@ -166,7 +166,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             
             cell.blogtitleLabel!.font =  Font.Blog.celltitle
-            cell.blogsubtitleLabel!.font =  Font.Blog.cellsubtitle
+            cell.blogsubtitleLabel!.font =  Font.celllabel2
             cell.blogmsgDateLabel.font = Font.Blog.celldate
             cell.numLabel.font = Font.Blog.cellLabel
             cell.commentLabel.font = Font.Blog.cellLabel

@@ -22,11 +22,8 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     var geotifications: [Geotification] = []
-    //var locationManager = CLLocationManager() //Setup AddGeotification
     
     var circle:MKCircle! //setup GetRegion
-    
-    //var geoNames: [String]?
     
     //Get Address
     var thoroughfare: String?
@@ -38,6 +35,24 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
     var subAdministrativeArea: String?
     var country: String?
     var ISOcountryCode: String?
+    
+    static let numberFormatter: NumberFormatter =  {
+        let mf = NumberFormatter()
+        mf.minimumFractionDigits = 0
+        mf.maximumFractionDigits = 0
+        return mf
+    }()
+    
+    let speedLabel: UILabel = {
+        let label = UILabel()
+        label.text = "---"
+        label.font = Font.celllabel1
+        label.backgroundColor = .yellow
+        label.textColor = .blue
+        label.sizeToFit()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     var floatingButton: UIButton = {
         let button = UIButton(type: .system)
@@ -54,7 +69,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         var locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters //kCLLocationAccuracyHundredMeters;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         return locationManager
     }()
     
@@ -88,22 +103,10 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        //geoNames: Array<String> = ["Geotify", "Get Region", "Get Address"]
-        //segmentedControl? = UISegmentedControl(items: geoNames)
-        
-        // Setup AddGeotification
-        //locationManager.delegate = self
-        //locationManager.requestAlwaysAuthorization()
-        // Setup GetAddress
-        //locationManager.startUpdatingLocation()
-        //loadAllGeotifications()
-        
-        // Setup Eatery
-        //locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
-        //locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         mapView.delegate = self //added
-        //mapView.showsUserLocation = true //added
-        mapView.userTrackingMode = .none //.follow //added
+        mapView.userTrackingMode = .follow //.none //added
+        mapView.showsUserLocation = true
+        UIApplication.shared.isIdleTimerDisabled = true
         
         // Float Button
         setupConstraints()
@@ -137,6 +140,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
     func setupConstraints() {
         
         self.view.addSubview(floatingButton)
+        self.view.addSubview(speedLabel)
     
         floatingButton.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
         floatingButton.bottomAnchor.constraint( equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -85).isActive = true
@@ -152,7 +156,12 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         let widthConstraint = NSLayoutConstraint(item: floatingButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonSize)
         let heightConstraint  = NSLayoutConstraint(item: floatingButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonSize)
         
-        view.addConstraints([widthConstraint, heightConstraint])
+        speedLabel.topAnchor.constraint( equalTo: view.topAnchor, constant: +75).isActive = true
+        speedLabel.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor, constant: +5).isActive = true
+        
+        let heightspeedConstraint  = NSLayoutConstraint(item: speedLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30)
+        
+        view.addConstraints([widthConstraint, heightConstraint, heightspeedConstraint])
 
     }
     
@@ -225,7 +234,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         for overlay in overlays {
             guard let circleOverlay = overlay as? MKCircle else { continue }
             let coord = circleOverlay.coordinate
-            if coord.latitude == geotification.coordinate.latitude && coord.longitude == geotification.coordinate.longitude && circleOverlay.radius == geotification.radius {
+            if coord.latitude == geotification.coordinate.latitude, coord.longitude == geotification.coordinate.longitude, circleOverlay.radius == geotification.radius {
                 mapView?.remove(circleOverlay)
                 break
             }
@@ -309,82 +318,32 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
     }
 
     
-    //---------------------------------------------------------------------
-    /*
-    // MARK: - Setup Eatery
-    
-    func setupEatery() {
-        // check if can monitor regions
-        if CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
-            
-            // region data
-            let title = "Balsamo's Eatery"
-            let coordinate = CLLocationCoordinate2DMake(40.71347652938283, -73.48204686313261)
-            let regionRadius = 300.0
-            
-            // setup region
-            let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude), radius: regionRadius, identifier: title)
-            locationManager.startMonitoring(for: region)
-            
-            // setup annotation
-            let restaurantAnnotation = MKPointAnnotation()
-            restaurantAnnotation.coordinate = coordinate;
-            restaurantAnnotation.title = "\(title)";
-            mapView.addAnnotation(restaurantAnnotation)
-            
-            // setup circle
-            let circle = MKCircle(center: coordinate, radius: regionRadius)
-            mapView.add(circle)
-        }
-        else {
-            print("System can't track regions")
-        }
-    }
-    
-    
-    func updateRegionsWithLocation(_ location: CLLocation) {
-        
-        let regionMaxVisiting = 10.0
-        var regionsToDelete: [String] = []
-        
-        for regionIdentifier in monitoredRegions.keys {
-            if Date().timeIntervalSince(monitoredRegions[regionIdentifier]! as Date) > regionMaxVisiting {
-                self.simpleAlert(title: "Balsamo's Eatery", message: "Thanks for visiting our restaurant")
-                regionsToDelete.append(regionIdentifier)
-            }
-        }
-        
-        for regionIdentifier in regionsToDelete {
-            monitoredRegions.removeValue(forKey: regionIdentifier)
-        }
-    }
-    */
-    /*
-    func showAlert(_ title: String) {
-        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        self.present(alert, animated: true, completion: nil)
-        
-    } */
-    
     //MARK: RegionsProtocol
     
     //setup GetRegion
     func loadOverlayForRegionWithLatitude(_ latitude: Double, andLongitude longitude: Double) {
         
-        //1
         let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        //2
         circle = MKCircle(center: coordinates, radius: 200000)
-        //3
         self.mapView.setRegion(MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: 7, longitudeDelta: 7)), animated: true)
-        //4
         self.mapView.add(circle)
     }
-
     
+    /*
+    @IBAction func addRegionDidTap() {
+        if CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            // Create a new region based on the center of the map view.
+            let coord = CLLocationCoordinate2D(latitude: regionsMapView.centerCoordinate.latitude, longitude: regionsMapView.centerCoordinate.longitude)
+            let newRegion = CLCircularRegion(center: coord, radius: 200, identifier: "\(coord)")
+            let myRegionAnnotation = RegionAnnotation(withRegion: newRegion)
+            myRegionAnnotation.coordinate = newRegion.center
+            myRegionAnnotation.radius = newRegion.radius
+            
+            self.regionsMapView.addAnnotation(myRegionAnnotation)
+            locationManager.startMonitoring(for: newRegion)
+        }
+    } */
+
     // MARK: - Segues
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -415,6 +374,20 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
             
         }
     }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
+        
+        if(newLocation.speed > 0) {
+            let kmh = newLocation.speed / 1000.0 * 60.0 * 60.0
+            if let speed = GeotificationsViewController.numberFormatter.string(from: NSNumber(value: kmh)) {
+                speedLabel.text = "\(speed) km/h"
+            }
+        }
+        else {
+            speedLabel.text = "---"
+        }
+    }
+
 
 }
 //---------------------------------------------------------------------
@@ -456,6 +429,7 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
         //Get Address Button
         CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: {(placemarks, error)->Void in
             
+            
             if (error != nil) {
                 self.simpleAlert(title: "Alert", message: "Reverse geocoder failed with error" + error!.localizedDescription)
                 return
@@ -468,21 +442,8 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
                 self.simpleAlert(title: "Alert", message: "Problem with the data received from geocoder")
             }
         })
-        //Setup Eatery
-        //updateRegionsWithLocation(locations[0])
     }
-    
-    /*
-     //Setup Eatery
-     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-     self.simpleAlert(title: "Enter Balsamo's Eatery", message: "enter \(region.identifier)")
-     monitoredRegions[region.identifier] = NSDate()
-     }
-     
-     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-     self.simpleAlert(title: "Exit Balsamo's Eatery", message: "exit \(region.identifier)")
-     monitoredRegions.removeValue(forKey: region.identifier)
-     } */
+
     
     // MARK: - Geotify AddGeotification
     
@@ -537,12 +498,21 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
 extension GeotificationsViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        
+        
         let identifier = "myGeotification"
         if annotation is Geotification {
             var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
             if annotationView == nil {
                 annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 annotationView?.canShowCallout = true
+                
+                annotationView?.isMultipleTouchEnabled = false
+                annotationView?.isDraggable = true
+                annotationView?.animatesDrop = true
+                
+                
                 let removeButton = UIButton(type: .custom)
                 removeButton.frame = CGRect(x: 0, y: 0, width: 23, height: 23)
                 removeButton.setImage(UIImage(named: "DeleteGeotification")!, for: .normal)

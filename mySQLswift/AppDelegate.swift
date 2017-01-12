@@ -19,7 +19,7 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
     var window: UIWindow?
     
-    let locationManager = CLLocationManager()
+    //let locationManager = CLLocationManager()
     var defaults = UserDefaults.standard
     var backgroundSessionCompletionHandler: (() -> Void)?
 
@@ -84,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
         
         // MARK: - Keychain
-        if (userSuccessful == true) && (passSuccessful == true) {
+        if (userSuccessful == true), (passSuccessful == true) {
             print("Keychain successful")
         } else {
             print("Keychain failed")

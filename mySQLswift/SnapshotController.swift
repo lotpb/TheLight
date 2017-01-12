@@ -577,7 +577,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         cell.playButton2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 30, height: 30)
         //cell.playButton2.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
         
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad) && (collectionView.tag == 0) {
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad), (collectionView.tag == 0) {
             myLabel1 = UILabel(frame: CGRect(x: 0, y: 160, width: cell.bounds.size.width, height: 20))
         } else {
             myLabel1 = UILabel(frame: CGRect(x: 0, y: 110, width: cell.bounds.size.width, height: 20))

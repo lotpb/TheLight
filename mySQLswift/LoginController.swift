@@ -640,7 +640,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         guard let email = self.emailField?.text else { return }
         guard let password = self.passwordField?.text else { return }
         
-        if email != "" && password != "" {
+        if email != "", password != "" {
             let credential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
             
             FIRAuth.auth()?.currentUser?.link(with: credential, completion: { (user, error) in

@@ -33,15 +33,18 @@ class Geotification: NSObject, NSCoding, MKAnnotation {
     var eventType: EventType
     
     var title: String? {
+        let eventTypeString = eventType.rawValue
         if note.isEmpty {
             return "No Note"
         }
-        return note
+        return "\(note) - \(eventTypeString)"
     }
     
     var subtitle: String? {
-        let eventTypeString = eventType.rawValue
-        return "Radius: \(radius)m - \(eventTypeString)"
+        
+        let userlat = String(format: "%.2f", coordinate.latitude)
+        let userlong = String(format: "%.2f", coordinate.longitude)
+        return String(format: "Radius: \(radius)m Lat: \(userlat) Lon: \(userlong)")
     }
     
     init(coordinate: CLLocationCoordinate2D, radius: CLLocationDistance, identifier: String, note: String, eventType: EventType) {

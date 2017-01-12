@@ -134,9 +134,9 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
-        if (formController == "Product") && (indexPath.row == 4) {
+        if (formController == "Product"), (indexPath.row == 4) {
             return 200
-        } else if (formController == "Salesman") && (indexPath.row == 3) {
+        } else if (formController == "Salesman"), (indexPath.row == 3) {
             return 200
         }
         return 44

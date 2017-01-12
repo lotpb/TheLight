@@ -240,11 +240,11 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         let myLabel6:UILabel = UILabel(frame: CGRect(x: 10, y: 140, width: self.tableView!.frame.size.width-20, height: 50))
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            myLabel4.font = Font.celltitlePad1
+            myLabel4.font = Font.celltitlePad
             myLabel5.font = Font.celllabel2
             myLabel6.font = Font.celllabel1
         } else {
-            myLabel4.font = Font.celltitlePad1
+            myLabel4.font = Font.celltitlePad
             myLabel5.font = Font.celllabel2
             myLabel6.font = Font.celllabel1
         }

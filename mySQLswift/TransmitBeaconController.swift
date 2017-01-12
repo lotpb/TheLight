@@ -53,12 +53,12 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.lblStatus?.font = Font.Snapshot.celltitlePad
-            self.lblBTStatus?.font = Font.Snapshot.celltitlePad
             self.txtMajor?.font = Font.Snapshot.celltitlePad
             self.txtMinor?.font = Font.Snapshot.celltitlePad
             self.majorLabel?.font = Font.Snapshot.celltitlePad
             self.minorLabel?.font = Font.Snapshot.celltitlePad
             self.beaconBroadlabel?.font = Font.Snapshot.celltitlePad
+            self.lblBTStatus?.font = Font.celllabel2
         } else {
             
         }

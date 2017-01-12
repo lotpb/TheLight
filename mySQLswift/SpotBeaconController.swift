@@ -55,11 +55,11 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
         btnSwitchSpotting.layer.cornerRadius = 30.0
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            //self.btnSwitchSpotting?.font = Font.Snapshot.celltitlePad
-            self.lblBeaconReport?.font = Font.Snapshot.celltitlePad
-            self.lblBeaconDetails?.font = Font.News.newstitlePad
             //self.beaconspotLabel?.font = Font.Snapshot.celltitlePad
             self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
+            self.lblBeaconDetails?.font = Font.News.newstitlePad
+            self.lblBeaconReport?.font = Font.Snapshot.celltitlePad
+            self.lblBTStatus?.font = Font.celllabel2
         } else {
     
 
@@ -118,7 +118,6 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
 
     
     func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
-        
         
         if beacons.count > 0 {
             updateDistance(beacons[0].proximity)

@@ -97,29 +97,32 @@ var searchController: UISearchController!
     */
 
     struct Font {
+        
+        static let ipadtitle = UIFont.systemFont(ofSize: 36, weight: UIFontWeightRegular)
+        static let ipadtextview = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
+        
         static let navlabel = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         static let headtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
         static let labeltitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
         
         static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
-        static let celltitlePad1 = UIFont.systemFont(ofSize: 20, weight: UIFontWeightBold)
+        static let celltitlePad1 = UIFont.systemFont(ofSize: 22, weight: UIFontWeightLight)
         
         static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
         static let celltitle2 = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
         
         static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-        static let celllabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        static let celllabel = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
         static let celllabel1 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
         static let celllabel2 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
         
-        
         struct Blog {
-            static let celltitlePad = Font.celltitlePad1
-            static let cellsubtitlePad = Font.celltitle
+            static let celltitlePad = Font.celltitlePad
+            static let cellsubtitlePad = Font.celltitlePad1
             static let celldatePad = Font.celllabel2
             
             static let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightLight)
+            //static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightLight)
             static let celldate = Font.cellsubtitle
             static let cellLabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightBold)
             static let cellsubject = Font.celltitle
@@ -127,10 +130,10 @@ var searchController: UISearchController!
         
         struct BlogEdit {
             static let replytitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let replysubtitlePad = Font.celllabel1
+            static let replysubtitlePad = Font.celllabel2
             
             static let replytitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-            static let replysubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+            static let replysubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
         }
         
         struct News {
@@ -149,7 +152,6 @@ var searchController: UISearchController!
             static let celltitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
             static let cellsubtitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
             static let celllabelPad = Font.celllabel1
-
             static let cellLabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
         }
         
@@ -189,6 +191,18 @@ var searchController: UISearchController!
         }
     }
 
+enum stateOfVC {
+    case minimized
+    case fullScreen
+    case hidden
+}
+
+enum Direction {
+    case up
+    case left
+    case none
+}
+
 
 // MARK: - RemoveWhiteSpace  //EditData
 
@@ -218,6 +232,21 @@ public extension UIViewController {
 extension UIColor { //youtube red
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
         return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+    }
+}
+
+// UIImage with downloadable content
+extension UIImage {
+    class  func contentOfURL(link: String) -> UIImage {
+        let url = URL.init(string: link)!
+        var image = UIImage()
+        do{
+            let data = try Data.init(contentsOf: url)
+            image = UIImage.init(data: data)!
+        } catch _ {
+            print("error downloading images")
+        }
+        return image
     }
 }
 

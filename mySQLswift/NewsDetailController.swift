@@ -14,10 +14,6 @@ import AVFoundation
 
 class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewControllerDelegate {
     
-    let ipadtitle = UIFont.systemFont(ofSize: 26, weight: UIFontWeightRegular)
-    let ipadsubtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-    let ipadtextview = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
-    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newsImageview: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -33,6 +29,17 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     var videoURL: String?
     
     var newsViewHeight: CGFloat!
+    
+    let faceLabel: UILabel = {
+        let label = UILabel()
+        label.text = "---"
+        label.font = Font.celllabel1
+        label.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        label.textColor = .white
+        label.sizeToFit()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,10 +83,10 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
             self.newsImageview.clipsToBounds = true
             
-            self.titleLabel.font = ipadtitle
-            self.detailLabel.font = ipadsubtitle
+            self.titleLabel.font = Font.ipadtitle
+            self.detailLabel.font = Font.celltitle2
             self.newsTextview.isEditable = true //bug fix
-            self.newsTextview.font = ipadtextview
+            self.newsTextview.font = Font.ipadtextview
         } else {
             self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
     
@@ -149,9 +156,19 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     }
     
     func setupConstraints() {
+        
+        self.view.addSubview(faceLabel)
+        
         //height newsImageview
         let heightRouteConstraints = NSLayoutConstraint(item: newsImageview, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newsViewHeight)
-        view.addConstraints([heightRouteConstraints])
+        
+        faceLabel.topAnchor.constraint( equalTo: view.topAnchor, constant: +75).isActive = true
+        faceLabel.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor, constant: +5).isActive = true
+        
+        let heightspeedConstraint  = NSLayoutConstraint(item: faceLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30)
+
+        
+        view.addConstraints([heightRouteConstraints, heightspeedConstraint])
     }
     
     
@@ -192,9 +209,9 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         }
         
         if faces!.count != 0 {
-            print("Number of Faces: \(faces!.count)")
+            self.faceLabel.text = "Number of Faces: \(faces!.count)"
         } else {
-            print("No Faces 😢")
+            self.faceLabel.text = "No Faces 😢"
         }
     }
     

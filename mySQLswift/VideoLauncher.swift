@@ -19,7 +19,6 @@ class VideoPlayerView: UIView {
         button.tintColor = .white
         button.isHidden = false
         button.addTarget(self, action: #selector(handleClose), for: .touchUpInside)
-        
         return button
     }()
     
@@ -38,7 +37,6 @@ class VideoPlayerView: UIView {
         button.tintColor = .white
         button.isHidden = true
         button.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
-        
         return button
     }()
     
@@ -91,7 +89,6 @@ class VideoPlayerView: UIView {
         slider.maximumTrackTintColor = .white
         slider.setThumbImage(UIImage(named: "thumb"), for: .normal)
         slider.addTarget(self, action: #selector(handleSliderChange), for: .valueChanged)
-        
         return slider
     }()
     
@@ -100,11 +97,8 @@ class VideoPlayerView: UIView {
         
         if let duration = player?.currentItem?.duration {
             let totalSeconds = CMTimeGetSeconds(duration)
-            
             let value = Float64(videoSlider.value) * totalSeconds
-            
             let seekTime = CMTime(value: Int64(value), timescale: 1)
-            
             player?.seek(to: seekTime, completionHandler: { (completedSeek) in
                 //perhaps do something later here
             })
@@ -125,9 +119,7 @@ class VideoPlayerView: UIView {
      override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
         setupPlayerView()
-        
         setupGradientLayer()
         
         controlsContainerView.frame = frame
@@ -185,6 +177,7 @@ class VideoPlayerView: UIView {
         if let url = NSURL(string: urlString) {
             player = AVPlayer(url: url as URL)
             let playerLayer = AVPlayerLayer(player: player)
+            
             self.layer.addSublayer(playerLayer)
             playerLayer.frame = self.frame
             
@@ -244,13 +237,6 @@ class VideoPlayerView: UIView {
 }
 
 class VideoLauncher: NSObject {
-    
-    /*
-    var detailItem: AnyObject? {
-        didSet {
-            VideoPlayerView(VideoPlayerView())
-        }
-    } */
     
     var videoURL: String?
     

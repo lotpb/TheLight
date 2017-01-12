@@ -152,7 +152,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
                 cell?.titleLabel!.font = Font.Blog.celltitlePad
-                cell?.subtitleLabel!.font = Font.celltitlePad
+                cell?.subtitleLabel!.font = Font.Blog.cellsubtitlePad
                 cell?.msgDateLabel.font = Font.Blog.celldatePad
                 
             } else {

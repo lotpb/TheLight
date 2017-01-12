@@ -997,7 +997,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         guard let textLast = self.last.text else { return }
         guard let textComp = self.company.text else { return }
         
-        if textFirst == "" &&  textLast == "" && textComp == "" {
+        if textFirst == "", textLast == "", textComp == "" {
             
             self.simpleAlert(title: "Oops!", message: "No text entered.")
             

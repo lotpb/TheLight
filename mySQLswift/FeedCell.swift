@@ -10,7 +10,13 @@ import UIKit
 import Parse
 import AVFoundation
 
+protocol UrlLookupDelegate: class {
+    func urlController(_ passedData: String)
+}
+
 class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    weak var delegate:UrlLookupDelegate?
     
     var _feedItems : NSMutableArray = NSMutableArray()
     var imageObject :PFObject!
@@ -283,11 +289,31 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             let imageDetailurl = self.imageFile.url
             let result1 = imageDetailurl!.contains("movie.mp4")
             if (result1 == true) {
+
+                //let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+                //let vc = storyboard.instantiateViewController(withIdentifier: "PlayVC") as! PlayVC
+                //vc.videoURL = self.imageFile.url
                 
+                
+                var videoURL: String?
+                videoURL = self.imageFile.url
+                self.delegate? .urlController(videoURL!)
+                //print(videoURL!)
+                
+                NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
+                
+                //vc.view.frame = CGRect.init(origin: self.hiddenOrigin, size: UIScreen.main.bounds.size)
+                //vc.delegate = self
+                
+                /*
+                let navigationController = UINavigationController(rootViewController: vc)
+                UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true) */
+                
+                /*
                 let videoLauncher = VideoLauncher()
                 videoLauncher.videoURL = self.imageFile.url
                 //videoLauncher.detailItem = self.imageFile.url as AnyObject?
-                videoLauncher.showVideoPlayer()
+                videoLauncher.showVideoPlayer() */
                 
             } else {
                 
@@ -313,37 +339,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     }
     
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        guard let navController = segue.destination as? UINavigationController,
-            let viewController = navController.topViewController as? DetailViewController else {
-                fatalError("Expected DetailViewController")
-        }
-        
-        // Manage the display mode button
-        //viewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-        viewController.navigationItem.leftItemsSupplementBackButton = true
-        
-        // Configure the secondary view controller
-        //viewController.detailItem = Date()
-        
-        
-        
-        
-        
-        /*
-        if segue.identifier == "newsdetailSeque" {
-            if let svc = self.window?.rootViewController as? UISplitViewController {
-                svc.preferredDisplayMode = .allVisible
-                if let nc = svc.viewControllers.last as? UINavigationController {
-                    nc.topViewController?.navigationItem.leftBarButtonItem = svc.displayModeButtonItem
-                }
-            }
-            /*
-            let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            controller.navigationItem.leftItemsSupplementBackButton = true */
-
-        } */
+ 
     }
 
 }

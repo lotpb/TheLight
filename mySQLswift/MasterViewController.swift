@@ -296,6 +296,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if (section == 0) {
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+                
                 let vw = UIView()
                 tableView.tableHeaderView = vw
                 
@@ -385,16 +386,21 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 vw.addSubview(separatorLineView3)
                 
                 let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 120, width: 280, height: 20))
-                myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
-                myLabel4.font = Font.labeltitle
-                if (textYQL!.contains("Rain") ||
-                    textYQL!.contains("Snow") ||
-                    textYQL!.contains("Thunderstorms") ||
-                    textYQL!.contains("Showers")) {
-                    myLabel4.textColor = .red
+                if (tempYQL != nil) && (textYQL != nil) {
+                    myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
+                    if (textYQL!.contains("Rain") ||
+                        textYQL!.contains("Snow") ||
+                        textYQL!.contains("Thunderstorms") ||
+                        textYQL!.contains("Showers")) {
+                        myLabel4.textColor = .red
+                    } else {
+                        myLabel4.textColor = .green
+                    }
                 } else {
-                    myLabel4.textColor = .green
+                    myLabel4.text = "Not Available"
+                    myLabel4.textColor = .red
                 }
+                myLabel4.font = Font.labeltitle
                 vw.addSubview(myLabel4)
                 
                 /* //Statistic Button
@@ -407,8 +413,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                  statButton.layer.borderColor = UIColor.black.cgColor
                  statButton.layer.borderWidth = 1.0
                  vw.addSubview(statButton) */
-                
-                return vw
+ 
+                return vw 
             }
         }
         return nil

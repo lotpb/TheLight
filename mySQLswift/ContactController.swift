@@ -85,7 +85,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
                 self.retrieveContacts({ (success, contacts) in
                     self.tableView.isHidden = !success
                     self.noContactsLabel.isHidden = success
-                    if success && contacts?.count > 0 {
+                    if success, contacts?.count > 0 {
                         self.contactEntry = contacts!
                         self.tableView.reloadData()
                     } else {
