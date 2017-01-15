@@ -66,8 +66,11 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewWillAppear(animated)
         //navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
-
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

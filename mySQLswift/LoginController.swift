@@ -170,6 +170,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             if user != nil {
                 
                 self.refreshLocation()
+                //self.redirectToHome()
                 
             } else {
                 
@@ -601,9 +602,16 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     func redirectToHome() {
         
+        //self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let initialViewController : UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
+        initialViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+        initialViewController.navigationItem.leftItemsSupplementBackButton = true
+        
+        /*
         let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true) */
         
     }
     

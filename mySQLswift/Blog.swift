@@ -324,12 +324,12 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             //let tintedRange1 = text.range(of: NSLocalizedString("http://www.eunited.com", comment: ""))
             
             // create our NSTextAttachment
-            let image1Attachment = NSTextAttachment()
-            image1Attachment.image = UIImage(named: "DeleteGeotification.png")
+            //let image1Attachment = NSTextAttachment()
+            //image1Attachment.image = UIImage(named: "DeleteGeotification.png")
 
-            let image1String = NSAttributedString(attachment: image1Attachment)
-            attributedText.append(image1String)
-            attributedText.append(NSAttributedString(string: " End of text"))
+            //let image1String = NSAttributedString(attachment: image1Attachment)
+            //attributedText.append(image1String)
+            //attributedText.append(NSAttributedString(string: " End of text"))
             
             cell.blogsubtitleLabel!.attributedText = attributedText
         }
@@ -745,9 +745,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }
         }
         if segue.identifier == "bloguserSegue" {
-                let controller = segue.destination as? LeadUserController
-                controller!.formController = "Blog"
-                controller!.postBy = titleLabel
+            let controller = (segue.destination as! UINavigationController).topViewController as! LeadUserController
+            
+            controller.formController = "Blog"
+            controller.postBy = titleLabel
+            
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
     }
     

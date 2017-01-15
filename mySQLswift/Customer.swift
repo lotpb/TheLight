@@ -520,11 +520,15 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         if segue.identifier == "custuserSeque" {
-            let controller = segue.destination as? LeadUserController
-            controller!.formController = "Customer"
-            controller!.objectId = objectIdLabel
-            controller!.postBy = titleLabel
-            controller!.leadDate = dateLabel
+            let controller = (segue.destination as! UINavigationController).topViewController as! LeadUserController
+            
+            controller.formController = "Customer"
+            controller.objectId = objectIdLabel
+            controller.postBy = titleLabel
+            controller.leadDate = dateLabel
+            
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
         
         if segue.identifier == "newcustSegue" {

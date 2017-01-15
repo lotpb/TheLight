@@ -6,17 +6,20 @@
 //  Copyright © 2016 letsbuildthatapp. All rights reserved.
 //
 
+protocol UrlLookupDelegate {
+    func urlController(passedData: String)
+    func titleController(passedData: String)
+    //func playVideo(videoURL: String)
+    //func likesController(passedData: String)
+}
+
 import UIKit
 import Parse
 import AVFoundation
 
-protocol UrlLookupDelegate: class {
-    func urlController(_ passedData: String)
-}
-
 class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    weak var delegate:UrlLookupDelegate?
+    var delegate:UrlLookupDelegate?
     
     var _feedItems : NSMutableArray = NSMutableArray()
     var imageObject :PFObject!
@@ -289,25 +292,21 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             let imageDetailurl = self.imageFile.url
             let result1 = imageDetailurl!.contains("movie.mp4")
             if (result1 == true) {
-
-                //let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-                //let vc = storyboard.instantiateViewController(withIdentifier: "PlayVC") as! PlayVC
-                //vc.videoURL = self.imageFile.url
-                
-                
-                var videoURL: String?
-                videoURL = self.imageFile.url
-                self.delegate? .urlController(videoURL!)
-                //print(videoURL!)
+                /*
+                let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "PlayVC") as! PlayVC
+                vc.videoURL = self.imageFile.url!
+                */
+    
+                self.delegate? .urlController(passedData: self.imageFile.url!)
+    
+                self.delegate? .titleController(passedData: ((self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String)!)
+    
+                /*
+                likesLookup = self.imageFile.url
+                self.delegate? .likesController(likesLookup!) */
                 
                 NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
-                
-                //vc.view.frame = CGRect.init(origin: self.hiddenOrigin, size: UIScreen.main.bounds.size)
-                //vc.delegate = self
-                
-                /*
-                let navigationController = UINavigationController(rootViewController: vc)
-                UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true) */
                 
                 /*
                 let videoLauncher = VideoLauncher()

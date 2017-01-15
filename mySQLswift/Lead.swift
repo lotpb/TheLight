@@ -515,11 +515,16 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         if segue.identifier == "leaduserSegue" {
-            let controller = segue.destination as? LeadUserController
-            controller!.formController = "Leads"
-            controller!.objectId = objectIdLabel
-            controller!.postBy = titleLabel
-            controller!.leadDate = dateLabel
+            
+            let controller = (segue.destination as! UINavigationController).topViewController as! LeadUserController
+            
+            controller.formController = "Leads"
+            controller.objectId = objectIdLabel
+            controller.postBy = titleLabel
+            controller.leadDate = dateLabel
+            
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
         
         if segue.identifier == "newleadSegue" {
