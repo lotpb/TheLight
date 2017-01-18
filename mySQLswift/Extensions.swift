@@ -22,18 +22,21 @@ var searchController: UISearchController!
     }
 
     enum Color {
-        static let twitterBlue = UIColor(red: 61, green: 167, blue: 244, alpha: 1.0)
         static let BlueColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
         static let DGrayColor = UIColor(white:0.45, alpha:1.0)
         static let LGrayColor = UIColor(white:0.90, alpha:1.0)
         static let DGreenColor = UIColor(red:0.16, green:0.54, blue:0.13, alpha: 1.0)
-        static let RedColor = UIColor.rgb(red: 230, green: 32, blue: 31)
+        static let youtubeRed = UIColor.rgb(red: 230, green: 32, blue: 31)
+        static let twitterBlue = UIColor.rgb(red: 61, green: 167, blue: 244)
+        static let twitterText = UIColor(red:0.54, green:0.60, blue:0.65, alpha: 1.0)
+        static let facebookBlue = UIColor.rgb(red: 0, green: 137, blue: 249)
         
         enum Blog {
-            static let navColor = UIColor.red
-            static let borderbtnColor = UIColor.lightGray.cgColor
-            static let buttonColor = UIColor.red
-            static let weblinkText = Color.BlueColor
+            static let navColor = Color.twitterBlue
+            static let borderbtnColor = Color.LGrayColor.cgColor
+            static let borderColor = UIColor.white
+            static let buttonColor = Color.twitterBlue
+            static let weblinkText = Color.twitterBlue
             static let emaillinkText = UIColor.red
             static let phonelinkText = UIColor.green
         }
@@ -66,7 +69,7 @@ var searchController: UISearchController!
         }
         
         enum News {
-            static let navColor = Color.RedColor
+            static let navColor = Color.youtubeRed
             static let buttonColor = Color.BlueColor
         }
         
@@ -107,6 +110,7 @@ var searchController: UISearchController!
         
         static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
         static let celltitlePad1 = UIFont.systemFont(ofSize: 22, weight: UIFontWeightLight)
+        static let celltitlePad2 = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
         
         static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
         static let celltitle2 = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
@@ -117,8 +121,9 @@ var searchController: UISearchController!
         static let celllabel2 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
         
         struct Blog {
+            
             static let celltitlePad = Font.celltitlePad
-            static let cellsubtitlePad = Font.celltitlePad1
+            static let cellsubtitlePad = Font.celltitlePad2
             static let celldatePad = Font.celllabel2
             
             static let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)

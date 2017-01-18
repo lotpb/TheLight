@@ -87,13 +87,13 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight Software - Snapshot", for: UIControlState())
+            titleButton.setTitle("TheLight Software - Snapshot", for: .normal)
         } else {
-            titleButton.setTitle("Snapshot", for: UIControlState())
+            titleButton.setTitle("Snapshot", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         self.refreshControl = UIRefreshControl()
@@ -347,14 +347,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Latest News"
-                //cell.collectionView.tag = 10
                 cell.collectionView.reloadData()
                 return cell
                 
             } else if (indexPath.row == 1) {
 
                 cell.collectionView.backgroundColor = .clear
-                //cell.collectionView.tag = 10
                 
                 let date1 = (_feedItems.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
@@ -377,14 +375,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Latest Blog"
-                //cell.collectionView.tag = 10
                 cell.collectionView.reloadData()
                 return cell
                 
             } else if (indexPath.row == 1) {
                 
                 cell.collectionView.backgroundColor = .clear
-                //cell.collectionView.tag = 10
                 
                 let date11 = (_feedItems6.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date11 != nil {
@@ -612,7 +608,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             imageDetailurl = self.imageFile.url!
             let result1 = imageDetailurl?.contains("movie.mp4")
             cell.playButton2.isHidden = result1 == false
-            cell.playButton2.setTitle(imageDetailurl, for: UIControlState.normal)
+            cell.playButton2.setTitle(imageDetailurl, for: .normal)
             cell.addSubview(cell.playButton2)
             
             return cell
@@ -836,9 +832,18 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 let result1 = imageDetailurl!.contains("movie.mp4")
                 if (result1 == true) {
                     
-                    let videoLauncher = VideoLauncher()
-                    videoLauncher.videoURL = self.imageFile.url
-                    videoLauncher.showVideoPlayer()
+                    self.performSegue(withIdentifier: "snapvideoSegue", sender: self)
+                    /*
+                    let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+                    let vc = storyboard.instantiateViewController(withIdentifier: "PlayVC") as! PlayVC
+                    vc.videoURL = self.imageFile.url! */
+                    
+                    NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
+                    
+                    /*
+                     let videoLauncher = VideoLauncher()
+                     videoLauncher.videoURL = self.imageFile.url
+                     videoLauncher.showVideoPlayer() */
                     
                 } else {
                 
@@ -943,7 +948,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "snapuploadSegue" {
+        if segue.identifier == "snapvideoSegue" {
+            
+            let vc = segue.destination as? PlayVC
+            vc?.videoURL = self.imageFile.url ?? ""
+            
+        } else if segue.identifier == "snapuploadSegue" {
             
             let VC = segue.destination as? NewsDetailController
             VC!.objectId = self.selectedObjectId ?? ""

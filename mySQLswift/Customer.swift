@@ -36,10 +36,10 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Customers", for: UIControlState())
+        titleButton.setTitle("Customers", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Customer.newData))
@@ -206,7 +206,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         cell.custreplyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.custreplyButton .setImage(replyimage, for: UIControlState())
+        cell.custreplyButton .setImage(replyimage, for: .normal)
         
         if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == "") {
             cell.custreplyButton!.tintColor = .lightGray
@@ -223,7 +223,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         cell.custlikeButton.tintColor = .lightGray
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.custlikeButton .setImage(likeimage, for: UIControlState())
+        cell.custlikeButton .setImage(likeimage, for: .normal)
 
         if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Rate") as? String == "A" ) {
             cell.custlikeButton!.tintColor = Color.Cust.buttonColor

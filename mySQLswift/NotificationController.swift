@@ -26,13 +26,13 @@ class NotificationController: UIViewController {
 
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Notifications", for: UIControlState())
+            titleButton.setTitle("TheLight - Notifications", for: .normal)
         } else {
-            titleButton.setTitle("Notifications", for: UIControlState())
+            titleButton.setTitle("Notifications", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
 
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(NotificationController.actionButton))
@@ -47,7 +47,7 @@ class NotificationController: UIViewController {
         self.customMessage!.font = celltitle
         self.customMessage.placeholder = "enter notification"
         
-        self.saveButton.setTitleColor(.orange, for: UIControlState())
+        self.saveButton.setTitleColor(.orange, for: .normal)
         self.saveButton.backgroundColor = .white
         self.saveButton.layer.cornerRadius = 24.0
         self.saveButton.layer.borderColor = UIColor.orange.cgColor

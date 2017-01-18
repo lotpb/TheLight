@@ -45,14 +45,14 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.splitViewController?.maximumPrimaryColumnWidth = 400
         //fix - remove bottom bar
         self.splitViewController!.delegate = self
-        self.splitViewController!.preferredDisplayMode = .automatic //.allVisible
+        self.splitViewController!.preferredDisplayMode = .allVisible
         self.extendedLayoutIncludesOpaqueBars = true
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Main Menu", for: UIControlState())
+        titleButton.setTitle("Main Menu", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
@@ -90,8 +90,22 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
     
     override func viewWillAppear(_ animated: Bool) {
-      //self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+            if let spec = self.splitViewController {
+                spec.preferredDisplayMode = .allVisible
+            }
+        } else {
+            if let tit = self.splitViewController {
+                tit.preferredDisplayMode = .automatic
+            }
+        }
         
         self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.barTintColor = .black
@@ -103,8 +117,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         // Dispose of any resources that can be recreated.
     }
     
-    
-    // MARK: - UISplitViewControllerDelegate
     
     //added MainController opens on startup
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
@@ -405,9 +417,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 
                 /* //Statistic Button
                  let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.width-100, y: 95, width: 90, height: 30))
-                 statButton.setTitle("Statistics", for: UIControlState())
+                 statButton.setTitle("Statistics", for: .normal)
                  statButton.backgroundColor = Color.MGrayColor
-                 statButton.setTitleColor(UIColor.white, for: UIControlState())
+                 statButton.setTitleColor(UIColor.white, for: .normal)
                  statButton.addTarget(self, action:#selector(MasterViewController.statButton), for: UIControlEvents.touchUpInside)
                  statButton.layer.cornerRadius = 15.0
                  statButton.layer.borderColor = UIColor.black.cgColor
@@ -563,10 +575,25 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
         }
         if segue.identifier == "statisticSegue" {
-            let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController
+            
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                
+            guard let navController = segue.destination as? UINavigationController,
+                let viewController = navController.topViewController as? StatisticController else {
+                    fatalError("Expected DetailViewController")
+            }
+            
             collapseDetailViewController = false
+            
+            viewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            viewController.navigationItem.leftItemsSupplementBackButton = true
+            }
+            
+            /*
+            let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController
+            //collapseDetailViewController = true
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            controller.navigationItem.leftItemsSupplementBackButton = true
+            controller.navigationItem.leftItemsSupplementBackButton = true */
         }
         if segue.identifier == "geotifySegue" {
             

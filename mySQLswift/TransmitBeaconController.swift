@@ -42,13 +42,13 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Transmit Beacon", for: UIControlState())
+            titleButton.setTitle("TheLight - Transmit Beacon", for: .normal)
         } else {
-            titleButton.setTitle("Transmit Beacon", for: UIControlState())
+            titleButton.setTitle("Transmit Beacon", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -107,7 +107,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: nil)
             peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
             
-            btnAction.setTitle("Stop", for: UIControlState())
+            btnAction.setTitle("Stop", for: .normal)
             lblStatus.text = "Broadcasting..."
             txtMajor.isEnabled = false
             txtMinor.isEnabled = false
@@ -121,7 +121,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             beaconPeripheralData = nil
             localBeacon = nil
             
-            btnAction.setTitle("Start", for: UIControlState())
+            btnAction.setTitle("Start", for: .normal)
             lblStatus.text = "Stopped"
             txtMajor.isEnabled = true
             txtMinor.isEnabled = true

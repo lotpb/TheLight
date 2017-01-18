@@ -55,6 +55,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     //Google
     var signInButton : GIDSignInButton = GIDSignInButton()
     
+    var twitterButton : TWTRLogInButton = TWTRLogInButton()
+    
     let userImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -71,7 +73,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         if ((defaults.string(forKey: "registerKey") == nil)) {
             
-            self.registerBtn!.setTitle("Register", for: UIControlState())
+            self.registerBtn!.setTitle("Register", for: .normal)
             self.loginBtn!.isHidden = true //hide login button no user is regsitered
             self.forgotPassword!.isHidden = true
             self.authentButton!.isHidden = true
@@ -108,9 +110,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.phoneField!.font = celltitle
         }
         
-        self.registerBtn!.setTitleColor(.white, for: UIControlState())
-        self.loginBtn!.setTitleColor(.white, for: UIControlState())
-        self.backloginBtn!.setTitleColor(.white, for: UIControlState())
+        self.registerBtn!.setTitleColor(.white, for: .normal)
+        self.loginBtn!.setTitleColor(.white, for: .normal)
+        self.backloginBtn!.setTitleColor(.white, for: .normal)
         self.emailField!.keyboardType = .emailAddress
         self.phoneField!.keyboardType = .numbersAndPunctuation
         
@@ -135,7 +137,18 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         //Twitter
         setupTwitterButton()
+        setupConstraints()
 
+    }
+    
+    func setupConstraints() {
+        
+        mapView?.translatesAutoresizingMaskIntoConstraints = false
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            mapView?.heightAnchor.constraint(equalToConstant: 380).isActive = true
+        } else {
+            mapView?.heightAnchor.constraint(equalToConstant: 175).isActive = true
+        }
     }
     
     //Animate Buttons
@@ -143,8 +156,13 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         super.viewDidAppear(animated)
         
         UIView.animate(withDuration: 0.5, delay: 0.3, options: [], animations: {
-                        self.signInButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
-                        self.fbButton.frame = CGRect(x: 10, y: 325, width: 110, height: 38)
+                self.signInButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
+                self.fbButton.frame = CGRect(x: 10, y: 325, width: 110, height: 38)
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                self.twitterButton.frame = CGRect(x: self.view.frame.width/2 - 90, y: 325, width: 180, height: 40)
+            } else {
+                self.twitterButton.frame = CGRect(x: self.view.frame.width/2 - 55, y: 325, width: 110, height: 40)
+            }
         }, completion: nil
         )
         
@@ -194,7 +212,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
 
         self.view.endEditing(true)
         keyboardHide()
-        self.registerBtn!.setTitle("Create an Account", for: UIControlState())
+        self.registerBtn!.setTitle("Create an Account", for: .normal)
         self.usernameField!.text = defaults.string(forKey: "usernameKey")
         self.passwordField!.isHidden = false 
         self.loginBtn!.isHidden = false
@@ -207,6 +225,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.phoneField!.isHidden = true
         self.fbButton.isHidden = false
         self.signInButton.isHidden = false
+        self.twitterButton.isHidden = false
         
     }
     
@@ -216,7 +235,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         if (self.registerBtn!.titleLabel!.text == "Create an Account") {
             
-            self.registerBtn!.setTitle("Register", for: UIControlState())
+            self.registerBtn!.setTitle("Register", for: .normal)
             self.usernameField!.text = ""
             self.loginBtn!.isHidden = true
             self.forgotPassword!.isHidden = true
@@ -227,7 +246,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.phoneField!.isHidden = false
             self.fbButton.isHidden = true
             self.signInButton.isHidden = true
-            //self.twitterButton.isHidden = true
+            self.twitterButton.isHidden = true
             
         } else {
             //check if all text fields are completed
@@ -303,37 +322,26 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     // MARK: - TwitterButton
     
     fileprivate func setupTwitterButton() {
-        let twitterButton = TWTRLogInButton { (session, error) in
+        twitterButton = TWTRLogInButton { (session, error) in
             if let err = error {
                 print("Failed to login via Twitter: ", err)
                 return
             }
-            
             //print("Successfully logged in under Twitter...")
-            
             //lets login with Firebase
-            
             guard let token = session?.authToken else { return }
             guard let secret = session?.authTokenSecret else { return }
             let credentials = FIRTwitterAuthProvider.credential(withToken: token, secret: secret)
             
             FIRAuth.auth()?.signIn(with: credentials, completion: { (user, error) in
-                
                 if let err = error {
                     print("Failed to login to Firebase with Twitter: ", err)
                     return
                 }
-                
                 print("Successfully created a Firebase-Twitter user: ", user?.uid ?? "")
             })
         }
-        
-        view.addSubview(twitterButton)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            twitterButton.frame = CGRect(x: self.view.frame.width/2 - 90, y: 325, width: 180, height: 40)
-        } else {
-            twitterButton.frame = CGRect(x: self.view.frame.width/2 - 55, y: 325, width: 110, height: 40)
-        }
+        self.mainView.addSubview(twitterButton)
     }
     
     
@@ -506,9 +514,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         PFUser.requestPasswordResetForEmail(inBackground: finalEmail) { (success, error) -> Void in
             if success {
                 self.simpleAlert(title: "Alert", message: "Link to reset the password has been send to specified email")
-                
             } else {
-                
                 self.simpleAlert(title: "Alert", message: "Enter email in field: %@")
             }
         }
@@ -516,7 +522,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
 
     
     // MARK: - Authenticate
-    
     
     @IBAction func authenticateUser(_ sender: AnyObject) {
         
@@ -529,7 +534,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reasonString, reply: { (success, policyError) -> Void in
                 
                 if success {
-                    
                     print("Authentication successful! :) ")
                     OperationQueue.main.addOperation({ () -> Void in
                         self.didAuthenticateWithTouchId()
@@ -601,18 +605,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     // MARK: - RedirectToHome
     
     func redirectToHome() {
-        
-        //self.window = UIWindow(frame: UIScreen.main.bounds)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let initialViewController : UIViewController = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        initialViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-        initialViewController.navigationItem.leftItemsSupplementBackButton = true
-        
-        /*
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        navigationController?.pushViewController(vc, animated: true) */
-        
+        self.performSegue(withIdentifier: "loginSegue", sender: self)
     }
     
 //------------------------------------------------

@@ -34,10 +34,10 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Vendors", for: UIControlState())
+        titleButton.setTitle("Vendors", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
@@ -165,11 +165,11 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         cell.vendreplyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.vendreplyButton .setImage(replyimage, for: UIControlState())
+        cell.vendreplyButton .setImage(replyimage, for: .normal)
         
         cell.vendlikeButton.tintColor = .lightGray
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.vendlikeButton .setImage(likeimage, for: UIControlState())
+        cell.vendlikeButton .setImage(likeimage, for: .normal)
         
         cell.vendreplyLabel.text! = ""
         

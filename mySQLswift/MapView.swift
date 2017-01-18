@@ -42,8 +42,8 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     var floatingButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor.red
-        button.setTitle("+", for: UIControlState.normal)
-        button.setTitleColor(UIColor.white, for: UIControlState.normal)
+        button.setTitle("+", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
         button.titleEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, 0)
         button.addTarget(self, action: #selector(routehideView), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -110,14 +110,11 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         mapView.addSubview(floatingButton)
         
         floatingButton.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
-        floatingButton.bottomAnchor.constraint( equalTo: mapView.layoutMarginsGuide.bottomAnchor, constant: -75).isActive = true
+        floatingButton.bottomAnchor.constraint( equalTo: mapView.layoutMarginsGuide.bottomAnchor, constant: -40).isActive = true
+        floatingButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        floatingButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        let widthConstraint = NSLayoutConstraint(item: floatingButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
-        let heightConstraint  = NSLayoutConstraint(item: floatingButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
-        mapView.addConstraints([widthConstraint, heightConstraint])
-        
-        let heightRouteConstraints = NSLayoutConstraint(item: routView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: routeviewHeight)
-        view.addConstraints([heightRouteConstraints])
+        routView.heightAnchor.constraint(equalToConstant: routeviewHeight).isActive = true
     }
     
     // MARK: - ActivityIndicator
@@ -321,13 +318,11 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         
         if self.routView.isHidden == false {
             
-            mapView.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: 0).isActive = true
             self.routView.isHidden = true
-            
+            mapView.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: 0).isActive = true
         } else {
-            
-            mapView.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: -routeviewHeight).isActive = true
             self.routView.isHidden = false
+            mapView.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: -routeviewHeight).isActive = true
         }
     }
     
@@ -335,10 +330,10 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         
         if mapView.showsTraffic == mapView.showsTraffic {
             mapView.showsTraffic = !mapView.showsTraffic
-            //sender.setTitle("Hide Traffic", for: UIControlState.normal)
+            //sender.setTitle("Hide Traffic", for: .normal)
         } else {
             mapView.showsTraffic = mapView.showsTraffic
-            //sender.setTitle("Show Traffic", for: UIControlState.normal)
+            //sender.setTitle("Show Traffic", for: .normal)
         }
     }
     

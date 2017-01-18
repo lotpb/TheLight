@@ -35,10 +35,10 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Products", for: UIControlState())
+        titleButton.setTitle("Products", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))

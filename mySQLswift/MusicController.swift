@@ -46,15 +46,15 @@ class MusicController: UIViewController {
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Music", for: UIControlState())
+            titleButton.setTitle("TheLight - Music", for: .normal)
             self.noContactsLabel.font = Font.celltitle
         } else {
-            titleButton.setTitle("Music", for: UIControlState())
+            titleButton.setTitle("Music", for: .normal)
             self.noContactsLabel.font = Font.cellsubtitle
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         noContactsLabel.isHidden = false
@@ -434,7 +434,7 @@ extension MusicController: UITableViewDataSource {
             cell.progressLabel.text = (download.isDownloading) ? "Downloading..." : "Paused"
             
             let title = (download.isDownloading) ? "Pause" : "Resume"
-            cell.pauseButton.setTitle(title, for: UIControlState())
+            cell.pauseButton.setTitle(title, for: .normal)
         }
         cell.progressView.isHidden = !showDownloadControls
         cell.progressLabel.isHidden = !showDownloadControls

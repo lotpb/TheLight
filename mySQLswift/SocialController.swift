@@ -21,13 +21,13 @@ class SocialController: UIViewController, UITextViewDelegate {
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Social", for: UIControlState())
+            titleButton.setTitle("TheLight - Social", for: .normal)
         } else {
-            titleButton.setTitle("Social", for: UIControlState())
+            titleButton.setTitle("Social", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {

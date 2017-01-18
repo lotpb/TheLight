@@ -11,6 +11,8 @@ import Parse
 
 class StatisticController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UISearchResultsUpdating {
     
+    //fileprivate var collapseDetailViewController = true
+    
     @IBOutlet weak var scrollWall: UIScrollView!
     @IBOutlet weak var tableView: UITableView!
     
@@ -75,13 +77,13 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight Software", for: UIControlState())
+            titleButton.setTitle("TheLight Software", for: .normal)
         } else {
-            titleButton.setTitle("TheLight", for: UIControlState())
+            titleButton.setTitle("TheLight", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel //UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(StatisticController.searchButton))
@@ -98,8 +100,20 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         setupTableView()
     }
     
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+    return true
+    
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
         
         self.navigationController?.navigationBar.tintColor = .white
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -108,12 +122,6 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             self.navigationController?.navigationBar.barTintColor = Color.Stat.navColor
         }
         self.refreshData()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        //navigationController?.hidesBarsOnSwipe = false
-        //self.mytimer.invalidate()
     }
     
     override func didReceiveMemoryWarning() {
@@ -370,86 +378,115 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         } else if (indexPath.section == 1) {
             
             if (indexPath.row == 0) {
-                
+                if (tempYQL != nil) {
+                    cell.detailTextLabel!.text = "\(tempYQL!)"
+                } else {
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 cell.textLabel!.text = "Todays Temperature"
-                cell.detailTextLabel!.text = "\(tempYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
-                
                 return cell
                 
             } else if (indexPath.row == 1) {
-                
+                if (weathYQL != nil) {
+                    cell.detailTextLabel!.text = "\(weathYQL!)"
+                } else {
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 cell.textLabel!.text = "Todays Weather"
-                cell.detailTextLabel!.text = "\(weathYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
-                
                 return cell
                 
             } else if (indexPath.row == 2) {
-                
+                if (riseYQL != nil) {
+                    cell.detailTextLabel!.text = "\(riseYQL!)"
+                } else {
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 cell.textLabel!.text = "Sunrise"
-                cell.detailTextLabel!.text = "\(riseYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
-                
                 return cell
                 
             } else if (indexPath.row == 3) {
-                
+                if (setYQL != nil) {
+                    cell.detailTextLabel!.text = "\(setYQL!)"
+                } else {
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 cell.textLabel!.text = "Sunset"
-                cell.detailTextLabel!.text = "\(setYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
-                
                 return cell
             } else if (indexPath.row == 4) {
-                
+                if (humYQL != nil) {
+                    cell.detailTextLabel!.text = "\(humYQL!)"
+                } else {
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 cell.textLabel!.text = "Humidity"
-                cell.detailTextLabel!.text = "\(humYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
-                
                 return cell
             } else if (indexPath.row == 5) {
-                
+                if (cityYQL != nil) {
+                    cell.detailTextLabel!.text = "\(cityYQL!)"
+                } else {
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 cell.textLabel!.text = "City"
-                cell.detailTextLabel!.text = "\(cityYQL!)" //w1results valueForKeyPath:"query.results.channel.item.condition"] objectForKey:"temp"
-                
                 return cell
             } else if (indexPath.row == 6) {
-                
+                if (updateYQL != nil) {
+                    cell.detailTextLabel!.text = "\(updateYQL!)"
+                } else {
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 cell.textLabel!.text = "Last Update"
-                cell.detailTextLabel!.text = "\(updateYQL!)"
-                
                 return cell
             }
             
         } else if (indexPath.section == 2) {
             
             if (indexPath.row == 0) {
-                
-                cell.textLabel!.text = "\(dayYQL[0])"
-                cell.detailTextLabel!.text = "\(textYQL[0])"
-                
+                if (dayYQL != nil) && (textYQL != nil) {
+                    cell.textLabel!.text = "\(dayYQL[0])"
+                    cell.detailTextLabel!.text = "\(textYQL[0])"
+                } else {
+                    cell.textLabel!.text = "Day1"
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 return cell
                 
             } else if (indexPath.row == 1) {
-                
-                cell.textLabel!.text = "\(dayYQL[1])"
-                cell.detailTextLabel!.text = "\(textYQL[1])"
-                
+                if (dayYQL != nil) && (textYQL != nil) {
+                    cell.textLabel!.text = "\(dayYQL[1])"
+                    cell.detailTextLabel!.text = "\(textYQL[1])"
+                } else {
+                    cell.textLabel!.text = "Day2"
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 return cell
                 
             } else if (indexPath.row == 2) {
-                
-                cell.textLabel!.text = "\(dayYQL[2])"
-                cell.detailTextLabel!.text = "\(textYQL[2])"
-                
+                if (dayYQL != nil) && (textYQL != nil) {
+                    cell.textLabel!.text = "\(dayYQL[2])"
+                    cell.detailTextLabel!.text = "\(textYQL[2])"
+                } else {
+                    cell.textLabel!.text = "Day3"
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 return cell
                 
             } else if (indexPath.row == 3) {
-                
-                cell.textLabel!.text = "\(dayYQL[3])"
-                cell.detailTextLabel!.text = "\(textYQL[3])"
-                
+                if (dayYQL != nil) && (textYQL != nil) {
+                    cell.textLabel!.text = "\(dayYQL[3])"
+                    cell.detailTextLabel!.text = "\(textYQL[3])"
+                } else {
+                    cell.textLabel!.text = "Day4"
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 return cell
             } else if (indexPath.row == 4) {
-                
-                cell.textLabel!.text = "\(dayYQL[4])"
-                cell.detailTextLabel!.text = "\(textYQL[4])"
-                
+                if (dayYQL != nil) && (textYQL != nil) {
+                    cell.textLabel!.text = "\(dayYQL[4])"
+                    cell.detailTextLabel!.text = "\(textYQL[4])"
+                } else {
+                    cell.textLabel!.text = "Day5"
+                    cell.detailTextLabel!.text = "Not Available"
+                }
                 return cell
             }
             

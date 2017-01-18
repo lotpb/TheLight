@@ -47,13 +47,13 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle(String(format: "%@", "TheLight Software - \(self.formStatus!) \(self.formController!)"), for: UIControlState())
+            titleButton.setTitle(String(format: "%@", "TheLight Software - \(self.formStatus!) \(self.formController!)"), for: .normal)
         } else {
-            titleButton.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: UIControlState())
+            titleButton.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))

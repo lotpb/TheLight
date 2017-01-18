@@ -96,10 +96,10 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", self.status!, self.formController!), for: UIControlState())
+        titleButton.setTitle(String(format: "%@ %@", self.status!, self.formController!), for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         self.pickerView.delegate = self

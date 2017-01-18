@@ -78,6 +78,14 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //Fix Grey Bar in iphone Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
+        
         navigationController?.hidesBarsOnSwipe = true
         //changes segmented color
         self.navigationController?.navigationBar.tintColor = .white

@@ -231,38 +231,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
         
-        return false
-    }
+        return true
+    } 
     
      // MARK: - Music Controller
     
     internal func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         backgroundSessionCompletionHandler = completionHandler
-    }
-    
-    // MARK: - App Theme Customization
-    
-    private func customizeAppearance() {
-        
-        UIApplication.shared.statusBarStyle = .lightContent
-        
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
-        UINavigationBar.appearance().barTintColor = .black
-        UINavigationBar.appearance().tintColor = .gray
-        UINavigationBar.appearance().isTranslucent = false
-        
-        UITabBar.appearance().barTintColor = .black
-        UITabBar.appearance().tintColor = .white
-        UITabBar.appearance().isTranslucent = false
-        //UITabBar.appearance().unselectedItemTintColor = UIColor.yellow
-        
-        UIToolbar.appearance().barTintColor = Color.DGrayColor
-        UIToolbar.appearance().tintColor = .white
-        
-        UISearchBar.appearance().barTintColor = .black
-        UISearchBar.appearance().tintColor = .white
-        
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
     }
     
     // MARK:
@@ -299,6 +274,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 }
 // MARK: - setup RegisterUserNotification, 3DTouch
 extension AppDelegate {
+    
+    // MARK: - App Theme Customization
+    func customizeAppearance() {
+        
+        UIApplication.shared.statusBarStyle = .lightContent
+        
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        UINavigationBar.appearance().barTintColor = .black
+        UINavigationBar.appearance().tintColor = .gray
+        UINavigationBar.appearance().isTranslucent = false
+        
+        UITabBar.appearance().barTintColor = .black
+        UITabBar.appearance().tintColor = .white
+        UITabBar.appearance().isTranslucent = false
+      //UITabBar.appearance().unselectedItemTintColor = UIColor.yellow
+        
+        UIToolbar.appearance().barTintColor = Color.DGrayColor
+        UIToolbar.appearance().tintColor = .white
+        
+        UISearchBar.appearance().barTintColor = .black
+        UISearchBar.appearance().tintColor = .white
+        
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
+    }
     
     func setUserNotifications() {
         

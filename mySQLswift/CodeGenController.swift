@@ -31,13 +31,13 @@ class CodeGenController: UIViewController {
 
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Membership", for: UIControlState())
+            titleButton.setTitle("TheLight - Membership", for: .normal)
         } else {
-            titleButton.setTitle("Membership", for: UIControlState())
+            titleButton.setTitle("Membership", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
@@ -84,14 +84,14 @@ class CodeGenController: UIViewController {
             
             textField.resignFirstResponder()
             
-            btnAction.setTitle("Clear", for: UIControlState())
+            btnAction.setTitle("Clear", for: .normal)
             
             displayQRCodeImage()
         }
         else {
             imgQRCode.image = nil
             qrcodeImage = nil
-            btnAction.setTitle("Generate", for: UIControlState())
+            btnAction.setTitle("Generate", for: .normal)
         }
         
         textField.isEnabled = !textField.isEnabled

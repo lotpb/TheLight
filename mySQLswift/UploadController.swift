@@ -16,7 +16,6 @@ import UserNotifications
 class UploadController: UIViewController, UINavigationControllerDelegate,
 UIImagePickerControllerDelegate, UITextViewDelegate {
     
-    let ipadtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
     
     let addText = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."
     
@@ -52,10 +51,10 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Upload", for: UIControlState())
+        titleButton.setTitle("Upload", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         self.mainView.backgroundColor = Color.LGrayColor
@@ -68,9 +67,9 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            self.commentTitle!.font = ipadtitle
-            self.commentDetail!.font = ipadtitle
-            self.commentSorce.font = ipadtitle
+            self.commentTitle!.font = Font.celllabel1
+            self.commentDetail!.font = Font.celllabel1
+            self.commentSorce.font = Font.celllabel1
             
         } else {
             self.commentTitle!.font = Font.cellsubtitle
@@ -97,7 +96,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         self.imgToUpload.isUserInteractionEnabled = true
         
-        self.clearButton.setTitle("Clear", for: UIControlState())
+        self.clearButton.setTitle("Clear", for: .normal)
         self.clearButton .addTarget(self, action: #selector(clearBtn), for: UIControlEvents.touchUpInside)
         self.clearButton.tintColor = Color.DGrayColor
         self.clearButton.layer.cornerRadius = 12.0
@@ -138,22 +137,13 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     }
     
     func setupConstraints() {
-        /*
-        commentTitle.widthAnchor.constraint(equalToConstant: 450).isActive = true
-
-        let widthContraints = NSLayoutConstraint(item: commentTitle, attribute:
-            .width, relatedBy: .equal, toItem: nil,
-                    attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
-                    constant: 450)
-         commentTitle.translatesAutoresizingMaskIntoConstraints = false
-        /*
-         let heightContraints = NSLayoutConstraint(item: self.mainView!, attribute:
-         .height, relatedBy: .equal, toItem: nil,
-         attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
-         constant: 550)
-         self.mainView?.translatesAutoresizingMaskIntoConstraints = false */
-        NSLayoutConstraint.activate([widthContraints]) */
         
+        commentTitle.translatesAutoresizingMaskIntoConstraints = false
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            commentTitle.widthAnchor.constraint(equalToConstant: 450).isActive = true
+        } else {
+           commentTitle.widthAnchor.constraint(equalToConstant: 338).isActive = true
+        }
     }
     
     // MARK: - Button
@@ -162,10 +152,10 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         if (self.clearButton.titleLabel!.text == "Clear")   {
             self.commentDetail.text = ""
-            self.clearButton.setTitle("add text", for: UIControlState())
+            self.clearButton.setTitle("add text", for: .normal)
         } else {
             self.commentDetail.text = addText
-            self.clearButton.setTitle("Clear", for: UIControlState())
+            self.clearButton.setTitle("Clear", for: .normal)
         }
     }
     

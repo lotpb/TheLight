@@ -29,10 +29,10 @@ class GetAddress: UIViewController, UITableViewDelegate, UITableViewDataSource {
     super.viewDidLoad()
     /*
     let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-    titleButton.setTitle("myLeads", for: UIControlState())
+    titleButton.setTitle("myLeads", for: .normal)
     //titleButton.titleLabel?.font = Font.navlabel
     titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-    titleButton.setTitleColor(UIColor.white(), for: UIControlState())
+    titleButton.setTitleColor(UIColor.white(), for: .normal)
     self.navigationItem.titleView = titleButton */
     
     self.tableView!.delegate = self

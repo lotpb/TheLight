@@ -56,14 +56,6 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     @IBOutlet weak var latitudeLabel: UILabel!
     @IBOutlet weak var longitudeLabel: UILabel!
     @IBOutlet weak var altitudeLabel: UILabel!
-    
-    //below has nothing
-    var detailItem: AnyObject? { //dont delete for splitview
-        didSet {
-            // Update the view.
-            //self.configureView()
-        }
-    }
 
 
     override func viewDidLoad() {
@@ -74,13 +66,13 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight Software - Detail", for: UIControlState())
+            titleButton.setTitle("TheLight Software - Detail", for: .normal)
         } else {
-            titleButton.setTitle("Detail", for: UIControlState())
+            titleButton.setTitle("Detail", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let searchButton = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(lightcamera))
@@ -131,6 +123,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
             self.lightoffButton?.titleLabel?.font = Font.Detail.VtextAmount
             self.spotlightButton?.titleLabel?.font = Font.Detail.VtextAmount
             self.nospotButton?.titleLabel?.font = Font.Detail.VtextAmount
+            self.altitudeLabel?.font = Font.Detail.VtextAmount
         } else {
             self.subject?.font = Font.Detail.textdate
             self.volume?.font = Font.Detail.textdate
@@ -145,8 +138,8 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
             self.lightoffButton?.titleLabel?.font = Font.Detail.textdate
             self.spotlightButton?.titleLabel?.font = Font.Detail.textdate
             self.nospotButton?.titleLabel?.font = Font.Detail.textdate
+            self.altitudeLabel?.font = Font.Detail.textdate
         }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -400,11 +393,8 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         langNum = row
     }
     
-    // MARK: - Button
-    
     
     // MARK: - locationManager
-    
     
     func locationManager(_ locationManager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 

@@ -34,10 +34,10 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Advertisers", for: UIControlState())
+        titleButton.setTitle("Advertisers", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         //self.navigationItem.leftBarButtonItem = self.editButtonItem()

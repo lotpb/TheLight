@@ -46,10 +46,10 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", "Lookup", (self.lookupItem)!), for: UIControlState())
+        titleButton.setTitle(String(format: "%@ %@", "Lookup", (self.lookupItem)!), for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         searchController = UISearchController(searchResultsController: resultsController)

@@ -68,13 +68,13 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
 
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - User Profile", for: UIControlState())
+            titleButton.setTitle("TheLight - User Profile", for: .normal)
         } else {
-            titleButton.setTitle("Profile", for: UIControlState())
+            titleButton.setTitle("Profile", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(getter: selectCamera))
@@ -88,17 +88,17 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         callBtn!.layer.cornerRadius = 24.0
         callBtn!.layer.borderColor = Color.BlueColor.cgColor
         callBtn!.layer.borderWidth = 3.0
-        callBtn!.setTitleColor(Color.BlueColor, for: UIControlState())
+        callBtn!.setTitleColor(Color.BlueColor, for: .normal)
         
         updateBtn!.layer.cornerRadius = 24.0
         updateBtn!.layer.borderColor = Color.BlueColor.cgColor
         updateBtn!.layer.borderWidth = 3.0
-        updateBtn!.setTitleColor(Color.BlueColor, for: UIControlState())
+        updateBtn!.setTitleColor(Color.BlueColor, for: .normal)
         
         emailBtn!.layer.cornerRadius = 24.0
         emailBtn!.layer.borderColor = Color.BlueColor.cgColor
         emailBtn!.layer.borderWidth = 3.0
-        emailBtn!.setTitleColor(Color.BlueColor, for: UIControlState())
+        emailBtn!.setTitleColor(Color.BlueColor, for: .normal)
         
         self.usernameField?.text = self.username
         self.emailField?.text = self.email

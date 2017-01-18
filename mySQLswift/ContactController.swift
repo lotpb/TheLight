@@ -59,13 +59,13 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Contacts", for: UIControlState())
+            titleButton.setTitle("TheLight - Contacts", for: .normal)
         } else {
-            titleButton.setTitle("Contacts", for: UIControlState())
+            titleButton.setTitle("Contacts", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         setupTableView()

@@ -29,7 +29,6 @@
 		AF221C8D1C930A6400C9EF39 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF221C8C1C930A6400C9EF39 /* AddressBook.framework */; };
 		AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2817CA1C38794F00B2607A /* LeadUserController.swift */; };
 		AF2D051B1D359A4200AC2A43 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D051A1D359A4200AC2A43 /* News.swift */; };
-		AF2D42E01D6CA9200071115E /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */; };
 		AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */; };
 		AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF46FA831C2313EE00C27445 /* UserViewController.swift */; };
 		AF4A56721E1F098A00AF6B9E /* Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A56711E1F098A00AF6B9E /* Cells.swift */; };
@@ -74,6 +73,7 @@
 		AFD1A3001C1CCFCF00580F10 /* SocialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD1A2FF1C1CCFCF00580F10 /* SocialController.swift */; };
 		AFD1A30B1C1E224600580F10 /* Customer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD1A30A1C1E224600580F10 /* Customer.swift */; };
 		AFD1A30F1C1E32A500580F10 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD1A30E1C1E32A500580F10 /* LoginController.swift */; };
+		AFD1EC811E2D21B100DC991A /* Blog+navbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD1EC801E2D21B100DC991A /* Blog+navbar.swift */; };
 		AFD754F21C4FCBF200021F97 /* ContactController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD754F11C4FCBF200021F97 /* ContactController.swift */; };
 		AFD754F41C4FFEB200021F97 /* UploadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD754F31C4FFEB200021F97 /* UploadController.swift */; };
 		AFDFCBB91C3EA4EA00F02E7B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDFCBB81C3EA4EA00F02E7B /* MapView.swift */; };
@@ -156,7 +156,6 @@
 		AF221C8C1C930A6400C9EF39 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		AF2817CA1C38794F00B2607A /* LeadUserController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadUserController.swift; sourceTree = "<group>"; };
 		AF2D051A1D359A4200AC2A43 /* News.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
-		AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoLauncher.swift; sourceTree = "<group>"; };
 		AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
 		AF46FA831C2313EE00C27445 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		AF4A56711E1F098A00AF6B9E /* Cells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
@@ -213,6 +212,7 @@
 		AFD1A2FF1C1CCFCF00580F10 /* SocialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialController.swift; sourceTree = "<group>"; };
 		AFD1A30A1C1E224600580F10 /* Customer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Customer.swift; sourceTree = "<group>"; };
 		AFD1A30E1C1E32A500580F10 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		AFD1EC801E2D21B100DC991A /* Blog+navbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Blog+navbar.swift"; sourceTree = "<group>"; };
 		AFD754F11C4FCBF200021F97 /* ContactController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactController.swift; sourceTree = "<group>"; };
 		AFD754F31C4FFEB200021F97 /* UploadController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadController.swift; sourceTree = "<group>"; };
 		AFDFCBB81C3EA4EA00F02E7B /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -337,6 +337,7 @@
 				AFE263A31C178830007BBB90 /* Blog.swift */,
 				AF0DACA01C1F43DB00B23CE5 /* BlogEditController.swift */,
 				AF0DACA31C1F47A500B23CE5 /* BlogNewController.swift */,
+				AFD1EC801E2D21B100DC991A /* Blog+navbar.swift */,
 			);
 			name = Blog;
 			sourceTree = "<group>";
@@ -401,7 +402,6 @@
 		AF5DBA891E253EC30014D704 /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				AF2D42DF1D6CA9200071115E /* VideoLauncher.swift */,
 				AF5DBA7D1E25310E0014D704 /* PlayVC.swift */,
 				AF5DBA871E253E980014D704 /* NavVC.swift */,
 			);
@@ -841,7 +841,6 @@
 				AFE263A41C178830007BBB90 /* Blog.swift in Sources */,
 				AFF3C8F21C4F38D500D9B7BD /* NewsDetailController.swift in Sources */,
 				AF0D6B331C4C554300334D03 /* YouTubeController.swift in Sources */,
-				AF2D42E01D6CA9200071115E /* VideoLauncher.swift in Sources */,
 				AF9EE4C71C2771D70057B7DB /* NotificationController.swift in Sources */,
 				AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */,
 				AFD1A30B1C1E224600580F10 /* Customer.swift in Sources */,
@@ -858,6 +857,7 @@
 				AF0754861C4336E200B03D38 /* LookupData.swift in Sources */,
 				AFA0396F1E08327500E140E4 /* GeotificationsViewController.swift in Sources */,
 				AF7383EB1C302DD00049407C /* NotificationDetailController.swift in Sources */,
+				AFD1EC811E2D21B100DC991A /* Blog+navbar.swift in Sources */,
 				AF5DBA7E1E25310E0014D704 /* PlayVC.swift in Sources */,
 				AFBB9B7D1D2D760300618586 /* FeedCell.swift in Sources */,
 				AF647ED21E100D4B004DDEA3 /* ContactEntry.swift in Sources */,

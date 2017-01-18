@@ -57,11 +57,12 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
     var floatingButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor.red
-        button.setTitle("+", for: UIControlState.normal)
-        button.setTitleColor(UIColor.white, for: UIControlState.normal)
+        button.setTitle("+", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
         button.titleEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, 0)
         button.addTarget(self, action: #selector(maptype), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
+        //button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
         return button
     }()
     

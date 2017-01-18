@@ -36,10 +36,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(formController, for: UIControlState())
+        titleButton.setTitle(formController, for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         if (self.formController == "Blog") {
@@ -183,12 +183,12 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         
         cell.actionBtn.tintColor = .lightGray
         let imagebutton : UIImage? = UIImage(named:"Upload50.png")!.withRenderingMode(.alwaysTemplate)
-        cell.actionBtn .setImage(imagebutton, for: UIControlState())
+        cell.actionBtn .setImage(imagebutton, for: .normal)
         //actionBtn .addTarget(self, action: "shareButton:", forControlEvents: UIControlEvents.TouchUpInside)
         
         cell.replyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.replyButton .setImage(replyimage, for: UIControlState())
+        cell.replyButton .setImage(replyimage, for: .normal)
         //cell.replyButton .addTarget(self, action: "replyButton:", forControlEvents: UIControlEvents.TouchUpInside)
         
         if !(cell.commentLabel.text! == "0") {
@@ -213,7 +213,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             myLabel.backgroundColor = Color.BlueColor
         } else if (self.formController == "Blog") {
             myLabel.text = "Blog"
-            myLabel.backgroundColor = Color.RedColor
+            myLabel.backgroundColor = Color.youtubeRed
         }
 
         myLabel.textColor = .white

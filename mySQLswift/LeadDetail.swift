@@ -133,13 +133,13 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle(String(format: "%@ %@", "TheLight Software - \(self.formController!)", "Profile"), for: UIControlState())
+            titleButton.setTitle(String(format: "%@ %@", "TheLight Software - \(self.formController!)", "Profile"), for: .normal)
         } else {
-            titleButton.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: UIControlState())
+            titleButton.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         self.listTableView!.rowHeight = 30
@@ -188,7 +188,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }
         
         self.mapbutton!.backgroundColor = Color.BlueColor
-        self.mapbutton!.setTitleColor(.white, for: UIControlState())
+        self.mapbutton!.setTitleColor(.white, for: .normal)
         self.mapbutton!.addTarget(self, action: #selector(LeadDetail.mapButton), for: UIControlEvents.touchUpInside)
         let btnLayer3: CALayer = self.mapbutton!.layer
         btnLayer3.masksToBounds = true
@@ -232,6 +232,14 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
+        
         self.navigationController?.navigationBar.tintColor = .white
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
@@ -243,6 +251,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.labeldate!.text = ""
         self.labeladdress!.text = ""
         self.labelcity!.text = ""
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -293,11 +302,11 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         if(self.active == "1") {
             self.following!.text = "Following"
             let replyimage : UIImage? = UIImage(named:"iosStar.png")
-            self.activebutton!.setImage(replyimage, for: UIControlState())
+            self.activebutton!.setImage(replyimage, for: .normal)
         } else {
             self.following!.text = "Follow"
             let replyimage : UIImage? = UIImage(named:"iosStarNA.png")
-            self.activebutton!.setImage(replyimage, for: UIControlState())
+            self.activebutton!.setImage(replyimage, for: .normal)
         }
     }
     

@@ -38,7 +38,9 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.backgroundColor = .white
+        
+        /*
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             titleLabel.text = "TheLight Software - Blog"
@@ -48,21 +50,21 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         titleLabel.textColor = .white
         titleLabel.font = Font.navlabel
         titleLabel.textAlignment = NSTextAlignment.center
-        navigationItem.titleView = titleLabel
+        navigationItem.titleView = titleLabel */
         
         parseData()
         setupTableView()
-        setupNavBarButtons()
+
+        //setupNavBarButtons()
         
         self.refreshControl = UIRefreshControl()
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.refreshControl.backgroundColor = .black
-        } else {
-            self.refreshControl.backgroundColor = Color.Blog.navColor
-            // get rid of black bar underneath navbar
-            UINavigationBar.appearance().shadowImage = UIImage()
-            UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        }
+        self.refreshControl.backgroundColor = Color.twitterText
+
+        /*
+        // get rid of black bar underneath navbar
+        UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default) */
+
         self.refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
@@ -75,19 +77,27 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        setupNavigationBarItems()
+        /*
         self.navigationController?.navigationBar.tintColor = .white
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.Blog.navColor
-        }
+        } */
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         refreshData(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        exitNavigationBarItems()
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -113,12 +123,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         resultsController.tableView.delegate = self
     }
     
+    /*
     func setupNavBarButtons() {
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(Blog.newButton))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(Blog.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-    }
+    } */
     
     
     // MARK: - refresh
@@ -154,6 +165,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
         
         cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.blogsubtitleLabel?.textColor = Color.twitterText
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
@@ -356,55 +368,55 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
         myLabel1.numberOfLines = 0
         myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
+        myLabel1.textColor = Color.twitterBlue
         myLabel1.textAlignment = NSTextAlignment.center
         myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Blog\n", _feedItems.count)
         myLabel1.font = Font.headtitle
         myLabel1.layer.cornerRadius = 25.0
         myLabel1.layer.borderColor = Color.Blog.borderbtnColor
-        myLabel1.layer.borderWidth = 1
+        myLabel1.layer.borderWidth = 2
         myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
         
         let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
-        separatorLineView1.backgroundColor = .white
+        separatorLineView1.backgroundColor = Color.Blog.borderColor
         vw.addSubview(separatorLineView1)
         
         let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
         myLabel2.numberOfLines = 0
         myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
+        myLabel2.textColor = Color.twitterBlue
         myLabel2.textAlignment = NSTextAlignment.center
         myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Likes\n", _feedheadItems2.count)
         myLabel2.font = Font.headtitle
         myLabel2.layer.cornerRadius = 25.0
         myLabel2.layer.borderColor = Color.Blog.borderbtnColor
-        myLabel2.layer.borderWidth = 1
+        myLabel2.layer.borderWidth = 2
         myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
         
         let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
-        separatorLineView2.backgroundColor = .white
+        separatorLineView2.backgroundColor = Color.Blog.borderColor
         vw.addSubview(separatorLineView2)
         
         let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
         myLabel3.numberOfLines = 0
         myLabel3.backgroundColor = .white
-        myLabel3.textColor = .black
+        myLabel3.textColor = Color.twitterBlue
         myLabel3.textAlignment = NSTextAlignment.center
         myLabel3.layer.masksToBounds = true
         myLabel3.text = String(format: "%@%d", "Users\n", _feedheadItems3.count)
         myLabel3.font = Font.headtitle
         myLabel3.layer.cornerRadius = 25.0
         myLabel3.layer.borderColor = Color.Blog.borderbtnColor
-        myLabel3.layer.borderWidth = 1
+        myLabel3.layer.borderWidth = 2
         myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         
         let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
-        separatorLineView3.backgroundColor = .white
+        separatorLineView3.backgroundColor = Color.Blog.borderColor
         vw.addSubview(separatorLineView3)
         
         return vw

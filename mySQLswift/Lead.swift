@@ -41,10 +41,10 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         
-        titleButton.setTitle("Leads", for: UIControlState())
+        titleButton.setTitle("Leads", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
@@ -201,11 +201,11 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         cell.leadreplyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.leadreplyButton .setImage(replyimage, for: UIControlState())
+        cell.leadreplyButton .setImage(replyimage, for: .normal)
         
         cell.leadlikeButton.tintColor = .lightGray
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.leadlikeButton .setImage(likeimage, for: UIControlState())
+        cell.leadlikeButton .setImage(likeimage, for: .normal)
         
         cell.leadreplyLabel.text! = ""
         

@@ -33,13 +33,13 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - YouTube", for: UIControlState())
+            titleButton.setTitle("TheLight - YouTube", for: .normal)
         } else {
-            titleButton.setTitle("YouTube", for: UIControlState())
+            titleButton.setTitle("YouTube", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         tblVideos.delegate = self

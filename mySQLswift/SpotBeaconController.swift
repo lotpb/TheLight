@@ -38,13 +38,13 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Spot Beacon", for: UIControlState())
+            titleButton.setTitle("TheLight - Spot Beacon", for: .normal)
         } else {
-            titleButton.setTitle("Spot Beacon", for: UIControlState())
+            titleButton.setTitle("Spot Beacon", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         locationManager = CLLocationManager()
@@ -88,7 +88,7 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
         locationManager.startRangingBeacons(in: beaconRegion)
         
         if !isSearchingForBeacons {
-            btnSwitchSpotting.setTitle("Stop Spotting", for: UIControlState())
+            btnSwitchSpotting.setTitle("Stop Spotting", for: .normal)
             lblBeaconReport.text = "Spotting beacons..."
         }
         else {
@@ -96,7 +96,7 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
             locationManager.stopRangingBeacons(in: beaconRegion)
             locationManager.stopUpdatingLocation()
             
-            btnSwitchSpotting.setTitle("Start Spotting", for: UIControlState())
+            btnSwitchSpotting.setTitle("Start Spotting", for: .normal)
             lblBeaconReport.text = "Not running"
             lblBeaconDetails.isHidden = false
             self.view.backgroundColor = UIColor.white

@@ -13,7 +13,7 @@ protocol PlayerVCDelegate {
 }
 
 import UIKit
-import AVKit
+//import AVKit
 import AVFoundation
 import Parse
 
@@ -28,13 +28,13 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     var _feedItems : NSMutableArray = NSMutableArray()
     var imageObject :PFObject!
     var imageFile :PFFile!
-    var selectedImage : UIImage?
     
     var delegate: PlayerVCDelegate?
     var state = stateOfVC.hidden
     var direction = Direction.none
     var videoPlayer = AVPlayer.init()
     
+    var playerLayer: AVPlayerLayer?
     var videoURL: String?
     var titleLookup: String?
     
@@ -110,10 +110,55 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
  
         if videoURL == nil {
             videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
-            //return
         }
         self.playVideo(videoURL: videoURL!)
     }
+    
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    open func resetPlayer() {
+ 
+        //self.playDidEnd = false
+        //self.playerItem = nil
+        //self.seekTime   = 0
+        
+        self.videoPlayer.pause()
+        self.playerLayer?.removeFromSuperlayer()
+        videoPlayer.replaceCurrentItem(with: nil)
+        //videoPlayer.removeObserver(self, forKeyPath: "rate")
+        //self.videoPlayer = nil
+    }
+    
+    open func prepareToDeinit() {
+        //self.playerItem = nil
+        self.resetPlayer()
+    }
+    
+    /*
+    @IBAction func backwardTouch(sender: AnyObject) {
+        playerVideo.rate = playerVideo.rate - 0.5
+    }
+    
+    @IBAction func playTouch(sender: AnyObject) {
+        if playerVideo.rate == 0 {
+            playerVideo.play()
+        } else {
+            playerVideo.pause()
+        }
+    }
+    
+    @IBAction func fowardTouch(sender: AnyObject) {
+        playerVideo.rate = playerVideo.rate + 0.5
+    } */
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+        
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -123,16 +168,16 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     // MARK: - Video Player
     
     private func playVideo(videoURL: String) {
-        //self.videoPlayer.pause()
+        self.videoPlayer.pause()
         //NotificationCenter.default.removeObserver(self)
         
         if let url = NSURL(string: videoURL) {
             DispatchQueue.main.async(execute: {
                 self.videoPlayer = AVPlayer(url: url as URL)
-                let playerLayer = AVPlayerLayer(player: self.videoPlayer)
-                playerLayer.frame = self.playerView.bounds
-                playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-                self.playerView.layer.addSublayer(playerLayer)
+                self.playerLayer = AVPlayerLayer(player: self.videoPlayer)
+                self.playerLayer?.frame = self.playerView.bounds
+                self.playerLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+                self.playerView.layer.addSublayer(self.playerLayer!)
                 if self.state != .hidden {
                     self.videoPlayer.play()
                 }
@@ -147,6 +192,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     // MARK: - Video Full Screen
     //not working below
+    /*
     func fullScreen(videoPlayer: AVPlayer) {
         let path = Bundle.main.path(forResource: "video", ofType: "mp4")!
         let url = URL(fileURLWithPath: path)
@@ -159,15 +205,29 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         let fullScreenPlayerViewController = AVPlayerViewController()
         fullScreenPlayerViewController.player = fullScreenPlayer
         present(fullScreenPlayerViewController, animated: true, completion: nil)
-    }
+    } */
     
     // MARK: - Setup View
     
     func setupConstraints() {
-        /*
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-         
-        } */
+            /*
+            playerView.translatesAutoresizingMaskIntoConstraints = false
+            playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+            playerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+            playerView.widthAnchor.constraint(equalToConstant: 400).isActive = true
+            playerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+            
+            containView.translatesAutoresizingMaskIntoConstraints = false
+            containView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+            containView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+            containView.widthAnchor.constraint(equalToConstant: 400).isActive = true
+            containView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+            */
+        }
+        
+        //make.height.equalTo(view.snp.width).multipliedBy(9.0/16.0)
         
         containView.addSubview(activityIndicatorView)
         activityIndicatorView.centerXAnchor.constraint(equalTo: playerView.centerXAnchor).isActive = true
@@ -314,6 +374,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         }
     }
     
+    
     func showControlObjects() {
         UIView.animate(withDuration: 0.3, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
             self.pausePlayButton.alpha = 1
@@ -327,6 +388,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             //self.panelVisible = true
         })
      }
+    
     
     func hideControlObjects() {
         UIView.animate(withDuration: 0.3, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
@@ -350,9 +412,12 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                 Bool in
                 self.videoSlider.setValue(0.0, animated: true)
                 self.showControlObjects()
+                self.handlePause()
             })
         }
     }
+    
+    /*
     // repeat Video
     func loopVideo(videoPlayer: AVPlayer) {
         NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { notification in
@@ -360,7 +425,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             videoPlayer.seek(to: kCMTimeZero)
             videoPlayer.play()
         }
-    }
+    } */
     
     // MARK: - Button
     
@@ -430,8 +495,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         self.containView.alpha = 1 - scaleFactor
         self.tableView.alpha = 1 - scaleFactor
         let scale = CGAffineTransform.init(scaleX: (1 - 0.5 * scaleFactor), y: (1 - 0.5 * scaleFactor))
-        let trasform = scale.concatenating(CGAffineTransform.init(translationX: -(self.playerView.bounds.width / 4 * scaleFactor), y: -(self.playerView.bounds.height / 4 * scaleFactor)))
-        self.playerView.transform = trasform
+        let transform = scale.concatenating(CGAffineTransform.init(translationX: -(self.playerView.bounds.width / 4 * scaleFactor), y: -(self.playerView.bounds.height / 4 * scaleFactor)))
+        self.playerView.transform = transform
     }
     
     func tapPlayView()  {
@@ -453,7 +518,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             return 0
         } */
         
-        return _feedItems.count
+        return _feedItems.count - 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -530,7 +595,17 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //FloatingView.sharedInstance.videoView.playUrl(url: URL.init(string: _feedItems[indexPath.row])!)
+        
+        imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+        imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+        imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            
+            let imageDetailurl = self.imageFile.url
+            let result1 = imageDetailurl!.contains("movie.mp4")
+            if (result1 == true) {
+                self.playVideo(videoURL: self.imageFile.url!)
+            }
+        }
     }
     
     //MARK: - Fetch Data

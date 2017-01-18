@@ -34,13 +34,13 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Notifications", for: UIControlState())
+            titleButton.setTitle("TheLight - Notifications", for: .normal)
         } else {
-            titleButton.setTitle("Notifications", for: UIControlState())
+            titleButton.setTitle("Notifications", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         self.tableView!.delegate = self

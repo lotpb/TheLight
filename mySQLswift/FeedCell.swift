@@ -225,7 +225,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         let imageDetailurl = self.imageFile.url
         let result1 = imageDetailurl!.contains("movie.mp4")
         cell.playButton.isHidden = result1 == false
-        cell.playButton.setTitle(imageDetailurl, for: UIControlState.normal)
+        cell.playButton.setTitle(imageDetailurl, for: .normal)
         
         var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
         if Liked == nil {

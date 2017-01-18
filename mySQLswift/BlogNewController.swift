@@ -136,8 +136,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         }
         
         let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        self.Like!.setImage(likeimage, for: UIControlState())
-        self.Like!.setTitleColor(.white, for: UIControlState())
+        self.Like!.setImage(likeimage, for: .normal)
+        self.Like!.setTitleColor(.white, for: .normal)
         
         //---------inline DatePicker---------------
         
@@ -289,12 +289,12 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             
             if (self.liked == nil || self.liked == 0) {
                 self.Like!.tintColor = .white
-                self.Like!.setTitle(" Like", for: UIControlState.normal)
+                self.Like!.setTitle(" Like", for: .normal)
                 self.activeImage!.image = UIImage(named:"iosStarNA.png")
                 
             } else {
                 self.Like!.tintColor = Color.Blog.buttonColor
-                self.Like!.setTitle(" Likes \(liked!)", for: UIControlState.normal)
+                self.Like!.setTitle(" Likes \(liked!)", for: .normal)
                 self.activeImage!.image = UIImage(named:"iosStar.png")
             }
             cell?.contentView.addSubview(self.activeImage!)

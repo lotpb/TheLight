@@ -36,6 +36,8 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /*
 
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -46,7 +48,8 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         titleLabel.textColor = .white
         titleLabel.font = Font.navlabel
         titleLabel.textAlignment = NSTextAlignment.center
-        navigationItem.titleView = titleLabel
+        navigationItem.titleView = titleLabel */
+        
         
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
@@ -82,17 +85,17 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         
         if (self.liked == nil) {
             self.Like!.tintColor = .lightGray
-            self.Like!.setTitle("", for: UIControlState())
+            self.Like!.setTitle("", for: .normal)
         } else {
             self.Like!.tintColor = Color.Blog.buttonColor
-            self.Like!.setTitle(" Likes \(liked!)", for: UIControlState())
+            self.Like!.setTitle(" Likes \(liked!)", for: .normal)
         }
         let likeImage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        self.Like!.setImage(likeImage, for: UIControlState())
-        self.Like!.setTitleColor(.gray, for: UIControlState())
+        self.Like!.setImage(likeImage, for: .normal)
+        self.Like!.setTitleColor(.gray, for: .normal)
         
         
-        self.update!.setTitleColor(.gray, for: UIControlState())
+        self.update!.setTitleColor(.gray, for: .normal)
         
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(BlogEditController.shareButton))
         let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(BlogEditController.deleteButton))
@@ -107,6 +110,13 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         self.refreshControl.addTarget(self, action: #selector(BlogEditController.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
     
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupEditNavigationBarItems()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -148,6 +158,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             }
             
             cell?.selectionStyle = UITableViewCellSelectionStyle.none
+            cell?.subtitleLabel?.textColor = Color.twitterText
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
@@ -272,7 +283,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             
             cell?.replylikeButton.tintColor = .lightGray
             let replyimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-            cell?.replylikeButton .setImage(replyimage, for: UIControlState())
+            cell?.replylikeButton .setImage(replyimage, for: .normal)
             cell?.replylikeButton .addTarget(self, action: #selector(BlogEditController.likeButton), for: UIControlEvents.touchUpInside)
             
             if !(cell?.replynumLabel.text == "0") {

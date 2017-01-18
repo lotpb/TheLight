@@ -44,13 +44,13 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Users", for: UIControlState())
+            titleButton.setTitle("TheLight - Users", for: .normal)
         } else {
-            titleButton.setTitle("Users", for: UIControlState())
+            titleButton.setTitle("Users", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: UIControlState())
+        titleButton.setTitleColor(.white, for: .normal)
         self.navigationItem.titleView = titleButton
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
