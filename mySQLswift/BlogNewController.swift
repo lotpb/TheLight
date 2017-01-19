@@ -151,6 +151,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         dateFormatter.timeStyle = .short
         
         NotificationCenter.default.addObserver(self, selector: #selector(localeChanged(_:)), name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        
+        self.toolBar!.barTintColor = Color.twitterBlue
         /*
          self.myDatePicker!.isHidden = false
          self.myDatePicker!.datePickerMode = UIDatePickerMode.date
@@ -160,6 +162,12 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
          */
         //--------------------------------------
  
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupTwitterNavigationBarItems()
     }
     
     override func didReceiveMemoryWarning() {

@@ -29,6 +29,7 @@ var searchController: UISearchController!
         static let youtubeRed = UIColor.rgb(red: 230, green: 32, blue: 31)
         static let twitterBlue = UIColor.rgb(red: 61, green: 167, blue: 244)
         static let twitterText = UIColor(red:0.54, green:0.60, blue:0.65, alpha: 1.0)
+        static let twitterline = UIColor.rgb(red: 230, green: 230, blue: 230)
         static let facebookBlue = UIColor.rgb(red: 0, green: 137, blue: 249)
         
         enum Blog {
@@ -48,23 +49,21 @@ var searchController: UISearchController!
         }
         
         enum Cust {
-            static let navColor = UIColor.black //UIColor(red: 0.21, green: 0.60, blue: 0.86, alpha: 1.0)
-            static let labelColor = Color.DGrayColor //UIColor(red: 0.20, green: 0.29, blue: 0.37, alpha: 1.0)
-            static let labelColor1 = Color.BlueColor //UIColor(red: 0.20, green: 0.29, blue: 0.37, alpha: 1.0)
+            static let navColor = UIColor.black
+            static let labelColor = Color.DGrayColor
+            static let labelColor1 = Color.BlueColor
             static let buttonColor = Color.BlueColor
         }
         
         enum Vend {
             static let navColor = UIColor.black
             static let labelColor = UIColor(red: 0.56, green: 0.45, blue: 0.62, alpha: 1.0)
-            //static let labelColor1 = UIColor(red: 0.10, green: 0.03, blue: 0.21, alpha: 1.0)
             static let buttonColor = UIColor(red: 0.56, green: 0.45, blue: 0.62, alpha: 1.0)
         }
         
         enum Employ {
             static let navColor = UIColor.black
             static let labelColor = UIColor(red: 0.64, green: 0.54, blue: 0.50, alpha: 1.0)
-            //static let labelColor1 = UIColor(red: 0.31, green: 0.23, blue: 0.17, alpha: 1.0)
             static let buttonColor = UIColor(red: 0.64, green: 0.54, blue: 0.50, alpha: 1.0)
         }
         

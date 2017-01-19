@@ -38,35 +38,22 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         /*
-
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleLabel.text = "TheLight Software - Edit Message"
-        } else {
-            titleLabel.text = "Edit Message"
-        }
-        titleLabel.textColor = .white
-        titleLabel.font = Font.navlabel
-        titleLabel.textAlignment = NSTextAlignment.center
-        navigationItem.titleView = titleLabel */
+         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
+         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+         titleLabel.text = "TheLight Software - Edit Message"
+         } else {
+         titleLabel.text = "Edit Message"
+         }
+         titleLabel.textColor = .white
+         titleLabel.font = Font.navlabel
+         titleLabel.textAlignment = NSTextAlignment.center
+         navigationItem.titleView = titleLabel */
         
-        
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 110
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor =  .white
-        
-        self.listTableView!.delegate = self
-        self.listTableView!.dataSource = self
-        self.listTableView!.estimatedRowHeight = 75
-        self.listTableView!.rowHeight = UITableViewAutomaticDimension
-        self.listTableView!.tableFooterView = UIView(frame: .zero)
-
         self.view.backgroundColor = .lightGray
-        self.toolBar!.isTranslucent = false
-        self.toolBar!.barTintColor = .white
+        self.update!.setTitleColor(.gray, for: .normal)
         
+        self.toolBar!.barTintColor = .white
+        self.toolBar!.isTranslucent = false
         self.toolBar!.layer.masksToBounds = true
         let width = CGFloat(2.0)
         
@@ -82,7 +69,6 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         bottomBorder.borderWidth = width
         self.toolBar!.layer.addSublayer(bottomBorder)
         
-        
         if (self.liked == nil) {
             self.Like!.tintColor = .lightGray
             self.Like!.setTitle("", for: .normal)
@@ -94,17 +80,15 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         self.Like!.setImage(likeImage, for: .normal)
         self.Like!.setTitleColor(.gray, for: .normal)
         
-        
-        self.update!.setTitleColor(.gray, for: .normal)
-        
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(BlogEditController.shareButton))
         let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(BlogEditController.deleteButton))
         navigationItem.rightBarButtonItems = [actionButton,trashButton]
         
         parseData()
+        setupTableView()
         
         self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .clear
+        refreshControl.backgroundColor = Color.twitterText
         refreshControl.tintColor = .black
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: #selector(BlogEditController.refreshData), for: UIControlEvents.valueChanged)
@@ -115,13 +99,27 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setupEditNavigationBarItems()
+        setupTwitterNavigationBarItems()
 
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.estimatedRowHeight = 110
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor =  .white
+        
+        self.listTableView!.delegate = self
+        self.listTableView!.dataSource = self
+        self.listTableView!.estimatedRowHeight = 75
+        self.listTableView!.rowHeight = UITableViewAutomaticDimension
+        self.listTableView!.tableFooterView = UIView(frame: .zero)
     }
     
     func refreshData(sender:AnyObject) {

@@ -54,21 +54,12 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         parseData()
         setupTableView()
-
-        //setupNavBarButtons()
         
         self.refreshControl = UIRefreshControl()
         self.refreshControl.backgroundColor = Color.twitterText
-
-        /*
-        // get rid of black bar underneath navbar
-        UINavigationBar.appearance().shadowImage = UIImage()
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default) */
-
         self.refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        //self.refreshControl.attributedTitle = NSAttributedString(string: "Last updated on \(NSDate())", attributes: attributes)
         self.refreshControl.addTarget(self, action: #selector(Blog.refreshData), for: UIControlEvents.valueChanged)
         self.tableView!.addSubview(refreshControl)
 
@@ -78,9 +69,8 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewWillAppear(animated)
         
         setupNavigationBarItems()
+        setupTwitterNavigationBarItems()
         /*
-        self.navigationController?.navigationBar.tintColor = .white
-        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
@@ -91,13 +81,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        refreshData(self)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        exitNavigationBarItems()
-        
+        //refreshData(self)
     }
     
     override func didReceiveMemoryWarning() {

@@ -38,10 +38,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         setupNavBarButtons()
         setupMenuBar()
         
-        // get rid of black bar underneath navbar
-        UINavigationBar.appearance().shadowImage = UIImage()
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        
         // MARK: NavigationController Hidden
         NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         
@@ -54,12 +50,10 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.tintColor = .white
-        
+        setupNewsNavigationItems()
+
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.News.navColor
         }
     }
     

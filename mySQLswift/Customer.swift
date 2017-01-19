@@ -70,7 +70,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
-            self.navigationController?.navigationBar.barTintColor = Color.Cust.navColor
+            setMainNavItems()
         }
     }
     

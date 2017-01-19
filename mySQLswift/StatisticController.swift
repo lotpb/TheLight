@@ -77,9 +77,9 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight Software", for: .normal)
+            titleButton.setTitle("TheLight Software - Statistics", for: .normal)
         } else {
-            titleButton.setTitle("TheLight", for: .normal)
+            titleButton.setTitle("Statistics", for: .normal)
         }
         titleButton.titleLabel?.font = Font.navlabel //UIFont(name: "HelveticaNeue-Thin", size: 25.0)
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
@@ -99,11 +99,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         setupTableView()
     }
-    
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
-    return true
-    
-    }
+ 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -114,14 +110,16 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
-        
-        self.navigationController?.navigationBar.tintColor = .white
+        setupNewsNavigationItems()
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.Stat.navColor
         }
         self.refreshData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        //self.refreshData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -606,7 +604,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if (section == 0) {
-            return 175
+            return 135
         } else if (section == 1) {
             return 5
         } else if (section == 2) {
@@ -643,32 +641,32 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
              photoImage.addSubview(visualEffectView) */
             
             segmentedControl = UISegmentedControl (items: ["WEEKLY", "MONTHLY", "YEARLY"])
-            segmentedControl.frame = CGRect(x: tableView.frame.width/2-125, y: 45, width: 250, height: 30)
+            segmentedControl.frame = CGRect(x: tableView.frame.width/2-125, y: 15, width: 250, height: 30)
             segmentedControl.backgroundColor = .red
             segmentedControl.tintColor = .white
             segmentedControl.selectedSegmentIndex = 1
             segmentedControl.addTarget(self, action: #selector(StatisticController.segmentedControlAction), for: .valueChanged)
             vw.addSubview(segmentedControl)
-            
+            /*
             let myLabel1 = UILabel(frame: CGRect(x: tableView.frame.width/2-45, y: 3, width: 90, height: 45))
             myLabel1.textColor = .white
             myLabel1.textAlignment = NSTextAlignment.center
             myLabel1.text = "Statistics"
             myLabel1.font = UIFont (name: "Avenir-Book", size: 21)
-            vw.addSubview(myLabel1)
+            vw.addSubview(myLabel1) */
             
-            let myLabel2 = UILabel(frame: CGRect(x: tableView.frame.width/2-25, y: 75, width: 50, height: 45))
+            let myLabel2 = UILabel(frame: CGRect(x: tableView.frame.width/2-25, y: 45, width: 50, height: 45))
             myLabel2.textColor = .green
             myLabel2.textAlignment = NSTextAlignment.center
             myLabel2.text = "SALES"
             myLabel2.font = UIFont (name: "Avenir-Black", size: 16)
             vw.addSubview(myLabel2)
             
-            let separatorLineView1 = UIView(frame: CGRect(x: tableView.frame.width/2-30, y: 110, width: 60, height: 1.9))
+            let separatorLineView1 = UIView(frame: CGRect(x: tableView.frame.width/2-30, y: 80, width: 60, height: 1.9))
             separatorLineView1.backgroundColor = .white
             vw.addSubview(separatorLineView1)
             
-            myLabel3 = UILabel(frame: CGRect(x: tableView.frame.width/2-70, y: 115, width: 140, height: 45))
+            myLabel3 = UILabel(frame: CGRect(x: tableView.frame.width/2-70, y: 85, width: 140, height: 45))
             myLabel3.textColor = .white
             myLabel3.textAlignment = NSTextAlignment.center
             myLabel3.text = "$200,000"

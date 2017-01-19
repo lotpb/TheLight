@@ -83,7 +83,8 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         navigationItem.rightBarButtonItems = [actionButton]
         
         addActivityIndicator()
-        setupConstraints() // Float Button
+        setupConstraints()
+        // Float Button
         //setCircularAvatar() //dont work
         
     }

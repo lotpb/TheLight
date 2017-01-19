@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISplitViewControllerDelegate {
     
     let searchScope = ["name","city","phone","date","active"]
     
@@ -34,13 +34,10 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //self.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.red], for:.selected)
-        
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
         let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        
         titleButton.setTitle("Leads", for: .normal)
         titleButton.titleLabel?.font = Font.navlabel
         titleButton.titleLabel?.textAlignment = NSTextAlignment.center
@@ -70,18 +67,14 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        self.navigationController?.navigationBar.tintColor = .white
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
+        
+        //Fix Grey Bar in iphone Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
         }
-        //animateTable()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        setMainNavItems()
     }
     
     

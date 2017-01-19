@@ -91,25 +91,17 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //Fix Grey Bar on Bpttom Bar
+        /*
+        //Fix Grey Bar in iphone Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
                 con.preferredDisplayMode = .primaryOverlay
             }
-        } else if UIDevice.current.userInterfaceIdiom == .pad {
-            if let spec = self.splitViewController {
-                spec.preferredDisplayMode = .allVisible
-            }
-        } else {
-            if let tit = self.splitViewController {
-                tit.preferredDisplayMode = .automatic
-            }
-        }
+        } */
         
-        self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.barTintColor = .black
-        self.refreshData()
+        setMainNavItems()
+        //self.refreshData()
+ 
     }
     
     override func didReceiveMemoryWarning() {
@@ -118,7 +110,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
     
     
-    //added MainController opens on startup
+    //added makes MainController opens on startup instead of DetailViewController
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
         
         return true
@@ -575,32 +567,21 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
         }
         if segue.identifier == "statisticSegue" {
-            
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
             guard let navController = segue.destination as? UINavigationController,
                 let viewController = navController.topViewController as? StatisticController else {
                     fatalError("Expected DetailViewController")
             }
-            
-            collapseDetailViewController = false
-            
+            //collapseDetailViewController = false
             viewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             viewController.navigationItem.leftItemsSupplementBackButton = true
-            }
-            
-            /*
-            let controller = (segue.destination as! UINavigationController).topViewController as! StatisticController
-            //collapseDetailViewController = true
-            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            controller.navigationItem.leftItemsSupplementBackButton = true */
         }
         if segue.identifier == "geotifySegue" {
             
             guard let navController = segue.destination as? UINavigationController,
                 let controller = navController.topViewController as? GeotificationsViewController
                 else {
-                    fatalError("Expected DetailViewController")
+                    fatalError("Expected GeotificationsViewController")
             }
             //let controller = (segue.destination as! UINavigationController).topViewController as! GeotificationsViewController
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem

@@ -15,13 +15,12 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     private var webView: WKWebView
     var url: URL?
     
-    let siteNames: Array<String> = ["CNN", "Drudge", "cnet", "Appcoda", "Cult of Mac", "Twits"]
+    let siteNames: Array<String> = ["CNN", "Drudge", "cnet", "Appcoda", "Cult of Mac"]
     let siteAddresses: Array<String> = ["http://www.cnn.com",
                       "http://www.Drudgereport.com",
                       "http://www.cnet.com",
                       "http://www.appcoda.com/tutorials/",
-                      "http://www.cultofmac.com/category/news/",
-                      "http://stocktwits.com/The_Stock_Whisperer"]
+                      "http://www.cultofmac.com/category/news/"]
     
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var backButton: UIBarButtonItem!
@@ -40,7 +39,6 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     }
     
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,6 +49,9 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         self.extendedLayoutIncludesOpaqueBars = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
+        
+        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(backButtonPressed))
+        navigationItem.rightBarButtonItems = [actionButton]
         
         self.segControl? = UISegmentedControl(items: siteNames)
         
@@ -66,11 +67,11 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         view.addConstraints([height, width])
         
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
-        //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil) //removes title on tabBar
-        //webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
+      //removes title on tabBar
+      //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil)
+      //webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
         
         self.configureView()
         
@@ -79,25 +80,24 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        setMainNavItems()
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .gray
+        navigationController?.hidesBarsOnSwipe = true
         //Fix Grey Bar in iphone Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
-        
-        navigationController?.hidesBarsOnSwipe = true
-        //changes segmented color
-        self.navigationController?.navigationBar.tintColor = .white
-        //self.navigationController?.navigationBar.barTintColor = Color.Lead.navColor
         //webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
-        //self.configureView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.hidesBarsOnSwipe = false
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -200,10 +200,6 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
             url = URL(string: siteAddresses[4])!
             let request = URLRequest(url: url!)
             webView.load(request)
-        case 5:
-            url = URL(string: siteAddresses[5])!
-            let request = URLRequest(url: url!)
-            webView.load(request)
         default:
             break
         }
@@ -214,19 +210,14 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         if let detail = self.detailItem {
             
             webView.load(URLRequest(url:URL(string: detail as! String)!))
-            /*
-            url = URL(string: detail as String)
-            let request = URLRequest(url: url!)
-            webView.load(request) */
+
         } else {
        
            webView.load(URLRequest(url:URL(string: siteAddresses[0])!)) 
         }
 
-        //webView.load(URLRequest(url: URL(string: detailItem as! String)!))
     }
  
-    
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         
         controller.dismiss(animated: true, completion: nil)

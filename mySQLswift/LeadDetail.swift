@@ -233,13 +233,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //Fix Grey Bar on Bpttom Bar
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            if let con = self.splitViewController {
-                con.preferredDisplayMode = .primaryOverlay
-            }
-        }
-        
         self.navigationController?.navigationBar.tintColor = .white
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
@@ -251,7 +244,13 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.labeldate!.text = ""
         self.labeladdress!.text = ""
         self.labelcity!.text = ""
-
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

@@ -282,13 +282,12 @@ extension AppDelegate {
         
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         UINavigationBar.appearance().barTintColor = .black
-        UINavigationBar.appearance().tintColor = .gray
+        UINavigationBar.appearance().tintColor = .gray 
         UINavigationBar.appearance().isTranslucent = false
         
         UITabBar.appearance().barTintColor = .black
         UITabBar.appearance().tintColor = .white
         UITabBar.appearance().isTranslucent = false
-      //UITabBar.appearance().unselectedItemTintColor = UIColor.yellow
         
         UIToolbar.appearance().barTintColor = Color.DGrayColor
         UIToolbar.appearance().tintColor = .white

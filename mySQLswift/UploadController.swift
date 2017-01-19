@@ -125,6 +125,11 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerViewController)
         self.commentDetail.isScrollEnabled = false
+        setupNewsNavigationItems()
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.navigationController?.navigationBar.barTintColor = .black
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

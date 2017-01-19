@@ -44,11 +44,6 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // MARK: - SplitView
-        /* self.splitViewController?.maximumPrimaryColumnWidth = 600
-        //fix - remove bottom bar
-        self.splitViewController!.delegate = self
-        self.splitViewController!.preferredDisplayMode = .automatic //.allVisible */
         self.extendedLayoutIncludesOpaqueBars = true
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -89,7 +84,6 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             self.newsTextview.font = Font.ipadtextview
         } else {
             self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
-    
             self.titleLabel.font = Font.News.newstitle
             self.detailLabel.font = Font.cellsubtitle
             self.newsTextview.isEditable = true//bug fix
@@ -134,11 +128,10 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     override func viewWillAppear(_ animated: Bool) {
         
         self.newsTextview.isScrollEnabled = false
-        self.navigationController?.navigationBar.tintColor = .white
+        setupNewsNavigationItems()
+
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.News.navColor
         }
     }
     //fix TextView Scroll first line
@@ -166,8 +159,6 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         faceLabel.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor, constant: +5).isActive = true
         
         let heightspeedConstraint  = NSLayoutConstraint(item: faceLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30)
-
-        
         view.addConstraints([heightRouteConstraints, heightspeedConstraint])
     }
     

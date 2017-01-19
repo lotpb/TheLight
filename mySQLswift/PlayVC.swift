@@ -175,8 +175,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             DispatchQueue.main.async(execute: {
                 self.videoPlayer = AVPlayer(url: url as URL)
                 self.playerLayer = AVPlayerLayer(player: self.videoPlayer)
-                self.playerLayer?.frame = self.playerView.bounds
                 self.playerLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+                self.playerLayer?.frame = self.playerView.bounds
                 self.playerView.layer.addSublayer(self.playerLayer!)
                 if self.state != .hidden {
                     self.videoPlayer.play()
@@ -228,6 +228,9 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         }
         
         //make.height.equalTo(view.snp.width).multipliedBy(9.0/16.0)
+        
+        playerView.translatesAutoresizingMaskIntoConstraints = false
+        playerView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
         
         containView.addSubview(activityIndicatorView)
         activityIndicatorView.centerXAnchor.constraint(equalTo: playerView.centerXAnchor).isActive = true
