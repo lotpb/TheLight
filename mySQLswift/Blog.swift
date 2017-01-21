@@ -24,8 +24,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var buttonView: UIView?
     var likeButton: UIButton?
-    var refreshControl: UIRefreshControl!
-
     var isReplyClicked = true
     var posttoIndex: String?
     var userIndex: String?
@@ -36,33 +34,26 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var resultsController: UITableViewController!
     var foundUsers = [String]()
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = Color.twitterText
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(Blog.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        //view.backgroundColor = .white
         
-        /*
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleLabel.text = "TheLight Software - Blog"
-        } else {
-            titleLabel.text = "Blog"
-        }
-        titleLabel.textColor = .white
-        titleLabel.font = Font.navlabel
-        titleLabel.textAlignment = NSTextAlignment.center
-        navigationItem.titleView = titleLabel */
+        // MARK: NavigationController Hidden
+        NotificationCenter.default.addObserver(self, selector: #selector(Blog.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         
         parseData()
         setupTableView()
-        
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl.backgroundColor = Color.twitterText
-        self.refreshControl.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(Blog.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-
+        self.tableView!.addSubview(self.refreshControl)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -70,18 +61,12 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         setupNavigationBarItems()
         setupTwitterNavigationBarItems()
-        /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.Blog.navColor
-        } */
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        //refreshData(self)
+        refreshData(self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -115,12 +100,20 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         navigationItem.rightBarButtonItems = [addButton,searchButton]
     } */
     
+    // MARK: - NavigationController Hidden
+    
+    func hideBar(notification: NSNotification)  {
+        let state = notification.object as! Bool
+        self.navigationController?.setNavigationBarHidden(state, animated: true)
+    }
+    
     
     // MARK: - refresh
     
     func refreshData(_ sender:AnyObject) {
         parseData()
-        self.refreshControl?.endRefreshing()
+        //self.tableView.reloadData()
+        self.refreshControl.endRefreshing()
     }
     
     
@@ -162,7 +155,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             
             cell.blogtitleLabel!.font =  Font.Blog.celltitle
-            cell.blogsubtitleLabel!.font =  Font.celllabel2
+            cell.blogsubtitleLabel!.font =  Font.celllabel1
             cell.blogmsgDateLabel.font = Font.Blog.celldate
             cell.numLabel.font = Font.Blog.cellLabel
             cell.commentLabel.font = Font.Blog.cellLabel

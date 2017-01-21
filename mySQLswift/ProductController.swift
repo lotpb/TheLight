@@ -22,11 +22,29 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     var filteredString : NSMutableArray = NSMutableArray()
  
     var pasteBoard = UIPasteboard.general
-    var refreshControl: UIRefreshControl!
-    
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle("Products", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = Color.Table.navColor
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(ProductController.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,27 +52,14 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Products", for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(ProductController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-        
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = Color.Table.navColor
-        refreshControl.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(ProductController.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
+
         parseData()
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,7 +97,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func refreshData(_ sender:AnyObject) {
         parseData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Button

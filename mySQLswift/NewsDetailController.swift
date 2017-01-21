@@ -40,11 +40,26 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle("News Detail", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.extendedLayoutIncludesOpaqueBars = true
+        
+        let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
+        let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
+        navigationItem.rightBarButtonItems = [editItem,backItem]
+      //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             newsViewHeight = 450
@@ -52,26 +67,10 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             newsViewHeight = 258
         }
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("News Detail", for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         self.scrollView.minimumZoomScale = 1.0
         self.scrollView.maximumZoomScale = 6.0
         self.newsImageview.backgroundColor = .black
-        
-        let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
-        let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
-
-        navigationItem.rightBarButtonItems = [editItem,backItem]
-        
-        //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
-        
         self.newsImageview.isUserInteractionEnabled = true
-        
 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
@@ -106,7 +105,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             dateFormatter.dateFormat = "EEEE"
         }
         let dateString = dateFormatter.string(from: date1!)
-
+        
         self.detailLabel.text = String(format: "%@ %@ %@", (self.newsDetail!), "Uploaded", "\(dateString)")
         self.detailLabel.textColor = .gray
         self.detailLabel.sizeToFit()
@@ -121,7 +120,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         
         self.findFace()
         setupConstraints()
-        
+        self.navigationItem.titleView = self.titleButton
     }
     
     //fix TextView Scroll first line

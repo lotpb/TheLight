@@ -20,8 +20,6 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
     var filteredString = NSMutableArray()
   
     var pasteBoard = UIPasteboard.general
-    var refreshControl: UIRefreshControl!
-    
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
@@ -29,6 +27,42 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
     var objectIdLabel = String()
     var titleLabel = String()
     var dateLabel = String()
+    /*
+    let cellLabel: UILabel = {
+        let label = UILabel()
+        label.frame = CGRect(x: 10, y: 10, width: 50, height: 50)
+        label.backgroundColor = Color.Lead.labelColor
+        label.textColor = .white
+        label.textAlignment = NSTextAlignment.center
+        label.layer.masksToBounds = true
+        label.text = "Lead"
+        label.font = Font.headtitle
+        label.layer.cornerRadius = 25.0
+        label.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(Lead.imgLoadSegue))
+        label.addGestureRecognizer(tap)
+        return label
+    }() */
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle("Leads", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = Color.Lead.navColor
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(Lead.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
     
     
     override func viewDidLoad() {
@@ -36,28 +70,15 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Leads", for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
+
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Lead.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = Color.Lead.navColor
-        refreshControl.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(Lead.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
         
         parseData()
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -67,7 +88,6 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         //Fix Grey Bar in iphone Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
@@ -101,7 +121,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
     func refreshData(_ sender:AnyObject) {
         
         parseData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Button
@@ -183,9 +203,9 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
             cell.leadsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""
             myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String ?? ""
             myLabel2.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String ?? ""
-        
+            
         } else {
-
+            
             cell.leadtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
             cell.leadsubtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "City") as? String
             myLabel1.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Date") as? String
@@ -218,7 +238,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         }
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        myLabel.backgroundColor = Color.Lead.labelColor
+        myLabel.backgroundColor = Color.Cust.labelColor
         myLabel.textColor = .white
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.layer.masksToBounds = true
@@ -414,9 +434,7 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         if (tableView == self.tableView) {
             self.performSegue(withIdentifier: "leaddetailSegue", sender: self)
         } else {
-            //if tableView == resultsController.tableView {
-            //userDetails = foundUsers[indexPath.row]
-            //self.performSegueWithIdentifier("PushDetailsVC", sender: self)
+
         }
     }
     

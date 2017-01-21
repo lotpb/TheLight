@@ -10,13 +10,10 @@ import UIKit
 import Parse
 
 class StatisticController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UISearchResultsUpdating {
-    
-    //fileprivate var collapseDetailViewController = true
-    
+
     @IBOutlet weak var scrollWall: UIScrollView!
     @IBOutlet weak var tableView: UITableView!
     
-    var refreshControl: UIRefreshControl!
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
@@ -45,29 +42,30 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var _feedCustItems : NSMutableArray = NSMutableArray()
     var _feedLeadItems : NSMutableArray = NSMutableArray()
-    //var _statHeaderItems : NSMutableArray = NSMutableArray()
     
-    //var _feedItems : NSMutableArray = NSMutableArray()
-    //var _feedheadItems : NSMutableArray = NSMutableArray()
-    //var filteredString : NSMutableArray = NSMutableArray()
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight Software - Statistics", for: .normal)
+        } else {
+            button.setTitle("Statistics", for: .normal)
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
     
-    //var _feedLeadsToday : NSMutableArray = NSMutableArray()
-    //var _feedAppToday : NSMutableArray = NSMutableArray()
-    //var _feedAppTomorrow : NSMutableArray = NSMutableArray()
-    //var _feedLeadActive : NSMutableArray = NSMutableArray()
-    //var _feedLeadYear : NSMutableArray = NSMutableArray()
-    
-    //var _feedCustToday : NSMutableArray = NSMutableArray()
-    //var _feedCustYesterday : NSMutableArray = NSMutableArray()
-    //var _feedCustActive : NSMutableArray = NSMutableArray()
-    //var _feedWinSold : NSMutableArray = NSMutableArray()
-    //var _feedCustYear : NSMutableArray = NSMutableArray()
-    //var _feedTESTItems : NSMutableArray = NSMutableArray()
-    
-    //var dict = NSDictionary()
-    //var w1results = NSDictionary()
-    //var resultsYQL = NSDictionary()
-    //var amount = String()
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = Color.Stat.navColor
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(StatisticController.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,29 +73,11 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight Software - Statistics", for: .normal)
-        } else {
-            titleButton.setTitle("Statistics", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel //UIFont(name: "HelveticaNeue-Thin", size: 25.0)
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(StatisticController.searchButton))
         navigationItem.rightBarButtonItems = [searchButton]
         
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl.backgroundColor = Color.Stat.navColor
-        self.refreshControl.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(StatisticController.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
     }
  
     
@@ -141,7 +121,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     func refreshData() {
         self.YahooFinanceLoad()
         self.tableView!.reloadData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Button

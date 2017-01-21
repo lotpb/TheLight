@@ -27,13 +27,6 @@ class GetAddress: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    /*
-    let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-    titleButton.setTitle("myLeads", for: .normal)
-    //titleButton.titleLabel?.font = Font.navlabel
-    titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-    titleButton.setTitleColor(UIColor.white(), for: .normal)
-    self.navigationItem.titleView = titleButton */
     
     self.tableView!.delegate = self
     self.tableView!.dataSource = self

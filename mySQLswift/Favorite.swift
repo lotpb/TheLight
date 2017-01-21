@@ -19,16 +19,24 @@ class Favorite: UITableViewController {
     var detailViewController: Web? = nil
     var objects = [Any]()
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: self.view.frame.height)
+        button.setTitle("Favorites", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
-        titleLabel.text = "Favorites"
-        titleLabel.textColor = .white
-        //titleLabel.font = Font.navlabel
-        titleLabel.textAlignment = NSTextAlignment.center
-        navigationItem.titleView = titleLabel
+        if let split = self.splitViewController {
+            let controllers = split.viewControllers
+            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? Web
+        }
         
         siteNames = ["Ray Wenderlich", "Vea Software", "IOS Dev Feed", "Stackflow", "Letsbuildthatapp", "Cocoacasts"]
         siteAddresses = ["https://www.raywenderlich.com/written",
@@ -38,12 +46,8 @@ class Favorite: UITableViewController {
                              "https://videos.letsbuildthatapp.com",
                              "https://cocoacasts.com/blog/"]
 
-
-        if let split = self.splitViewController {
-            let controllers = split.viewControllers
-            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? Web
-        }
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
     }
 
     override func didReceiveMemoryWarning() {

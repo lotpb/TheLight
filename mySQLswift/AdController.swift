@@ -21,25 +21,36 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
 
     var isFormStat = false
     var pasteBoard = UIPasteboard.general
-    var refreshControl: UIRefreshControl!
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle("Advertisers", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = Color.Table.navColor
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(AdController.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Advertisers", for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         //self.navigationItem.leftBarButtonItem = self.editButtonItem()
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(AdController.newData))
@@ -49,17 +60,11 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
         } */
-        
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = Color.Table.navColor
-        refreshControl.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(AdController.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
+
         parseData()
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,7 +102,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     func refreshData(_ sender:AnyObject) {
         
         parseData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Button

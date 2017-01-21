@@ -19,7 +19,6 @@ import Parse
 
 class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
 
-    
     //MARK: Properties
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -154,12 +153,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         playerVideo.rate = playerVideo.rate + 0.5
     } */
     
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        
-        
-    }
 
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -518,7 +512,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         if let count = _feedItems.count {
             return count + 1
         } else {
-            return 0
+            return _feedItems.count
         } */
         
         return _feedItems.count - 1

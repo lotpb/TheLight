@@ -65,17 +65,33 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var _feedItems4 : NSMutableArray = NSMutableArray() //salesman
     var _feedItems5 : NSMutableArray = NSMutableArray() //employee
     var _feedItems6 : NSMutableArray = NSMutableArray() //blog
-    var refreshControl: UIRefreshControl!
     
     var imageObject :PFObject!
     var imageFile :PFFile!
     
-    //below has nothing
-    var detailItem: AnyObject? { //dont delete for splitview
-        didSet {
- 
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight Software - Snapshot", for: .normal)
+        } else {
+            button.setTitle("Snapshot", for: .normal)
         }
-    }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .clear
+        refreshControl.tintColor = .black
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,28 +100,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar'
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
-        
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight Software - Snapshot", for: .normal)
-        } else {
-            titleButton.setTitle("Snapshot", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .clear
-        refreshControl.tintColor = .black
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
+
         parseData()
         setupTableView()
         setupNavBarButtons()
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -155,7 +155,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     func refreshData(_ sender:AnyObject) {
         parseData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
 
@@ -538,9 +538,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         return cell
     }
     
-    
     // MARK: UICollectionView
-    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1

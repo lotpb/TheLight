@@ -33,11 +33,33 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     var objects = [AnyObject]()
     var pasteBoard = UIPasteboard.general
-    var refreshControl: UIRefreshControl!
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle(String(format: "%@", "TheLight Software - \(self.formStatus!) \(self.formController!)"), for: .normal)
+        } else {
+            button.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: .normal)
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .clear
+        refreshControl.tintColor = .black
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(NewEditData.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,32 +67,16 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle(String(format: "%@", "TheLight Software - \(self.formStatus!) \(self.formController!)"), for: .normal)
-        } else {
-            titleButton.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
         navigationItem.rightBarButtonItems = [saveButton]
 
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .clear
-        refreshControl.tintColor = .black
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(NewEditData.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
         if formStatus == "New" {
             self.frm11 = "Active"
         }
         
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,7 +118,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     func refreshData(_ sender:AnyObject) {
         self.tableView!.reloadData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     

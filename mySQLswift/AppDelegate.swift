@@ -150,7 +150,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             //rootNavigationViewController?.popToRootViewController(animated: false)
             rootViewController?.performSegue(withIdentifier: "showleadSegue", sender: nil)
             handled = true
-            
         }
         
         if shortcutItem.type == "2" {
@@ -161,7 +160,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             //rootNavigationViewController?.popToRootViewController(animated: false)
             rootViewController?.performSegue(withIdentifier: "showcustSegue", sender: nil)
             handled = true
-            
         }
         return handled
     }

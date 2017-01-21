@@ -58,6 +58,20 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
  
     var emailTitle :NSString?
     var messageBody:NSString?
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight - User Profile", for: .normal)
+        } else {
+            button.setTitle("Profile", for: .normal)
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
 
 
     override func viewDidLoad() {
@@ -65,17 +79,6 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - User Profile", for: .normal)
-        } else {
-            titleButton.setTitle("Profile", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
         
         let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(getter: selectCamera))
         let videoButton = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(selectVideo))
@@ -170,6 +173,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         self.phoneField!.keyboardType = .numbersAndPunctuation
         
         setupConstraints()
+        self.navigationItem.titleView = self.titleButton
     }
 
     override func didReceiveMemoryWarning() {

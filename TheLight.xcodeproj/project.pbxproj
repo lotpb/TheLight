@@ -32,8 +32,6 @@
 		AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */; };
 		AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF46FA831C2313EE00C27445 /* UserViewController.swift */; };
 		AF4A56721E1F098A00AF6B9E /* Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A56711E1F098A00AF6B9E /* Cells.swift */; };
-		AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */; };
-		AF4C1A281CEFF85300F8B038 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C1A271CEFF85300F8B038 /* Weather.swift */; };
 		AF56DFC31C28947400CD7EB9 /* SnapshotController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */; };
 		AF58C8831E1E8E9000F50CA6 /* RegionsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58C8821E1E8E9000F50CA6 /* RegionsListController.swift */; };
 		AF5BCEF11E0A2830007A9093 /* CreateContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5BCEF01E0A2830007A9093 /* CreateContactViewController.swift */; };
@@ -159,8 +157,6 @@
 		AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
 		AF46FA831C2313EE00C27445 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		AF4A56711E1F098A00AF6B9E /* Cells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
-		AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherGetter.swift; sourceTree = "<group>"; };
-		AF4C1A271CEFF85300F8B038 /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotController.swift; sourceTree = "<group>"; };
 		AF58C8821E1E8E9000F50CA6 /* RegionsListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionsListController.swift; sourceTree = "<group>"; };
 		AF5BCEF01E0A2830007A9093 /* CreateContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateContactViewController.swift; sourceTree = "<group>"; };
@@ -350,15 +346,6 @@
 				AF206E041C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 */,
 			);
 			name = Sounds;
-			sourceTree = "<group>";
-		};
-		AF4C1A291CEFF85D00F8B038 /* Weather */ = {
-			isa = PBXGroup;
-			children = (
-				AF4C1A271CEFF85300F8B038 /* Weather.swift */,
-				AF4C1A251CEFF84600F8B038 /* WeatherGetter.swift */,
-			);
-			name = Weather;
 			sourceTree = "<group>";
 		};
 		AF5BCEF21E0A2AB6007A9093 /* Contacts */ = {
@@ -552,7 +539,6 @@
 			children = (
 				AF5BCEF21E0A2AB6007A9093 /* Contacts */,
 				AFA0396D1E08322300E140E4 /* Geotify */,
-				AF4C1A291CEFF85D00F8B038 /* Weather */,
 				AFF3C8F01C4EC45100D9B7BD /* Beacons */,
 				AF5C01E51C493245009BB817 /* Music */,
 				AF0754871C4344F400B03D38 /* Lookup */,
@@ -834,7 +820,6 @@
 				AF8CC3AB1C42B9FB004147F3 /* StatisticController.swift in Sources */,
 				AF0369A91C173DDC00137D7E /* DetailViewController.swift in Sources */,
 				AFA039751E08329800E140E4 /* GetAddress.swift in Sources */,
-				AF4C1A281CEFF85300F8B038 /* Weather.swift in Sources */,
 				AF011A741C40AAE2000EAF5D /* JobController.swift in Sources */,
 				AF2D051B1D359A4200AC2A43 /* News.swift in Sources */,
 				AF0369A71C173DDC00137D7E /* MasterViewController.swift in Sources */,
@@ -861,7 +846,6 @@
 				AF5DBA7E1E25310E0014D704 /* PlayVC.swift in Sources */,
 				AFBB9B7D1D2D760300618586 /* FeedCell.swift in Sources */,
 				AF647ED21E100D4B004DDEA3 /* ContactEntry.swift in Sources */,
-				AF4C1A261CEFF84600F8B038 /* WeatherGetter.swift in Sources */,
 				AF4A56721E1F098A00AF6B9E /* Cells.swift in Sources */,
 				AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */,
 				AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */,

@@ -34,23 +34,32 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var filteredString : NSMutableArray = NSMutableArray()
     
     var lookupItem : String?
-    
-    var refreshControl: UIRefreshControl!
-    
     var isFilltered = false
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle(String(format: "%@ %@", "Lookup", (self.lookupItem)!), for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .clear
+        refreshControl.tintColor = .black
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.addTarget(self, action: #selector(LookupData.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", "Lookup", (self.lookupItem)!), for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
         
         searchController = UISearchController(searchResultsController: resultsController)
         searchController.searchResultsUpdater = self
@@ -59,27 +68,10 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView!.tableFooterView = UIView(frame: .zero)
         self.present(searchController, animated: true, completion: nil)
         
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.estimatedRowHeight = 44
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.LGrayColor
-        self.automaticallyAdjustsScrollViewInsets = false
-       
-        resultsController = UITableViewController(style: .plain)
-        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
-        resultsController.tableView.dataSource = self
-        resultsController.tableView.delegate = self 
-        
         parseData()
-        
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .clear
-        refreshControl.tintColor = .black
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(LookupData.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
+        setupTableView()
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,11 +89,25 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // Dispose of any resources that can be recreated.
     }
     
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.estimatedRowHeight = 44
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor = Color.LGrayColor
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        resultsController = UITableViewController(style: .plain)
+        resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
+        resultsController.tableView.dataSource = self
+        resultsController.tableView.delegate = self
+    }
+    
     // MARK: - Refresh
     
     func refreshData(sender:AnyObject) {
         parseData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Table View

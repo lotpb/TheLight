@@ -88,6 +88,16 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     var lookupItem : String?
     var pasteBoard = UIPasteboard.general
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle(String(format: "%@ %@", self.status!, self.formController!), for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,16 +105,8 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(String(format: "%@ %@", self.status!, self.formController!), for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         self.pickerView.delegate = self
         self.pickerView.dataSource = self
-      //self.pickerView.backgroundColor = .whiteColor()
         NotificationCenter.default.addObserver(self, selector: (#selector(EditData.updatePicker)), name: NSNotification.Name.UITextFieldTextDidBeginEditing, object: nil)
         
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
@@ -126,6 +128,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         clearFormData()
         observeKeyboardNotifications() //Move Keyboard
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
     }
     
     override func viewDidAppear(_ animated: Bool) {

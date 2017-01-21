@@ -7,8 +7,6 @@
 //
 
 // MARK:, // TODO: and // FIXME:
-
-//import Foundation
 import UIKit
 
 var searchController: UISearchController!
@@ -195,6 +193,8 @@ var searchController: UISearchController!
         }
     }
 
+// MARK: - PlayVC, NavVC
+
 enum stateOfVC {
     case minimized
     case fullScreen
@@ -231,7 +231,7 @@ public extension UIViewController {
     
 }
 
-//--------------youtube------------
+//--------------News youtube------------
 
 extension UIColor { //youtube red
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
@@ -331,18 +331,5 @@ public extension String {
         return scheme == "mailto" && result?.range.length == self.characters.count
     }
 }
-/*
 
-// MARK: Helper Extensions
-extension UIViewController {
-    
-    func showAlert(withTitle title: String?, message: String?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
-} */
-
-//----------------------------
 

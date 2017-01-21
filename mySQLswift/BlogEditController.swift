@@ -21,7 +21,6 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     
     var _feedItems : NSMutableArray = NSMutableArray()
     var _feedItems1 : NSMutableArray = NSMutableArray()
-    var refreshControl: UIRefreshControl!
     var filteredString : NSMutableArray = NSMutableArray()
     var objects = [AnyObject]()
  
@@ -33,30 +32,53 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     var rating : String?
     var replyId : String?
     var liked : Int?
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = Color.twitterText
+        refreshControl.tintColor = .black
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(BlogEditController.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        /*
-         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
-         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-         titleLabel.text = "TheLight Software - Edit Message"
-         } else {
-         titleLabel.text = "Edit Message"
-         }
-         titleLabel.textColor = .white
-         titleLabel.font = Font.navlabel
-         titleLabel.textAlignment = NSTextAlignment.center
-         navigationItem.titleView = titleLabel */
-        
-        self.view.backgroundColor = .lightGray
-        self.update!.setTitleColor(.gray, for: .normal)
+
+        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(BlogEditController.shareButton))
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(BlogEditController.deleteButton))
+        navigationItem.rightBarButtonItems = [actionButton,trashButton]
         
         self.toolBar!.barTintColor = .white
         self.toolBar!.isTranslucent = false
         self.toolBar!.layer.masksToBounds = true
-        let width = CGFloat(2.0)
         
+        let likeImage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
+        self.Like!.setImage(likeImage, for: .normal)
+        self.Like!.setTitleColor(.gray, for: .normal)
+        
+        parseData()
+        setupTableView()
+        setupForm()
+        self.tableView!.addSubview(self.refreshControl)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupTwitterNavigationBarItems()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setupForm() {
+        self.view.backgroundColor = .lightGray
+        self.update!.setTitleColor(.gray, for: .normal)
+        
+        let width = CGFloat(2.0)
         let topBorder = CALayer()
         topBorder.borderColor = UIColor.lightGray.cgColor
         topBorder.frame = CGRect(x: 0, y: 0, width:  self.view.frame.width, height: 0.5)
@@ -76,36 +98,6 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             self.Like!.tintColor = Color.Blog.buttonColor
             self.Like!.setTitle(" Likes \(liked!)", for: .normal)
         }
-        let likeImage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        self.Like!.setImage(likeImage, for: .normal)
-        self.Like!.setTitleColor(.gray, for: .normal)
-        
-        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(BlogEditController.shareButton))
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(BlogEditController.deleteButton))
-        navigationItem.rightBarButtonItems = [actionButton,trashButton]
-        
-        parseData()
-        setupTableView()
-        
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = Color.twitterText
-        refreshControl.tintColor = .black
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(BlogEditController.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-    
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        setupTwitterNavigationBarItems()
-
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func setupTableView() {
@@ -125,10 +117,9 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     func refreshData(sender:AnyObject) {
         
         parseData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
 
-    
     // MARK: - Table View
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -167,7 +158,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             } else {
                 
                 cell?.titleLabel!.font = Font.Blog.celltitle
-                cell?.subtitleLabel!.font = Font.celltitle
+                cell?.subtitleLabel!.font = Font.celltitle2 
                 cell?.msgDateLabel.font = Font.Blog.celldate
             }
             

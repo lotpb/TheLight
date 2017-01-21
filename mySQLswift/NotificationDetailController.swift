@@ -20,10 +20,30 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
     @IBOutlet weak var tableView: UITableView?
     var filteredString : NSMutableArray = NSMutableArray()
     var objects = [AnyObject]()
-    var refreshControl: UIRefreshControl!
-    //let searchController = UISearchController(searchResultsController: nil)
-    //var localNotifications = NSArray()
-    //var localNotification = UILocalNotification()
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight - Notifications", for: .normal)
+        } else {
+            button.setTitle("Notifications", for: .normal)
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .orange
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        self.refreshControl.addTarget(self, action: #selector(NotificationDetailController.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
     
     
     override func viewDidLoad() {
@@ -32,36 +52,12 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Notifications", for: .normal)
-        } else {
-            titleButton.setTitle("Notifications", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
-        self.tableView!.delegate = self
-        self.tableView!.dataSource = self
-        self.tableView!.rowHeight = 85
-        //self.tableView!.estimatedRowHeight = 110
-        //self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.LGrayColor
-        //self.tableView!.tableFooterView = UIView(frame: .zero)
-        
         let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))
         navigationItem.rightBarButtonItems = [trashButton]
         
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .orange
-        refreshControl.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(NotificationDetailController.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
+        setupTableView()
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,12 +77,18 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         // Dispose of any resources that can be recreated.
     }
     
+    func setupTableView() {
+        self.tableView!.delegate = self
+        self.tableView!.dataSource = self
+        self.tableView!.rowHeight = 85
+        self.tableView!.backgroundColor = Color.LGrayColor
+    }
+    
     // MARK: - refresh
     
-    func refreshData(_ sender:AnyObject)
-    {
+    func refreshData(_ sender:AnyObject) {
         self.tableView!.reloadData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Buttons
@@ -226,7 +228,5 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
-    
-
     
 }

@@ -21,6 +21,20 @@ class CodeGenController: UIViewController {
     
     var qrcodeImage: CIImage!
     var defaults = UserDefaults.standard
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight - Membership", for: .normal)
+        } else {
+            button.setTitle("Membership", for: .normal)
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
 
 
     override func viewDidLoad() {
@@ -28,17 +42,6 @@ class CodeGenController: UIViewController {
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Membership", for: .normal)
-        } else {
-            titleButton.setTitle("Membership", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
@@ -60,6 +63,7 @@ class CodeGenController: UIViewController {
         
         self.textField!.font = fonttitle
         self.textField!.text = defaults.string(forKey: "usernameKey")
+        self.navigationItem.titleView = self.titleButton
     }
 
     override func didReceiveMemoryWarning() {

@@ -24,6 +24,21 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
     var videosArray: Array<Dictionary<String, AnyObject>> = []
     var selectedVideoIndex: Int!
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight - YouTube", for: .normal)
+        } else {
+            button.setTitle("YouTube", for: .normal)
+        }
+        button.setTitle("Leads", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,23 +46,13 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - YouTube", for: .normal)
-        } else {
-            titleButton.setTitle("YouTube", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         tblVideos.delegate = self
         tblVideos.dataSource = self
         txtSearch.delegate = self
         
         getChannelDetails(false)
         self.segDisplayedContent.apportionsSegmentWidthsByContent = true
+        self.navigationItem.titleView = self.titleButton
     }
     
     override func didReceiveMemoryWarning() {

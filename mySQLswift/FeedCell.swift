@@ -25,11 +25,12 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     var imageObject :PFObject!
     var imageFile :PFFile!
     var selectedImage : UIImage?
-    var refreshControl: UIRefreshControl!
+    
+    let cellId = "cellId"
     
     // MARK: NavigationController Hidden
     var lastContentOffset: CGFloat = 0.0
-
+    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -39,7 +40,15 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         return cv
     }()
     
-    let cellId = "cellId"
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .white//Color.News.navColor
+        refreshControl.tintColor = .lightGray
+        let attributes = [NSForegroundColorAttributeName: UIColor.lightGray]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
     
     func fetchVideos() {
         
@@ -61,22 +70,14 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         super.setupViews()
         
         fetchVideos()
-        
         backgroundColor = .brown
-        
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .white//Color.News.navColor
-        refreshControl.tintColor = .lightGray
-        let attributes = [NSForegroundColorAttributeName: UIColor.lightGray]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
-        self.collectionView.addSubview(refreshControl)
         
         addSubview(collectionView)
         addConstraintsWithFormat(format: "H:|[v0]|", views: collectionView)
         addConstraintsWithFormat(format: "V:|[v0]|", views: collectionView)
         
-        collectionView.register(VideoCell.self, forCellWithReuseIdentifier: cellId)
+        self.collectionView.register(VideoCell.self, forCellWithReuseIdentifier: cellId)
+        self.collectionView.addSubview(self.refreshControl)
     }
     
     // MARK: - refresh
@@ -84,7 +85,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     func refreshData() {
         fetchVideos()
         self.collectionView.reloadData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - NavigationController Hidden
@@ -109,7 +110,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         sender.tintColor = Color.BlueColor
         let hitPoint = sender.convert(CGPoint.zero, to: self.collectionView)
         let indexPath = self.collectionView.indexPathForItem(at: hitPoint)
- 
+        
         let query = PFQuery(className:"Newsios")
         query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
@@ -118,7 +119,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 object!.saveInBackground()
             }
         }
-    } 
+    }
     
     func shareButton(sender: UIButton) {
         
@@ -133,7 +134,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         }
         let image: UIImage = self.selectedImage!
         let activityViewController = UIActivityViewController (activityItems: [(image), socialText!], applicationActivities: nil)
-
+        
         activityViewController.popoverPresentationController?.sourceView = (sender)
         activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
         activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
@@ -145,7 +146,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return self._feedItems.count 
+        return self._feedItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -177,7 +178,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             UIView.transition(with: cell.thumbnailImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
                 self.selectedImage = UIImage(data: imageData!)
                 cell.thumbnailImageView.image = self.selectedImage
-                }, completion: nil)
+            }, completion: nil)
         }
         
         //profile Image
@@ -191,7 +192,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                         
                         UIView.transition(with: cell.userProfileImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
                             cell.userProfileImageView.image = UIImage(data: imageData!)
-                            }, completion: nil)
+                        }, completion: nil)
                     }
                 }
             }
@@ -218,7 +219,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         } else if elapsedTimeInSeconds > secondInDays {
             dateFormatter.dateFormat = "EEEE"
         }
-
+        
         let createString = dateFormatter.string(from: updated)
         cell.uploadbylabel.text = String(format: "%@ %@", "Uploaded", createString)
         
@@ -263,26 +264,8 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         return 0
     }
     
-    /*
-    private func thumbnailImageForFileUrl(fileUrl: NSURL) -> UIImage? {
-        let asset = AVAsset(url: fileUrl as URL)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-        
-        do {
-            
-            let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(1, 60), actualTime: nil)
-            return UIImage(cgImage: thumbnailCGImage)
-            
-        } catch let err {
-            print(err)
-        }
-        
-        return nil
-    } */
-    
-    
     // MARK: - Segues
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         imageObject = _feedItems.object(at: indexPath.row) as! PFObject
@@ -293,35 +276,28 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             let result1 = imageDetailurl!.contains("movie.mp4")
             if (result1 == true) {
                 /*
-                let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(withIdentifier: "PlayVC") as! PlayVC
-                vc.videoURL = self.imageFile.url!
-                */
-    
-                self.delegate? .urlController(passedData: self.imageFile.url!)
-    
-                self.delegate? .titleController(passedData: ((self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String)!)
-    
+                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+                 let vc = storyboard.instantiateViewController(withIdentifier: "PlayVC") as! PlayVC
+                 vc.videoURL = self.imageFile.url!
+                 */
+                
+                //self.delegate? .urlController(passedData: self.imageFile.url!)
+                
+                //self.delegate? .titleController(passedData: ((self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String)!)
+                
                 /*
-                likesLookup = self.imageFile.url
-                self.delegate? .likesController(likesLookup!) */
+                 likesLookup = self.imageFile.url
+                 self.delegate? .likesController(likesLookup!) */
                 
                 NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
-                
-                /*
-                let videoLauncher = VideoLauncher()
-                videoLauncher.videoURL = self.imageFile.url
-                //videoLauncher.detailItem = self.imageFile.url as AnyObject?
-                videoLauncher.showVideoPlayer() */
                 
             } else {
                 
                 self.selectedImage = UIImage(data: imageData! as Data)
-
+                
                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
                 
-
                 vc.objectId = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
                 vc.newsTitle = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
                 vc.newsDetail = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsDetail") as? String
@@ -332,16 +308,17 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 
                 let navigationController = UINavigationController(rootViewController: vc)
                 UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
-
+                
             }
         }
     }
     
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
- 
+        
     }
-
+    
 }
+
 
 
 

@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 
 
-class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SearchDelegate {
+class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, SearchDelegate {
     
     let cellId = "cellId"
     let trendingCellId = "trendingCellId"
@@ -19,28 +19,32 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     
     let titles = ["Home", "Trending", "Subscriptions", "Account"]
     
-    @IBOutlet weak var collectionView: UICollectionView!
-    
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     
-
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "  Home"
+        label.textColor = UIColor.white
+        label.font = UIFont.systemFont(ofSize: 20)
+        return label
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
-        titleLabel.text = "  Home"
-        titleLabel.textColor = .white
-        titleLabel.font = UIFont.systemFont(ofSize: 20)
-        navigationItem.titleView = titleLabel
+        navigationController?.navigationBar.isTranslucent = false
 
-        setupCollectionView()
-        setupNavBarButtons()
-        setupMenuBar()
-        
+        self.titleLabel.frame = CGRect(x: 0, y: 0, width: self.view.frame.width - 32, height: self.view.frame.height)
+        navigationItem.titleView = self.titleLabel
+
         // MARK: NavigationController Hidden
         NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         
+        setupCollectionView()
+        setupMenuBar()
+        setupNavBarButtons()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -51,7 +55,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         super.viewWillAppear(animated)
         
         setupNewsNavigationItems()
-
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         }
@@ -64,38 +68,33 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     
     func setupCollectionView() {
         
-        if let flowLayout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+        if let flowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
             flowLayout.scrollDirection = .horizontal
             flowLayout.minimumLineSpacing = 0
         }
+        collectionView?.backgroundColor = .white
+        collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(TrendingCell.self, forCellWithReuseIdentifier: trendingCellId)
+        collectionView?.register(SubscriptionCell.self, forCellWithReuseIdentifier: subscriptionCellId)
+        collectionView?.register(AccountCell.self, forCellWithReuseIdentifier: accountCellId)
         
-        self.collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: cellId)
-        self.collectionView?.register(TrendingCell.self, forCellWithReuseIdentifier: trendingCellId)
-        self.collectionView?.register(SubscriptionCell.self, forCellWithReuseIdentifier: subscriptionCellId)
-        self.collectionView?.register(AccountCell.self, forCellWithReuseIdentifier: accountCellId)
+        collectionView?.contentInset = UIEdgeInsetsMake(50,0,0,0)
+        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(50,0,0,0)
         
-      //self.collectionView?.register(AccountCollectionViewController.self, forCellWithReuseIdentifier: accountCellId)
-        
-        self.collectionView?.contentInset = UIEdgeInsetsMake(50,0,0,0)
-        self.collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(50,0,0,0)
-        self.collectionView?.backgroundColor = .clear
         //added below
-        self.view.addSubview(self.collectionView)
-        self.collectionView?.isPagingEnabled = true
-        self.collectionView?.isDirectionalLockEnabled = true
-        self.collectionView?.bounces = false
-        self.collectionView?.showsHorizontalScrollIndicator = false
+        self.view.addSubview(collectionView!)
+        collectionView?.isPagingEnabled = true
+        collectionView?.isDirectionalLockEnabled = true
+        collectionView?.bounces = false
+        collectionView?.showsHorizontalScrollIndicator = false
         
     }
     
     func setupNavBarButtons() {
         
         let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
-        
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(newButton))
-        
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(handleSearch))
-        
         navigationItem.rightBarButtonItems = [moreButton,addButton,searchButton]
     }
     
@@ -105,16 +104,16 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         let state = notification.object as! Bool
         self.navigationController?.setNavigationBarHidden(state, animated: true)
     }
-
+    
     
     // MARK: - collectionView
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 4
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let identifier: String
         if indexPath.item == 1 {
@@ -128,7 +127,7 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) //as! CollectionViewCell
-
+        
         return cell
     }
     
@@ -139,10 +138,10 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         
         self.performSegue(withIdentifier: "uploadSegue", sender: self)
     }
-
+    
     
     // MARK: - youtube Action Menu
-//-------------------------------------------------
+    //-------------------------------------------------
     
     lazy var search: Search = {
         let se = Search.init(frame: UIScreen.main.bounds)
@@ -195,11 +194,11 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         menuBar.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         menuBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         
         let index = targetContentOffset.pointee.x / view.frame.width
         
@@ -221,7 +220,6 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         
         if let titleLabel = navigationItem.titleView as? UILabel {
             titleLabel.text = "\(titles[index])"
-          //titleLabel.textAlignment = NSTextAlignment.left //dont work
         }
     }
     
@@ -245,22 +243,22 @@ class News: UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         return CGSize(width: view.frame.width, height: view.frame.height - 50)
     }
     
-//--------------end youtube Menu-------------------
+    //--------------end youtube Menu-------------------
     
     //handle Landscape and Portrait Orientation
     /* //code crashes on startup
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-         //super.willTransition(to: newCollection, with: coordinator)
-        
-        collectionView.collectionViewLayout.invalidateLayout()
-        
-        let indexPath = IndexPath(item: 0, section: 0)
-        //scroll to indexPath after the rotation is going
-        DispatchQueue.main.async {
-            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            self.collectionView.reloadData()
-        }
-    } */
+     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+     //super.willTransition(to: newCollection, with: coordinator)
+     
+     collectionView.collectionViewLayout.invalidateLayout()
+     
+     let indexPath = IndexPath(item: 0, section: 0)
+     //scroll to indexPath after the rotation is going
+     DispatchQueue.main.async {
+     self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+     self.collectionView.reloadData()
+     }
+     } */
     
 }
 

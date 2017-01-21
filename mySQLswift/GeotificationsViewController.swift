@@ -62,7 +62,6 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         button.titleEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, 0)
         button.addTarget(self, action: #selector(maptype), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        //button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
         return button
     }()
     
@@ -253,7 +252,8 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         let region = CLCircularRegion(center: geotification.coordinate, radius: geotification.radius, identifier: geotification.identifier)
         region.notifyOnEntry = (geotification.eventType == .onEntry)
         region.notifyOnExit = !region.notifyOnEntry
-        return region    }
+        return region
+    }
     
     func startMonitoring(geotification: Geotification) {
         
@@ -305,9 +305,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         {
          
         case 0: break;
-            /*
-            self.performSegue(withIdentifier: "geotifySegue", sender: self)
-            */
+            
         case 1:
             self.performSegue(withIdentifier: "getregionSegue", sender: self)
             
@@ -474,10 +472,20 @@ extension GeotificationsViewController: CLLocationManagerDelegate {
             content.categoryIdentifier = "myCategory"
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+            
+            let request = UNNotificationRequest(identifier: "AddGeotification", content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request) { error in
+                //UNUserNotificationCenter.current().delegate = self
+                if (error != nil) {
+                    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                }
+            }
+            /*
             let request = UNNotificationRequest(identifier: "AddGeotification", content: content, trigger: trigger)
             //UNUserNotificationCenter.current().delegate = self
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil) */
         }
         else if state == .active {
             

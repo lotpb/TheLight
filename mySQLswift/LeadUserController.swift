@@ -18,7 +18,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     var filteredString : NSMutableArray = NSMutableArray()
     var objects = [AnyObject]()
     var pasteBoard = UIPasteboard.general
-    var refreshControl: UIRefreshControl!
     
     var emptyLabel : UILabel?
     var objectId : String?
@@ -28,6 +27,24 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     
     var formController : String?
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .clear
+        refreshControl.tintColor = .black
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.addTarget(self, action: #selector(LeadUserController.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,24 +52,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle(formController, for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         if (self.formController == "Blog") {
         self.comments = "90 percent of my picks made $$$. The stock whisper has traded over 1000 traders worldwide"
         }
-        
-        self.refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .clear
-        refreshControl.tintColor = .black
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(LeadUserController.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl)
-        
+
         emptyLabel = UILabel(frame: self.view.bounds)
         emptyLabel!.textAlignment = NSTextAlignment.center
         emptyLabel!.textColor = .lightGray
@@ -60,6 +63,9 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         
         parseData()
         setupTableView()
+        self.titleButton.setTitle(formController, for: .normal)
+        self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,7 +103,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     func refreshData(_ sender:AnyObject)
     {
         self.tableView!.reloadData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Table View

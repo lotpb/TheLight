@@ -46,16 +46,19 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     var pictureData : Data!
     var videoURL : URL?
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle("Upload", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Upload", for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
         
         self.mainView.backgroundColor = Color.LGrayColor
         self.progressView.isHidden = true
@@ -115,7 +118,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             setupConstraints()
         }
-        
+        self.navigationItem.titleView = self.titleButton
     }
     
     override func viewDidAppear(_ animated: Bool) {

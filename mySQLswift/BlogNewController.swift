@@ -26,8 +26,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     @IBOutlet weak var placeholderlabel: UILabel?
     @IBOutlet weak var characterCountLabel: UILabel?
     
-    //@IBOutlet weak var myDatePicker: UIDatePicker?
-    
     var objectId : String?
     var msgNo : String?
     var postby : String?
@@ -47,7 +45,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     var activeImage : UIImageView? //star
     
 //------inlineDatePicker---------
-    
     let kPickerAnimationDuration = 0.40 // duration for the animation to slide the date picker
     let kDatePickerTag           = 99   // view tag identifiying the date picker view
  
@@ -68,33 +65,57 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     // keep track which indexPath points to the cell with UIDatePicker
     var datePickerIndexPath: IndexPath?
     var pickerCellRowHeight: CGFloat = 216
-
-//-------------------------------------
+   //-------------------------------------
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight Software - New Message", for: .normal)
+        } else {
+            button.setTitle("New Message", for: .normal)
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: view.frame.height))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleLabel.text = "TheLight Software - New Message"
-        } else {
-            titleLabel.text = "New Message"
-        }
-        titleLabel.textColor = .white
-        titleLabel.font = Font.navlabel
-        titleLabel.textAlignment = NSTextAlignment.center
-        navigationItem.titleView = titleLabel
-        
-        parseData() //load image
-        configureTextView()
-        
+ 
         self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
         self.tableView!.tableFooterView = UIView(frame: .zero)
-        
+        self.toolBar!.barTintColor = Color.twitterBlue
+
         self.imageBlog!.layer.masksToBounds = true
         self.imageBlog!.layer.cornerRadius = 5
         self.imageBlog!.contentMode = .scaleAspectFill
+
+        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
+        self.Like!.setImage(likeimage, for: .normal)
+        self.Like!.setTitleColor(.white, for: .normal)
         
+        parseData() //load image
+        configureTextView()
+        setupForm()
+        setupDatePicker()
+        self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupTwitterNavigationBarItems()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+     func setupForm() {
         if ((self.formStatus == "New") || (self.formStatus == "Reply")) {
             
             self.placeholderlabel!.textColor = .lightGray
@@ -117,7 +138,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.postby = self.textcontentpostby
             self.rating = self.textcontentrating
             if (self.liked == nil || self.liked == 0) {
-                
                 self.Like!.tintColor = .white
             } else {
                 self.Like!.tintColor = Color.Blog.buttonColor
@@ -134,45 +154,20 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.subject!.becomeFirstResponder()
             self.subject!.isUserInteractionEnabled = true
         }
-        
-        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        self.Like!.setImage(likeimage, for: .normal)
-        self.Like!.setTitleColor(.white, for: .normal)
-        
-        //---------inline DatePicker---------------
-        
+    }
+    
+    func setupDatePicker() {
+
         let itemOne = [kTitleKey : "Tap a cell to change its date:", kDateKey : ""]
         let itemTwo = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         let itemThree = [kTitleKey : "Name", kDateKey : self.postby]
-      //let itemFour = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
+        //let itemFour = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         dataArray = [itemOne as Dictionary<String, AnyObject>, itemTwo as Dictionary<String, AnyObject>, itemThree as Dictionary<String, AnyObject>]
         
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
         
         NotificationCenter.default.addObserver(self, selector: #selector(localeChanged(_:)), name: NSLocale.currentLocaleDidChangeNotification, object: nil)
-        
-        self.toolBar!.barTintColor = Color.twitterBlue
-        /*
-         self.myDatePicker!.isHidden = false
-         self.myDatePicker!.datePickerMode = UIDatePickerMode.date
-         self.myDatePicker!.backgroundColor = UIColor(white:0.90, alpha:1.0)
-         //self.myDatePicker!.setValue(UIColor.white(), forKeyPath: "textColor")
-         self.myDatePicker!.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
-         */
-        //--------------------------------------
- 
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        setupTwitterNavigationBarItems()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     
@@ -482,19 +477,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.msgDate = strDate
         
     }
-//--------------------------------------------------------
-    // MARK: - DatePicker
-    /*
-     func datePickerValueChanged(sender: UIDatePicker) {
-     
-     let dateFormatter = DateFormatter()
-     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-     dateFormatter.timeZone = TimeZone.current
-     let strDate = dateFormatter.string(from: (myDatePicker?.date)!)
-     self.msgDate = strDate
-     self.tableView!.reloadData()
-     } */
-//---------------------------------------------------------
     
     // MARK: - Parse
     

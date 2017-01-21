@@ -38,6 +38,17 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     var tempYQL: String!
     var textYQL: String!
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle("Main Menu", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,13 +58,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.splitViewController!.delegate = self
         self.splitViewController!.preferredDisplayMode = .allVisible
         self.extendedLayoutIncludesOpaqueBars = true
-        
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        titleButton.setTitle("Main Menu", for: .normal)
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
         let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
@@ -66,14 +70,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             playSound()
         }
         
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl!.backgroundColor = Color.Lead.navColor
-        self.refreshControl!.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl!.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: UIControlEvents.valueChanged)
-        self.tableView!.addSubview(refreshControl!)
-        
         // yahoo bad weather warning
         if (defaults.bool(forKey: "weatherKey"))  {
             if (textYQL!.contains("Rain") ||
@@ -83,10 +79,17 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 self.simpleAlert(title: "Info", message: "Bad weather today!")
             }
         }
-
-        self.versionCheck()
-        self.refreshData()
+        
+        self.updateYahoo()
+        versionCheck()
         setupTableView()
+        self.navigationItem.titleView = self.titleButton
+ 
+        self.refreshControl?.backgroundColor = Color.Lead.navColor
+        self.refreshControl?.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: UIControlEvents.valueChanged)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,14 +104,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         setMainNavItems()
         //self.refreshData()
- 
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
     
     //added makes MainController opens on startup instead of DetailViewController
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
@@ -133,7 +134,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
         self.updateYahoo()
         }
-        self.tableView!.reloadData()
+        self.tableView.reloadData()
         self.refreshControl?.endRefreshing()
     }
 

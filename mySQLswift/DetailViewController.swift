@@ -56,6 +56,36 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     @IBOutlet weak var latitudeLabel: UILabel!
     @IBOutlet weak var longitudeLabel: UILabel!
     @IBOutlet weak var altitudeLabel: UILabel!
+    
+    let speakLabel: UILabel = {
+        let label = UILabel()
+        label.frame = CGRect(x: 20, y: 88, width: 60, height: 60)
+        label.backgroundColor = .orange
+        label.textColor = .white
+        label.textAlignment = NSTextAlignment.center
+        label.layer.masksToBounds = true
+        label.text = "Speak"
+        label.font = Font.Detail.textaddress
+        label.layer.cornerRadius = 30.0
+        label.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(speak))
+        label.addGestureRecognizer(tap)
+        return label
+    }()
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight Software - Detail", for: .normal)
+        } else {
+            button.setTitle("Detail", for: .normal)
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
 
 
     override func viewDidLoad() {
@@ -64,22 +94,10 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight Software - Detail", for: .normal)
-        } else {
-            titleButton.setTitle("Detail", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         let searchButton = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(lightcamera))
         navigationItem.rightBarButtonItems = [searchButton]
         
         // MARK: - locationManager
-
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
@@ -88,27 +106,33 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         processingView.isHidden = true
         buttonEnabledControl(recorder.isRecording)
 
-        
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 20, y: 88, width: 60, height: 60))
-        myLabel.backgroundColor = .orange
-        myLabel.textColor = .white
-        myLabel.textAlignment = NSTextAlignment.center
-        myLabel.layer.masksToBounds = true
-        myLabel.text = "Speak"
-        myLabel.font = Font.Detail.textaddress
-        myLabel.layer.cornerRadius = 30.0
-        myLabel.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(speak))
-        myLabel.addGestureRecognizer(tap)
-        self.mainView.addSubview(myLabel)
-        
-        self.subject!.text = textviewText
-        
         langNum = 4
         languagePick!.selectRow(langNum, inComponent: 0, animated: true)
         //langRate = 0.4
         //ratetext!.text = langRate as String
         
+        setupFonts()
+        self.subject!.text = textviewText
+        self.mainView.addSubview(speakLabel)
+        self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.hidesBarsOnSwipe = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.hidesBarsOnSwipe = false
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setupFonts() {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.subject?.font = Font.Detail.VtextAmount
             self.volume?.font = Font.Detail.VtextAmount
@@ -140,21 +164,6 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
             self.nospotButton?.titleLabel?.font = Font.Detail.textdate
             self.altitudeLabel?.font = Font.Detail.textdate
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.hidesBarsOnSwipe = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.hidesBarsOnSwipe = false
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     

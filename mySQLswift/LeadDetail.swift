@@ -109,7 +109,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     var advertiser : String?
     
     var savedEventId : String?
-    
     var getEmail : String?
     var emailTitle :String?
     var messageBody:String?
@@ -124,75 +123,44 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         return imageView
     }()
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle(String(format: "%@ %@", "TheLight Software - \(self.formController!)", "Profile"), for: .normal)
+        } else {
+            button.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: .normal)
+        }
+        button.setTitle("Leads", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = Color.Lead.navColor
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(LeadDetail.refreshData), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle(String(format: "%@ %@", "TheLight Software - \(self.formController!)", "Profile"), for: .normal)
-        } else {
-            titleButton.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
-        self.listTableView!.rowHeight = 30
-        self.listTableView2!.rowHeight = 30
-        self.newsTableView!.estimatedRowHeight = 100
-        self.newsTableView!.rowHeight = UITableViewAutomaticDimension
-        self.newsTableView!.tableFooterView = UIView(frame: .zero)
-        
-        emailTitle = defaults.string(forKey: "emailtitleKey")
-        messageBody = defaults.string(forKey: "emailmessageKey")
-        
-        self.mainView!.addSubview(photoImage)
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            
-            setupConstraints()
-            labelamount!.font = Font.Detail.ipadAmount
-            labelname!.font = Font.Detail.ipadname
-            labeldate!.font = Font.Detail.ipaddate
-            labeladdress!.font = Font.Detail.ipadaddress
-            labelcity!.font = Font.Detail.ipadaddress
-            mapbutton!.titleLabel?.font = Font.Detail.textbutton
-            
-        } else {
-            
-            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
-            
-            labeladdress!.font = Font.Detail.textaddress
-            labelcity!.font = Font.Detail.textaddress
-            mapbutton!.titleLabel?.font = Font.Detail.textbutton
-            
-            if (self.formController == "Vendor" || self.formController == "Employee") {
-                labelamount!.font = Font.Detail.VtextAmount
-                labeldate!.font = Font.Detail.Vtextdate
-            } else {
-                labelamount!.font = Font.Detail.textAmount
-                labeldate!.font = Font.Detail.textdate
-            }
-            
-            if self.formController == "Vendor" {
-                labelname!.font = Font.Detail.Vtextname
-            } else {
-                labelname!.font = Font.Detail.textname
-            }
-            
-        }
-        
-        self.mapbutton!.backgroundColor = Color.BlueColor
-        self.mapbutton!.setTitleColor(.white, for: .normal)
-        self.mapbutton!.addTarget(self, action: #selector(LeadDetail.mapButton), for: UIControlEvents.touchUpInside)
+  
         let btnLayer3: CALayer = self.mapbutton!.layer
         btnLayer3.masksToBounds = true
         btnLayer3.cornerRadius = 9.0
+        self.mapbutton!.backgroundColor = Color.BlueColor
+        self.mapbutton!.setTitleColor(.white, for: .normal)
+        self.mapbutton!.addTarget(self, action: #selector(LeadDetail.mapButton), for: UIControlEvents.touchUpInside)
         
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(LeadDetail.editButton))
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(LeadDetail.actionButton))
@@ -203,24 +171,20 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         topBorder.borderColor = UIColor.lightGray.cgColor
         topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
         topBorder.borderWidth = width
-        tableView!.layer.addSublayer(topBorder)
         tableView!.layer.masksToBounds = true
-        
-        if (self.formController == "Leads") {
-            if (self.tbl11 == "Sold") {
-                self.mySwitch!.setOn(true, animated:true)
-            } else {
-                self.mySwitch!.setOn(false, animated:true)
-            }
-        }
-        
-        self.mySwitch!.onTintColor = Color.BlueColor
-        self.mySwitch!.tintColor = .lightGray
+        tableView!.layer.addSublayer(topBorder)
         
         parseData()
+        setupTableView()
+        setupFonts()
+        setupSwitch()
         followButton()
         refreshData()
-   
+        emailTitle = defaults.string(forKey: "emailtitleKey")
+        messageBody = defaults.string(forKey: "emailmessageKey")
+        self.navigationItem.titleView = self.titleButton
+        self.mainView!.addSubview(photoImage)
+        self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -256,6 +220,61 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        self.listTableView!.rowHeight = 30
+        self.listTableView2!.rowHeight = 30
+        self.newsTableView!.estimatedRowHeight = 100
+        self.newsTableView!.rowHeight = UITableViewAutomaticDimension
+        self.newsTableView!.tableFooterView = UIView(frame: .zero)
+    }
+    
+    func setupSwitch() {
+        if (self.formController == "Leads") {
+            if (self.tbl11 == "Sold") {
+                self.mySwitch!.setOn(true, animated:true)
+            } else {
+                self.mySwitch!.setOn(false, animated:true)
+            }
+        }
+        self.mySwitch!.onTintColor = Color.BlueColor
+        self.mySwitch!.tintColor = .lightGray
+    }
+    
+    func setupFonts() {
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            
+            setupConstraints()
+            labelamount!.font = Font.Detail.ipadAmount
+            labelname!.font = Font.Detail.ipadname
+            labeldate!.font = Font.Detail.ipaddate
+            labeladdress!.font = Font.Detail.ipadaddress
+            labelcity!.font = Font.Detail.ipadaddress
+            mapbutton!.titleLabel?.font = Font.Detail.textbutton
+            
+        } else {
+            
+            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
+            
+            labeladdress!.font = Font.Detail.textaddress
+            labelcity!.font = Font.Detail.textaddress
+            mapbutton!.titleLabel?.font = Font.Detail.textbutton
+            
+            if (self.formController == "Vendor" || self.formController == "Employee") {
+                labelamount!.font = Font.Detail.VtextAmount
+                labeldate!.font = Font.Detail.Vtextdate
+            } else {
+                labelamount!.font = Font.Detail.textAmount
+                labeldate!.font = Font.Detail.textdate
+            }
+            
+            if self.formController == "Vendor" {
+                labelname!.font = Font.Detail.Vtextname
+            } else {
+                labelname!.font = Font.Detail.textname
+            }
+        }
     }
     
     func setupConstraints() {

@@ -36,6 +36,22 @@ class MusicController: UIViewController {
         return session
     }()
     
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight - Music", for: .normal)
+            self.noContactsLabel.font = Font.celltitle
+        } else {
+            button.setTitle("Music", for: .normal)
+            self.noContactsLabel.font = Font.cellsubtitle
+        }
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     // MARK: View controller methods
     
     override func viewDidLoad() {
@@ -44,24 +60,13 @@ class MusicController: UIViewController {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Music", for: .normal)
-            self.noContactsLabel.font = Font.celltitle
-        } else {
-            titleButton.setTitle("Music", for: .normal)
-            self.noContactsLabel.font = Font.cellsubtitle
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
-        
         noContactsLabel.isHidden = false
         noContactsLabel.text = "Search to Retrieve Apple Music Library..."
         tableView.isHidden = true
         tableView.tableFooterView = UIView()
         _ = self.downloadsSession
+        
+        self.navigationItem.titleView = self.titleButton
     }
 
     override func didReceiveMemoryWarning() {

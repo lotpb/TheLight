@@ -17,23 +17,28 @@ class NotificationController: UIViewController {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var frequencySegmentedControl : UISegmentedControl!
     @IBOutlet weak var saveButton: UIButton!
+    
+    lazy var titleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            button.setTitle("TheLight - Notifications", for: .normal)
+        } else {
+            button.setTitle("Notifications", for: .normal)
+        }
+        button.setTitle("Leads", for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            titleButton.setTitle("TheLight - Notifications", for: .normal)
-        } else {
-            titleButton.setTitle("Notifications", for: .normal)
-        }
-        titleButton.titleLabel?.font = Font.navlabel
-        titleButton.titleLabel?.textAlignment = NSTextAlignment.center
-        titleButton.setTitleColor(.white, for: .normal)
-        self.navigationItem.titleView = titleButton
 
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(NotificationController.actionButton))
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NotificationController.editButton))
@@ -54,7 +59,7 @@ class NotificationController: UIViewController {
         self.saveButton.layer.borderWidth = 3.0
         
         UITextField.appearance().tintColor = .orange
-
+        self.navigationItem.titleView = self.titleButton
     }
 
     override func didReceiveMemoryWarning() {
