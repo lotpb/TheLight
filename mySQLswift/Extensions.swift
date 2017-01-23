@@ -98,63 +98,69 @@ var searchController: UISearchController!
 
     struct Font {
         
-        static let ipadtitle = UIFont.systemFont(ofSize: 36, weight: UIFontWeightRegular)
-        static let ipadtextview = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
+        static let celltitle36r = UIFont.systemFont(ofSize: 36)
         
         static let navlabel = UIFont(name: "HelveticaNeue-Thin", size: 25.0)
-        static let headtitle = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
-        static let labeltitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
         
-        static let celltitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
-        static let celltitlePad1 = UIFont.systemFont(ofSize: 22, weight: UIFontWeightLight)
-        static let celltitlePad2 = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
+        static let celltitle26l = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
         
-        static let celltitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
-        static let celltitle2 = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
+        static let celltitle22m = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium)
+        static let celltitle22r = UIFont.systemFont(ofSize: 22)
+        static let celltitle22l = UIFont.systemFont(ofSize: 22, weight: UIFontWeightLight)
         
-        static let cellsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-        static let celllabel = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
-        static let celllabel1 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
-        static let celllabel2 = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+        static let celltitle20r = UIFont.systemFont(ofSize: 20)
+        static let celltitle20l = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
+        
+        static let celltitle18m = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
+        static let celltitle18r = UIFont.systemFont(ofSize: 18)
+        static let celltitle18l = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
+        
+        static let celltitle16r = UIFont.systemFont(ofSize: 16)
+        static let celltitle16l = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+        
+        static let celltitle14m = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
+        static let celltitle14l = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
+        
+        static let celltitle12r = UIFont.systemFont(ofSize: 12)
+        static let celltitle12l = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
         
         struct Blog {
             
-            static let celltitlePad = Font.celltitlePad
-            static let cellsubtitlePad = Font.celltitlePad2
-            static let celldatePad = Font.celllabel2
+            static let celltitlePad = Font.celltitle22m
+            static let cellsubtitlePad = Font.celltitle22r
+            static let celldatePad = Font.celltitle18l
             
-            static let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            //static let cellsubtitle = UIFont.systemFont(ofSize: 17, weight: UIFontWeightLight)
-            static let celldate = Font.cellsubtitle
-            static let cellLabel = UIFont.systemFont(ofSize: 17, weight: UIFontWeightBold)
-            static let cellsubject = Font.celltitle
+            static let celltitle = UIFont.boldSystemFont(ofSize: 18)
+            static let celldate = Font.celltitle16r
+            static let cellLabel = UIFont.boldSystemFont(ofSize: 17)
+            static let cellsubject = Font.celltitle20l
         }
         
         struct BlogEdit {
-            static let replytitlePad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let replysubtitlePad = Font.celllabel2
+            static let replytitlePad = UIFont.boldSystemFont(ofSize: 18)
+            static let replysubtitlePad = Font.celltitle18l
             
-            static let replytitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-            static let replysubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+            static let replytitle = Font.celltitle16r
+            static let replysubtitle = Font.celltitle16l
         }
         
         struct News {
-            static let newstitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightRegular)
-            static let newssourcePad = Font.celltitle2
-            static let newslabel1Pad = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-            static let newslabel2Pad = Font.celllabel1
+            static let newstitlePad = UIFont.systemFont(ofSize: 26)
+            static let newssourcePad = Font.celltitle20r
+            static let newslabel1Pad = UIFont.boldSystemFont(ofSize: 18)
+            static let newslabel2Pad = Font.celltitle18r
             
-            static let newstitle = Font.celllabel1
-            static let newssource = Font.labeltitle
-            static let newslabel1 = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
-            static let newslabel2 = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
+            static let newstitle = Font.celltitle18r
+            static let newssource = Font.celltitle16l
+            static let newslabel1 = UIFont.boldSystemFont(ofSize: 16)
+            static let newslabel2 = Font.celltitle14l
         }
         
         struct Snapshot {
             static let celltitlePad = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
-            static let cellsubtitlePad = UIFont.systemFont(ofSize: 22, weight: UIFontWeightRegular)
-            static let celllabelPad = Font.celllabel1
-            static let cellLabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+            static let cellsubtitlePad = UIFont.systemFont(ofSize: 22)
+            static let celllabelPad = Font.celltitle18r
+            static let cellLabel = UIFont.systemFont(ofSize: 14)
         }
         
         struct Stat {
@@ -163,33 +169,33 @@ var searchController: UISearchController!
         
         struct Detail {
             static let ipadname = UIFont.systemFont(ofSize: 30, weight: UIFontWeightLight)
-            static let ipaddate = Font.celllabel1
+            static let ipaddate = Font.celltitle18r
             static let ipadaddress = UIFont.systemFont(ofSize: 26, weight: UIFontWeightLight)
-            static let ipadAmount = UIFont.systemFont(ofSize: 60, weight: UIFontWeightRegular)
+            static let ipadAmount = UIFont.systemFont(ofSize: 60)
             
             static let textname = UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)
-            static let textdate = Font.cellsubtitle
-            static let textaddress = Font.celltitle2
-            static let textAmount = UIFont.systemFont(ofSize: 30, weight: UIFontWeightRegular)
+            static let textdate = Font.celltitle16r
+            static let textaddress = Font.celltitle20r
+            static let textAmount = UIFont.systemFont(ofSize: 30)
             
-            static let Vtextname = Font.celllabel2
-            static let Vtextdate = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+            static let Vtextname = Font.celltitle18l
+            static let Vtextdate = Font.celltitle12r
             static let VtextAmount = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium)
             
             static let celltitlePad = UIFont.systemFont(ofSize: 16, weight: UIFontWeightSemibold)
-            static let cellsubtitlePad = Font.labeltitle
+            static let cellsubtitlePad = Font.celltitle16l
             static let celltitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightSemibold)
-            static let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
+            static let cellsubtitle = Font.celltitle12l
             
             static let ipadnewstitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightSemibold)
-            static let ipadnewssubtitle = Font.celllabel2
-            static let ipadnewsdetail = Font.celllabel1
+            static let ipadnewssubtitle = Font.celltitle18l
+            static let ipadnewsdetail = Font.celltitle18r
             
             static let newstitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightSemibold)
-            static let newssubtitle = Font.labeltitle
-            static let newsdetail = Font.cellsubtitle
+            static let newssubtitle = Font.celltitle16l
+            static let newsdetail = Font.celltitle16r
             
-            static let textbutton = Font.celllabel1
+            static let textbutton = Font.celltitle18r
         }
     }
 

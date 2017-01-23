@@ -78,7 +78,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             button.setTitle("Snapshot", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -88,7 +88,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         refreshControl.backgroundColor = .clear
         refreshControl.tintColor = .black
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
 
@@ -301,9 +301,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.snapdetailLabel.font = Font.Snapshot.cellsubtitlePad
 
         } else {
-            cell.textLabel!.font = Font.celltitle
-            cell.snaptitleLabel.font = Font.cellsubtitle
-            cell.snapdetailLabel.font = Font.cellsubtitle
+            cell.textLabel!.font = Font.celltitle20l
+            cell.snaptitleLabel.font = Font.celltitle16r
+            cell.snapdetailLabel.font = Font.celltitle16r
         }
         
         cell.textLabel!.textColor = Color.Snap.textColor
@@ -582,7 +582,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel1.font = Font.Snapshot.cellLabel
         myLabel1.backgroundColor = Color.Snap.collectbackColor
         myLabel1.textColor = Color.Snap.textColor
-        myLabel1.textAlignment = NSTextAlignment.center
+        myLabel1.textAlignment = .center
         myLabel1.clipsToBounds = true
       //myLabel1.adjustsFontSizeToFitWidth = true
 

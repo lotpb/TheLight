@@ -23,7 +23,7 @@ class SocialController: UIViewController, UITextViewDelegate {
             button.setTitle("Social", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()

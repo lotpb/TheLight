@@ -93,7 +93,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         button.setTitle(String(format: "%@ %@", self.status!, self.formController!), for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -141,7 +141,6 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.tintColor = .white
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
@@ -212,26 +211,26 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             textframe = UITextField(frame:CGRect(x: 118, y: 7, width: 250, height: 30))
             textviewframe = UITextView(frame:CGRect(x: 118, y: 7, width: 250, height: 85))
             activeImage = UIImageView(frame:CGRect(x: 118, y: 10, width: 18, height: 22))
-            textframe!.font = Font.celltitle
-            aptframe!.font = Font.celltitle
-            textviewframe!.font = Font.celltitle
+            textframe!.font = Font.celltitle20l
+            aptframe!.font = Font.celltitle20l
+            textviewframe!.font = Font.celltitle20l
 
         } else {
             
             textframe = UITextField(frame:CGRect(x: 118, y: 7, width: 205, height: 30))
             textviewframe = UITextView(frame:CGRect(x: 118, y: 7, width: 240, height: 85))
             activeImage = UIImageView(frame:CGRect(x: 118, y: 10, width: 18, height: 22))
-            textframe!.font = Font.celltitle
-            aptframe!.font = Font.celltitle
-            textviewframe!.font = Font.celltitle
+            textframe!.font = Font.celltitle20l
+            aptframe!.font = Font.celltitle20l
+            textviewframe!.font = Font.celltitle20l
         }
         
-        textframe!.autocorrectionType = UITextAutocorrectionType.no
+        textframe!.autocorrectionType = .no
         textframe!.clearButtonMode = .whileEditing
         textframe!.autocapitalizationType = UITextAutocapitalizationType.words
         textframe!.textColor = .black
         
-        self.comment?.autocorrectionType = UITextAutocorrectionType.default
+        self.comment?.autocorrectionType = .default
         self.callback?.clearButtonMode = .never
         self.zip?.keyboardType = .decimalPad
         
@@ -296,7 +295,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 }
                 self.date?.inputView = datePickerView
                 datePickerView.datePickerMode = UIDatePickerMode.date
-                datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: UIControlEvents.valueChanged)
+                datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: .valueChanged)
             }
             
             if (self.formController == "Vendor") {
@@ -391,7 +390,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 cell.textLabel!.text = "Apt Date"
                 self.aptDate!.inputView = datePickerView
                 datePickerView.datePickerMode = UIDatePickerMode.date
-                datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: UIControlEvents.valueChanged)
+                datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: .valueChanged)
             }
             
             cell.contentView.addSubview(self.aptDate!)
@@ -503,7 +502,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     simpleStepper.stepValue = 100
                     simpleStepper.tintColor = .gray
                     cell.accessoryView = simpleStepper
-                    simpleStepper.addTarget(self, action: #selector(EditData.stepperValueDidChange), for: UIControlEvents.valueChanged)
+                    simpleStepper.addTarget(self, action: #selector(EditData.stepperValueDidChange), for: .valueChanged)
                 }
             }
             
@@ -581,7 +580,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 simpleStepper.stepValue = 1
                 simpleStepper.tintColor = .gray
                 cell.accessoryView = simpleStepper
-                simpleStepper.addTarget(self, action: #selector(EditData.stepperValueDidChange), for: UIControlEvents.valueChanged)
+                simpleStepper.addTarget(self, action: #selector(EditData.stepperValueDidChange), for: .valueChanged)
             }
             else if (self.formController == "Vendor") {
                 self.callback!.isHidden = true //Field
@@ -619,7 +618,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 self.start!.text = self.frm31
             }
             self.start!.inputView = datePickerView
-            datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: UIControlEvents.valueChanged)
+            datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: .valueChanged)
             cell.textLabel!.text = "Start Date"
             cell.contentView.addSubview(self.start!)
             
@@ -633,7 +632,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             self.complete!.text = self.frm32
             }
             self.complete!.inputView = datePickerView
-            datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: UIControlEvents.valueChanged)
+            datePickerView.addTarget(self, action: #selector(EditData.handleDatePicker), for: .valueChanged)
             cell.textLabel!.text = "End Date"
             cell.contentView.addSubview(self.complete!)
             }
@@ -777,9 +776,9 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func passFieldData() {
         
-        self.first.font = Font.celltitle
-        self.last.font = Font.celltitle
-        self.company.font = Font.celltitle
+        self.first.font = Font.celltitle20l
+        self.last.font = Font.celltitle20l
+        self.company.font = Font.celltitle20l
         
         if (self.formController == "Leads" || self.formController == "Customer") {
             self.last.borderStyle = UITextBorderStyle.roundedRect

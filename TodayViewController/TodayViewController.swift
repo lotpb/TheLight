@@ -25,7 +25,8 @@ class TodayViewController: UIViewController, NCWidgetProviding, CLLocationManage
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
+        locationManager.requestLocation()
+      //locationManager.startUpdatingLocation()
         
         latitudeLabel.text = "searching..."
         longitudeLabel.text = "searching..."

@@ -45,7 +45,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         button.setTitle("Salesman", for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -56,7 +56,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        refreshControl.addTarget(self, action: #selector(SalesmanController.refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -78,14 +78,13 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //navigationController?.hidesBarsOnSwipe = true
-        self.navigationController?.navigationBar.tintColor = .white
+
         self.navigationController?.navigationBar.barTintColor = Color.Table.navColor
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //navigationController?.hidesBarsOnSwipe = false
+  
     }
     
     override func didReceiveMemoryWarning() {
@@ -109,7 +108,6 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
-        
         parseData()
         self.refreshControl.endRefreshing()
     }
@@ -150,16 +148,16 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         cell.selectionStyle = UITableViewCellSelectionStyle.none
 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.salestitleLabel!.font = Font.celltitlePad
+            cell.salestitleLabel!.font = Font.celltitle22m
         } else {
-            cell.salestitleLabel!.font = Font.celltitle
+            cell.salestitleLabel!.font = Font.celltitle20l
         }
         
         /*
          let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
          myLabel.backgroundColor = Color.Table.labelColor
          myLabel.textColor = .white
-         myLabel.textAlignment = NSTextAlignment.center
+         myLabel.textAlignment = .center
          myLabel.layer.masksToBounds = true
          myLabel.text = "Sale"
          myLabel.font = Font.headtitle
@@ -211,10 +209,10 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel1.numberOfLines = 0
         myLabel1.backgroundColor = .white
         myLabel1.textColor = .black
-        myLabel1.textAlignment = NSTextAlignment.center
+        myLabel1.textAlignment = .center
         myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Sale's\n", _feedItems.count)
-        myLabel1.font = Font.headtitle
+        myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
         myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
@@ -227,10 +225,10 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel2.numberOfLines = 0
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
-        myLabel2.textAlignment = NSTextAlignment.center
+        myLabel2.textAlignment = .center
         myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
-        myLabel2.font = Font.headtitle
+        myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
         myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
@@ -243,10 +241,10 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel3.numberOfLines = 0
         myLabel3.backgroundColor = .white
         myLabel3.textColor = .black
-        myLabel3.textAlignment = NSTextAlignment.center
+        myLabel3.textAlignment = .center
         myLabel3.layer.masksToBounds = true
         myLabel3.text = "Active"
-        myLabel3.font = Font.headtitle
+        myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
         myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)

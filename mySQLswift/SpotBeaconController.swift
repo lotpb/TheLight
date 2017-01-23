@@ -38,7 +38,7 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
             button.setTitle("Spot Beacon", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -62,13 +62,24 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
             self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
             self.lblBeaconDetails?.font = Font.News.newstitlePad
             self.lblBeaconReport?.font = Font.Snapshot.celltitlePad
-            self.lblBTStatus?.font = Font.celllabel2
+            self.lblBTStatus?.font = Font.celltitle18l
         } else {
     
         }
         
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
         self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

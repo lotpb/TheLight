@@ -11,8 +11,6 @@ import Parse
 
 class CodeGenController: UIViewController {
     
-    let fonttitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightBold)
-    
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var imgQRCode: UIImageView!
     @IBOutlet weak var profilePick: UIImageView!
@@ -31,7 +29,7 @@ class CodeGenController: UIViewController {
             button.setTitle("Membership", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -61,7 +59,7 @@ class CodeGenController: UIViewController {
             }
         }
         
-        self.textField!.font = fonttitle
+        self.textField!.font = Font.celltitle18m
         self.textField!.text = defaults.string(forKey: "usernameKey")
         self.navigationItem.titleView = self.titleButton
     }

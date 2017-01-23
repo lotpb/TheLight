@@ -30,18 +30,20 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.setTitle(self.formController, for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .clear
-        refreshControl.tintColor = .black
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(LeadUserController.refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.backgroundColor = Color.Lead.navColor
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -57,31 +59,30 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         }
 
         emptyLabel = UILabel(frame: self.view.bounds)
-        emptyLabel!.textAlignment = NSTextAlignment.center
+        emptyLabel!.textAlignment = .center
         emptyLabel!.textColor = .lightGray
         emptyLabel!.text = "You have no customer data :)"
         
         parseData()
         setupTableView()
-        self.titleButton.setTitle(formController, for: .normal)
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //navigationController?.hidesBarsOnSwipe = true
-        self.navigationController?.navigationBar.tintColor = .white
+
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
         }
+        setMainNavItems()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //navigationController?.hidesBarsOnSwipe = false
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -100,8 +101,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - refresh
     
-    func refreshData(_ sender:AnyObject)
-    {
+    func refreshData(_ sender:AnyObject) {
         self.tableView!.reloadData()
         self.refreshControl.endRefreshing()
     }
@@ -109,7 +109,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - Table View
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        
         return 1
     }
     
@@ -138,15 +137,15 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         cell.blogsubtitleLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.blogtitleLabel!.font = Font.celltitle2
-            cell.blogsubtitleLabel!.font = Font.celllabel1
-            cell.blogmsgDateLabel!.font = Font.cellsubtitle
-            cell.commentLabel!.font = Font.cellsubtitle
+            cell.blogtitleLabel!.font = Font.celltitle20r
+            cell.blogsubtitleLabel!.font = Font.celltitle18r
+            cell.blogmsgDateLabel!.font = Font.celltitle16r
+            cell.commentLabel!.font = Font.celltitle16r
         } else {
-            cell.blogtitleLabel!.font = Font.celltitle
-            cell.blogsubtitleLabel!.font = Font.cellsubtitle
-            cell.blogmsgDateLabel!.font = Font.cellsubtitle
-            cell.commentLabel!.font = Font.cellsubtitle
+            cell.blogtitleLabel!.font = Font.celltitle20l
+            cell.blogsubtitleLabel!.font = Font.celltitle16r
+            cell.blogmsgDateLabel!.font = Font.celltitle16r
+            cell.commentLabel!.font = Font.celltitle16r
         }
         
         let dateStr : String
@@ -190,12 +189,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         cell.actionBtn.tintColor = .lightGray
         let imagebutton : UIImage? = UIImage(named:"Upload50.png")!.withRenderingMode(.alwaysTemplate)
         cell.actionBtn .setImage(imagebutton, for: .normal)
-        //actionBtn .addTarget(self, action: "shareButton:", forControlEvents: UIControlEvents.TouchUpInside)
         
         cell.replyButton.tintColor = .lightGray
         let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
         cell.replyButton .setImage(replyimage, for: .normal)
-        //cell.replyButton .addTarget(self, action: "replyButton:", forControlEvents: UIControlEvents.TouchUpInside)
         
         if !(cell.commentLabel.text! == "0") {
             cell.commentLabel.textColor = .lightGray
@@ -223,9 +220,9 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         }
 
         myLabel.textColor = .white
-        myLabel.textAlignment = NSTextAlignment.center
+        myLabel.textAlignment = .center
         myLabel.layer.masksToBounds = true
-        myLabel.font = Font.headtitle
+        myLabel.font = Font.celltitle14m
         myLabel.layer.cornerRadius = 25.0
         myLabel.isUserInteractionEnabled = true
         cell.addSubview(myLabel)
@@ -249,23 +246,23 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         let myLabel6:UILabel = UILabel(frame: CGRect(x: 10, y: 140, width: self.tableView!.frame.size.width-20, height: 50))
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            myLabel4.font = Font.celltitlePad
-            myLabel5.font = Font.celllabel2
-            myLabel6.font = Font.celllabel1
+            myLabel4.font = Font.celltitle22m
+            myLabel5.font = Font.celltitle18l
+            myLabel6.font = Font.celltitle18r
         } else {
-            myLabel4.font = Font.celltitlePad
-            myLabel5.font = Font.celllabel2
-            myLabel6.font = Font.celllabel1
+            myLabel4.font = Font.celltitle22m
+            myLabel5.font = Font.celltitle18l
+            myLabel6.font = Font.celltitle18r
         }
         
         let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
         myLabel1.numberOfLines = 0
         myLabel1.backgroundColor = .white
         myLabel1.textColor = .black
-        myLabel1.textAlignment = NSTextAlignment.center
+        myLabel1.textAlignment = .center
         myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Count\n", _feedItems.count)
-        myLabel1.font = Font.headtitle
+        myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
         myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
@@ -278,10 +275,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel2.numberOfLines = 0
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
-        myLabel2.textAlignment = NSTextAlignment.center
+        myLabel2.textAlignment = .center
         myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
-        myLabel2.font = Font.headtitle
+        myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
         myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
@@ -294,10 +291,10 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel3.numberOfLines = 0
         myLabel3.backgroundColor = .white
         myLabel3.textColor = .black
-        myLabel3.textAlignment = NSTextAlignment.center
+        myLabel3.textAlignment = .center
         myLabel3.layer.masksToBounds = true
         myLabel3.text = "Active"
-        myLabel3.font = Font.headtitle
+        myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
         myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
@@ -520,12 +517,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     // MARK: - Segues
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {        
-    }
+
     
 }

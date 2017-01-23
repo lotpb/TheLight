@@ -33,7 +33,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     let faceLabel: UILabel = {
         let label = UILabel()
         label.text = "---"
-        label.font = Font.celllabel1
+        label.font = Font.celltitle18r
         label.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         label.textColor = .white
         label.sizeToFit()
@@ -46,7 +46,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         button.setTitle("News Detail", for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -77,14 +77,14 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
             self.newsImageview.clipsToBounds = true
             
-            self.titleLabel.font = Font.ipadtitle
-            self.detailLabel.font = Font.celltitle2
+            self.titleLabel.font = Font.celltitle36r
+            self.detailLabel.font = Font.celltitle20r
             self.newsTextview.isEditable = true //bug fix
-            self.newsTextview.font = Font.ipadtextview
+            self.newsTextview.font = Font.celltitle26l
         } else {
             self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
             self.titleLabel.font = Font.News.newstitle
-            self.detailLabel.font = Font.cellsubtitle
+            self.detailLabel.font = Font.celltitle16r
             self.newsTextview.isEditable = true//bug fix
             self.newsTextview.font = Font.News.newssource
         }
@@ -116,7 +116,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         // Make web links clickable
         self.newsTextview.isSelectable = true
         self.newsTextview.isEditable = false
-        self.newsTextview.dataDetectorTypes = UIDataDetectorTypes.link
+        self.newsTextview.dataDetectorTypes = .link
         
         self.findFace()
         setupConstraints()

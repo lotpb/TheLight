@@ -38,6 +38,14 @@ extension Blog {
 
 public extension UIViewController {
     
+    func setupTwitterNavigationBarItems() {
+        setupTwitterNavItems()
+    }
+    
+    func setupNewsNavigationItems() {
+        setupNewsNavigationBarItems()
+    }
+    
     func setMainNavItems() {
         
         UIApplication.shared.statusBarStyle = .lightContent
@@ -49,25 +57,17 @@ public extension UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.tintColor = .gray
         navigationController?.navigationBar.backgroundColor = .black
-        navigationController?.navigationBar.isTranslucent = false
+        //navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        
         //remove navbar line
         navigationController?.navigationBar.shadowImage = nil
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         
         tabBarController?.tabBar.barTintColor = .black
         tabBarController?.tabBar.tintColor = .white
-        tabBarController?.tabBar.isTranslucent = false
+        //tabBarController?.tabBar.isTranslucent = false
     }
-    
-    func setupTwitterNavigationBarItems() {
-        setupTwitterNavItems()
-    }
-    
-    func setupNewsNavigationItems() {
-        setupNewsNavigationBarItems()
-    }
-    
     
     private func setupNewsNavigationBarItems() {
         
@@ -91,7 +91,7 @@ public extension UIViewController {
         
         tabBarController?.tabBar.barTintColor = .black
         tabBarController?.tabBar.tintColor = .white
-        tabBarController?.tabBar.isTranslucent = false
+        //tabBarController?.tabBar.isTranslucent = false
     }
     
     private func setupTwitterNavItems() {
@@ -105,8 +105,8 @@ public extension UIViewController {
         let titleImageView = UIImageView(image: #imageLiteral(resourceName: "title_icon"))
         titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         titleImageView.contentMode = .scaleAspectFit
-        
         navigationItem.titleView = titleImageView
+        
         navigationController?.navigationBar.barTintColor = .white
         navigationController?.navigationBar.tintColor = Color.twitterBlue
         navigationController?.navigationBar.backgroundColor = .white

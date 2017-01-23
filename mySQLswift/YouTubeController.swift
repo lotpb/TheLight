@@ -34,7 +34,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         button.setTitle("Leads", for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -53,6 +53,17 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         getChannelDetails(false)
         self.segDisplayedContent.apportionsSegmentWidthsByContent = true
         self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

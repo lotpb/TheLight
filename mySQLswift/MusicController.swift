@@ -41,13 +41,13 @@ class MusicController: UIViewController {
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             button.setTitle("TheLight - Music", for: .normal)
-            self.noContactsLabel.font = Font.celltitle
+            self.noContactsLabel.font = Font.celltitle20l
         } else {
             button.setTitle("Music", for: .normal)
-            self.noContactsLabel.font = Font.cellsubtitle
+            self.noContactsLabel.font = Font.celltitle16r
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -67,6 +67,17 @@ class MusicController: UIViewController {
         _ = self.downloadsSession
         
         self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -419,7 +430,7 @@ extension MusicController: UITableViewDataSource {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.titleLabel.font = Font.Stat.celltitlePad
-            cell.artistLabel.font = Font.cellsubtitle
+            cell.artistLabel.font = Font.celltitle16r
         } else {
             //cell.titleLabel.font = Font.Edittitle
             //cell.artistLabel.font = Font.cellsubtitle

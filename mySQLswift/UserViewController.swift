@@ -12,12 +12,6 @@ import MapKit
 import CoreLocation
 
 class UserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate,  UICollectionViewDataSource, MKMapViewDelegate {
-    
-    let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
-    let ipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    
-    let celltitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -43,7 +37,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             button.setTitle("Users", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -53,7 +47,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         refreshControl.backgroundColor = .clear
         refreshControl.tintColor = .black
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(UserViewController.refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(UserViewController.refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -146,11 +140,11 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell?.usersubtitleLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell?.usertitleLabel!.font = ipadtitle
-            cell?.usersubtitleLabel!.font = ipadsubtitle
+            cell?.usertitleLabel!.font = Font.celltitle20r
+            cell?.usersubtitleLabel!.font = Font.celltitle16r
         } else {
-            cell?.usertitleLabel!.font = celltitle
-            cell?.usersubtitleLabel!.font = cellsubtitle
+            cell?.usertitleLabel!.font = Font.celltitle16r
+            cell?.usersubtitleLabel!.font = Font.celltitle12r
         }
         
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
@@ -184,7 +178,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         myLabel1.backgroundColor = .clear
         myLabel1.textColor = .white
         myLabel1.text = String(format: "%@%d", "Users ", _feedItems.count)
-        myLabel1.font = Font.celllabel
+        myLabel1.font = Font.celltitle18m
         vw.addSubview(myLabel1)
         
         return vw
@@ -242,10 +236,10 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         let title:UILabel = UILabel(frame: CGRect(x: 0, y: 100, width: cell.bounds.size.width, height: 20))
         title.backgroundColor = .white
         title.textColor = .black
-        title.textAlignment = NSTextAlignment.center
+        title.textAlignment = .center
         title.layer.masksToBounds = true
         title.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
-        title.font = Font.headtitle
+        title.font = Font.celltitle14m
         title.adjustsFontSizeToFitWidth = true
         title.clipsToBounds = true
         cell.addSubview(title)

@@ -41,13 +41,13 @@ class ContactTableViewCell: UITableViewCell {
     func configureWithContactEntry(_ contact: ContactEntry) {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            contactNameLabel.font = Font.celltitlePad
-            contactEmailLabel.font = Font.celltitle
-            contactPhoneLabel.font = Font.celltitle
+            contactNameLabel.font = Font.celltitle22m
+            contactEmailLabel.font = Font.celltitle20l
+            contactPhoneLabel.font = Font.celltitle20l
         } else {
-            contactNameLabel.font = Font.celltitle
-            contactEmailLabel.font = Font.cellsubtitle
-            contactPhoneLabel.font = Font.cellsubtitle
+            contactNameLabel.font = Font.celltitle20l
+            contactEmailLabel.font = Font.celltitle16r
+            contactPhoneLabel.font = Font.celltitle16r
         }
 
         contactNameLabel.text = contact.name

@@ -43,7 +43,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         button.setTitle(String(format: "%@ %@", "Lookup", (self.lookupItem)!), for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -53,7 +53,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         refreshControl.backgroundColor = .clear
         refreshControl.tintColor = .black
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(LookupData.refreshData), for: UIControlEvents.valueChanged)
+        self.refreshControl.addTarget(self, action: #selector(LookupData.refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -76,7 +76,6 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
     }
     
@@ -152,11 +151,11 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            cell.textLabel!.font = Font.celltitle
+            cell.textLabel!.font = Font.celltitle20l
             
         } else {
             
-            cell.textLabel!.font = Font.celltitle
+            cell.textLabel!.font = Font.celltitle20l
         }
         
         if (tableView == self.tableView) {

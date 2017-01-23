@@ -17,8 +17,7 @@ import MobileCoreServices //added CoreSpotlight
 //import AVFoundation
 
 class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, AVSpeechSynthesizerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RPScreenRecorderDelegate {
-    
-    //let headtitle = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+   
     let textviewText = "Chadi sucks in Basketball, he has no picks and certainly has no rolls"
     
     @IBOutlet weak var subject: UITextView?
@@ -62,7 +61,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         label.frame = CGRect(x: 20, y: 88, width: 60, height: 60)
         label.backgroundColor = .orange
         label.textColor = .white
-        label.textAlignment = NSTextAlignment.center
+        label.textAlignment = .center
         label.layer.masksToBounds = true
         label.text = "Speak"
         label.font = Font.Detail.textaddress
@@ -82,7 +81,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
             button.setTitle("Detail", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -120,6 +119,12 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -11,11 +11,11 @@ import  UserNotifications
 
 class NotificationDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UNUserNotificationCenterDelegate {
     
-    let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
-    let ipadsubtitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+    let ipadtitle = UIFont.systemFont(ofSize: 20)
+    let ipadsubtitle = UIFont.systemFont(ofSize: 16)
     
-    let celltitle = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
-    let cellsubtitle = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+    let celltitle = UIFont.systemFont(ofSize: 16)
+    let cellsubtitle = UIFont.systemFont(ofSize: 12)
     
     @IBOutlet weak var tableView: UITableView?
     var filteredString : NSMutableArray = NSMutableArray()
@@ -30,7 +30,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
             button.setTitle("Notifications", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -41,7 +41,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(NotificationDetailController.refreshData), for: UIControlEvents.valueChanged)
+        self.refreshControl.addTarget(self, action: #selector(NotificationDetailController.refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -63,7 +63,6 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.barTintColor = .orange
     }
     
@@ -167,7 +166,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         myLabel1.numberOfLines = 0
         myLabel1.backgroundColor = .white
         myLabel1.textColor = .black
-        myLabel1.textAlignment = NSTextAlignment.center
+        myLabel1.textAlignment = .center
         myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Count\n", (UIApplication.shared.scheduledLocalNotifications!.count))
         myLabel1.font = Font.headtitle
@@ -183,7 +182,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         myLabel2.numberOfLines = 0
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
-        myLabel2.textAlignment = NSTextAlignment.center
+        myLabel2.textAlignment = .center
         myLabel2.layer.masksToBounds = true
         myLabel2.text = "Active"
         myLabel2.font = Font.headtitle

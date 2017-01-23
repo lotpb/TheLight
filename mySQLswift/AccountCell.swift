@@ -78,7 +78,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         button.tintColor = .white
         let image : UIImage? = UIImage(named:"minimize")!.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
-      //button.addTarget(self, action: #selector(replySetButton), for: UIControlEvents.touchUpInside)
         return button
     }()
     
@@ -89,16 +88,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     }()
     
     /*
-     lazy var refreshControl: UIRefreshControl = {
-     let refreshControl = UIRefreshControl()
-     refreshControl.backgroundColor = Color.Lead.navColor
-     refreshControl.tintColor = .white
-     let attributes = [NSForegroundColorAttributeName: UIColor.white]
-     self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-     //refreshControl.addTarget(self, action: #selector(AccountCell.handleRefresh(_:)), for: UIControlEvents.valueChanged)
-     return refreshControl
-     }()
-     
      let lineSeparatorView: UIView = {
      let view = UIView()
      view.backgroundColor = UIColor(white: 0.9, alpha: 1)
@@ -200,12 +189,12 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            cell.titleLabel.font =  Font.cellsubtitle
+            cell.titleLabel.font =  Font.celltitle16r
             cell.detailLabel.font =  Font.News.newslabel2
             
         } else {
             
-            cell.titleLabel.font =  Font.cellsubtitle
+            cell.titleLabel.font =  Font.celltitle16r
             cell.detailLabel.font =  Font.News.newslabel2
 
         }
@@ -274,7 +263,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
             sortButton.tintColor = .black
             let sortimage : UIImage? = UIImage(named:"minimize")!.withRenderingMode(.alwaysTemplate)
             sortButton.setImage(sortimage, for: .normal)
-            //sortButton.addTarget(self, action: #selector(replySetButton), for: UIControlEvents.touchUpInside)
             vw.addSubview(sortButton)
             
             return vw

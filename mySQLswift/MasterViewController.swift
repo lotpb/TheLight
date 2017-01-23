@@ -43,7 +43,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         button.setTitle("Main Menu", for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -89,7 +89,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.refreshControl?.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: UIControlEvents.valueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: .valueChanged)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -220,9 +220,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel!.font = Font.celltitlePad
+            cell.textLabel!.font = Font.celltitle22m
         } else {
-            cell.textLabel!.font = Font.celltitle
+            cell.textLabel!.font = Font.celltitle20l
         }
         
         if (tableView == self.tableView) {
@@ -319,10 +319,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel1.numberOfLines = 0
                 myLabel1.backgroundColor = .white
                 myLabel1.textColor = .black
-                myLabel1.textAlignment = NSTextAlignment.center
+                myLabel1.textAlignment = .center
                 myLabel1.layer.masksToBounds = true
                 myLabel1.text = String(format: "%@%d", "COUNT\n", menuItems.count )
-                myLabel1.font = Font.headtitle
+                myLabel1.font = Font.celltitle14m
                 myLabel1.layer.cornerRadius = 40.0
                 myLabel1.isUserInteractionEnabled = true
                 vw.addSubview(myLabel1)
@@ -335,19 +335,19 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel2.numberOfLines = 0
                 myLabel2.backgroundColor = .white
                 myLabel2.textColor = .black
-                myLabel2.textAlignment = NSTextAlignment.center
+                myLabel2.textAlignment = .center
                 myLabel2.layer.masksToBounds = true
                 myLabel2.text = "NASDAQ \n \(tradeYQL![0])"
-                myLabel2.font = Font.headtitle
+                myLabel2.font = Font.celltitle14m
                 myLabel2.layer.cornerRadius = 40.0
                 myLabel2.isUserInteractionEnabled = true
                 vw.addSubview(myLabel2)
                 
                 let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 90, width: 80, height: 20))
                 myLabel25.numberOfLines = 1
-                myLabel25.textAlignment = NSTextAlignment.center
+                myLabel25.textAlignment = .center
                 myLabel25.text = changeYQL[0] as? String
-                myLabel25.font = Font.headtitle
+                myLabel25.font = Font.celltitle14m
                 vw.addSubview(myLabel25)
                 
                 let separatorLineView2 = UIView(frame: CGRect(x: 110, y: 110, width: 80, height: 3.5))
@@ -364,19 +364,19 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel3.numberOfLines = 0
                 myLabel3.backgroundColor = .white
                 myLabel3.textColor = .black
-                myLabel3.textAlignment = NSTextAlignment.center
+                myLabel3.textAlignment = .center
                 myLabel3.layer.masksToBounds = true
                 myLabel3.text = "S&P 500 \n \(tradeYQL![1])"
-                myLabel3.font = Font.headtitle
+                myLabel3.font = Font.celltitle14m
                 myLabel3.layer.cornerRadius = 40.0
                 myLabel3.isUserInteractionEnabled = true
                 vw.addSubview(myLabel3)
                 
                 let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 90, width: 80, height: 20))
                 myLabel35.numberOfLines = 1
-                myLabel35.textAlignment = NSTextAlignment.center
+                myLabel35.textAlignment = .center
                 myLabel35.text = changeYQL[1] as? String //" \(changeYQL![1])"
-                myLabel35.font = Font.headtitle
+                myLabel35.font = Font.celltitle14m
                 vw.addSubview(myLabel35)
                 
                 let separatorLineView3 = UIView(frame: CGRect(x: 210, y: 110, width: 80, height: 3.5))
@@ -405,7 +405,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                     myLabel4.text = "Not Available"
                     myLabel4.textColor = .red
                 }
-                myLabel4.font = Font.labeltitle
+                myLabel4.font = Font.celltitle16l
                 vw.addSubview(myLabel4)
                 
                 /* //Statistic Button
@@ -413,7 +413,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                  statButton.setTitle("Statistics", for: .normal)
                  statButton.backgroundColor = Color.MGrayColor
                  statButton.setTitleColor(UIColor.white, for: .normal)
-                 statButton.addTarget(self, action:#selector(MasterViewController.statButton), for: UIControlEvents.touchUpInside)
+                 statButton.addTarget(self, action:#selector(MasterViewController.statButton), for: .touchUpInside)
                  statButton.layer.cornerRadius = 15.0
                  statButton.layer.borderColor = UIColor.black.cgColor
                  statButton.layer.borderWidth = 1.0

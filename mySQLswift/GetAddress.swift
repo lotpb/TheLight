@@ -69,13 +69,13 @@ class GetAddress: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
         
-        cell.textLabel!.font = Font.celltitlePad
-        cell.detailTextLabel!.font = Font.cellsubtitle
+        cell.textLabel!.font = Font.celltitle22m
+        cell.detailTextLabel!.font = Font.celltitle16r
         
     } else {
         
-        cell.textLabel!.font = Font.celltitle
-        cell.detailTextLabel!.font =  Font.cellsubtitle
+        cell.textLabel!.font = Font.celltitle20l
+        cell.detailTextLabel!.font =  Font.celltitle16r
     }
     
     if ((indexPath as NSIndexPath).row == 0) {

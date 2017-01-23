@@ -12,9 +12,7 @@ import UserNotifications
 
 
 class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate {
-    
-    let ipadtitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
-    let ipadsubject = UIFont.systemFont(ofSize: 22, weight: UIFontWeightLight)
+
     let CharacterLimit = 140
     
     @IBOutlet weak var tableView: UITableView?
@@ -76,7 +74,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             button.setTitle("New Message", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -212,13 +210,13 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func configureTextView() {
         
         subject?.delegate = self
-        subject?.autocorrectionType = UITextAutocorrectionType.yes
-        subject?.dataDetectorTypes = UIDataDetectorTypes.all
+        subject?.autocorrectionType = .yes
+        subject?.dataDetectorTypes = .all
         self.characterCountLabel!.text = ""
         self.characterCountLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.subject!.font = ipadsubject
+            self.subject!.font = Font.celltitle22l
         } else {
             self.subject!.font = Font.Blog.cellsubject
         }

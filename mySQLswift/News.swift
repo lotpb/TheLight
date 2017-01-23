@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Foundation
+//import Foundation
 
 
 class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, SearchDelegate {
@@ -87,7 +87,6 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         collectionView?.isDirectionalLockEnabled = true
         collectionView?.bounces = false
         collectionView?.showsHorizontalScrollIndicator = false
-        
     }
     
     func setupNavBarButtons() {

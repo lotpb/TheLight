@@ -51,7 +51,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         button.setTitle("Upload", for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -70,14 +70,14 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
-            self.commentTitle!.font = Font.celllabel1
-            self.commentDetail!.font = Font.celllabel1
-            self.commentSorce.font = Font.celllabel1
+            self.commentTitle!.font = Font.celltitle18r
+            self.commentDetail!.font = Font.celltitle18r
+            self.commentSorce.font = Font.celltitle18r
             
         } else {
-            self.commentTitle!.font = Font.cellsubtitle
-            self.commentDetail!.font = Font.cellsubtitle
-            self.commentSorce.font = Font.cellsubtitle
+            self.commentTitle!.font = Font.celltitle16r
+            self.commentDetail!.font = Font.celltitle16r
+            self.commentSorce.font = Font.celltitle16r
             
         }
         
@@ -100,7 +100,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         self.imgToUpload.isUserInteractionEnabled = true
         
         self.clearButton.setTitle("Clear", for: .normal)
-        self.clearButton .addTarget(self, action: #selector(clearBtn), for: UIControlEvents.touchUpInside)
+        self.clearButton .addTarget(self, action: #selector(clearBtn), for: .touchUpInside)
         self.clearButton.tintColor = Color.DGrayColor
         self.clearButton.layer.cornerRadius = 12.0
         self.clearButton.layer.borderColor = Color.DGrayColor.cgColor
@@ -112,8 +112,8 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         self.selectPic.layer.borderWidth = 2.0
         
         self.commentDetail.delegate = self
-        self.commentDetail.autocorrectionType = UITextAutocorrectionType.yes
-        self.commentDetail.dataDetectorTypes = UIDataDetectorTypes.all
+        self.commentDetail.autocorrectionType = .yes
+        self.commentDetail.dataDetectorTypes = .all
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             setupConstraints()

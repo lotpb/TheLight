@@ -52,7 +52,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             button.setTitle("Statistics", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -63,7 +63,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        refreshControl.addTarget(self, action: #selector(StatisticController.refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -172,12 +172,12 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             label1.font = Font.Stat.celltitlePad
             label2.font = Font.Stat.celltitlePad
         } else {
-            cell.textLabel!.font = Font.cellsubtitle
-            cell.detailTextLabel!.font = Font.cellsubtitle
+            cell.textLabel!.font = Font.celltitle16r
+            cell.detailTextLabel!.font = Font.celltitle16r
             label1 = UILabel(frame: CGRect(x: tableView.frame.width-155, y: 5, width: 77, height: 25))
             label2 = UILabel(frame: CGRect(x: tableView.frame.width-70, y: 5, width: 60, height: 25))
-            label1.font = Font.cellsubtitle
-            label2.font = Font.celllabel
+            label1.font = Font.celltitle16r
+            label2.font = Font.celltitle18m
         }
         
         cell.selectionStyle = UITableViewCellSelectionStyle.none
@@ -185,9 +185,9 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.textLabel!.textColor = .black
         cell.detailTextLabel!.textColor = .black
         label1.textColor = .black
-        label1.textAlignment = NSTextAlignment.right
+        label1.textAlignment = .right
         label2.textColor = .white
-        label2.textAlignment = NSTextAlignment.right
+        label2.textAlignment = .right
 
         if (indexPath.section == 0) {
             
@@ -630,14 +630,14 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             /*
             let myLabel1 = UILabel(frame: CGRect(x: tableView.frame.width/2-45, y: 3, width: 90, height: 45))
             myLabel1.textColor = .white
-            myLabel1.textAlignment = NSTextAlignment.center
+            myLabel1.textAlignment = .center
             myLabel1.text = "Statistics"
             myLabel1.font = UIFont (name: "Avenir-Book", size: 21)
             vw.addSubview(myLabel1) */
             
             let myLabel2 = UILabel(frame: CGRect(x: tableView.frame.width/2-25, y: 45, width: 50, height: 45))
             myLabel2.textColor = .green
-            myLabel2.textAlignment = NSTextAlignment.center
+            myLabel2.textAlignment = .center
             myLabel2.text = "SALES"
             myLabel2.font = UIFont (name: "Avenir-Black", size: 16)
             vw.addSubview(myLabel2)
@@ -648,7 +648,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             
             myLabel3 = UILabel(frame: CGRect(x: tableView.frame.width/2-70, y: 85, width: 140, height: 45))
             myLabel3.textColor = .white
-            myLabel3.textAlignment = NSTextAlignment.center
+            myLabel3.textAlignment = .center
             myLabel3.text = "$200,000"
             myLabel3.font = UIFont (name: "Avenir-Black", size: 30)
             vw.addSubview(myLabel3)

@@ -59,7 +59,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
             button.setTitle("Contacts", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -80,6 +80,12 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         tableView.isHidden = true
         noContactsLabel.isHidden = false
         noContactsLabel.text = "Retrieving contacts..."
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -215,81 +221,5 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
             dvc.type = .cnContact
         }
     }
-    
-    // =========================================================================
-    //MARK: - UITableViewDelegate
-    /*
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        
-        let deleteActionHandler = { (action: UITableViewRowAction, index: IndexPath) in
-            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { [unowned self] (action: UIAlertAction) in
-                // set the data to be deleted
-                let request = CNSaveRequest()
-                let contact = self.contacts[(index as NSIndexPath).row].mutableCopy() as! CNMutableContact
-                request.delete(contact)
-                
-                do {
-                    // save
-                    let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"
-                    let store = CNContactStore()
-                    try store.execute(request)
-                    NSLog("\(fullName) Deleted")
-                    
-                    // update table
-                    self.contacts.remove(at: (index as NSIndexPath).row)
-                    DispatchQueue.main.async(execute: {
-                        self.tableView.deleteRows(at: [index], with: .fade)
-                    })
-                } catch let error as NSError {
-                    NSLog("Delete error \(error.localizedDescription)")
-                }
-                })
-            
-            let cancelAction = UIAlertAction(title: "CANCEL", style: UIAlertActionStyle.default, handler: { [unowned self] (action: UIAlertAction) in
-                self.tableView.isEditing = false
-                })
-            
-            // show alert
-            self.showAlert(title: "Delete Contact", message: "OK？", actions: [okAction, cancelAction])
-        }
-        
-        return [UITableViewRowAction(style: UITableViewRowActionStyle(), title: "Delete", handler: deleteActionHandler)]
-    }
-    
-    
-    // MARK: - IBAction
-    
-    @IBAction func tapped(_ sender: AnyObject) {
-        view.endEditing(true)
-    } */
-    
-    
-    /*
-    // fetch the contact of matching names
-    private func fetchContacts(_ name: String) -> [CNContact] {
-        
-        let store = CNContactStore()
-        
-        do {
-            let request = CNContactFetchRequest(keysToFetch: [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
-
-            if name.isEmpty { // all search
-                request.predicate = nil
-            } else {
-                request.predicate = CNContact.predicateForContacts(matchingName: name)
-            }
-            
-            var contacts = [CNContact]()
-            try store.enumerateContacts(with: request, usingBlock: { (contact, error) in
-                contacts.append(contact)
-            })
-            
-            return contacts
-        } catch let error as NSError {
-            NSLog("Fetch error \(error.localizedDescription)")
-            return []
-        }
-    } */
-    
 
 } 

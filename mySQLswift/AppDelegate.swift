@@ -12,7 +12,6 @@ import GoogleSignIn
 import FBSDKCoreKit
 import Firebase
 import SwiftKeychainWrapper
-//import CoreLocation
 import UserNotifications
 
 @UIApplicationMain

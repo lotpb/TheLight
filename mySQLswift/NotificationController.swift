@@ -11,7 +11,7 @@ import UserNotifications
 
 class NotificationController: UIViewController {
     
-    let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+    let celltitle = UIFont.systemFont(ofSize: 18)
     
     @IBOutlet weak var customMessage: UITextField!
     @IBOutlet weak var datePicker: UIDatePicker!
@@ -28,7 +28,7 @@ class NotificationController: UIViewController {
         }
         button.setTitle("Leads", for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -71,7 +71,6 @@ class NotificationController: UIViewController {
     
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
-        self.navigationController?.navigationBar.tintColor = .white
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {

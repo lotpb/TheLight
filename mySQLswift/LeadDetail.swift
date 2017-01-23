@@ -26,7 +26,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     @IBOutlet weak var tableView: UIView?
     @IBOutlet weak var mySwitch: UISwitch?
     @IBOutlet weak var activebutton: UIButton?
-    @IBOutlet weak var mapbutton: UIButton?
+//    @IBOutlet weak var mapbutton: UIButton?
     
     @IBOutlet weak var listTableView: UITableView?
     @IBOutlet weak var listTableView2: UITableView?
@@ -131,10 +131,22 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         } else {
             button.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: .normal)
         }
-        button.setTitle("Leads", for: .normal)
-        button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
         button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = Font.navlabel
+        button.titleLabel?.textAlignment = .center
+        return button
+    }()
+    
+    lazy var mapButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Color.BlueColor
+        button.setTitle("Map", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(mapClickButton), for: .touchUpInside)
+        let btnLayer: CALayer = button.layer
+        btnLayer.masksToBounds = true
+        btnLayer.cornerRadius = 9.0
         return button
     }()
     
@@ -144,7 +156,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        refreshControl.addTarget(self, action: #selector(LeadDetail.refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -154,14 +166,9 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-  
-        let btnLayer3: CALayer = self.mapbutton!.layer
-        btnLayer3.masksToBounds = true
-        btnLayer3.cornerRadius = 9.0
-        self.mapbutton!.backgroundColor = Color.BlueColor
-        self.mapbutton!.setTitleColor(.white, for: .normal)
-        self.mapbutton!.addTarget(self, action: #selector(LeadDetail.mapButton), for: UIControlEvents.touchUpInside)
-        
+        emailTitle = defaults.string(forKey: "emailtitleKey")
+        messageBody = defaults.string(forKey: "emailmessageKey")
+ 
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(LeadDetail.editButton))
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(LeadDetail.actionButton))
         navigationItem.rightBarButtonItems = [editButton,actionButton]
@@ -171,20 +178,21 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         topBorder.borderColor = UIColor.lightGray.cgColor
         topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
         topBorder.borderWidth = width
-        tableView!.layer.masksToBounds = true
         tableView!.layer.addSublayer(topBorder)
-        
-        parseData()
+        tableView!.layer.masksToBounds = true
+
+        //don't move addSubview(photoImage) keep above setupConstraints
+        self.mainView!.addSubview(photoImage)
+        setupConstraints()
+
+        //Leave this setup below
         setupTableView()
         setupFonts()
         setupSwitch()
+        parseData()
         followButton()
-        refreshData()
-        emailTitle = defaults.string(forKey: "emailtitleKey")
-        messageBody = defaults.string(forKey: "emailmessageKey")
         self.navigationItem.titleView = self.titleButton
-        self.mainView!.addSubview(photoImage)
-        self.tableView!.addSubview(self.refreshControl)
+        self.mainView!.addSubview(self.refreshControl)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -197,7 +205,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.tintColor = .white
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
@@ -215,6 +222,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
+        setMainNavItems()
     }
     
     override func didReceiveMemoryWarning() {
@@ -244,22 +252,18 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func setupFonts() {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            
-            setupConstraints()
             labelamount!.font = Font.Detail.ipadAmount
             labelname!.font = Font.Detail.ipadname
             labeldate!.font = Font.Detail.ipaddate
             labeladdress!.font = Font.Detail.ipadaddress
             labelcity!.font = Font.Detail.ipadaddress
-            mapbutton!.titleLabel?.font = Font.Detail.textbutton
+            following!.font = Font.Detail.ipaddate
+            mapButton.titleLabel?.font = Font.Detail.textbutton
             
         } else {
-            
-            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
-            
             labeladdress!.font = Font.Detail.textaddress
             labelcity!.font = Font.Detail.textaddress
-            mapbutton!.titleLabel?.font = Font.Detail.textbutton
+            mapButton.titleLabel?.font = Font.Detail.textbutton
             
             if (self.formController == "Vendor" || self.formController == "Employee") {
                 labelamount!.font = Font.Detail.VtextAmount
@@ -279,29 +283,37 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func setupConstraints() {
         
-        photoImage.translatesAutoresizingMaskIntoConstraints = false
-        photoImage.topAnchor.constraint(equalTo: (following?.bottomAnchor)!, constant: +25).isActive = true
-        photoImage.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor, constant: +10).isActive = true
-        photoImage.bottomAnchor.constraint( equalTo: (mapbutton?.topAnchor)!, constant: -10).isActive = true
-        //width constraint
-        let widthContraints = NSLayoutConstraint(item: photoImage, attribute:
-            .width, relatedBy: .equal, toItem: nil,
-                    attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
-                    constant: 350)
-        /*
-         let heightContraints = NSLayoutConstraint(item: self.mainView!, attribute:
-         .height, relatedBy: .equal, toItem: nil,
-         attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0,
-         constant: 550)
-         self.mainView?.translatesAutoresizingMaskIntoConstraints = false */
-        NSLayoutConstraint.activate([widthContraints])
+        mainView?.addSubview(self.mapButton)
         
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            
+            mainView?.translatesAutoresizingMaskIntoConstraints = false
+            mainView?.heightAnchor.constraint(equalToConstant: 350).isActive = true
+            
+            photoImage.translatesAutoresizingMaskIntoConstraints = false
+            photoImage.topAnchor.constraint(equalTo: (mainView?.topAnchor)!, constant: +65).isActive = true
+            photoImage.trailingAnchor.constraint( equalTo: (mainView?.trailingAnchor)!, constant: -15).isActive = true
+            photoImage.widthAnchor.constraint(equalToConstant: 300).isActive = true
+            photoImage.heightAnchor.constraint(equalToConstant: 160).isActive = true
+        } else {
+            mainView?.translatesAutoresizingMaskIntoConstraints = false
+            mainView?.heightAnchor.constraint(equalToConstant: 265).isActive = true
+            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
+        }
+        
+        mapButton.translatesAutoresizingMaskIntoConstraints = false
+        mapButton.bottomAnchor.constraint(equalTo: (mainView?.bottomAnchor)!, constant: -15).isActive = true
+        mapButton.trailingAnchor.constraint( equalTo: (mainView?.trailingAnchor)!, constant: -15).isActive = true
+        mapButton.widthAnchor.constraint(equalToConstant: 75).isActive = true
+        mapButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     func refreshData() {
+        parseData()
         self.listTableView!.reloadData()
         self.listTableView2!.reloadData()
         self.newsTableView!.reloadData()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Button
@@ -311,7 +323,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.performSegue(withIdentifier: "editFormSegue", sender: self)
     }
     
-    func mapButton() {
+    func mapClickButton() {
         self.performSegue(withIdentifier: "showmapSegue", sender: self)
     }
     
@@ -812,7 +824,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         email.setToRecipients([emailfield as String])
         email.setSubject((emailTitle)!)
         email.setMessageBody((messageBody)!, isHTML:true)
-        email.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
+        email.modalTransitionStyle = .flipHorizontal
         self.present(email, animated: true, completion: nil)
     }
 

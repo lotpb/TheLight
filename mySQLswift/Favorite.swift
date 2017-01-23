@@ -24,7 +24,7 @@ class Favorite: UITableViewController {
         button.frame = CGRect(x: 0, y: 0, width: 100, height: self.view.frame.height)
         button.setTitle("Favorites", for: .normal)
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -84,9 +84,9 @@ class Favorite: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
       
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel!.font = Font.celltitlePad
+            cell.textLabel!.font = Font.celltitle22m
         } else {
-            cell.textLabel!.font = Font.celltitle
+            cell.textLabel!.font = Font.celltitle20l
         }
 
         cell.textLabel!.text = siteNames![indexPath.row]

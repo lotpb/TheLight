@@ -47,7 +47,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             button.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -57,7 +57,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         refreshControl.backgroundColor = .clear
         refreshControl.tintColor = .black
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(NewEditData.refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -81,8 +81,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //navigationController?.hidesBarsOnSwipe = true
-        self.navigationController?.navigationBar.tintColor = .white
+ 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
@@ -92,7 +91,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //navigationController?.hidesBarsOnSwipe = false
+  
     }
     
     override func didReceiveMemoryWarning() {
@@ -165,10 +164,10 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             self.salesNo?.font = Font.Stat.celltitlePad
             self.price?.font = Font.Stat.celltitlePad
         } else {
-            cell.textLabel!.font = Font.celltitle
-            self.salesman?.font = Font.celltitle
-            self.salesNo?.font = Font.celltitle
-            self.price?.font = Font.celltitle
+            cell.textLabel!.font = Font.celltitle20l
+            self.salesman?.font = Font.celltitle20l
+            self.salesNo?.font = Font.celltitle20l
+            self.price?.font = Font.celltitle20l
         }
         
         if (indexPath.row == 0) {

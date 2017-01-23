@@ -38,7 +38,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         refreshControl.backgroundColor = Color.twitterText
         refreshControl.tintColor = .black
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(BlogEditController.refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(BlogEditController.refreshData), for: .valueChanged)
         return refreshControl
     }()
 
@@ -158,7 +158,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             } else {
                 
                 cell?.titleLabel!.font = Font.Blog.celltitle
-                cell?.subtitleLabel!.font = Font.celltitle2 
+                cell?.subtitleLabel!.font = Font.celltitle20r 
                 cell?.msgDateLabel.font = Font.Blog.celldate
             }
             
@@ -273,7 +273,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             cell?.replylikeButton.tintColor = .lightGray
             let replyimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
             cell?.replylikeButton .setImage(replyimage, for: .normal)
-            cell?.replylikeButton .addTarget(self, action: #selector(BlogEditController.likeButton), for: UIControlEvents.touchUpInside)
+            cell?.replylikeButton .addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
             
             if !(cell?.replynumLabel.text == "0") {
                 cell?.replynumLabel.textColor = .red

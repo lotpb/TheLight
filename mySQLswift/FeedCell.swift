@@ -46,7 +46,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         refreshControl.tintColor = .lightGray
         let attributes = [NSForegroundColorAttributeName: UIColor.lightGray]
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        refreshControl.addTarget(self, action: #selector(refreshData), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -199,8 +199,8 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         }
         
         cell.titleLabelnew.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
-        cell.actionButton.addTarget(self, action: #selector(shareButton), for: UIControlEvents.touchUpInside)
-        cell.likeBtn.addTarget(self, action: #selector(likeSetButton), for: UIControlEvents.touchUpInside)
+        cell.actionButton.addTarget(self, action: #selector(shareButton), for: .touchUpInside)
+        cell.likeBtn.addTarget(self, action: #selector(likeSetButton), for: .touchUpInside)
         
         let date1 = ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
         let date2 = Date()

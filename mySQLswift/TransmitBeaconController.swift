@@ -42,7 +42,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             button.setTitle("Transmit Beacon", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -61,7 +61,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
             self.majorLabel?.font = Font.Snapshot.celltitlePad
             self.minorLabel?.font = Font.Snapshot.celltitlePad
             self.beaconBroadlabel?.font = Font.Snapshot.celltitlePad
-            self.lblBTStatus?.font = Font.celllabel2
+            self.lblBTStatus?.font = Font.celltitle18l
         } else {
             
         }
@@ -75,6 +75,17 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
         
         self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

@@ -26,8 +26,8 @@ func delay(_ seconds: Double, completion: @escaping ()->Void) {
 
 class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate,  GIDSignInUIDelegate, GIDSignInDelegate {
     
-    let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightRegular)
-    let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+    let ipadtitle = UIFont.systemFont(ofSize: 20)
+    let celltitle = UIFont.systemFont(ofSize: 18)
     
     @IBOutlet weak var mapView: MKMapView?
     @IBOutlet weak var mainView: UIView!
@@ -170,7 +170,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.barTintColor = .black
     }
     

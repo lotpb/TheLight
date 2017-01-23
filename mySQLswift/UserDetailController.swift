@@ -15,12 +15,6 @@ import MessageUI
 
 class UserDetailController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, MKMapViewDelegate, MFMailComposeViewControllerDelegate, UITextFieldDelegate {
     
-    let ipadtitle = UIFont.systemFont(ofSize: 20, weight: UIFontWeightLight)
-    let ipadlabel = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-    
-    let celltitle = UIFont.systemFont(ofSize: 18, weight: UIFontWeightLight)
-    let celllabel = UIFont.systemFont(ofSize: 14, weight: UIFontWeightLight)
-    
     let defaults = UserDefaults.standard
     
     @IBOutlet weak var mapView: MKMapView!
@@ -39,7 +33,6 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     @IBOutlet weak var callBtn: UIButton?
     @IBOutlet weak var emailBtn: UIButton?
 
-    
     var objectId : String?
     var username : String?
     var create : String?
@@ -68,7 +61,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             button.setTitle("Profile", for: .normal)
         }
         button.titleLabel?.font = Font.navlabel
-        button.titleLabel?.textAlignment = NSTextAlignment.center
+        button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -116,15 +109,6 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         self.mainView!.backgroundColor = UIColor(white:0.99, alpha:1.0)
         self.view.backgroundColor = .white //Color.LGrayColor
         
-        /*
-        let topBorder = CALayer()
-        let width = CGFloat(2.0)
-        topBorder.borderColor = UIColor.darkGray.cgColor
-        topBorder.frame = CGRect(x: 0, y: 175, width: view.frame.size.width, height: 0.5)
-        topBorder.borderWidth = width
-        self.mainView!.layer.masksToBounds = true
-        self.mainView!.layer.addSublayer(topBorder) */
-        
         let bottomBorder = CALayer()
         let width1 = CGFloat(2.0)
         bottomBorder.borderColor = UIColor.darkGray.cgColor
@@ -134,17 +118,17 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         self.mainView!.layer.addSublayer(bottomBorder)
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.usernameField!.font = ipadtitle
-            self.emailField!.font = ipadtitle
-            self.phoneField!.font = ipadtitle
-            self.createLabel!.font = ipadlabel
-            self.mapLabel!.font = Font.celltitle
+            self.usernameField!.font = Font.celltitle20l
+            self.emailField!.font = Font.celltitle20l
+            self.phoneField!.font = Font.celltitle20l
+            self.createLabel!.font = Font.celltitle16l
+            self.mapLabel!.font = Font.celltitle20l
         } else {
-            self.usernameField!.font = celltitle
-            self.emailField!.font = celltitle
-            self.phoneField!.font = celltitle
-            self.createLabel!.font = celllabel
-            self.mapLabel!.font = Font.celltitle
+            self.usernameField!.font = Font.celltitle18l
+            self.emailField!.font = Font.celltitle18l
+            self.phoneField!.font = Font.celltitle18l
+            self.createLabel!.font = Font.celltitle14l
+            self.mapLabel!.font = Font.celltitle20l
         }
         
         let query = PFUser.query()
@@ -293,7 +277,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         email.setToRecipients([emailfield as String])
         email.setSubject((emailTitle as? String)!)
         email.setMessageBody((messageBody as? String)!, isHTML:true)
-        email.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
+        email.modalTransitionStyle = .flipHorizontal
         self.present(email, animated: true, completion: nil)
     }
     
