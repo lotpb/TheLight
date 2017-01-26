@@ -66,7 +66,6 @@ public extension UIViewController {
         
         tabBarController?.tabBar.barTintColor = .black
         tabBarController?.tabBar.tintColor = .white
-        //tabBarController?.tabBar.isTranslucent = false
     }
     
     private func setupNewsNavigationBarItems() {
@@ -76,12 +75,14 @@ public extension UIViewController {
         if statusBar.responds(to: #selector(setter: UIView.backgroundColor)) {
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 statusBar.backgroundColor = .black
+                navigationController?.navigationBar.barTintColor = .black
             } else {
                 statusBar.backgroundColor = Color.News.navColor
+                navigationController?.navigationBar.barTintColor = Color.News.navColor
             }
         }
         
-        navigationController?.navigationBar.barTintColor = Color.News.navColor
+        //navigationController?.navigationBar.barTintColor = Color.News.navColor
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.backgroundColor = .white
         
@@ -91,7 +92,6 @@ public extension UIViewController {
         
         tabBarController?.tabBar.barTintColor = .black
         tabBarController?.tabBar.tintColor = .white
-        //tabBarController?.tabBar.isTranslucent = false
     }
     
     private func setupTwitterNavItems() {

@@ -17,17 +17,24 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
-
-    var label1 : UILabel!
-    var label2 : UILabel!
-    var myLabel3 : UILabel!
+    
+    var _feedCustItems : NSMutableArray = NSMutableArray()
+    var _feedLeadItems : NSMutableArray = NSMutableArray()
+    
     var segmentedControl : UISegmentedControl!
-    var mytimer: Timer = Timer()
+    //var mytimer: Timer = Timer()
     let defaults = UserDefaults.standard
+    
+    var dayYQL: NSArray!
+    var textYQL: NSArray!
     
     var symYQL: NSArray!
     var tradeYQL: NSArray!
     var changeYQL: NSArray!
+
+    var label1 : UILabel!
+    var label2 : UILabel!
+    var myLabel3 : UILabel!
     
     var tempYQL: String!
     var weathYQL: String!
@@ -36,12 +43,6 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     var humYQL: String!
     var cityYQL: String!
     var updateYQL: String!
-    
-    var dayYQL: NSArray!
-    var textYQL: NSArray!
-    
-    var _feedCustItems : NSMutableArray = NSMutableArray()
-    var _feedLeadItems : NSMutableArray = NSMutableArray()
     
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
@@ -73,8 +74,8 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(StatisticController.searchButton))
-        navigationItem.rightBarButtonItems = [searchButton]
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        navigationItem.rightBarButtonItems = [searchBtn]
         
         setupTableView()
         self.navigationItem.titleView = self.titleButton
@@ -91,15 +92,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
         setupNewsNavigationItems()
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        }
         self.refreshData()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        //self.refreshData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -604,7 +597,6 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             //vw.frame = CGRectMake(0 , 0, tableView.frame.width, 175)
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 vw.backgroundColor = .black
-                self.navigationController?.navigationBar.barTintColor = .black
             } else {
                 vw.backgroundColor = Color.Stat.navColor
             }
@@ -625,8 +617,9 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             segmentedControl.backgroundColor = .red
             segmentedControl.tintColor = .white
             segmentedControl.selectedSegmentIndex = 1
-            segmentedControl.addTarget(self, action: #selector(StatisticController.segmentedControlAction), for: .valueChanged)
+            segmentedControl.addTarget(self, action: #selector(segmentedControlAction), for: .valueChanged)
             vw.addSubview(segmentedControl)
+            
             /*
             let myLabel1 = UILabel(frame: CGRect(x: tableView.frame.width/2-45, y: 3, width: 90, height: 45))
             myLabel1.textColor = .white
@@ -690,22 +683,14 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         definesPresentationContext = true
         searchController.dimsBackgroundDuringPresentation = true
         searchController.hidesNavigationBarDuringPresentation = true
-        //searchController.searchBar.scopeButtonTitles = ["name", "city", "phone", "date", "active"]
-        //tableView!.tableHeaderView = searchController.searchBar
         tableView.tableFooterView = UIView(frame: .zero)
         UISearchBar.appearance().barTintColor = Color.Stat.navColor
-        
         self.present(searchController, animated: true, completion: nil)
     }
     
     
     func updateSearchResults(for searchController: UISearchController) {
-        /*
-         self.foundUsers.removeAll(keepCapacity: false)
-         let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-         let array = (self._feedItems as NSArray).filteredArrayUsingPredicate(searchPredicate)
-         self.foundUsers = array as! [String]
-         self.resultsController.tableView.reloadData() */
+ 
     }
     
     

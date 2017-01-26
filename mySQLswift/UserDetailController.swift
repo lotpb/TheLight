@@ -18,21 +18,22 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     let defaults = UserDefaults.standard
     
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var mainView: UIView?
+    @IBOutlet weak var containView: UIView!
+    @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var userimageView: UIImageView?
-
-    @IBOutlet weak var createLabel: UILabel?
+    
     @IBOutlet weak var usernameField : UITextField?
     @IBOutlet weak var emailField : UITextField?
     @IBOutlet weak var phoneField : UITextField?
-    @IBOutlet weak var mapLabel: UILabel!
     
-    @IBOutlet weak var pickFile: UIButton?
-    @IBOutlet weak var selectCamera: UIButton?
+    @IBOutlet weak var mapLabel: UILabel!
+    @IBOutlet weak var createLabel: UILabel?
+    
     @IBOutlet weak var updateBtn: UIButton?
     @IBOutlet weak var callBtn: UIButton?
     @IBOutlet weak var emailBtn: UIButton?
 
+    var status : String?
     var objectId : String?
     var username : String?
     var create : String?
@@ -46,7 +47,6 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     var pictureData : Data?
     
     var imagePicker: UIImagePickerController!
-
     var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
  
     var emailTitle :NSString?
@@ -73,9 +73,71 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(getter: selectCamera))
-        let videoButton = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(selectVideo))
-        navigationItem.rightBarButtonItems = [cameraButton, videoButton]
+        let cameraBtn = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(selectCamera))
+        let videoBtn = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(selectVideo))
+        navigationItem.rightBarButtonItems = [cameraBtn, videoBtn]
+        
+        emailTitle = defaults.string(forKey: "emailtitleKey")! as NSString
+        messageBody = defaults.string(forKey: "emailmessageKey")! as NSString
+        
+        self.emailField!.keyboardType = .emailAddress
+        self.phoneField!.keyboardType = .numbersAndPunctuation
+        
+        if status == "Edit" {
+            setupData()
+        }
+        setupForm()
+        setupBorder()
+        setupFonts()
+        setupConstraints()
+        self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
+        setMainNavItems()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setupBorder() {
+        let bottomBorder = CALayer()
+        let width1 = CGFloat(2.0)
+        bottomBorder.borderColor = UIColor.darkGray.cgColor
+        bottomBorder.frame = CGRect(x: 0, y: self.mainView!.frame.size.height-1, width: view.frame.size.width, height: 0.5)
+        bottomBorder.borderWidth = width1
+        self.mainView!.layer.masksToBounds = true
+        self.mainView!.layer.addSublayer(bottomBorder)
+    }
+    
+    func setupForm() {
+        self.view.backgroundColor = .white //Color.LGrayColor
+        self.mainView!.backgroundColor = UIColor(white:0.99, alpha:1.0)
+        
+        if status == "Edit" {
+            self.usernameField?.text = self.username
+            self.emailField?.text = self.email
+            self.phoneField?.text = self.phone
+            self.createLabel!.text = self.create
+            self.userimageView?.image = self.userimage
+        } else {
+            self.userimageView?.image = UIImage(named:"profile-rabbit-toy")
+        }
+        
+        self.userimageView?.backgroundColor = .white
+        self.userimageView!.isUserInteractionEnabled = true
+        self.userimageView!.layer.masksToBounds = true
+        self.userimageView!.layer.cornerRadius = 60.0
         
         mapView.delegate = self
         mapView!.layer.borderColor = UIColor.lightGray.cgColor
@@ -95,42 +157,9 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         emailBtn!.layer.borderColor = Color.BlueColor.cgColor
         emailBtn!.layer.borderWidth = 3.0
         emailBtn!.setTitleColor(Color.BlueColor, for: .normal)
-        
-        self.usernameField?.text = self.username
-        self.emailField?.text = self.email
-        self.phoneField?.text = self.phone
-        
-        self.createLabel!.text = self.create
-        self.userimageView?.image = self.userimage
-        self.userimageView?.backgroundColor = .black
-        self.userimageView!.isUserInteractionEnabled = true
-        self.userimageView!.layer.masksToBounds = true
-        self.userimageView!.layer.cornerRadius = 60.0
-        self.mainView!.backgroundColor = UIColor(white:0.99, alpha:1.0)
-        self.view.backgroundColor = .white //Color.LGrayColor
-        
-        let bottomBorder = CALayer()
-        let width1 = CGFloat(2.0)
-        bottomBorder.borderColor = UIColor.darkGray.cgColor
-        bottomBorder.frame = CGRect(x: 0, y: self.mainView!.frame.size.height-1, width: view.frame.size.width, height: 0.5)
-        bottomBorder.borderWidth = width1
-        self.mainView!.layer.masksToBounds = true
-        self.mainView!.layer.addSublayer(bottomBorder)
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.usernameField!.font = Font.celltitle20l
-            self.emailField!.font = Font.celltitle20l
-            self.phoneField!.font = Font.celltitle20l
-            self.createLabel!.font = Font.celltitle16l
-            self.mapLabel!.font = Font.celltitle20l
-        } else {
-            self.usernameField!.font = Font.celltitle18l
-            self.emailField!.font = Font.celltitle18l
-            self.phoneField!.font = Font.celltitle18l
-            self.createLabel!.font = Font.celltitle14l
-            self.mapLabel!.font = Font.celltitle20l
-        }
-        
+    }
+    
+    func setupData() {
         let query = PFUser.query()
         do {
             userquery = try query!.getObjectWithId(self.objectId!)
@@ -149,23 +178,30 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         } catch {
             print("")
         }
-        
-        emailTitle = defaults.string(forKey: "emailtitleKey")! as NSString
-        messageBody = defaults.string(forKey: "emailmessageKey")! as NSString
-        
-        self.emailField!.keyboardType = .emailAddress
-        self.phoneField!.keyboardType = .numbersAndPunctuation
-        
-        setupConstraints()
-        self.navigationItem.titleView = self.titleButton
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func setupFonts() {
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.usernameField!.font = Font.celltitle20l
+            self.emailField!.font = Font.celltitle20l
+            self.phoneField!.font = Font.celltitle20l
+            self.createLabel!.font = Font.celltitle16l
+            self.mapLabel!.font = Font.celltitle20l
+        } else {
+            self.usernameField!.font = Font.celltitle18l
+            self.emailField!.font = Font.celltitle18l
+            self.phoneField!.font = Font.celltitle18l
+            self.createLabel!.font = Font.celltitle14l
+            self.mapLabel!.font = Font.celltitle20l
+        }
     }
     
     func setupConstraints() {
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        containView.translatesAutoresizingMaskIntoConstraints = false
+        containView.heightAnchor.constraint(equalToConstant: 800).isActive = true
+        }
         
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.topAnchor.constraint(equalTo: (mapLabel?.bottomAnchor)!, constant: +25).isActive = true
@@ -176,8 +212,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     // MARK: - Button
     
-    @IBAction func selectVideo(_ sender: AnyObject) {
-    //func selectCamera() {
+    func selectVideo() {
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             
@@ -195,8 +230,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     }
     
     
-    @IBAction func selectCamera(_ sender: AnyObject) {
-    //func selectImage() {
+    func selectCamera() {
         
         imagePicker = UIImagePickerController()
         imagePicker.sourceType = .savedPhotosAlbum
@@ -211,11 +245,6 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
             self.userimageView!.image = pickedImage
-            /*
-            let uncroppedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
-            let croppedImage = info[UIImagePickerControllerEditedImage] as? UIImage
-            let cropRect = info[UIImagePickerControllerCropRect]!.CGRectValue */
-            
             dismiss(animated: true, completion: { () -> Void in
             })
         }

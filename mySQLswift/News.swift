@@ -55,10 +55,10 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         super.viewWillAppear(animated)
         
         setupNewsNavigationItems()
-        
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
-        }
+        } */
     }
     
     override func didReceiveMemoryWarning() {

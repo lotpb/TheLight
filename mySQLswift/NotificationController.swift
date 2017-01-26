@@ -44,10 +44,6 @@ class NotificationController: UIViewController {
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NotificationController.editButton))
         navigationItem.rightBarButtonItems = [editButton, actionButton]
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
-        
         self.customMessage.clearButtonMode = .always
         self.customMessage!.font = celltitle
         self.customMessage.placeholder = "enter notification"
@@ -68,14 +64,15 @@ class NotificationController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-    
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
+        //Fix Grey Bar in iphone Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
         }
+        setMainNavItems()
     }
     
     // MARK: - localNotification
@@ -359,12 +356,6 @@ class NotificationController: UIViewController {
         
         self.performSegue(withIdentifier: "notificationdetailsegue", sender: self)
         
-    }
-    
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

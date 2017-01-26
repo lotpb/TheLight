@@ -59,7 +59,6 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
         let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
         navigationItem.rightBarButtonItems = [editItem,backItem]
-      //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             newsViewHeight = 450
@@ -67,30 +66,6 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             newsViewHeight = 258
         }
         
-        self.scrollView.minimumZoomScale = 1.0
-        self.scrollView.maximumZoomScale = 6.0
-        self.newsImageview.backgroundColor = .black
-        self.newsImageview.isUserInteractionEnabled = true
-
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
-            self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
-            self.newsImageview.clipsToBounds = true
-            
-            self.titleLabel.font = Font.celltitle36r
-            self.detailLabel.font = Font.celltitle20r
-            self.newsTextview.isEditable = true //bug fix
-            self.newsTextview.font = Font.celltitle26l
-        } else {
-            self.newsImageview.contentMode = .scaleToFill //.scaleAspectFill //.scaleAspectFit
-            self.titleLabel.font = Font.News.newstitle
-            self.detailLabel.font = Font.celltitle16r
-            self.newsTextview.isEditable = true//bug fix
-            self.newsTextview.font = Font.News.newssource
-        }
-        UIView.transition(with: self.newsImageview, duration: 0.5, options: .transitionCrossDissolve, animations: {
-            self.newsImageview.image = self.image
-        }, completion: nil)
         self.titleLabel.text = self.newsTitle
         self.titleLabel.numberOfLines = 2
         
@@ -110,15 +85,10 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         self.detailLabel.textColor = .gray
         self.detailLabel.sizeToFit()
         
-        self.newsTextview.text = self.newsStory
-        self.newsTextview.delegate = self
-        self.newsTextview.textContainerInset = UIEdgeInsetsMake(0, -4, 0, 0)
-        // Make web links clickable
-        self.newsTextview.isSelectable = true
-        self.newsTextview.isEditable = false
-        self.newsTextview.dataDetectorTypes = .link
-        
-        self.findFace()
+        setupImageView()
+        setupFonts()
+        setupTextView()
+        findFace()
         setupConstraints()
         self.navigationItem.titleView = self.titleButton
     }
@@ -129,10 +99,14 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         self.newsTextview.isScrollEnabled = false
         setupNewsNavigationItems()
 
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
-        }
+        } else {
+            self.navigationController?.navigationBar.barTintColor = Color.News.navColor
+        } */
     }
+    
     //fix TextView Scroll first line
     override func viewDidAppear(_ animated: Bool) {
         self.newsTextview.isScrollEnabled = true
@@ -147,18 +121,60 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         return self.newsImageview
     }
     
+    func setupImageView() {
+        
+        self.scrollView.minimumZoomScale = 1.0
+        self.scrollView.maximumZoomScale = 6.0
+        self.newsImageview.backgroundColor = .black
+        self.newsImageview.isUserInteractionEnabled = true
+        
+        UIView.transition(with: self.newsImageview, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.newsImageview.image = self.image
+        }, completion: nil)
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
+            self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
+            self.newsImageview.clipsToBounds = true
+        } else {
+            self.newsImageview.contentMode = .scaleToFill
+        }
+    }
+    
+    func setupFonts() {
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            self.titleLabel.font = Font.celltitle36r
+            self.detailLabel.font = Font.celltitle20r
+            self.newsTextview.isEditable = true //bug fix
+            self.newsTextview.font = Font.celltitle26l
+        } else {
+            self.titleLabel.font = Font.News.newstitle
+            self.detailLabel.font = Font.celltitle16r
+            self.newsTextview.isEditable = true//bug fix
+            self.newsTextview.font = Font.News.newssource
+        }
+    }
+    
+    func setupTextView() {
+        self.newsTextview.text = self.newsStory
+        self.newsTextview.delegate = self
+        self.newsTextview.textContainerInset = UIEdgeInsetsMake(0, -4, 0, 0)
+        // Make web links clickable
+        self.newsTextview.isSelectable = true
+        self.newsTextview.isEditable = false
+        self.newsTextview.dataDetectorTypes = .link
+    }
+    
     func setupConstraints() {
         
-        self.view.addSubview(faceLabel)
+        newsImageview.addSubview(faceLabel)
+  
+        newsImageview.translatesAutoresizingMaskIntoConstraints = false
+        newsImageview.heightAnchor.constraint(equalToConstant: newsViewHeight).isActive = true
         
-        //height newsImageview
-        let heightRouteConstraints = NSLayoutConstraint(item: newsImageview, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newsViewHeight)
-        
-        faceLabel.topAnchor.constraint( equalTo: view.topAnchor, constant: +75).isActive = true
+        faceLabel.topAnchor.constraint( equalTo: newsImageview.topAnchor, constant: +10).isActive = true
         faceLabel.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor, constant: +5).isActive = true
-        
-        let heightspeedConstraint  = NSLayoutConstraint(item: faceLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30)
-        view.addConstraints([heightRouteConstraints, heightspeedConstraint])
+        faceLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     

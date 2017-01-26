@@ -76,7 +76,12 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     
     func setupForm() {
         self.view.backgroundColor = .lightGray
-        self.update!.setTitleColor(.gray, for: .normal)
+
+        self.update?.backgroundColor = Color.twitterBlue
+        self.update?.setTitleColor(.white, for: .normal)
+        let btnLayer: CALayer = self.update!.layer
+        btnLayer.masksToBounds = true
+        btnLayer.cornerRadius = 9.0
         
         let width = CGFloat(2.0)
         let topBorder = CALayer()

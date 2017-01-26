@@ -16,7 +16,6 @@ class SocialController: UIViewController, UITextViewDelegate {
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        let titleButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             button.setTitle("TheLight - Social", for: .normal)
         } else {
@@ -34,13 +33,20 @@ class SocialController: UIViewController, UITextViewDelegate {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
-        
         configureNoteTextView()
         noteTextview.delegate = self
         self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //Fix Grey Bar in iphone Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
+        setMainNavItems()
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,12 +85,9 @@ class SocialController: UIViewController, UITextViewDelegate {
                 
                 // Display the compose view controller.
                 self.present(twitterComposeVC!, animated: true, completion: nil)
+            } else {
+                self.simpleAlert(title: "Alert", message: "You are not logged in to your Twitter account.")
             }
-            else {
-                self.showAlertMessage("You are not logged in to your Twitter account.")
-            }
-
-            
         }
         
         
@@ -97,22 +100,17 @@ class SocialController: UIViewController, UITextViewDelegate {
                 facebookComposeVC?.setInitialText("\(self.noteTextview.text)")
                 
                 self.present(facebookComposeVC!, animated: true, completion: nil)
+            } else {
+                self.simpleAlert(title: "Alert", message: "You are not connected to your Facebook account.")
             }
-            else {
-                self.showAlertMessage("You are not connected to your Facebook account.")
-            }
-            
         }
         
         // Configure a new action to show the UIActivityViewController
         let moreAction = UIAlertAction(title: "More", style: UIAlertActionStyle.default) { (action) -> Void in
             
             let activityViewController = UIActivityViewController(activityItems: [self.noteTextview.text], applicationActivities: nil)
-            
             activityViewController.excludedActivityTypes = [UIActivityType.mail]
-            
             self.present(activityViewController, animated: true, completion: nil)
-            
         }
         
         let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) -> Void in
@@ -123,17 +121,9 @@ class SocialController: UIViewController, UITextViewDelegate {
         actionSheet.addAction(facebookPostAction)
         actionSheet.addAction(moreAction)
         actionSheet.addAction(dismissAction)
-        
         self.present(actionSheet, animated: true, completion: nil)
     }
-    
-    func showAlertMessage(_ message: String!) {
-        let alertController = UIAlertController(title: "EasyShare", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    
+
     // MARK: Custom Functions
     
     func configureNoteTextView() {
@@ -153,11 +143,5 @@ class SocialController: UIViewController, UITextViewDelegate {
     
     // MARK: - Button
     
-    func goHome() {
-        
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        navigationController?.pushViewController(vc, animated: true)
-    }
 }
 

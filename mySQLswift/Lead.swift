@@ -55,9 +55,9 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
 
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Lead.searchButton))
-        navigationItem.rightBarButtonItems = [addButton,searchButton]
+        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        navigationItem.rightBarButtonItems = [addBtn,searchBtn]
         
         parseData()
         setupTableView()

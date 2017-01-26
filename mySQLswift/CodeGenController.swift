@@ -41,10 +41,6 @@ class CodeGenController: UIViewController {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
-        
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo:defaults.string(forKey: "usernameKey")!)
         query.limit = 1
@@ -62,6 +58,17 @@ class CodeGenController: UIViewController {
         self.textField!.font = Font.celltitle18m
         self.textField!.text = defaults.string(forKey: "usernameKey")
         self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //Fix Grey Bar in iphone Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
+        setMainNavItems()
     }
 
     override func didReceiveMemoryWarning() {
@@ -158,12 +165,5 @@ class CodeGenController: UIViewController {
     
     // MARK: - Button
     
-    func goHome() {
-        
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        navigationController?.pushViewController(vc, animated: true)
-        
-    }
 
 }

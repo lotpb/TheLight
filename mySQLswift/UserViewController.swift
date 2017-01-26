@@ -19,6 +19,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var mainView: UIView!
     
     var formController: String?
+    var isFormStat = false
     var selectedImage: UIImage?
     var user: PFUser?
     
@@ -47,7 +48,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         refreshControl.backgroundColor = .clear
         refreshControl.tintColor = .black
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(UserViewController.refreshData), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -57,19 +58,14 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        }
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
+        navigationItem.rightBarButtonItems = [addButton, searchButton]
         
         mapView!.delegate = self
         mapView!.layer.borderColor = UIColor.lightGray.cgColor
         mapView!.layer.borderWidth = 0.5
-        
-        //fix below no add user
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
-        navigationItem.rightBarButtonItems = [addButton, searchButton]
-        
+
         parseData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
@@ -78,6 +74,14 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //Fix Grey Bar on Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
+        setMainNavItems()
         
         user = PFUser.current()!
         PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) -> Void in
@@ -312,10 +316,9 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - Button
     
-    func goHome() {
-        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MasterViewController") as UIViewController
-        navigationController?.pushViewController(vc, animated: true)
+    func newData() {
+        isFormStat = true
+        self.performSegue(withIdentifier: "userdetailSegue", sender: self)
     }
     
     // MARK: - Segues
@@ -323,7 +326,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         self.formController = "TableView"
-        
+        isFormStat = false
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
@@ -336,7 +339,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         self.formController = "CollectionView"
-        
+        isFormStat = false
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
@@ -352,37 +355,45 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             let VC = segue.destination as? UserDetailController
             
             if self.formController == "TableView" {
-                
-                let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-                
-                let updated:Date = ((self._feedItems[indexPath] as AnyObject).value(forKey: "createdAt") as? Date)!
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MMM dd, yyyy"
-                let createString = dateFormatter.string(from: updated)
-                
-                VC!.objectId = (self._feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
-                VC!.username = (self._feedItems[indexPath] as AnyObject).value(forKey: "username") as? String
-                VC!.create = createString
-                VC!.email = (self._feedItems[indexPath] as AnyObject).value(forKey: "email") as? String
-                VC!.phone = (self._feedItems[indexPath] as AnyObject).value(forKey: "phone") as? String
-                VC!.userimage = self.selectedImage
+                if (isFormStat == true) {
+                    VC!.status = "New"
+                } else {
+                    
+                    VC!.status = "Edit"
+                    let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
+                    let updated:Date = ((self._feedItems[indexPath] as AnyObject).value(forKey: "createdAt") as? Date)!
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "MMM dd, yyyy"
+                    let createString = dateFormatter.string(from: updated)
+                    
+                    VC!.objectId = (self._feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
+                    VC!.username = (self._feedItems[indexPath] as AnyObject).value(forKey: "username") as? String
+                    VC!.create = createString
+                    VC!.email = (self._feedItems[indexPath] as AnyObject).value(forKey: "email") as? String
+                    VC!.phone = (self._feedItems[indexPath] as AnyObject).value(forKey: "phone") as? String
+                    VC!.userimage = self.selectedImage
+                }
                 
             } else if self.formController == "CollectionView" {
-                
-                let indexPaths = self.collectionView!.indexPathsForSelectedItems!
-                let indexPath = indexPaths[0] as IndexPath
-                
-                let updated:Date = ((self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "createdAt") as? Date)!
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MMM dd, yyyy"
-                let createString = dateFormatter.string(from: updated)
-                
-                VC!.objectId = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "objectId") as? String
-                VC!.username = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "username") as? String
-                VC!.create = createString
-                VC!.email = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "email") as? String
-                VC!.phone = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "phone") as? String
-                VC!.userimage = self.selectedImage
+                if (isFormStat == true) {
+                    VC!.status = "New"
+                } else {
+                    
+                    VC!.status = "Edit"
+                    let indexPaths = self.collectionView!.indexPathsForSelectedItems!
+                    let indexPath = indexPaths[0] as IndexPath
+                    let updated:Date = ((self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "createdAt") as? Date)!
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "MMM dd, yyyy"
+                    let createString = dateFormatter.string(from: updated)
+
+                    VC!.objectId = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "objectId") as? String
+                    VC!.username = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "username") as? String
+                    VC!.create = createString
+                    VC!.email = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "email") as? String
+                    VC!.phone = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "phone") as? String
+                    VC!.userimage = self.selectedImage
+                }
             }
         }
     }

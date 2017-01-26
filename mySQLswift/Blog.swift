@@ -81,8 +81,8 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView!.dataSource = self
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.estimatedRowHeight = 110
-        self.tableView!.sectionHeaderHeight = UITableViewAutomaticDimension;
-        self.tableView!.estimatedSectionHeaderHeight = 90
+        //self.tableView!.sectionHeaderHeight = UITableViewAutomaticDimension;
+        //self.tableView!.estimatedSectionHeaderHeight = 90
         self.tableView!.sectionFooterHeight = UITableViewAutomaticDimension;
         self.tableView!.estimatedSectionFooterHeight = 0
         self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
@@ -276,30 +276,20 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let matches = detector.matches(in: input, options: [], range: NSRange(location: 0, length: input.utf16.count))
         
         for match in matches {
-          //let url = (input as NSString).substring(with: match.range)
-            let url = input.substring(with: match.range.range(for: input)!)
-          //print(url)
 
             let text = (cell.blogsubtitleLabel.text!) as NSString
-            let attributedText = NSMutableAttributedString(attributedString: (cell.blogsubtitleLabel.attributedText!))
+            let url = input.substring(with: match.range.range(for: text as String)!)
+            let attributedText = NSMutableAttributedString(string: text as String)
+
+            let boldRange = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 24)]
+            let highlightedRange = [NSBackgroundColorAttributeName: Color.Blog.phonelinkText]
+            let underlinedRange = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue]
+            let tintedRange1 = [NSForegroundColorAttributeName: Color.Blog.weblinkText]
             
-            // Add bold.
-            let boldRange = text.range(of: NSLocalizedString("VCSY", comment: ""))
-            let boldFontDescriptor = cell.blogsubtitleLabel.font.fontDescriptor.withSymbolicTraits(.traitBold)
-            let boldFont = UIFont(descriptor: boldFontDescriptor!, size: 24)
-            attributedText.addAttribute(NSFontAttributeName, value: boldFont, range: boldRange)
-            
-            // Add highlight.
-            let highlightedRange = text.range(of: NSLocalizedString("(516)241-4786", comment: ""))
-            attributedText.addAttribute(NSBackgroundColorAttributeName, value: Color.Blog.phonelinkText, range: highlightedRange)
-            
-            // Add underline.
-            let underlinedRange = text.range(of: NSLocalizedString("Lost", comment: ""))
-            attributedText.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.styleSingle.rawValue, range: underlinedRange)
-            
-            
-            let tintedRange1 = text.range(of: NSLocalizedString(url, comment: ""))
-            attributedText.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: tintedRange1)
+            attributedText.addAttributes(boldRange, range: text.range(of: "VCSY", options: .caseInsensitive))
+            attributedText.addAttributes(highlightedRange, range: text.range(of: "(516)241-4786"))
+            attributedText.addAttributes(underlinedRange, range: text.range(of: "Lost", options: .caseInsensitive))
+            attributedText.addAttributes(tintedRange1, range: text.range(of: url))
             
             /*
              // Append a space with matching font of the rest of the body text.
@@ -329,8 +319,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0
-        {
+        if section == 0 {
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
                 return 90.0
             } else {
@@ -344,7 +333,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 0 {
-            let vw = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 90))
+            let vw = UIView()
             vw.backgroundColor = Color.Blog.navColor
             //tableView.tableHeaderView = vw
             
@@ -459,7 +448,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func likeSetButton(sender:UIButton) {
 
         likeButton?.isSelected = true
-        sender.tintColor = .red
+        sender.tintColor = Color.twitterBlue
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
         
