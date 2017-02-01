@@ -44,6 +44,9 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return refreshControl
     }()
     
+    // MARK: NavigationController Hidden
+    var lastContentOffset: CGFloat = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,6 +89,10 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView!.sectionFooterHeight = UITableViewAutomaticDimension;
         self.tableView!.estimatedSectionFooterHeight = 0
         self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
+        //self.tableView?.contentInset = UIEdgeInsetsMake(-90,0,0,0)
+        //self.tableView?.scrollIndicatorInsets = UIEdgeInsetsMake(-90,0,0,0)
+        self.automaticallyAdjustsScrollViewInsets = false //fix headerview
+
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -227,7 +234,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.blogmsgDateLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"MsgDate") as? String
             cell.numLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"Liked") as? String
             cell.commentLabel?.text = (filteredString[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? String
-            
         }
         
         cell.replyButton.tintColor = .lightGray
@@ -475,6 +481,21 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func flagSetButton(_ sender:UIButton) {
     }
+    
+    // MARK: - NavigationController Hidden
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (self.lastContentOffset > scrollView.contentOffset.y) {
+            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
+        } else {
+            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.lastContentOffset = scrollView.contentOffset.y;
+    }
+
     
     
     // MARK: - Firebase

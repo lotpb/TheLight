@@ -90,6 +90,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         locationManager.stopUpdatingHeading()
         locationManager.stopUpdatingLocation()
     }

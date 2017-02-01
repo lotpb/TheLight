@@ -118,11 +118,6 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         segmentedControl.selectedSegmentIndex = 0
@@ -140,6 +135,11 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         // Setup GetAddress
         locationManager.startUpdatingLocation()
         loadAllGeotifications()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
     

@@ -50,9 +50,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 $0.applicationId = "lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M"
                 $0.clientKey = "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX"
                 $0.server = "https://parseapi.back4app.com"
-                $0.localDatastoreEnabled = true // If you need to enable local data store
+                $0.isLocalDatastoreEnabled = true // If you need to enable local data store
             }
-            Parse.initializeWithConfiguration(configuration) */
+            Parse.initialize(with: configuration) */
             
             Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
             PFAnalytics.trackAppOpened(launchOptions: launchOptions)

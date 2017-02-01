@@ -96,7 +96,7 @@ class NavVC: UINavigationController, PlayerVCDelegate  {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
+        super.viewDidAppear(true)
         if let window = UIApplication.shared.keyWindow {
             window.addSubview(self.statusView)
             window.addSubview(self.playVC.view)

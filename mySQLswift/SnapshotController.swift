@@ -964,6 +964,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             VC!.newsStory = self.selectedPhone ?? ""
             VC!.image = self.selectedImage ?? nil
             VC!.videoURL = self.imageDetailurl ?? ""
+            //VC!.navigationItem.leftBarButtonItems = nil
             
         } else if segue.identifier == "userdetailSegue" {
             

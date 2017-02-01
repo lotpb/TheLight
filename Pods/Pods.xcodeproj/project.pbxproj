@@ -6530,6 +6530,13 @@
 			path = iOS/TwitterCore.framework;
 			sourceTree = "<group>";
 		};
+		2F6609A83FBEAB624DEBA9EFB790A37B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = FirebaseCore.framework;
+			path = Frameworks/FirebaseCore.framework;
+			sourceTree = "<group>";
+		};
 		2FE13211160D380E3CD2781681EECE53 = {
 			isa = PBXFileReference;
 			includeInIndex = 1;
@@ -11373,13 +11380,6 @@
 			path = Parse/Internal/PFEncoder.h;
 			sourceTree = "<group>";
 		};
-		E47107DCC25C16A2D5BB0EDEA171543B = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = FirebaseCore.framework;
-			path = Frameworks/frameworks/FirebaseCore.framework;
-			sourceTree = "<group>";
-		};
 		E47379BEC5B8A29D51D4291F173DDA8E = {
 			isa = PBXFileReference;
 			includeInIndex = 1;
@@ -13566,7 +13566,7 @@
 		D4E19E7FF9A1E530DB279B75CF938E76 = {
 			isa = PBXGroup;
 			children = (
-				F28F59E3CE66DDBD7F6C8D204EBCD7E6,
+				FC83C0E929C1CAEA5EBC756476EFF0F5,
 			);
 			name = FirebaseCore;
 			path = FirebaseCore;
@@ -13699,18 +13699,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F28F59E3CE66DDBD7F6C8D204EBCD7E6 = {
-			isa = PBXGroup;
-			children = (
-				E47107DCC25C16A2D5BB0EDEA171543B,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		F5DF01598CDFAE3586A05F77979E86D5 = {
 			isa = PBXGroup;
 			children = (
 				429E4CE39042D64DCA6B932CED488D11,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FC83C0E929C1CAEA5EBC756476EFF0F5 = {
+			isa = PBXGroup;
+			children = (
+				2F6609A83FBEAB624DEBA9EFB790A37B,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

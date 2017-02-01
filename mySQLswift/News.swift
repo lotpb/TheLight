@@ -48,6 +48,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         //NotificationCenter.default.removeObserver(self)
     }
     

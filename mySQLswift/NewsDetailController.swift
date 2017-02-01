@@ -58,57 +58,36 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         
         let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
         let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
-        navigationItem.rightBarButtonItems = [editItem,backItem]
+        navigationItem.rightBarButtonItems = [editItem]
+        navigationItem.leftBarButtonItems = [backItem]
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            newsViewHeight = 450
-        } else {
-            newsViewHeight = 258
-        }
-        
-        self.titleLabel.text = self.newsTitle
-        self.titleLabel.numberOfLines = 2
-        
-        let date1 = self.newsDate
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
-        let elapsedTimeInSeconds = NSDate().timeIntervalSince(date1! as Date)
-        let secondInDays: TimeInterval = 60 * 60 * 24
-        if elapsedTimeInSeconds > 7 * secondInDays {
-            dateFormatter.dateFormat = "MMM dd, yyyy"
-        } else if elapsedTimeInSeconds > secondInDays {
-            dateFormatter.dateFormat = "EEEE"
-        }
-        let dateString = dateFormatter.string(from: date1!)
-        
-        self.detailLabel.text = String(format: "%@ %@ %@", (self.newsDetail!), "Uploaded", "\(dateString)")
-        self.detailLabel.textColor = .gray
-        self.detailLabel.sizeToFit()
-        
+       
+        setupConstraints()
+        setupForm()
         setupImageView()
         setupFonts()
         setupTextView()
         findFace()
-        setupConstraints()
+        
         self.navigationItem.titleView = self.titleButton
     }
     
-    //fix TextView Scroll first line
     override func viewWillAppear(_ animated: Bool) {
-        
+        super.viewWillAppear(animated)
+        //Fix Grey Bar in iphone Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
+        //fix TextView Scroll first line
         self.newsTextview.isScrollEnabled = false
         setupNewsNavigationItems()
-
-        /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.News.navColor
-        } */
     }
     
     //fix TextView Scroll first line
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.newsTextview.isScrollEnabled = true
     }
 
@@ -141,7 +120,31 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         }
     }
     
+    func setupForm() {
+        
+        self.titleLabel.text = self.newsTitle
+        self.titleLabel.numberOfLines = 2
+        
+        let date1 = self.newsDate
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        let elapsedTimeInSeconds = NSDate().timeIntervalSince(date1! as Date)
+        let secondInDays: TimeInterval = 60 * 60 * 24
+        
+        if elapsedTimeInSeconds > 7 * secondInDays {
+            dateFormatter.dateFormat = "MMM dd, yyyy"
+        } else if elapsedTimeInSeconds > secondInDays {
+            dateFormatter.dateFormat = "EEEE"
+        }
+        
+        let dateString = dateFormatter.string(from: date1!)
+        self.detailLabel.text = String(format: "%@ %@ %@", (self.newsDetail!), "Uploaded", "\(dateString)")
+        self.detailLabel.textColor = .gray
+        self.detailLabel.sizeToFit()
+    }
+    
     func setupFonts() {
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.titleLabel.font = Font.celltitle36r
             self.detailLabel.font = Font.celltitle20r
@@ -156,6 +159,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     }
     
     func setupTextView() {
+        
         self.newsTextview.text = self.newsStory
         self.newsTextview.delegate = self
         self.newsTextview.textContainerInset = UIEdgeInsetsMake(0, -4, 0, 0)
@@ -166,6 +170,12 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     }
     
     func setupConstraints() {
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            newsViewHeight = 450
+        } else {
+            newsViewHeight = 258
+        }
         
         newsImageview.addSubview(faceLabel)
   
@@ -184,8 +194,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         dismiss(animated: true, completion: nil)
     }
     
+    
     func editData(_ sender: AnyObject) {
-        
         self.performSegue(withIdentifier: "uploadSegue", sender: self)
     }
     

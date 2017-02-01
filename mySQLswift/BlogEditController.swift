@@ -194,8 +194,9 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
 //---------------------NSDataDetector-----------------------------
             
             let text = self.subject
-            let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
+            let types: NSTextCheckingResult.CheckingType = [.date, .phoneNumber, .link]
             let detector = try? NSDataDetector(types: types.rawValue)
+            
             detector?.enumerateMatches(in: text!, options: [], range: NSMakeRange(0, (text! as NSString).length)) { (result, flags, _) in
                 
                 let webattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
@@ -204,6 +205,8 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
                 
+                let dateattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
+                
                 if result!.resultType == .link {
                     
                     if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
@@ -211,10 +214,12 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                     } else {
                         cell?.subtitleLabel!.attributedText = webattributedText
                     }
-                    
                 } else if result?.resultType == .phoneNumber {
                     
                     cell?.subtitleLabel!.attributedText = phoneattributedText
+                } else if result?.resultType == .date {
+                    
+                    cell?.subtitleLabel!.attributedText = dateattributedText
                 }
             }
 //--------------------------------------------------

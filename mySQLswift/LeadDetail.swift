@@ -166,27 +166,15 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        emailTitle = defaults.string(forKey: "emailtitleKey")
-        messageBody = defaults.string(forKey: "emailmessageKey")
- 
+        
         let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(LeadDetail.editButton))
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(LeadDetail.actionButton))
         navigationItem.rightBarButtonItems = [editButton,actionButton]
         
-        let topBorder = CALayer()
-        let width = CGFloat(2.0)
-        topBorder.borderColor = UIColor.lightGray.cgColor
-        topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
-        topBorder.borderWidth = width
-        tableView!.layer.addSublayer(topBorder)
-        tableView!.layer.masksToBounds = true
-
-        //don't move addSubview(photoImage) keep above setupConstraints
-        self.mainView!.addSubview(photoImage)
-        setupConstraints()
-
         //Leave this setup below
+        setupConstraints()
         setupTableView()
+        setupForm()
         setupFonts()
         setupSwitch()
         parseData()
@@ -238,6 +226,20 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         self.newsTableView!.tableFooterView = UIView(frame: .zero)
     }
     
+    
+    func setupForm() {
+        emailTitle = defaults.string(forKey: "emailtitleKey")
+        messageBody = defaults.string(forKey: "emailmessageKey")
+        let topBorder = CALayer()
+        let width = CGFloat(2.0)
+        topBorder.borderColor = UIColor.lightGray.cgColor
+        topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
+        topBorder.borderWidth = width
+        tableView!.layer.addSublayer(topBorder)
+        tableView!.layer.masksToBounds = true
+    }
+    
+    
     func setupSwitch() {
         if (self.formController == "Leads") {
             if (self.tbl11 == "Sold") {
@@ -282,8 +284,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     }
     
     func setupConstraints() {
-        
-        mainView?.addSubview(self.mapButton)
+        mainView?.addSubview(photoImage)
+        mainView?.addSubview(mapButton)
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             

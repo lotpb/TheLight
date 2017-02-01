@@ -105,10 +105,6 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        self.pickerView.delegate = self
-        self.pickerView.dataSource = self
-        NotificationCenter.default.addObserver(self, selector: (#selector(EditData.updatePicker)), name: NSNotification.Name.UITextFieldTextDidBeginEditing, object: nil)
-        
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
         navigationItem.rightBarButtonItems = [saveButton]
         
@@ -120,11 +116,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             parseLookup()
         }
         
-        profileImageView!.layer.cornerRadius = 32.0
-        profileImageView!.layer.borderColor = Color.Blog.borderbtnColor
-        profileImageView!.layer.borderWidth = 2.0
-        profileImageView!.layer.masksToBounds = true
-        
+        setupForm()
         clearFormData()
         observeKeyboardNotifications() //Move Keyboard
         setupTableView()
@@ -151,7 +143,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-         NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -166,6 +158,17 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = .white
         self.tableView!.tableFooterView = UIView(frame: .zero)
+    }
+    
+    func setupForm() {
+        self.pickerView.delegate = self
+        self.pickerView.dataSource = self
+        NotificationCenter.default.addObserver(self, selector: (#selector(EditData.updatePicker)), name: NSNotification.Name.UITextFieldTextDidBeginEditing, object: nil)
+        
+        profileImageView!.layer.cornerRadius = 32.0
+        profileImageView!.layer.borderColor = Color.Blog.borderbtnColor
+        profileImageView!.layer.borderWidth = 2.0
+        profileImageView!.layer.masksToBounds = true
     }
     
     

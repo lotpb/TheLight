@@ -16,17 +16,12 @@ import UserNotifications
 class UploadController: UIViewController, UINavigationControllerDelegate,
 UIImagePickerControllerDelegate, UITextViewDelegate {
     
-    
     let addText = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."
     
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var imgToUpload: UIImageView!
     @IBOutlet weak var commentTitle: UITextField!
     @IBOutlet weak var commentSorce: UITextField!
-    @IBOutlet weak var commentDetail: UITextView!
-    @IBOutlet weak var clearButton: UIButton!
-    @IBOutlet weak var selectPic: UIButton!
     
     var playerViewController = AVPlayerViewController()
     var imagePicker = UIImagePickerController()
@@ -46,6 +41,25 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     var pictureData : Data!
     var videoURL : URL?
     
+    let newsImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .black
+        imageView.layer.masksToBounds = true
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    
+    let commentDetail: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.backgroundColor = .white
+        textView.autocorrectionType = .yes
+        textView.dataDetectorTypes = .all
+        return textView
+    }()
+    
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
@@ -56,32 +70,79 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         return button
     }()
     
+    lazy var clearButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Clear", for: .normal)
+        button.tintColor = Color.DGrayColor
+        button.layer.cornerRadius = 12.0
+        button.layer.borderColor = Color.DGrayColor.cgColor
+        button.layer.borderWidth = 2.0
+        button.addTarget(self, action: #selector(clearBtn), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var selectPic: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Select Picture", for: .normal)
+        button.tintColor = Color.DGrayColor
+        button.layer.cornerRadius = 12.0
+        button.layer.borderColor = Color.DGrayColor.cgColor
+        button.layer.borderWidth = 2.0
+        button.addTarget(self, action: #selector(selectImage), for: .touchUpInside)
+        return button
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.mainView.backgroundColor = Color.LGrayColor
-        self.progressView.isHidden = true
-        self.progressView.setProgress(0, animated: true)
         
         let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(shootPhoto))
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(uploadImage))
         navigationItem.rightBarButtonItems = [saveButton, cameraButton]
         
+        setupConstraints()
+        setupForm()
+        setupFonts()
+        self.navigationItem.titleView = self.titleButton
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.commentDetail.isScrollEnabled = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.commentDetail.isScrollEnabled = false
+        setupNewsNavigationItems()
+        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            
-            self.commentTitle!.font = Font.celltitle18r
-            self.commentDetail!.font = Font.celltitle18r
-            self.commentSorce.font = Font.celltitle18r
-            
-        } else {
-            self.commentTitle!.font = Font.celltitle16r
-            self.commentDetail!.font = Font.celltitle16r
-            self.commentSorce.font = Font.celltitle16r
-            
+            self.navigationController?.navigationBar.barTintColor = .black
         }
         
-        if (self.formStat == "Update") {
+        NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerViewController)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
+    
+    func setupForm() {
+        self.mainView.backgroundColor = Color.LGrayColor
+        self.commentDetail.delegate = self
+        self.progressView.isHidden = true
+        self.progressView.setProgress(0, animated: true)
+        
+        if self.formStat == "Update" {
             // FIXME:
             if (newsImage != nil) {
                 pickImage = true
@@ -92,66 +153,58 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             self.commentTitle.text = self.newstitle
             self.commentDetail.text = self.newsStory
             self.commentSorce.text = self.newsdetail
-            self.imgToUpload.image = self.newsImage
+            self.newsImageView.image = self.newsImage
         } else {
             self.commentDetail.text = addText
         }
-        
-        self.imgToUpload.isUserInteractionEnabled = true
-        
-        self.clearButton.setTitle("Clear", for: .normal)
-        self.clearButton .addTarget(self, action: #selector(clearBtn), for: .touchUpInside)
-        self.clearButton.tintColor = Color.DGrayColor
-        self.clearButton.layer.cornerRadius = 12.0
-        self.clearButton.layer.borderColor = Color.DGrayColor.cgColor
-        self.clearButton.layer.borderWidth = 2.0
-        
-        self.selectPic.tintColor = Color.DGrayColor
-        self.selectPic.layer.cornerRadius = 12.0
-        self.selectPic.layer.borderColor = Color.DGrayColor.cgColor
-        self.selectPic.layer.borderWidth = 2.0
-        
-        self.commentDetail.delegate = self
-        self.commentDetail.autocorrectionType = .yes
-        self.commentDetail.dataDetectorTypes = .all
+    }
+    
+    func setupFonts() {
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            setupConstraints()
+            self.commentTitle!.font = Font.celltitle18r
+            self.commentDetail.font = Font.celltitle18r
+            self.commentSorce.font = Font.celltitle18r
+        } else {
+            self.commentTitle!.font = Font.celltitle16r
+            self.commentDetail.font = Font.celltitle16r
+            self.commentSorce.font = Font.celltitle16r
         }
-        self.navigationItem.titleView = self.titleButton
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        self.commentDetail.isScrollEnabled = true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerViewController)
-        self.commentDetail.isScrollEnabled = false
-        setupNewsNavigationItems()
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        
     }
     
     func setupConstraints() {
+        mainView.addSubview(newsImageView)
+        mainView?.addSubview(commentDetail)
+        mainView.addSubview(selectPic)
+        mainView.addSubview(clearButton)
         
         commentTitle.translatesAutoresizingMaskIntoConstraints = false
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             commentTitle.widthAnchor.constraint(equalToConstant: 450).isActive = true
         } else {
-           commentTitle.widthAnchor.constraint(equalToConstant: 338).isActive = true
+            commentTitle.widthAnchor.constraint(equalToConstant: 338).isActive = true
         }
+        
+        newsImageView.topAnchor.constraint(equalTo: (commentSorce?.bottomAnchor)!, constant: 10).isActive = true
+        newsImageView.leadingAnchor.constraint( equalTo: (commentSorce?.leadingAnchor)!, constant: 0).isActive = true
+        newsImageView.trailingAnchor.constraint( equalTo: (commentSorce?.trailingAnchor)!, constant: 0).isActive = true
+        newsImageView.heightAnchor.constraint(equalToConstant: 202).isActive = true
+        
+        commentDetail.topAnchor.constraint(equalTo: (selectPic.bottomAnchor), constant: 15).isActive = true
+        commentDetail.leadingAnchor.constraint( equalTo: (commentSorce?.leadingAnchor)!, constant: 0).isActive = true
+        commentDetail.trailingAnchor.constraint( equalTo: (commentSorce?.trailingAnchor)!, constant: 0).isActive = true
+        //commentDetail.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: 40).isActive = true
+        commentDetail.heightAnchor.constraint(equalToConstant: 202).isActive = true
+        
+        selectPic.topAnchor.constraint(equalTo: (newsImageView.bottomAnchor), constant: 10).isActive = true
+        selectPic.leadingAnchor.constraint( equalTo: (newsImageView.leadingAnchor), constant: 0).isActive = true
+        selectPic.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        selectPic.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        clearButton.topAnchor.constraint(equalTo: (commentDetail.bottomAnchor), constant: 10).isActive = true
+        clearButton.leadingAnchor.constraint( equalTo: (commentSorce.leadingAnchor), constant: 0).isActive = true
+        clearButton.widthAnchor.constraint(equalToConstant: 75).isActive = true
+        clearButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     // MARK: - Button
@@ -167,8 +220,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         }
     }
     
-    // MARK: - Button
-    
     // MARK: Camera
     
     func shootPhoto(_ sender: AnyObject) {
@@ -179,7 +230,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             imagePicker.sourceType = .camera
             imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera)!
             imagePicker.delegate = self
-            //imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
+          //imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
             self.present(imagePicker, animated: true, completion: nil)
         } else{
             self.simpleAlert(title: "Alert!", message: "Camera not available")
@@ -193,7 +244,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         imagePicker.sourceType = .photoLibrary
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
         imagePicker.delegate = self
-        //imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
         self.present(imagePicker, animated: true, completion: nil)
     }
     
@@ -210,20 +260,19 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             let player = AVPlayer(url: videoURL!)
             playerViewController.player = player
    
-            playerViewController.view.frame = self.imgToUpload.bounds
+            playerViewController.view.frame = self.newsImageView.bounds
             playerViewController.videoGravity = AVLayerVideoGravityResizeAspect
             playerViewController.showsPlaybackControls = true
-            imgToUpload.addSubview(playerViewController.view)
+            newsImageView.addSubview(playerViewController.view)
             player.play()
             
         } else if mediaType.isEqual(to: kUTTypeImage as String) {
             
             pickImage = true
             let image = info[UIImagePickerControllerEditedImage] as? UIImage
-            imgToUpload.contentMode = .scaleAspectFill
-            imgToUpload.clipsToBounds = true
-            imgToUpload.image = image
-            
+            newsImageView.contentMode = .scaleAspectFill
+            newsImageView.clipsToBounds = true
+            newsImageView.image = image
         } 
     }
     
@@ -278,12 +327,12 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             self.navigationItem.rightBarButtonItem!.isEnabled = false
             self.progressView.isHidden = false
             
-            activityIndicator.center = self.imgToUpload!.center
+            activityIndicator.center = self.newsImageView.center
             activityIndicator.startAnimating()
             self.view.addSubview(activityIndicator)
             
             if (pickImage == true) { //image
-                pictureData = UIImageJPEGRepresentation(self.imgToUpload!.image!, 1.0)
+                pictureData = UIImageJPEGRepresentation(self.newsImageView.image!, 1.0)
                 file = PFFile(name: "img", data: pictureData!)
             } else { //video
                 
