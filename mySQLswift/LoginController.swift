@@ -51,10 +51,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     //Facebook
     var fbButton : FBSDKLoginButton = FBSDKLoginButton()
-    
     //Google
     var signInButton : GIDSignInButton = GIDSignInButton()
-    
+    //Twitter
     var twitterButton : TWTRLogInButton = TWTRLogInButton()
     
     let userImageView: UIImageView = {
@@ -71,31 +70,29 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         observeKeyboardNotifications() //Move Keyboard
         
-        if ((defaults.string(forKey: "registerKey") == nil)) {
-            
-            self.registerBtn!.setTitle("Register", for: .normal)
-            self.loginBtn!.isHidden = true //hide login button no user is regsitered
-            self.forgotPassword!.isHidden = true
-            self.authentButton!.isHidden = true
-            self.fbButton.isHidden = true
-            self.signInButton.isHidden = true
-            self.emailField!.isHidden = false
-            self.phoneField!.isHidden = false
-            
+        //Facebook
+        fbButton.delegate = self
+        if (FBSDKAccessToken.current() != nil) {
+            self.simpleAlert(title: "Alert", message: "User is already logged in")
         } else {
-            //Keychain
-            self.usernameField!.text = KeychainWrapper.standard.string(forKey: "usernameKey")
-            self.passwordField!.text = KeychainWrapper.standard.string(forKey: "passwordKey")
-            self.reEnterPasswordField!.isHidden = true
-            self.registerBtn!.isHidden = false
-            self.forgotPassword!.isHidden = false
-            self.fbButton.isHidden = false
-            self.signInButton.isHidden = false
-            self.emailField!.isHidden = true
-            self.phoneField!.isHidden = true
-            self.backloginBtn!.isHidden = true
+            fbButton.readPermissions = ["public_profile", "email", "user_friends","user_birthday"]
         }
         
+        //Google
+        GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
+        GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().delegate = self
+      //GIDSignIn.sharedInstance().signInSilently()
+        
+        //Twitter
+        setupTwitterButton()
+        
+        setupForm()
+        setupFont()
+        setupConstraints()
+    }
+    
+    func setupFont() {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.usernameField!.font = ipadtitle
             self.passwordField!.font = ipadtitle
@@ -109,7 +106,33 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.emailField!.font = celltitle
             self.phoneField!.font = celltitle
         }
+    }
+    
+    func setupForm() {
         
+        if ((defaults.string(forKey: "registerKey") == nil)) {
+            self.registerBtn!.setTitle("Register", for: .normal)
+            self.loginBtn!.isHidden = true //hide login button no user is regsitered
+            self.forgotPassword!.isHidden = true
+            self.authentButton!.isHidden = true
+            self.fbButton.isHidden = true
+            self.signInButton.isHidden = true
+            self.emailField!.isHidden = false
+            self.phoneField!.isHidden = false
+        } else {
+            //Keychain
+            self.usernameField!.text = KeychainWrapper.standard.string(forKey: "usernameKey")
+            self.passwordField!.text = KeychainWrapper.standard.string(forKey: "passwordKey")
+            self.reEnterPasswordField!.isHidden = true
+            self.registerBtn!.isHidden = false
+            self.forgotPassword!.isHidden = false
+            self.fbButton.isHidden = false
+            self.signInButton.isHidden = false
+            self.emailField!.isHidden = true
+            self.phoneField!.isHidden = true
+            self.backloginBtn!.isHidden = true
+        }
+
         self.registerBtn!.setTitleColor(.white, for: .normal)
         self.loginBtn!.setTitleColor(.white, for: .normal)
         self.backloginBtn!.setTitleColor(.white, for: .normal)
@@ -118,30 +141,11 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         self.passwordField!.text = ""
         self.userimage = nil
-        
-        //Facebook
-        fbButton.delegate = self
-        if (FBSDKAccessToken.current() != nil) {
-            self.simpleAlert(title: "Alert", message: "User is already logged in")
-        } else {
-            fbButton.readPermissions = ["public_profile", "email", "user_friends","user_birthday"]
-        }
-        self.mainView.addSubview(fbButton)
-        
-        //Google
-        GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
-        GIDSignIn.sharedInstance().uiDelegate = self
-        GIDSignIn.sharedInstance().delegate = self
-        //GIDSignIn.sharedInstance().signInSilently()
-        self.mainView.addSubview(signInButton)
-        
-        //Twitter
-        setupTwitterButton()
-        setupConstraints()
-
     }
     
     func setupConstraints() {
+        self.mainView.addSubview(fbButton)
+        self.mainView.addSubview(signInButton)
         
         mapView?.translatesAutoresizingMaskIntoConstraints = false
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -296,7 +300,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 self.simpleAlert(title: "Success", message: "You have registered a new user")
                 
             } else {
-                self.simpleAlert(title: "Alert", message: "Error: \(error)")
+                self.simpleAlert(title: "Alert", message: "Error: \(String(describing: error))")
             }
         }
         /*
@@ -581,8 +585,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     func refreshLocation() {
         
-        PFGeoPoint.geoPointForCurrentLocation {
-            (geoPoint: PFGeoPoint?, error: Error?) -> Void in
+        PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) -> Void in
             if error == nil {
                 PFUser.current()!.setValue(geoPoint, forKey: "currentLocation")
                 PFUser.current()!.saveInBackground()

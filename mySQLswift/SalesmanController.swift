@@ -32,11 +32,14 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     var userProfileImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.backgroundColor = .black
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.lightGray.cgColor
         imageView.layer.borderWidth = 0.5
+        imageView.layer.cornerRadius = imageView.frame.size.width / 2.0
         imageView.layer.masksToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
-        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -179,9 +182,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
                 }, completion: nil)
                 
             }
-            self.userProfileImageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
-            self.userProfileImageView.layer.cornerRadius = self.userProfileImageView.frame.size.width / 2.0
-            self.userProfileImageView.clipsToBounds = true
+            self.userProfileImageView.frame = CGRect(x: 10, y: 10, width: 40, height: 40)
             cell.addSubview(userProfileImageView)
         } else {
             cell.salestitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Salesman") as? String
@@ -429,7 +430,7 @@ extension SalesmanController: UISearchResultsUpdating {
         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
         let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
         query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in

@@ -7,10 +7,7 @@
 //
 
 import UIKit
-import Parse
-import AVKit
-import AVFoundation
-//import MobileCoreServices //kUTTypeImage
+
 
 class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewControllerDelegate {
     
@@ -28,12 +25,14 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     var newsDate: Date?
     var videoURL: String?
     
-    var newsViewHeight: CGFloat!
+    var SnapshotBool = false //hide leftBarButtonItems
+    
+    //var newsViewHeight: CGFloat!
     
     let faceLabel: UILabel = {
         let label = UILabel()
         label.text = "---"
-        label.font = Font.celltitle18r
+        label.font = Font.celltitle14r
         label.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         label.textColor = .white
         label.sizeToFit()
@@ -59,9 +58,12 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
         let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
         navigationItem.rightBarButtonItems = [editItem]
-        navigationItem.leftBarButtonItems = [backItem]
-        
-       
+        if SnapshotBool == false {
+            navigationItem.leftBarButtonItems = [backItem]
+        } else {
+            navigationItem.leftBarButtonItems = nil
+        }
+
         setupConstraints()
         setupForm()
         setupImageView()
@@ -85,9 +87,9 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         setupNewsNavigationItems()
     }
     
-    //fix TextView Scroll first line
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        //fix TextView Scroll first line
         self.newsTextview.isScrollEnabled = true
     }
 
@@ -104,20 +106,18 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         
         self.scrollView.minimumZoomScale = 1.0
         self.scrollView.maximumZoomScale = 6.0
-        self.newsImageview.backgroundColor = .black
-        self.newsImageview.isUserInteractionEnabled = true
         
         UIView.transition(with: self.newsImageview, duration: 0.5, options: .transitionCrossDissolve, animations: {
             self.newsImageview.image = self.image
         }, completion: nil)
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
-            self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFit
-            self.newsImageview.clipsToBounds = true
-        } else {
-            self.newsImageview.contentMode = .scaleToFill
-        }
+        self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
+        self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFill //.scaleAspectFit
+        self.newsImageview.clipsToBounds = true
+        
+        self.newsImageview.backgroundColor = .black
+        self.newsImageview.isUserInteractionEnabled = true
+        
     }
     
     func setupForm() {
@@ -171,18 +171,20 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     
     func setupConstraints() {
         
+        let height = (view.frame.width * 9 / 16)
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             newsViewHeight = 450
         } else {
             newsViewHeight = 258
-        }
+        } */
         
         newsImageview.addSubview(faceLabel)
   
         newsImageview.translatesAutoresizingMaskIntoConstraints = false
-        newsImageview.heightAnchor.constraint(equalToConstant: newsViewHeight).isActive = true
+        newsImageview.heightAnchor.constraint(equalToConstant: height).isActive = true
         
-        faceLabel.topAnchor.constraint( equalTo: newsImageview.topAnchor, constant: +10).isActive = true
+        faceLabel.topAnchor.constraint( equalTo: newsImageview.topAnchor, constant: +5).isActive = true
         faceLabel.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor, constant: +5).isActive = true
         faceLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
@@ -225,7 +227,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         }
         
         if faces!.count != 0 {
-            self.faceLabel.text = "Number of Faces: \(faces!.count)"
+            self.faceLabel.text = "Faces: \(faces!.count)"
         } else {
             self.faceLabel.text = "No Faces 😢"
         }

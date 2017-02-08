@@ -213,16 +213,13 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     // MARK: - Button
     
     func selectVideo() {
-        
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            
             imagePicker = UIImagePickerController()
             imagePicker.sourceType = .camera
             imagePicker.mediaTypes = [kUTTypeImage as String]
             imagePicker.allowsEditing = true
             imagePicker.delegate = self
             imagePicker.showsCameraControls = true
-            //imagePicker.videoMaximumDuration = 10.0
             self.present(imagePicker, animated: true, completion: nil)
         } else {
             print("Camera is not available")
@@ -231,20 +228,23 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     
     func selectCamera() {
-        
-        imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .savedPhotosAlbum
-        imagePicker.mediaTypes = [kUTTypeImage as String]
-        imagePicker.allowsEditing = true
-        imagePicker.delegate = self
-        self.present(imagePicker, animated: false, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
+            imagePicker = UIImagePickerController()
+            imagePicker.sourceType = .savedPhotosAlbum
+            imagePicker.mediaTypes = [kUTTypeImage as String]
+            imagePicker.allowsEditing = true
+            imagePicker.delegate = self
+            self.present(imagePicker, animated: false, completion: nil)
+        }
     }
     
     
-    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            
-            self.userimageView!.image = pickedImage
+            self.userimageView?.contentMode = .scaleAspectFill
+            self.userimageView?.clipsToBounds = true
+            self.userimageView?.image = pickedImage
             dismiss(animated: true, completion: { () -> Void in
             })
         }
@@ -253,7 +253,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        picker.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     
@@ -304,8 +304,8 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         let email = MFMailComposeViewController()
         email.mailComposeDelegate = self
         email.setToRecipients([emailfield as String])
-        email.setSubject((emailTitle as? String)!)
-        email.setMessageBody((messageBody as? String)!, isHTML:true)
+        email.setSubject((emailTitle as String?)!)
+        email.setMessageBody((messageBody as String?)!, isHTML:true)
         email.modalTransitionStyle = .flipHorizontal
         self.present(email, animated: true, completion: nil)
     }

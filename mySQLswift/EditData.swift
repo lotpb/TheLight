@@ -12,13 +12,10 @@ import Parse
 class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var tableView: UITableView?
-    
     @IBOutlet weak var first: UITextField!
     @IBOutlet weak var last: UITextField!
     @IBOutlet weak var company: UITextField!
     @IBOutlet weak var profileImageView: UIImageView?
-    
-    var activeImage: UIImageView?
     
     var datePickerView : UIDatePicker = UIDatePicker()
     var pickerView : UIPickerView = UIPickerView()
@@ -98,6 +95,14 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return button
     }()
     
+    let activeImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -166,7 +171,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         NotificationCenter.default.addObserver(self, selector: (#selector(EditData.updatePicker)), name: NSNotification.Name.UITextFieldTextDidBeginEditing, object: nil)
         
         profileImageView!.layer.cornerRadius = 32.0
-        profileImageView!.layer.borderColor = Color.Blog.borderbtnColor
+        profileImageView!.layer.borderColor = Color.Blog.borderColor.cgColor
         profileImageView!.layer.borderWidth = 2.0
         profileImageView!.layer.masksToBounds = true
     }
@@ -213,7 +218,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             textframe = UITextField(frame:CGRect(x: 118, y: 7, width: 250, height: 30))
             textviewframe = UITextView(frame:CGRect(x: 118, y: 7, width: 250, height: 85))
-            activeImage = UIImageView(frame:CGRect(x: 118, y: 10, width: 18, height: 22))
+            activeImage.frame = CGRect(x: 118, y: 10, width: 18, height: 22)
             textframe!.font = Font.celltitle20l
             aptframe!.font = Font.celltitle20l
             textviewframe!.font = Font.celltitle20l
@@ -222,7 +227,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             textframe = UITextField(frame:CGRect(x: 118, y: 7, width: 205, height: 30))
             textviewframe = UITextView(frame:CGRect(x: 118, y: 7, width: 240, height: 85))
-            activeImage = UIImageView(frame:CGRect(x: 118, y: 10, width: 18, height: 22))
+            activeImage.frame = CGRect(x: 118, y: 10, width: 18, height: 22)
             textframe!.font = Font.celltitle20l
             aptframe!.font = Font.celltitle20l
             textviewframe!.font = Font.celltitle20l
@@ -262,15 +267,14 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         if (indexPath.row == 0) {
             
             let theSwitch = UISwitch(frame:CGRect.zero)
-            self.activeImage?.contentMode = .scaleAspectFill
             
             if self.frm30 == "1" {
                 theSwitch.isOn = true
-                self.activeImage!.image = UIImage(named:"iosStar.png")
+                self.activeImage.image = UIImage(named:"iosStar.png")
                 cell.textLabel!.text = "Active"
             } else {
                 theSwitch.isOn = false
-                self.activeImage!.image = UIImage(named:"iosStarNA.png")
+                self.activeImage.image = UIImage(named:"iosStarNA.png")
                 cell.textLabel!.text = "Inactive"
             }
             theSwitch.onTintColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
@@ -279,7 +283,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
 
             cell.addSubview(theSwitch)
             cell.accessoryView = theSwitch
-            cell.contentView.addSubview(activeImage!)
+            cell.contentView.addSubview(activeImage)
             
         } else if (indexPath.row == 1) {
             
@@ -1013,7 +1017,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             if (self.formController == "Leads") {
                 
-                let myActive : NSNumber = numberFormatter.number(from: (self.frm30 as? String)!)!
+                let myActive : NSNumber = numberFormatter.number(from: (self.frm30 as String?)!)!
                 
                 var Lead = self.leadNo
                 if Lead == nil { Lead = "" }

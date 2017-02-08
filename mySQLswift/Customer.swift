@@ -269,14 +269,14 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
         myLabel1.numberOfLines = 0
         myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
+        myLabel1.textColor = Color.Header.headtextColor
         myLabel1.textAlignment = .center
         myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Cust\n", _feedItems.count)
         myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
         myLabel1.isUserInteractionEnabled = true
-        myLabel1.layer.borderColor = UIColor.lightGray.cgColor
+        myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel1.layer.borderWidth = 1
         vw.addSubview(myLabel1)
         
@@ -287,14 +287,14 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
         myLabel2.numberOfLines = 0
         myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
+        myLabel2.textColor = Color.Header.headtextColor
         myLabel2.textAlignment = .center
         myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
         myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
         myLabel2.isUserInteractionEnabled = true
-        myLabel2.layer.borderColor = UIColor.lightGray.cgColor
+        myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel2.layer.borderWidth = 1
         vw.addSubview(myLabel2)
         
@@ -305,14 +305,14 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
         myLabel3.numberOfLines = 0
         myLabel3.backgroundColor = .white
-        myLabel3.textColor = .black
+        myLabel3.textColor = Color.Header.headtextColor
         myLabel3.textAlignment = .center
         myLabel3.layer.masksToBounds = true
         myLabel3.text = String(format: "%@%d", "Events\n", 3)
         myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
         myLabel3.isUserInteractionEnabled = true
-        myLabel3.layer.borderColor = UIColor.lightGray.cgColor
+        myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel3.layer.borderWidth = 1
         vw.addSubview(myLabel3)
         
@@ -568,7 +568,7 @@ extension Customer: UISearchResultsUpdating {
         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
         let lastNameQuery = PFQuery(className:"Customer")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
         query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in

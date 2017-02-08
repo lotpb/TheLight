@@ -176,7 +176,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         
         // Form the request URL string.
-        var urlString = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=\(textField.text)&type=\(type)&key=\(apiKey)"
+        var urlString = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=\(String(describing: textField.text))&type=\(type)&key=\(apiKey)"
         urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         
         // Create a NSURL object based on the above string.
@@ -227,7 +227,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             }
             else {
                 print("HTTP Status Code = \(HTTPStatusCode)")
-                print("Error crap while loading channel videos: \(error)")
+                print("Error crap while loading channel videos: \(String(describing: error))")
             }
             
             // Hide the activity indicator.
@@ -247,7 +247,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let sessionConfiguration = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfiguration)
-        let task = session.dataTask(with: request) { data, response, error in DispatchQueue.main.async { completion(data, (response as! HTTPURLResponse).statusCode, error as? NSError) } }
+        let task = session.dataTask(with: request) { data, response, error in DispatchQueue.main.async { completion(data, (response as! HTTPURLResponse).statusCode, error as NSError?) } }
         
         task.resume()
         
@@ -302,7 +302,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
                 
             } else {
                 print("HTTP Status Code = \(HTTPStatusCode)")
-                print("Error while loading channel details: \(error)")
+                print("Error while loading channel details: \(String(describing: error))")
             }
         })
     }
@@ -339,7 +339,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
             }
             else {
                 print("HTTP Status Code = \(HTTPStatusCode)")
-                print("Error while loading channel videos: \(error)")
+                print("Error while loading channel videos: \(String(describing: error))")
             }
             self.viewWait.isHidden = true
         })

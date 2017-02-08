@@ -29,7 +29,6 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     var price: UITextField!
     
     var image : UIImage!
-    var activeImage: UIImageView!
     
     var objects = [AnyObject]()
     var pasteBoard = UIPasteboard.general
@@ -59,6 +58,14 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
+    }()
+    
+    let activeImage: UIImageView = { //tableheader
+        let imageView = UIImageView()
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     override func viewDidLoad() {
@@ -156,7 +163,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         textframe = UITextField(frame:CGRect(x: 130, y: 7, width: 175, height: 30))
-        activeImage = UIImageView(frame:CGRect(x: 130, y: 10, width: 18, height: 22))
+        activeImage.frame = CGRect(x: 130, y: 10, width: 18, height: 22)
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.textLabel!.font = Font.Stat.celltitlePad
@@ -180,19 +187,18 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             if self.frm11 == "Active" {
                 theSwitch.isOn = true
                 self.active = (self.frm11)!
-                self.activeImage!.image = UIImage(named:"iosStar.png")
+                self.activeImage.image = UIImage(named:"iosStar.png")
                 cell.textLabel!.text = "Active"
             } else {
                 theSwitch.isOn = false
                 self.active = ""
-                self.activeImage!.image = UIImage(named:"iosStarNA.png")
+                self.activeImage.image = UIImage(named:"iosStarNA.png")
                 cell.textLabel!.text = "Inactive"
             }
             
-            self.activeImage?.contentMode = .scaleAspectFill
             cell.addSubview(theSwitch)
             cell.accessoryView = theSwitch
-            cell.contentView.addSubview(activeImage!)
+            cell.contentView.addSubview(activeImage)
             
         } else if (indexPath.row == 1) {
             

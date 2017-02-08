@@ -34,6 +34,9 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var resultsController: UITableViewController!
     var foundUsers = [String]()
     
+    // MARK: NavigationController Hidden
+    var lastContentOffset: CGFloat = 0.0
+    
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = Color.twitterText
@@ -44,9 +47,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return refreshControl
     }()
     
-    // MARK: NavigationController Hidden
-    var lastContentOffset: CGFloat = 0.0
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -100,13 +101,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         resultsController.tableView.delegate = self
     }
     
-    /*
-    func setupNavBarButtons() {
-        
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(Blog.newButton))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(Blog.searchButton))
-        navigationItem.rightBarButtonItems = [addButton,searchButton]
-    } */
     
     // MARK: - NavigationController Hidden
     
@@ -346,14 +340,14 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
             myLabel1.numberOfLines = 0
             myLabel1.backgroundColor = .white
-            myLabel1.textColor = Color.twitterBlue
+            myLabel1.textColor = Color.goldColor
             myLabel1.textAlignment = .center
-            myLabel1.layer.masksToBounds = true
             myLabel1.text = String(format: "%@%d", "Blog\n", _feedItems.count)
             myLabel1.font = Font.celltitle14m
             myLabel1.layer.cornerRadius = 25.0
-            myLabel1.layer.borderColor = Color.Blog.borderbtnColor
-            myLabel1.layer.borderWidth = 2
+            myLabel1.layer.borderColor = Color.Blog.borderColor.cgColor
+            myLabel1.layer.borderWidth = 1
+            myLabel1.layer.masksToBounds = true
             myLabel1.isUserInteractionEnabled = true
             vw.addSubview(myLabel1)
             
@@ -364,14 +358,14 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
             myLabel2.numberOfLines = 0
             myLabel2.backgroundColor = .white
-            myLabel2.textColor = Color.twitterBlue
+            myLabel2.textColor = Color.goldColor
             myLabel2.textAlignment = .center
-            myLabel2.layer.masksToBounds = true
             myLabel2.text = String(format: "%@%d", "Likes\n", _feedheadItems2.count)
             myLabel2.font = Font.celltitle14m
             myLabel2.layer.cornerRadius = 25.0
-            myLabel2.layer.borderColor = Color.Blog.borderbtnColor
-            myLabel2.layer.borderWidth = 2
+            myLabel2.layer.borderColor = Color.Blog.borderColor.cgColor
+            myLabel2.layer.borderWidth = 1
+            myLabel2.layer.masksToBounds = true
             myLabel2.isUserInteractionEnabled = true
             vw.addSubview(myLabel2)
             
@@ -382,14 +376,14 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
             myLabel3.numberOfLines = 0
             myLabel3.backgroundColor = .white
-            myLabel3.textColor = Color.twitterBlue
+            myLabel3.textColor = Color.goldColor
             myLabel3.textAlignment = .center
-            myLabel3.layer.masksToBounds = true
             myLabel3.text = String(format: "%@%d", "Users\n", _feedheadItems3.count)
             myLabel3.font = Font.celltitle14m
             myLabel3.layer.cornerRadius = 25.0
-            myLabel3.layer.borderColor = Color.Blog.borderbtnColor
-            myLabel3.layer.borderWidth = 2
+            myLabel3.layer.borderColor = Color.Blog.borderColor.cgColor
+            myLabel3.layer.borderWidth = 1
+            myLabel3.layer.masksToBounds = true
             myLabel3.isUserInteractionEnabled = true
             vw.addSubview(myLabel3)
             
@@ -801,7 +795,7 @@ extension Blog: UISearchResultsUpdating {
         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
         let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
         query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in

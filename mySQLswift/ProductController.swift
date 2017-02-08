@@ -408,7 +408,7 @@ extension ProductController: UISearchResultsUpdating {
         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
         let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
         query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in

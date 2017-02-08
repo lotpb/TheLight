@@ -27,10 +27,12 @@ extension Blog {
         let searchButton = UIButton(type: .system)
         searchButton.setImage(#imageLiteral(resourceName: "search").withRenderingMode(.alwaysOriginal), for: .normal)
         searchButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        searchButton.addTarget(self, action: #selector(Blog.searchButton), for: .touchUpInside)
         
         let composeButton = UIButton(type: .system)
         composeButton.setImage(#imageLiteral(resourceName: "compose").withRenderingMode(.alwaysOriginal), for: .normal)
         composeButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        composeButton.addTarget(self, action: #selector(Blog.newButton), for: .touchUpInside)
         
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: composeButton), UIBarButtonItem(customView: searchButton)]
     }

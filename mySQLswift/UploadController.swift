@@ -174,7 +174,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     
     func setupConstraints() {
         mainView.addSubview(newsImageView)
-        mainView?.addSubview(commentDetail)
+        mainView.addSubview(commentDetail)
         mainView.addSubview(selectPic)
         mainView.addSubview(clearButton)
         
@@ -185,16 +185,16 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             commentTitle.widthAnchor.constraint(equalToConstant: 338).isActive = true
         }
         
+        let height = ((commentTitle.frame.width) * 9 / 16) + 16
         newsImageView.topAnchor.constraint(equalTo: (commentSorce?.bottomAnchor)!, constant: 10).isActive = true
         newsImageView.leadingAnchor.constraint( equalTo: (commentSorce?.leadingAnchor)!, constant: 0).isActive = true
         newsImageView.trailingAnchor.constraint( equalTo: (commentSorce?.trailingAnchor)!, constant: 0).isActive = true
-        newsImageView.heightAnchor.constraint(equalToConstant: 202).isActive = true
+        newsImageView.heightAnchor.constraint(equalToConstant: height).isActive = true
         
         commentDetail.topAnchor.constraint(equalTo: (selectPic.bottomAnchor), constant: 15).isActive = true
         commentDetail.leadingAnchor.constraint( equalTo: (commentSorce?.leadingAnchor)!, constant: 0).isActive = true
         commentDetail.trailingAnchor.constraint( equalTo: (commentSorce?.trailingAnchor)!, constant: 0).isActive = true
-        //commentDetail.bottomAnchor.constraint( equalTo: view.bottomAnchor, constant: 40).isActive = true
-        commentDetail.heightAnchor.constraint(equalToConstant: 202).isActive = true
+        commentDetail.heightAnchor.constraint(equalToConstant: 200).isActive = true
         
         selectPic.topAnchor.constraint(equalTo: (newsImageView.bottomAnchor), constant: 10).isActive = true
         selectPic.leadingAnchor.constraint( equalTo: (newsImageView.leadingAnchor), constant: 0).isActive = true
@@ -230,7 +230,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             imagePicker.sourceType = .camera
             imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera)!
             imagePicker.delegate = self
-          //imagePicker.videoQuality = UIImagePickerControllerQualityType.typeHigh
             self.present(imagePicker, animated: true, completion: nil)
         } else{
             self.simpleAlert(title: "Alert!", message: "Camera not available")
@@ -308,7 +307,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
         let request = UNNotificationRequest(identifier: "news-id-123", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        
     }
 
     
@@ -319,11 +317,8 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         guard let text = self.commentTitle.text else { return }
         
         if text == "" {
-            
             self.simpleAlert(title: "Oops!", message: "No text entered.")
-            
         } else {
-            
             self.navigationItem.rightBarButtonItem!.isEnabled = false
             self.progressView.isHidden = false
             
@@ -335,7 +330,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                 pictureData = UIImageJPEGRepresentation(self.newsImageView.image!, 1.0)
                 file = PFFile(name: "img", data: pictureData!)
             } else { //video
-                
                 pictureData =  try? Data(contentsOf: videoURL!)
                 file = PFFile(name: "movie.mp4", data: pictureData!)
             }
@@ -346,14 +340,13 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                 query.whereKey("objectId", equalTo:self.objectId!)
                 query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
                     if error == nil {
-                        updateblog!.setObject(self.commentTitle.text!, forKey:"newsTitle")
-                        updateblog!.setObject(self.commentSorce.text!, forKey:"newsDetail")
-                        updateblog!.setObject(self.commentDetail.text!, forKey:"storyText")
-                        updateblog!.setObject(PFUser.current()!.username!, forKey:"username")
+                        updateblog!.setObject(self.commentTitle.text ?? NSNull(), forKey:"newsTitle")
+                        updateblog!.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
+                        updateblog!.setObject(self.commentDetail.text ?? NSNull(), forKey:"storyText")
+                        updateblog!.setObject(PFUser.current()!.username ?? NSNull(), forKey:"username")
                         updateblog!.saveEventually()
                         
                         if self.editImage == true {
-                            
                             self.file!.saveInBackground { (success: Bool, error: Error?) -> Void in
                                 if success {
                                     updateblog!.setObject(self.file!, forKey:"imageFile")
@@ -371,9 +364,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                                     }
                                 }
                             }
-                            
                         } else {
-                            
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                         }
                         self.navigationItem.rightBarButtonItem!.isEnabled = true
@@ -385,30 +376,24 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                 }
                 
             } else {
-                
                 file!.saveInBackground { (success: Bool, error: Error?) -> Void in
                     if success {
                         let updateuser:PFObject = PFObject(className:"Newsios")
-                        updateuser.setObject(self.file!, forKey:"imageFile")
-                        updateuser.setObject(self.commentTitle.text!, forKey:"newsTitle")
-                        updateuser.setObject(self.commentSorce.text!, forKey:"newsDetail")
-                        updateuser.setObject(self.commentDetail.text!, forKey:"storyText")
-                        updateuser.setObject(PFUser.current()!.username!, forKey:"username")
+                        updateuser.setObject(self.file ?? NSNull(), forKey:"imageFile")
+                        updateuser.setObject(self.commentTitle.text ?? NSNull(), forKey:"newsTitle")
+                        updateuser.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
+                        updateuser.setObject(self.commentDetail.text ?? NSNull(), forKey:"storyText")
+                        updateuser.setObject(PFUser.current()!.username ?? NSNull(), forKey:"username")
                         updateuser.saveInBackground { (success: Bool, error: Error?) -> Void in
-                            
                             if success {
-                                
                                 self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
                                 self.newsNotification()
                             } else {
-                                
-                                print("Error: \(error) \(error!._userInfo)")
+                                print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
                             }
                         }
                     } else {
-                        
                         self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                        
                     }
                 }
             }

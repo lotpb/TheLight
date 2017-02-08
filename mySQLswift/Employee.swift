@@ -231,6 +231,8 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
         myLabel1.isUserInteractionEnabled = true
+        myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
+        myLabel1.layer.borderWidth = 1
         vw.addSubview(myLabel1)
         
         let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
@@ -247,6 +249,8 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
         myLabel2.isUserInteractionEnabled = true
+        myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
+        myLabel2.layer.borderWidth = 1
         vw.addSubview(myLabel2)
         
         let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
@@ -263,6 +267,8 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
         myLabel3.isUserInteractionEnabled = true
+        myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
+        myLabel3.layer.borderWidth = 1
         vw.addSubview(myLabel3)
         
         let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
@@ -476,7 +482,7 @@ extension Employee: UISearchResultsUpdating {
         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
         let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
         query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in

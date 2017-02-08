@@ -17,8 +17,6 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var Like: UIButton?
     @IBOutlet weak var update: UIButton?
     
-    var replylikeButton: UIButton?
-    
     var _feedItems : NSMutableArray = NSMutableArray()
     var _feedItems1 : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
@@ -32,6 +30,17 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     var rating : String?
     var replyId : String?
     var liked : Int?
+    
+    lazy var replylikeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.tintColor = .lightGray
+        let image: UIImage = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.isHidden = false
+        button.addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -57,9 +66,9 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         self.Like!.setImage(likeImage, for: .normal)
         self.Like!.setTitleColor(.gray, for: .normal)
         
-        parseData()
         setupTableView()
         setupForm()
+        parseData()
         self.tableView!.addSubview(self.refreshControl)
     }
     
@@ -280,10 +289,10 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             }
             cell?.replynumLabel!.text = "\(Liked!)"
             
-            cell?.replylikeButton.tintColor = .lightGray
-            let replyimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-            cell?.replylikeButton .setImage(replyimage, for: .normal)
-            cell?.replylikeButton .addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
+            //cell?.replylikeButton.tintColor = .lightGray
+            //let replyimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
+            //cell?.replylikeButton .setImage(replyimage, for: .normal)
+            //cell?.replylikeButton .addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
             
             if !(cell?.replynumLabel.text == "0") {
                 cell?.replynumLabel.textColor = .red

@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Bolts.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -59,6 +64,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>TRON.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>YouTubePlayer.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -67,7 +77,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2BFCEE71760F83B19053290953250540</key>
+		<key>13FB7B283889B3A6FC5D232C80445920</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -78,11 +88,6 @@
 			<true/>
 		</dict>
 		<key>30D7FCF8072F5D59AE1C98D94F9A6EC9</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>34130F9FF92C7D1BD109F42204D37F26</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -102,12 +107,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>7D04535608058A2FABC0D16935868FB9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>88C7FACD5D31604CCE5B355E27A0489A</key>
+		<key>955B5EE59667759E771CDBC34B1C8EF1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -117,12 +127,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C2F0B67235C79BBF46CDE1E67C415B31</key>
+		<key>D468777BEC2DE5127A16239373FFD11F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D468777BEC2DE5127A16239373FFD11F</key>
+		<key>E7482EF663354EC4404A96DF569AE525</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FB51C57D170B2372998B0AC9DBFA0B33</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC5819067812C69F0D5FFA45FBB95DE7</key>
 		<dict>
 			<key>primary</key>
 			<true/>

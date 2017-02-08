@@ -24,10 +24,7 @@ target 'TheLight' do
     
     pod 'SwiftKeychainWrapper'
     
-    pod 'SwiftyJSON', git: 'https://github.com/BaiduHiDeviOS/SwiftyJSON.git', branch: 'swift3'
-    
+    pod 'TRON', '~> 2.0.0'
     pod 'YouTubePlayer'
-    
-    #pod 'Alamofire', '~> 4.0'
     #pod 'JSQMessagesViewController'
 end

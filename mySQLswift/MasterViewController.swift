@@ -22,7 +22,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     var currentItem = "Snapshot"
     
     var player : AVAudioPlayer! = nil
-    var photoImage: UIImageView!
     var objects = [AnyObject]()
     
     var searchController: UISearchController!
@@ -46,6 +45,15 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
+    }()
+    
+    let photoImage: UIImageView = { //tableheader
+        let imageView = UIImageView()
+        imageView.image = UIImage(named:"IMG_1133.jpg")
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.masksToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
 
     
@@ -178,11 +186,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         self.present(alertController, animated: true, completion: nil)
     }
-    
-    func statButton() {
-        
-        self.performSegue(withIdentifier: "statisticSegue", sender: self)
-    }
+
 
     // MARK: - Table View
 
@@ -305,52 +309,53 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let vw = UIView()
                 tableView.tableHeaderView = vw
                 
-                photoImage = UIImageView(frame:CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 145))
-                photoImage.image = UIImage(named:"IMG_1133.jpg")
-                photoImage.layer.masksToBounds = true
-                photoImage.contentMode = .scaleAspectFill
+                photoImage.frame = CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 145)
                 vw.addSubview(photoImage)
                 
                 let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
                 visualEffectView.frame = photoImage.bounds
                 photoImage.addSubview(visualEffectView)
                 
-                let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 80, height: 80))
+                let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 74, height: 74))
                 myLabel1.numberOfLines = 0
                 myLabel1.backgroundColor = .white
-                myLabel1.textColor = .black
+                myLabel1.textColor = Color.goldColor
                 myLabel1.textAlignment = .center
-                myLabel1.layer.masksToBounds = true
                 myLabel1.text = String(format: "%@%d", "COUNT\n", menuItems.count )
                 myLabel1.font = Font.celltitle14m
-                myLabel1.layer.cornerRadius = 40.0
+                myLabel1.layer.cornerRadius = 37.0
+                myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
+                myLabel1.layer.borderWidth = 1
+                myLabel1.layer.masksToBounds = true
                 myLabel1.isUserInteractionEnabled = true
                 vw.addSubview(myLabel1)
                 
-                let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 110, width: 80, height: 3.5))
+                let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 105, width: 74, height: 3.5))
                 separatorLineView1.backgroundColor = .green
                 vw.addSubview(separatorLineView1)
                 
-                let myLabel2:UILabel = UILabel(frame: CGRect(x: 110, y: 10, width: 80, height: 80))
+                let myLabel2:UILabel = UILabel(frame: CGRect(x: 110, y: 10, width: 74, height: 74))
                 myLabel2.numberOfLines = 0
                 myLabel2.backgroundColor = .white
-                myLabel2.textColor = .black
+                myLabel2.textColor = Color.goldColor
                 myLabel2.textAlignment = .center
-                myLabel2.layer.masksToBounds = true
                 myLabel2.text = "NASDAQ \n \(tradeYQL![0])"
                 myLabel2.font = Font.celltitle14m
-                myLabel2.layer.cornerRadius = 40.0
+                myLabel2.layer.cornerRadius = 37.0
+                myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
+                myLabel2.layer.borderWidth = 1
+                myLabel2.layer.masksToBounds = true
                 myLabel2.isUserInteractionEnabled = true
                 vw.addSubview(myLabel2)
                 
-                let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 90, width: 80, height: 20))
+                let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 85, width: 74, height: 20))
                 myLabel25.numberOfLines = 1
                 myLabel25.textAlignment = .center
                 myLabel25.text = changeYQL[0] as? String
                 myLabel25.font = Font.celltitle14m
                 vw.addSubview(myLabel25)
                 
-                let separatorLineView2 = UIView(frame: CGRect(x: 110, y: 110, width: 80, height: 3.5))
+                let separatorLineView2 = UIView(frame: CGRect(x: 110, y: 105, width: 74, height: 3.5))
                 if (changeYQL?[0] as AnyObject).contains("-") {
                     separatorLineView2.backgroundColor = .red
                     myLabel25.textColor = .red
@@ -360,26 +365,28 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 }
                 vw.addSubview(separatorLineView2)
                 
-                let myLabel3:UILabel = UILabel(frame: CGRect(x: 210, y: 10, width: 80, height: 80))
+                let myLabel3:UILabel = UILabel(frame: CGRect(x: 210, y: 10, width: 74, height: 74))
                 myLabel3.numberOfLines = 0
                 myLabel3.backgroundColor = .white
-                myLabel3.textColor = .black
+                myLabel3.textColor = Color.goldColor
                 myLabel3.textAlignment = .center
-                myLabel3.layer.masksToBounds = true
                 myLabel3.text = "S&P 500 \n \(tradeYQL![1])"
                 myLabel3.font = Font.celltitle14m
-                myLabel3.layer.cornerRadius = 40.0
+                myLabel3.layer.cornerRadius = 37.0
+                myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
+                myLabel3.layer.borderWidth = 1
+                myLabel3.layer.masksToBounds = true
                 myLabel3.isUserInteractionEnabled = true
                 vw.addSubview(myLabel3)
                 
-                let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 90, width: 80, height: 20))
+                let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 85, width: 74, height: 20))
                 myLabel35.numberOfLines = 1
                 myLabel35.textAlignment = .center
                 myLabel35.text = changeYQL[1] as? String //" \(changeYQL![1])"
                 myLabel35.font = Font.celltitle14m
                 vw.addSubview(myLabel35)
                 
-                let separatorLineView3 = UIView(frame: CGRect(x: 210, y: 110, width: 80, height: 3.5))
+                let separatorLineView3 = UIView(frame: CGRect(x: 210, y: 105, width: 74, height: 3.5))
                 
                 if (changeYQL![1] as AnyObject).contains("-") {
                     separatorLineView3.backgroundColor = .red
@@ -390,7 +397,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 }
                 vw.addSubview(separatorLineView3)
                 
-                let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 120, width: 280, height: 20))
+                let myLabel4:UILabel = UILabel(frame: CGRect(x: 10, y: 115, width: 280, height: 20))
                 if (tempYQL != nil) && (textYQL != nil) {
                     myLabel4.text = String(format: "%@ %@ %@", "Weather:", "\(tempYQL!)°", "\(textYQL!)")
                     if (textYQL!.contains("Rain") ||
@@ -407,17 +414,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 }
                 myLabel4.font = Font.celltitle16l
                 vw.addSubview(myLabel4)
-                
-                /* //Statistic Button
-                 let statButton:UIButton = UIButton(frame: CGRect(x: tableView.frame.width-100, y: 95, width: 90, height: 30))
-                 statButton.setTitle("Statistics", for: .normal)
-                 statButton.backgroundColor = Color.MGrayColor
-                 statButton.setTitleColor(UIColor.white, for: .normal)
-                 statButton.addTarget(self, action:#selector(MasterViewController.statButton), for: .touchUpInside)
-                 statButton.layer.cornerRadius = 15.0
-                 statButton.layer.borderColor = UIColor.black.cgColor
-                 statButton.layer.borderWidth = 1.0
-                 vw.addSubview(statButton) */
  
                 return vw 
             }

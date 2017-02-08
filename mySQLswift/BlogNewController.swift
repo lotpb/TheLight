@@ -40,7 +40,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     var textcontentrating : String?
     
     var formStatus : String?
-    var activeImage : UIImageView? //star
     
 //------inlineDatePicker---------
     let kPickerAnimationDuration = 0.40 // duration for the animation to slide the date picker
@@ -77,6 +76,14 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         button.titleLabel?.textAlignment = .center
         button.setTitleColor(.white, for: .normal)
         return button
+    }()
+    
+    let activeImage: UIImageView = { //tableheader
+        let imageView = UIImageView()
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
   
@@ -285,20 +292,19 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         if indexPath.row == 0 {
             
-            self.activeImage = UIImageView(frame:CGRect(x: tableView.frame.width-35, y: 10, width: 18, height: 22))
-            self.activeImage!.contentMode = .scaleAspectFill
+            self.activeImage.frame = CGRect(x: tableView.frame.width-35, y: 10, width: 18, height: 22)
             
             if (self.liked == nil || self.liked == 0) {
                 self.Like!.tintColor = .white
                 self.Like!.setTitle(" Like", for: .normal)
-                self.activeImage!.image = UIImage(named:"iosStarNA.png")
+                self.activeImage.image = UIImage(named:"iosStarNA.png")
                 
             } else {
                 self.Like!.tintColor = Color.Blog.buttonColor
                 self.Like!.setTitle(" Likes \(liked!)", for: .normal)
-                self.activeImage!.image = UIImage(named:"iosStar.png")
+                self.activeImage.image = UIImage(named:"iosStar.png")
             }
-            cell?.contentView.addSubview(self.activeImage!)
+            cell?.contentView.addSubview(self.activeImage)
             cell?.selectionStyle = .none
         }
         
@@ -543,23 +549,18 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     @IBAction func saveData(sender: UIButton) {
         
         guard let text = self.subject?.text else { return }
-        
         if text == "" {
-            
             self.simpleAlert(title: "Oops!", message: "No text entered.")
-            
         } else {
-            
             if (self.formStatus == "None") {
-                
                 let query = PFQuery(className:"Blog")
                 query.whereKey("objectId", equalTo:self.objectId!)
                 query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
                     if error == nil {
-                        updateblog!.setObject(self.msgDate!, forKey:"MsgDate")
-                        updateblog!.setObject(self.postby!, forKey:"PostBy")
-                        updateblog!.setObject(self.rating!, forKey:"Rating")
-                        updateblog!.setObject(self.subject!.text, forKey:"Subject")
+                        updateblog!.setObject(self.msgDate ?? NSNull(), forKey:"MsgDate")
+                        updateblog!.setObject(self.postby ?? NSNull(), forKey:"PostBy")
+                        updateblog!.setObject(self.rating ?? NSNull(), forKey:"Rating")
+                        updateblog!.setObject(self.subject?.text ?? NSNull(), forKey:"Subject")
                         updateblog!.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
                         updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
                         updateblog!.saveEventually()
@@ -567,7 +568,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
                         self.show(vc!, sender: self)
                         //self.present(vc!, animated: true)
-                        
                         self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                     } else {
                         self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
@@ -576,11 +576,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 
             } else if (self.formStatus == "New" || self.formStatus == "Reply") {
                 
-                let saveblog:PFObject = PFObject(className:"Blog")
-                saveblog.setObject(self.msgDate!, forKey:"MsgDate")
-                saveblog.setObject(self.postby!, forKey:"PostBy")
-                saveblog.setObject(self.rating!, forKey:"Rating")
-                saveblog.setObject(self.subject!.text, forKey:"Subject")
+                let saveblog: PFObject = PFObject(className:"Blog")
+                saveblog.setObject(self.msgDate ?? NSNull(), forKey:"MsgDate")
+                saveblog.setObject(self.postby ?? NSNull(), forKey:"PostBy")
+                saveblog.setObject(self.rating ?? NSNull(), forKey:"Rating")
+                saveblog.setObject(self.subject?.text ?? NSNull(), forKey:"Subject")
                 saveblog.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
                 saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
                 saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
@@ -588,7 +588,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 if (self.formStatus == "Reply") {
                     let query = PFQuery(className:"Blog")
                     query.whereKey("objectId", equalTo:self.replyId!)
-                    query.getFirstObjectInBackground {(updateReply: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground { (updateReply: PFObject?, error: Error?) -> Void in
                         if error == nil {
                             updateReply!.incrementKey("CommentCount")
                             updateReply!.saveEventually()
@@ -598,12 +598,10 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 
                 saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
                     if success == true {
-                        
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
                         self.show(vc!, sender: self)
-                        
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                         self.newBlogNotification()
+                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                     } else {
                         self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
                     }

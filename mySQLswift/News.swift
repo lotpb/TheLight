@@ -44,7 +44,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         
         setupCollectionView()
         setupMenuBar()
-        setupNavBarButtons()
+        setupNavBarButtons() 
     }
     
     override func viewWillDisappear(_ animated: Bool) {

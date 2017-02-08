@@ -659,7 +659,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Peter Balsamo";
 				TargetAttributes = {
 					AF0369A01C173DDC00137D7E = {
@@ -1013,6 +1013,7 @@
 				CODE_SIGN_ENTITLEMENTS = TheLight.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YX8KSFWQDW;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1054,7 +1055,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"-enable-bridging-pch\"";
+				OTHER_SWIFT_FLAGS = "\"-enable-bridging-pch\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";
@@ -1118,7 +1119,7 @@
 					"-isystem",
 					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"-enable-bridging-pch\"";
+				OTHER_SWIFT_FLAGS = "\"-enable-bridging-pch\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
 				PROVISIONING_PROFILE = "";

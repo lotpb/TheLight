@@ -29,11 +29,16 @@ var searchController: UISearchController!
         static let twitterText = UIColor(red:0.54, green:0.60, blue:0.65, alpha: 1.0)
         static let twitterline = UIColor.rgb(red: 230, green: 230, blue: 230)
         static let facebookBlue = UIColor.rgb(red: 0, green: 137, blue: 249)
+        static let goldColor = UIColor(red:0.76, green:0.57, blue:0.27, alpha: 1.0)
+        
+        enum Header {
+            static let headtextColor = Color.goldColor
+        }
         
         enum Blog {
             static let navColor = Color.twitterBlue
-            static let borderbtnColor = Color.LGrayColor.cgColor
-            static let borderColor = UIColor.white
+            //static let borderbtnColor = Color.LGrayColor.cgColor
+            static let borderColor = Color.goldColor
             static let buttonColor = Color.twitterBlue
             static let weblinkText = Color.twitterBlue
             static let emaillinkText = UIColor.red
@@ -154,8 +159,8 @@ var searchController: UISearchController!
             static let replytitlePad = celltitle18b
             static let replysubtitlePad = Font.celltitle18l
             
-            static let replytitle = Font.celltitle16r
-            static let replysubtitle = Font.celltitle16l
+            static let replytitle = Font.celltitle16b
+            static let replysubtitle = Font.celltitle16r
         }
         
         struct News {

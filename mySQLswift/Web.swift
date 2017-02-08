@@ -54,27 +54,9 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         navigationItem.rightBarButtonItems = [actionButton]
         
         self.segControl? = UISegmentedControl(items: siteNames)
-        
-        view.insertSubview(webView, belowSubview: progressView)
-        
-        backButton.isEnabled = false
-        forwardButton.isEnabled = false
-        recentPostsButton.isEnabled = false
-        
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        let height = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 1, constant: -44)
-        let width = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1, constant: 0)
-        view.addConstraints([height, width])
-        
-        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
-      //removes title on tabBar
-      //webView.addObserver(self, forKeyPath: "title", options: .New, context: nil)
-      //webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
-        
-        self.configureView()
-        
+
+        setupConstraints()
+        configureWeb()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,10 +85,18 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         // Dispose of any resources that can be recreated.
     }
     
+    func setupConstraints() {
+        view.insertSubview(webView, belowSubview: progressView)
+        
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        let height = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 1, constant: -44)
+        let width = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1, constant: 0)
+        view.addConstraints([height, width])
+    }
+    
     var detailItem: AnyObject? {
         didSet {
-            //print(detailItem!)
-            self.configureView()
+            self.configureWeb()
         }
     }
     
@@ -205,17 +195,23 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
         }
     }
     
-    func configureView() {
+    func configureWeb() {
+        backButton.isEnabled = false
+        forwardButton.isEnabled = false
+        recentPostsButton.isEnabled = false
+        
+        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
+        webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+        // MARK: - removes title on tabBar
+        // webView.addObserver(self, forKeyPath: "title", options: .New, context: nil)
+        // webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
         
         if let detail = self.detailItem {
-            
             webView.load(URLRequest(url:URL(string: detail as! String)!))
-
         } else {
-       
            webView.load(URLRequest(url:URL(string: siteAddresses[0])!)) 
         }
-
     }
  
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {

@@ -1,4 +1,4 @@
-//
+ //
 //  AppDelegate.swift
 //  mySQLswift
 //
@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Bolts //added
 import GoogleSignIn
 import FBSDKCoreKit
 import Firebase
@@ -45,17 +46,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // MARK: - Parse
         if (defaults.bool(forKey: "parsedataKey"))  {
-            /*
+            
             let configuration = ParseClientConfiguration {
                 $0.applicationId = "lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M"
                 $0.clientKey = "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX"
                 $0.server = "https://parseapi.back4app.com"
-                $0.isLocalDatastoreEnabled = true // If you need to enable local data store
+                $0.isLocalDatastoreEnabled = false
             }
-            Parse.initialize(with: configuration) */
+            Parse.initialize(with: configuration)
             
-            Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
-            PFAnalytics.trackAppOpened(launchOptions: launchOptions)
+            //Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
+            //PFAnalytics.trackAppOpened(launchOptions: launchOptions)
         }
 
         // MARK: - prevent Autolock
@@ -93,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // MARK: - Parse
         PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
             if error != nil {
-                print("Error: \(error) \(error!._userInfo)")
+                print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
                 return
             }
         }

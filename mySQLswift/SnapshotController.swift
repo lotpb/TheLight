@@ -964,7 +964,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             VC!.newsStory = self.selectedPhone ?? ""
             VC!.image = self.selectedImage ?? nil
             VC!.videoURL = self.imageDetailurl ?? ""
-            //VC!.navigationItem.leftBarButtonItems = nil
+            VC!.SnapshotBool = true //hide leftBarButtonItems
             
         } else if segue.identifier == "userdetailSegue" {
             
@@ -1042,7 +1042,7 @@ extension SnapshotController: UISearchResultsUpdating {
         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
         let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(searchController.searchBar.text)")
+        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
         query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in

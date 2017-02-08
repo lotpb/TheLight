@@ -13,7 +13,6 @@ protocol PlayerVCDelegate {
 }
 
 import UIKit
-//import AVKit
 import AVFoundation
 import Parse
 
@@ -102,7 +101,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         super.viewDidLoad()
         
         containView.backgroundColor = .clear
-        
         self.customization()
         self.setupConstraints()
         self.fetchVideos()
@@ -426,20 +424,21 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     // MARK: - Button
     
-    func likeSetButton(sender:UIButton) {
-        /*
-         sender.tintColor = Color.BlueColor
-         let hitPoint = sender.convert(CGPoint.zero, to: self.collectionView)
-         let indexPath = self.collectionView.indexPathForItem(at: hitPoint)
-         
-         let query = PFQuery(className:"Newsios")
-         query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
-         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
-         if error == nil {
-         object!.incrementKey("Liked")
-         object!.saveInBackground()
-         }
-         } */
+    //not Set
+    func setLikeBtn(sender:UIButton) {
+        
+        sender.tintColor = Color.BlueColor
+        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
+        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
+        
+        let query = PFQuery(className:"Newsios")
+        query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            if error == nil {
+                object!.incrementKey("Liked")
+                object!.saveInBackground()
+            }
+        }
     }
     
     @IBAction func minimize(_ sender: UIButton) {
@@ -515,7 +514,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             return _feedItems.count
         } */
         
-        return _feedItems.count - 1
+        return _feedItems.count //- 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -525,7 +524,12 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Header") as! headerCell
             cell.title.text = "Title" //self.titleLookup
-            cell.viewCount.text = "2234534 views"
+            
+            var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
+            if newsView == nil {
+                newsView = 0
+            }
+            cell.viewCount.text = "\(newsView!) views"
             
             var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
             if Liked == nil {
@@ -592,6 +596,15 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let query = PFQuery(className:"Newsios")
+        query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            if error == nil {
+                object!.incrementKey("newsView")
+                object!.saveInBackground()
+            }
+        }
         
         imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile

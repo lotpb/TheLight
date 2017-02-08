@@ -59,34 +59,67 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            routeviewHeight = 350
-        } else {
-            routeviewHeight = 220
-        }
-        
-        self.routView.isHidden = false
-        
-        self.stepView.font = cellsteps
-        self.stepView.isSelectable = false
-        
-        self.allSteps = ""
-        self.travelTime.text = ""
-        self.travelDistance.text = ""
-        self.travelTime.font = celllabel1
-        self.travelTime.textColor = .white
-        self.travelDistance.textColor = .white
-        self.travelDistance.font = celllabel1
-        self.routView.backgroundColor = Color.DGrayColor
-        
         let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(MapView.shareButton))
         navigationItem.rightBarButtonItems = [actionButton]
         
         addActivityIndicator()
+        setupForm()
         setupConstraints()
-        // Float Button
-        //setCircularAvatar() //dont work
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
+        setupLocation()
+        setupMap()
+
+        let location: String = String(format: "%@ %@ %@ %@", self.mapaddress!, self.mapcity!, self.mapstate!, self.mapzip!)
+        
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(location, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
+            
+            if error != nil{
+                print("Geocode failed with error: \(error!.localizedDescription)")
+            } else if placemarks!.count > 0 {
+                let placemark = placemarks![0]
+                
+                if(self.annotationPoint == nil)
+                {
+                    self.annotationPoint = MKPointAnnotation()
+                    self.annotationPoint.coordinate = placemark.location!.coordinate
+                    self.annotationPoint.title = self.mapaddress as String?
+                    self.annotationPoint.subtitle = String(format: "%@ %@ %@", self.mapcity!, self.mapstate!, self.mapzip!)
+                    self.mapView.addAnnotation(self.annotationPoint)
+                }
+                self.locationManager.stopUpdatingLocation()
+                
+                // MARK:  Directions
+                
+                let request = MKDirectionsRequest()
+                
+                request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!), addressDictionary: nil))
+                
+                request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude), addressDictionary: nil))
+                
+                // MARK:  AlternateRoutes
+                request.requestsAlternateRoutes = true
+                // MARK:  transportType
+                request.transportType = .automobile
+                
+                let directions = MKDirections(request: request)
+                
+                directions.calculate { [unowned self] response, error in
+                    guard let unwrappedResponse = response else { return }
+                    
+                    for route in unwrappedResponse.routes {
+                        self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                        //self.mapView.addOverlay(route.polyline)
+                        self.showRoute(response!)
+                        self.hideActivityIndicator()
+                    }
+                }
+            }
+        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -100,23 +133,63 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    /* dont work
-    func setCircularAvatar() {
-        floatingButton.layer.cornerRadius = floatingButton.bounds.size.width / 2.0
-        floatingButton.layer.masksToBounds = true
-    } */
+    func setupMap() {
+        self.mapView.delegate = self
+        self.mapView.showsUserLocation = true
+        self.mapView.userTrackingMode = .followWithHeading
+        self.mapView.isZoomEnabled = true
+        self.mapView.isScrollEnabled = true
+        self.mapView.isRotateEnabled = true
+        self.mapView.showsPointsOfInterest = true
+        self.mapView.showsCompass = true
+        self.mapView.showsScale = true
+        //self.mapView.showsBuildings = true
+    }
+    
+    func setupLocation() {
+        
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        let status = CLLocationManager.authorizationStatus()
+        if status == .notDetermined || status == .denied || status == .authorizedWhenInUse {
+            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+        }
+        locationManager.startUpdatingLocation()
+        locationManager.startUpdatingHeading()
+    }
+    
+    func setupForm() {
+        self.routView.isHidden = false
+        self.stepView.font = cellsteps
+        self.stepView.isSelectable = false
+        self.allSteps = ""
+        self.travelTime.text = ""
+        self.travelDistance.text = ""
+        self.travelTime.font = celllabel1
+        self.travelTime.textColor = .white
+        self.travelDistance.textColor = .white
+        self.travelDistance.font = celllabel1
+        self.routView.backgroundColor = Color.DGrayColor
+    }
     
     
     func setupConstraints() {
-        
         mapView.addSubview(floatingButton)
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            routeviewHeight = 350
+        } else {
+            routeviewHeight = 220
+        }
+        routView.heightAnchor.constraint(equalToConstant: routeviewHeight).isActive = true
         
         floatingButton.trailingAnchor.constraint( equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
         floatingButton.bottomAnchor.constraint( equalTo: mapView.layoutMarginsGuide.bottomAnchor, constant: -40).isActive = true
         floatingButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         floatingButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        routView.heightAnchor.constraint(equalToConstant: routeviewHeight).isActive = true
     }
     
     // MARK: - ActivityIndicator
@@ -140,83 +213,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     
     // MARK: - CLLocationManager
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        locationManager = CLLocationManager()
-        
-        locationManager.delegate = self
-        locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
-        let status = CLLocationManager.authorizationStatus()
-        if status == .notDetermined || status == .denied || status == .authorizedWhenInUse {
-            locationManager.requestAlwaysAuthorization()
-            locationManager.requestWhenInUseAuthorization()
-        }
-        locationManager.startUpdatingLocation()
-        locationManager.startUpdatingHeading()
-        
-        self.mapView.delegate = self
-        self.mapView.showsUserLocation = true
-        self.mapView.userTrackingMode = .followWithHeading
-        self.mapView.isZoomEnabled = true
-        self.mapView.isScrollEnabled = true
-        self.mapView.isRotateEnabled = true
-        self.mapView.showsPointsOfInterest = true
-        self.mapView.showsCompass = true
-        self.mapView.showsScale = true
-        //self.mapView.showsBuildings = true
-        
-        let location: String = String(format: "%@ %@ %@ %@", self.mapaddress!, self.mapcity!, self.mapstate!, self.mapzip!)
-        
-        let geocoder = CLGeocoder()
-        
-        geocoder.geocodeAddressString(location, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
-            
-            if error != nil{
-                print("Geocode failed with error: \(error!.localizedDescription)")
-            } else if placemarks!.count > 0 {
-                let placemark = placemarks![0]
-                
-                if(self.annotationPoint == nil)
-                {
-                self.annotationPoint = MKPointAnnotation()
-                self.annotationPoint.coordinate = placemark.location!.coordinate
-                self.annotationPoint.title = self.mapaddress as? String
-                self.annotationPoint.subtitle = String(format: "%@ %@ %@", self.mapcity!, self.mapstate!, self.mapzip!)
-                self.mapView.addAnnotation(self.annotationPoint)
-                }
-                self.locationManager.stopUpdatingLocation()
-                
-        // MARK:  Directions
-                
-                let request = MKDirectionsRequest()
-                
-                request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!), addressDictionary: nil))
-                
-                request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude), addressDictionary: nil))
-                
-        // MARK:  AlternateRoutes
-                request.requestsAlternateRoutes = true
-        // MARK:  transportType
-                request.transportType = .automobile
-                
-                let directions = MKDirections(request: request)
-                
-                directions.calculate { [unowned self] response, error in
-                    guard let unwrappedResponse = response else { return }
-                    
-                    for route in unwrappedResponse.routes {
-                        self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                        //self.mapView.addOverlay(route.polyline)
-                        self.showRoute(response!)
-                        self.hideActivityIndicator()
-                    }
-                }
-            }
-        })
-    }
+    
     
     // MARK: - Routes
     

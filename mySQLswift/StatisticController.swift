@@ -601,16 +601,6 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 vw.backgroundColor = Color.Stat.navColor
             }
             //tableView.tableHeaderView = vw
-            /*
-             photoImage = UIImageView(frame:CGRectMake(0, 0, vw.frame.size.width, 175))
-             photoImage!.image = UIImage(named:"IMG_1133New.jpg")
-             photoImage!.clipsToBounds = true
-             photoImage!.contentMode = .ScaleAspectFill
-             vw.addSubview(photoImage!)
-             
-             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .Dark))
-             visualEffectView.frame = photoImage.bounds
-             photoImage.addSubview(visualEffectView) */
             
             segmentedControl = UISegmentedControl (items: ["WEEKLY", "MONTHLY", "YEARLY"])
             segmentedControl.frame = CGRect(x: tableView.frame.width/2-125, y: 15, width: 250, height: 30)

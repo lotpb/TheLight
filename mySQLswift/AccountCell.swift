@@ -29,7 +29,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         let image = UIImage(named:"images")!.withRenderingMode(.alwaysTemplate)
         let imageView = UIImageView(image: image)
         imageView.tintColor = .black
-        //imageView.backgroundColor = .black
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -51,7 +50,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
                 }
             }
         }
-        //imageView.image = UIImage(named: "profile-rabbit-toy")
         imageView.layer.cornerRadius = 22
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -275,29 +273,11 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
     func selectCamera(_ sender: AnyObject) {
         
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            
-            imagePicker = UIImagePickerController()
-            imagePicker.sourceType = .camera
-            imagePicker.mediaTypes = [kUTTypeImage as String]
-            imagePicker.allowsEditing = true
-            imagePicker.delegate = self
-            imagePicker.showsCameraControls = true
-            //self.present(imagePicker, animated: true, completion: nil)
-        } else {
-            print("Camera is not available")
-        }
     }
     
     
-    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: AnyObject]) {
-        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            
-            self.userimageView!.image = pickedImage
-            
-            //dismiss(animated: true, completion: { () -> Void in
-            //})
-        }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+
     }
     
     
