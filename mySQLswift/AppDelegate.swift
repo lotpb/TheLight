@@ -54,9 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 $0.isLocalDatastoreEnabled = false
             }
             Parse.initialize(with: configuration)
-            
-            //Parse.setApplicationId("lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M", clientKey: "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX")
-            //PFAnalytics.trackAppOpened(launchOptions: launchOptions)
         }
 
         // MARK: - prevent Autolock
@@ -332,7 +329,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         print("Notification being triggered")
 
-        //window?.rootViewController?.showAlert(withTitle: nil, message: "Crap")
+      //window?.rootViewController?.showAlert(withTitle: nil, message: "Crap")
         completionHandler([.alert, .badge, .sound])
     }
     

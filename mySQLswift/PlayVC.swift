@@ -34,9 +34,15 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     var playerLayer: AVPlayerLayer?
     var videoURL: String?
+    
     var titleLookup: String?
+    var viewLookup: String?
+    var likesLookup: String?
+    var dislikesLookup: String?
+    var imageLookup: String?
     
     var isPlaying = true
+    
     
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -95,7 +101,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         button.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
         return button
     }()
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,46 +121,23 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         NotificationCenter.default.removeObserver(self)
     }
     
+    open func prepareToDeinit() {
+        
+        self.resetPlayer()
+    }
+    
     open func resetPlayer() {
- 
-        //self.playDidEnd = false
-        //self.playerItem = nil
-        //self.seekTime   = 0
         
         self.videoPlayer.pause()
         self.playerLayer?.removeFromSuperlayer()
         videoPlayer.replaceCurrentItem(with: nil)
-        //videoPlayer.removeObserver(self, forKeyPath: "rate")
-        //self.videoPlayer = nil
     }
     
-    open func prepareToDeinit() {
-        //self.playerItem = nil
-        self.resetPlayer()
-    }
-    
-    /*
-    @IBAction func backwardTouch(sender: AnyObject) {
-        playerVideo.rate = playerVideo.rate - 0.5
-    }
-    
-    @IBAction func playTouch(sender: AnyObject) {
-        if playerVideo.rate == 0 {
-            playerVideo.play()
-        } else {
-            playerVideo.pause()
-        }
-    }
-    
-    @IBAction func fowardTouch(sender: AnyObject) {
-        playerVideo.rate = playerVideo.rate + 0.5
-    } */
-    
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     // MARK: - Video Player
     
@@ -172,6 +154,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                 self.playerView.layer.addSublayer(self.playerLayer!)
                 if self.state != .hidden {
                     self.videoPlayer.play()
+
                 }
                 //self.loopVideo(videoPlayer: self.videoPlayer)
                 self.playDidEnd(videoPlayer: self.videoPlayer)
@@ -181,43 +164,11 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             })
         }
     }
-    
-    // MARK: - Video Full Screen
-    //not working below
-    /*
-    func fullScreen(videoPlayer: AVPlayer) {
-        let path = Bundle.main.path(forResource: "video", ofType: "mp4")!
-        let url = URL(fileURLWithPath: path)
-        
-        let asset = AVAsset(url: url)
-        let playerItem = AVPlayerItem(asset: asset)
-        let fullScreenPlayer = AVPlayer(playerItem: playerItem)
-        fullScreenPlayer.play()
-        
-        let fullScreenPlayerViewController = AVPlayerViewController()
-        fullScreenPlayerViewController.player = fullScreenPlayer
-        present(fullScreenPlayerViewController, animated: true, completion: nil)
-    } */
+
     
     // MARK: - Setup View
     
     func setupConstraints() {
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            /*
-            playerView.translatesAutoresizingMaskIntoConstraints = false
-            playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
-            playerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-            playerView.widthAnchor.constraint(equalToConstant: 400).isActive = true
-            playerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-            
-            containView.translatesAutoresizingMaskIntoConstraints = false
-            containView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
-            containView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-            containView.widthAnchor.constraint(equalToConstant: 400).isActive = true
-            containView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-            */
-        }
         
         //make.height.equalTo(view.snp.width).multipliedBy(9.0/16.0)
         
@@ -271,6 +222,23 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         
         
     }
+    
+    /*
+     @IBAction func backwardTouch(sender: AnyObject) {
+     playerVideo.rate = playerVideo.rate - 0.5
+     }
+     
+     @IBAction func playTouch(sender: AnyObject) {
+     if playerVideo.rate == 0 {
+     playerVideo.play()
+     } else {
+     playerVideo.pause()
+     }
+     }
+     
+     @IBAction func fowardTouch(sender: AnyObject) {
+     playerVideo.rate = playerVideo.rate + 0.5
+     } */
     
     func animate()  {
         switch self.state {
@@ -422,7 +390,53 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         }
     } */
     
+    
+    // MARK: - Parse Subscribed
+    
+    func subscribedParse() {
+        /*
+        var arrayColumn:[String] = PFObject["Subscribed"]
+        let count = arrayColumn.count
+        print(count) */
+        
+        print("Crazy")
+        //var array: [String] = [String]()
+        var array: [String] = [(PFUser.current()?.objectId)!]
+        let query = PFUser.query()
+    
+        //query?.whereKey("objectId", equalTo:(PFUser.current()?.username)!)
+        //query?.whereKey("Subscribed", contains: (PFUser.current()?.objectId))
+        //query?.order(byAscending: "Subscribed")
+        query?.findObjectsInBackground {(objects: [PFObject]?, error: Error?) -> Void in
+            if error == nil {
+                for object in objects! {
+                    //object.setObject(array, forKey: "Subscribed")
+                    array.append(object.object(forKey: "Subscribed") as! String)
+                }
+            }
+        }
+    }
+    
     // MARK: - Button
+    
+    func setSubscribed(_ sender: UIButton) {
+        
+        if (sender.titleLabel!.text == " UNSUBSCRIBE")   {
+            sender.setTitle(" SUBSCRIBE", for: .normal)
+            sender.setTitleColor(Color.youtubeRed, for: .normal)
+            let image: UIImage = UIImage(named:"iosStar.png")!.withRenderingMode(.alwaysTemplate)
+            sender.setImage(image, for: .normal)
+            sender.tintColor = Color.youtubeRed
+            sender.addTarget(self, action: #selector(subscribedParse), for: .touchUpInside)
+        } else {
+            sender.setTitle(" UNSUBSCRIBE", for: .normal)
+            sender.setTitleColor(Color.DGrayColor, for: .normal)
+            let image: UIImage = UIImage(named:"iosStarNA.png")!.withRenderingMode(.alwaysTemplate)
+            sender.setImage(image, for: .normal)
+            sender.tintColor = Color.DGrayColor
+            //sender.addTarget(self, action: #selector(subscribedParse), for: .touchUpInside)
+        }
+    }
     
     //not Set
     func setLikeBtn(sender:UIButton) {
@@ -514,7 +528,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             return _feedItems.count
         } */
         
-        return _feedItems.count //- 1
+        return _feedItems.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -523,30 +537,15 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Header") as! headerCell
-            cell.title.text = "Title" //self.titleLookup
             
-            var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
-            if newsView == nil {
-                newsView = 0
-            }
-            cell.viewCount.text = "\(newsView!) views"
-            
-            var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
-            if Liked == nil {
-                Liked = 0
-            }
-            cell.likes.text = "\(Liked!)"
-            
-            var Disliked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Dislikes")as? Int
-            if Disliked == nil {
-                Disliked = 0
-            }
-            cell.disLikes.text = "\(Disliked!)"
-            
-            cell.channelTitle.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as? String
+            cell.title.text = self.titleLookup ?? "Big Buck Bunny"
+            cell.viewCount.text = self.viewLookup ?? "0"
+            cell.likes.text = self.likesLookup ?? "0"
+            cell.disLikes.text = self.dislikesLookup ?? "0"
+            cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
             
             let query:PFQuery = PFUser.query()!
-            query.whereKey("username",  equalTo:"Peter Balsamo")
+            query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
                 if error == nil {
@@ -560,17 +559,31 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                     }
                 }
             }
-
-            cell.channelPic.layer.cornerRadius = 25
+            cell.channelPic.layer.cornerRadius = 20
             cell.channelPic.clipsToBounds = true
             cell.channelSubscribers.text = "235235 subscribers"
+            
+            let subImage: UIImage = UIImage(named:"iosStar")!.withRenderingMode(.alwaysTemplate)
+            cell.subscribed.setImage(subImage, for: .normal)
+            cell.subscribed.tintColor = Color.youtubeRed
+            //cell.subscribed.backgroundColor = .white
+            cell.subscribed.setTitle(" SUBSCRIBE", for: .normal)
+            cell.subscribed.setTitleColor(Color.youtubeRed, for: .normal)
+            cell.subscribed.addTarget(self, action: #selector(setSubscribed), for: .touchUpInside)
+            
             cell.selectionStyle = .none
             returnCell = cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! videoCell
-            cell.name.numberOfLines = 2
-            cell.name.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String
+            
+            cell.title.numberOfLines = 2
             cell.title.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
+            
+            var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
+            if newsView == nil { newsView = 0 }
+            let NewText = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String
+            cell.name.text =  String(format: "%@%@", "\(NewText!)", " \(newsView!) views")
+
             imageObject = _feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
@@ -597,6 +610,23 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        self.titleLookup = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
+        
+        var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
+        if newsView == nil { newsView = 0 }
+        self.viewLookup = "\(newsView!) views"
+        
+        var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
+        if Liked == nil { Liked = 0 }
+        self.likesLookup = "\(Liked!)"
+        
+        var Disliked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Dislikes")as? Int
+        if Disliked == nil { Disliked = 0 }
+        self.dislikesLookup = "\(Disliked!)"
+
+        self.imageLookup = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as? String
+        
+        //update View Count
         let query = PFQuery(className:"Newsios")
         query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
@@ -616,6 +646,12 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                 self.playVideo(videoURL: self.imageFile.url!)
             }
         }
+        scrollToFirstRow()
+    }
+    
+    func scrollToFirstRow() {
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
     
     //MARK: - Fetch Data
@@ -623,7 +659,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     func fetchVideos() {
         
         let query = PFQuery(className:"Newsios")
-        //query.whereKey("imageFile", equalTo:"movie.mp4")
+      //query.whereKey("imageFile", equalTo:"movie.mp4")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "createdAt")
         query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
@@ -638,7 +674,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     }
     
 }
-
+/*
 extension PlayVC: UrlLookupDelegate {
     func urlController(passedData: String) {
         self.videoURL = passedData
@@ -653,7 +689,7 @@ extension PlayVC: UrlLookupDelegate {
     func playVideo(videoURL: String) {
         self.playVideo(videoURL)
     } */
-}
+} */
 
 
 class headerCell: UITableViewCell {
@@ -666,6 +702,7 @@ class headerCell: UITableViewCell {
     @IBOutlet weak var channelTitle: UILabel!
     @IBOutlet weak var channelPic: UIImageView!
     @IBOutlet weak var channelSubscribers: UILabel!
+    @IBOutlet weak var subscribed: UIButton! //added
     
     //MARK: Inits
     required init?(coder aDecoder: NSCoder) {

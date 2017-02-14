@@ -88,16 +88,16 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             }
         }
         
-        self.updateYahoo()
-        versionCheck()
-        setupTableView()
-        self.navigationItem.titleView = self.titleButton
- 
         self.refreshControl?.backgroundColor = Color.Lead.navColor
         self.refreshControl?.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
         self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: .valueChanged)
+        
+        updateYahoo()
+      //versionCheck()
+        setupTableView()
+        self.navigationItem.titleView = self.titleButton
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -59,7 +59,6 @@ public extension UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.tintColor = .gray
         navigationController?.navigationBar.backgroundColor = .black
-        //navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         
         //remove navbar line

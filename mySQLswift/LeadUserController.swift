@@ -72,11 +72,12 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
-        }
+        } */
         setMainNavItems()
     }
     
@@ -168,9 +169,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             cell.blogsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
             cell.blogmsgDateLabel!.text = dateFormatter.string(from: date)as String!
             var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CommentCount")as? Int
-            if CommentCount == nil {
-                CommentCount = 0
-            }
+            if CommentCount == nil { CommentCount = 0 }
             cell.commentLabel?.text = "\(CommentCount!)"
             
         } else {
@@ -181,9 +180,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             cell.blogsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String
             cell.blogmsgDateLabel!.text = dateFormatter.string(from: date)as String!
             var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Amount")as? Int
-            if CommentCount == nil {
-                CommentCount = 0
-            }
+            if CommentCount == nil { CommentCount = 0 }
             cell.commentLabel?.text = formatter.string(from: CommentCount! as NSNumber)        }
         
         cell.actionBtn.tintColor = .lightGray

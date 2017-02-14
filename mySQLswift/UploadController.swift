@@ -118,10 +118,10 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         self.commentDetail.isScrollEnabled = false
         setupNewsNavigationItems()
-        
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
-        }
+        } */
         
         NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerViewController)
     }

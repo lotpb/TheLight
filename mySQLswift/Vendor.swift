@@ -67,12 +67,13 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        /*
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.Vend.navColor
-        }
+        } */
+        setMainNavItems()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

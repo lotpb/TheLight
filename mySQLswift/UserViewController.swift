@@ -61,13 +61,10 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
         navigationItem.rightBarButtonItems = [addButton, searchButton]
-        
-        mapView!.delegate = self
-        mapView!.layer.borderColor = UIColor.lightGray.cgColor
-        mapView!.layer.borderWidth = 0.5
 
         parseData()
         setupTableView()
+        
         self.navigationItem.titleView = self.titleButton
         self.mapView!.addSubview(refreshControl)
     }
@@ -82,8 +79,19 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         setMainNavItems()
+        setupMap()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setupMap() {
+        mapView!.delegate = self
+        mapView!.layer.borderColor = UIColor.lightGray.cgColor
+        mapView!.layer.borderWidth = 0.5
         
-        user = PFUser.current()!
         PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) -> Void in
             
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.40, 0.40)
@@ -94,11 +102,6 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.mapView!.showsUserLocation = true //added
             self.refreshMap()
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func setupTableView() {
@@ -273,7 +276,6 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         query?.whereKey("currentLocation", nearGeoPoint: geoPoint, withinMiles:50.0)
         query?.limit = 20
         query?.findObjectsInBackground { (objects:[PFObject]?, error:Error?) -> Void in
-            
             for object in objects! {
                 let annotation = MKPointAnnotation()
                 annotation.title = object["username"] as? String
@@ -307,7 +309,6 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     var timer: Timer?
     
     func handleReloadTable() {
-        
         DispatchQueue.main.async {
             self.collectionView!.reloadData()
             self.tableView.reloadData()
@@ -358,7 +359,6 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if (isFormStat == true) {
                     VC!.status = "New"
                 } else {
-                    
                     VC!.status = "Edit"
                     let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
                     let updated:Date = ((self._feedItems[indexPath] as AnyObject).value(forKey: "createdAt") as? Date)!
@@ -378,7 +378,6 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if (isFormStat == true) {
                     VC!.status = "New"
                 } else {
-                    
                     VC!.status = "Edit"
                     let indexPaths = self.collectionView!.indexPathsForSelectedItems!
                     let indexPath = indexPaths[0] as IndexPath

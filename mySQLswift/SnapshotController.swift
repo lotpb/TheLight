@@ -117,9 +117,10 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         setMainNavItems()
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        }
+        
+        //if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            //self.navigationController?.navigationBar.barTintColor = .black
+        //}
         self.eventStore = EKEventStore()
         self.reminders = [EKReminder]()
     }
@@ -969,6 +970,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         } else if segue.identifier == "userdetailSegue" {
             
             let VC = segue.destination as? UserDetailController
+            VC!.status = "Edit"
             VC!.objectId = self.selectedObjectId ?? ""
             VC!.username = self.selectedName ?? ""
             VC!.create = self.selectedCreate ?? ""

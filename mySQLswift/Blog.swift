@@ -94,7 +94,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         //self.tableView?.scrollIndicatorInsets = UIEdgeInsetsMake(-90,0,0,0)
         self.automaticallyAdjustsScrollViewInsets = false //fix headerview
 
-        
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
         resultsController.tableView.dataSource = self

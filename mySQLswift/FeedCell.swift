@@ -229,9 +229,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         cell.playButton.setTitle(imageDetailurl, for: .normal)
         
         var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
-        if Liked == nil {
-            Liked = 0
-        }
+        if Liked == nil { Liked = 0 }
         cell.numberLabel.text = "\(Liked!)"
         
         if !(cell.numberLabel.text! == "0") {

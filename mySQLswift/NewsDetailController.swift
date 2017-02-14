@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 
 class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewControllerDelegate {
@@ -62,6 +63,15 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             navigationItem.leftBarButtonItems = [backItem]
         } else {
             navigationItem.leftBarButtonItems = nil
+        }
+        
+        let query = PFQuery(className:"Newsios")
+        query.whereKey("objectId", equalTo: self.objectId!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            if error == nil {
+                object!.incrementKey("newsView")
+                object!.saveInBackground()
+            }
         }
 
         setupConstraints()
@@ -172,12 +182,6 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     func setupConstraints() {
         
         let height = (view.frame.width * 9 / 16)
-        /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            newsViewHeight = 450
-        } else {
-            newsViewHeight = 258
-        } */
         
         newsImageview.addSubview(faceLabel)
   
@@ -185,7 +189,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         newsImageview.heightAnchor.constraint(equalToConstant: height).isActive = true
         
         faceLabel.topAnchor.constraint( equalTo: newsImageview.topAnchor, constant: +5).isActive = true
-        faceLabel.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor, constant: +5).isActive = true
+        faceLabel.leadingAnchor.constraint( equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 0).isActive = true
         faceLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     

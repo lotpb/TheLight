@@ -70,12 +70,13 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
- 
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            setMainNavItems()
-        }
+        /*
+         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+         self.navigationController?.navigationBar.barTintColor = .black
+         } else {
+         setMainNavItems()
+         } */
+        setMainNavItems()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -436,57 +437,39 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
             controller.navigationItem.leftItemsSupplementBackButton = true
             
             var CustNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "CustNo") as? Int
-            if CustNo == nil {
-                CustNo = 0
-            }
+            if CustNo == nil { CustNo = 0 }
             controller.custNo = formatter.string(from: CustNo! as NSNumber)
             
             var LeadNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "LeadNo") as? Int
-            if LeadNo == nil {
-                LeadNo = 0
-            }
+            if LeadNo == nil { LeadNo = 0 }
             controller.leadNo = formatter.string(from: LeadNo! as NSNumber)
             
             var Zip:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Zip")as? Int
-            if Zip == nil {
-                Zip = 0
-            }
+            if Zip == nil { Zip = 0 }
             controller.zip = formatter.string(from: Zip! as NSNumber)
             
             var Amount:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Amount")as? Int
-            if Amount == nil {
-                Amount = 0
-            }
+            if Amount == nil { Amount = 0 }
             controller.amount = formatter.string(from: Amount! as NSNumber)
             
             var SalesNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "SalesNo")as? Int
-            if SalesNo == nil {
-                SalesNo = 0
-            }
+            if SalesNo == nil { SalesNo = 0 }
             controller.tbl22 = formatter.string(from: SalesNo! as NSNumber)
             
             var JobNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "JobNo")as? Int
-            if JobNo == nil {
-                JobNo = 0
-            }
+            if JobNo == nil { JobNo = 0 }
             controller.tbl23 = formatter.string(from: JobNo! as NSNumber)
             
             var AdNo:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "ProductNo")as? Int
-            if AdNo == nil {
-                AdNo = 0
-            }
+            if AdNo == nil { AdNo = 0 }
             controller.tbl24 = formatter.string(from: AdNo! as NSNumber)
             
             var Quan:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Quan")as? Int
-            if Quan == nil {
-                Quan = 0
-            }
+            if Quan == nil { Quan = 0 }
             controller.tbl25 = formatter.string(from: Quan! as NSNumber)
             
             var Active:Int? = (_feedItems[indexPath] as AnyObject).value(forKey: "Active")as? Int
-            if Active == nil {
-                Active = 0
-            }
+            if Active == nil { Active = 0 }
             controller.active = formatter.string(from: Active! as NSNumber)
             
             controller.date = (_feedItems[indexPath] as AnyObject).value(forKey: "Date") as? String

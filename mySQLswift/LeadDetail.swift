@@ -192,12 +192,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
-        }
+
         self.labelname!.text = ""
         self.labelamount!.text = ""
         self.labeldate!.text = ""

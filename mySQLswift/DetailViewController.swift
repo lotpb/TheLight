@@ -13,8 +13,7 @@ import CoreLocation
 import CoreSpotlight //added CoreSpotlight
 import CoreBluetooth
 import MobileCoreServices //added CoreSpotlight
-//import iAd //added iAd
-//import AVFoundation
+
 
 class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, AVSpeechSynthesizerDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RPScreenRecorderDelegate {
    
@@ -62,12 +61,12 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         label.backgroundColor = .orange
         label.textColor = .white
         label.textAlignment = .center
-        label.layer.masksToBounds = true
         label.text = "Speak"
         label.font = Font.Detail.textaddress
         label.layer.cornerRadius = 30.0
+        label.layer.masksToBounds = true
         label.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(speak))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(speakBtn))
         label.addGestureRecognizer(tap)
         return label
     }()
@@ -372,7 +371,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         subject!.attributedText = NSAttributedString(string: utterance.speechString)
     }
     
-    func speak() {
+    func speakBtn(_ sender: AnyObject) {
         let string = subject!.text
         let utterance = AVSpeechUtterance(string: string!)
         utterance.voice = AVSpeechSynthesisVoice(language: languageCodeList[langNum])
