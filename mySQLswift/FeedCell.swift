@@ -202,15 +202,16 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         cell.actionButton.addTarget(self, action: #selector(shareButton), for: .touchUpInside)
         cell.likeBtn.addTarget(self, action: #selector(likeSetButton), for: .touchUpInside)
         
+        var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
+        if newsView == nil { newsView = 0 }
         let date1 = ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
         let date2 = Date()
         let calendar = Calendar.current
         let diffDateComponents = calendar.dateComponents([.day], from: date1, to: date2)
-        cell.subtitleLabel.text = String(format: "%@, %d%@" , ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, diffDateComponents.day!," days ago" )
+        cell.subtitleLabel.text = String(format: "%@, %@, %d%@", ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, "\(newsView!) views", diffDateComponents.day!," days ago" )
         
         let updated:Date = date1
         let dateFormatter = DateFormatter()
-        
         dateFormatter.dateFormat = "h:mm a"
         let elapsedTimeInSeconds = NSDate().timeIntervalSince(date1 as Date)
         let secondInDays: TimeInterval = 60 * 60 * 24
@@ -222,7 +223,6 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         let createString = dateFormatter.string(from: updated)
         cell.uploadbylabel.text = String(format: "%@ %@", "Uploaded", createString)
-        
         let imageDetailurl = self.imageFile.url
         let result1 = imageDetailurl!.contains("movie.mp4")
         cell.playButton.isHidden = result1 == false

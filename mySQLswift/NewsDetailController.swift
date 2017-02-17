@@ -255,5 +255,5 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         }
     }
 
-
 }
+

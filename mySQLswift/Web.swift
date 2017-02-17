@@ -78,6 +78,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.hidesBarsOnSwipe = false
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {

@@ -110,7 +110,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         
         // Float Button
         setupConstraints()
-        registerNotification()
+        
     }
     
     deinit {
@@ -135,6 +135,12 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         // Setup GetAddress
         locationManager.startUpdatingLocation()
         loadAllGeotifications()
+        registerNotification()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {

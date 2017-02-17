@@ -92,7 +92,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.refreshControl?.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl?.addTarget(self, action: #selector(MasterViewController.refreshData), for: .valueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
         updateYahoo()
       //versionCheck()
@@ -643,6 +643,7 @@ extension MasterViewController: UISearchResultsUpdating {
         self.resultsController.tableView.reloadData()
     }
 }
+
 
 
 

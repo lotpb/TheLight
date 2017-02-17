@@ -47,7 +47,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         refreshControl.backgroundColor = Color.twitterText
         refreshControl.tintColor = .black
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(BlogEditController.refreshData), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
 

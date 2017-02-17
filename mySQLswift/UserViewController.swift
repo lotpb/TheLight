@@ -45,9 +45,10 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = .clear
-        refreshControl.tintColor = .black
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.backgroundColor = Color.Cust.navColor
+        refreshControl.tintColor = .white
+        let attributes = [NSForegroundColorAttributeName: UIColor.white]
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
@@ -61,10 +62,9 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
         navigationItem.rightBarButtonItems = [addButton, searchButton]
-
-        parseData()
-        setupTableView()
         
+        setupTableView()
+        parseData()
         self.navigationItem.titleView = self.titleButton
         self.mapView!.addSubview(refreshControl)
     }
@@ -88,6 +88,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func setupMap() {
+        
         mapView!.delegate = self
         mapView!.layer.borderColor = UIColor.lightGray.cgColor
         mapView!.layer.borderWidth = 0.5
@@ -137,37 +138,36 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell
         
-        if cell == nil {
-            cell = CustomTableCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
-        }
-        
-        cell?.selectionStyle = UITableViewCellSelectionStyle.none
-        cell?.usersubtitleLabel!.textColor = .gray
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.usersubtitleLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell?.usertitleLabel!.font = Font.celltitle20r
-            cell?.usersubtitleLabel!.font = Font.celltitle16r
+            cell.usertitleLabel!.font = Font.celltitle20r
+            cell.usersubtitleLabel!.font = Font.celltitle16r
         } else {
-            cell?.usertitleLabel!.font = Font.celltitle16r
-            cell?.usersubtitleLabel!.font = Font.celltitle12r
+            cell.usertitleLabel!.font = Font.celltitle16r
+            cell.usersubtitleLabel!.font = Font.celltitle12r
         }
         
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-            cell?.userImageView?.image = UIImage(data: imageData!)
+            
+            UIView.transition(with: cell.userImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                cell.userImageView.image = UIImage(data: imageData!)
+            }, completion: nil)
         }
 
         let dateUpdated = (_feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
         let dateFormat = DateFormatter()
         dateFormat.dateFormat = "EEE, MMM d, h:mm a"
         
-        cell?.usertitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
-        cell?.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
+        cell.usertitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
+        cell.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
  
-        return cell!
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -258,7 +258,11 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.loadingSpinner!.startAnimating()
         
         imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-            cell.user2ImageView?.image = UIImage(data: imageData!)
+            
+            UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                cell.user2ImageView?.image = UIImage(data: imageData!)
+            }, completion: nil)
+            
             cell.loadingSpinner!.stopAnimating()
             cell.loadingSpinner!.isHidden = true
         }
@@ -297,15 +301,17 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
+                self.collectionView!.reloadData()
+                self.tableView.reloadData()
             } else {
                 print("Error")
             }
         }
         
-        self.timer?.invalidate()
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+        //self.timer?.invalidate()
+        //self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
-    
+    /*
     var timer: Timer?
     
     func handleReloadTable() {
@@ -313,7 +319,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.collectionView!.reloadData()
             self.tableView.reloadData()
         }
-    }
+    } */
     
     // MARK: - Button
     

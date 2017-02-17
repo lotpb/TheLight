@@ -52,8 +52,8 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .clear
         refreshControl.tintColor = .black
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: #selector(LookupData.refreshData), for: .valueChanged)
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     

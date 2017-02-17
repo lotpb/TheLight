@@ -100,9 +100,11 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar'
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
+        
+        setupTableView()
 
         parseData()
-        setupTableView()
+        
         setupNavBarButtons()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -110,6 +112,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.eventStore = EKEventStore()
+        self.reminders = [EKReminder]()
         //Fix Grey Bar in iphone Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
@@ -117,12 +121,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         setMainNavItems()
-        
-        //if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            //self.navigationController?.navigationBar.barTintColor = .black
-        //}
-        self.eventStore = EKEventStore()
-        self.reminders = [EKReminder]()
     }
     
     override func didReceiveMemoryWarning() {
@@ -737,7 +735,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
-                //self.tableView!.reloadData()
+                self.tableView!.reloadData()
             } else {
                 print("Error")
             }
@@ -750,7 +748,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems2 = temp.mutableCopy() as! NSMutableArray
-                //self.tableView!.reloadData()
+                self.tableView!.reloadData()
             } else {
                 print("Error")
             }
@@ -763,7 +761,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems3 = temp.mutableCopy() as! NSMutableArray
-                //self.tableView!.reloadData()
+                self.tableView!.reloadData()
             } else {
                 print("Error")
             }
@@ -776,7 +774,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems4 = temp.mutableCopy() as! NSMutableArray
-                //self.tableView!.reloadData()
+                self.tableView!.reloadData()
             } else {
                 print("Error")
             }
@@ -789,7 +787,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems5 = temp.mutableCopy() as! NSMutableArray
-                //self.tableView!.reloadData()
+                self.tableView!.reloadData()
             } else {
                 print("Error")
             }
@@ -803,21 +801,22 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems6 = temp.mutableCopy() as! NSMutableArray
-                //self.tableView!.reloadData()
+                self.tableView!.reloadData()
             } else {
                 print("Error")
             }
         }
-        self.timer?.invalidate()
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+ 
+        //self.timer?.invalidate()
+        //self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
-    
+    /*
     var timer: Timer?
     func handleReloadTable() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }
+    } */
 
     
     // MARK: - Segues

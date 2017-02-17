@@ -205,14 +205,10 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     }
     
     func hideActivityIndicator() {
-        //if activityIndicator != nil {
+        
         activityIndicator.stopAnimating()
         activityIndicator.removeFromSuperview()
-        //}
     }
-    
-    // MARK: - CLLocationManager
-    
     
     
     // MARK: - Routes
@@ -222,8 +218,8 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         
         let temp:MKRoute = response.routes.first! as MKRoute
         self.route = temp
-        self.travelTime.text = String(format:"Time: %0.1f minutes", route.expectedTravelTime/60) as String
-        self.travelDistance.text = String(format:"Distance: %0.1f Miles", route.distance/1609.344) as String
+        self.travelTime.text = String(format:"Time: %0.1f min drive", route.expectedTravelTime/60) as String
+        self.travelDistance.text = String(format:"Distance: %0.1f miles", route.distance/1609.344) as String
         self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
         
         for i in 0 ..< self.route.steps.count {

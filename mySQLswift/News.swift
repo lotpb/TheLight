@@ -39,27 +39,21 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         self.titleLabel.frame = CGRect(x: 0, y: 0, width: self.view.frame.width - 32, height: self.view.frame.height)
         navigationItem.titleView = self.titleLabel
 
-        // MARK: NavigationController Hidden
-        NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
-        
         setupCollectionView()
         setupMenuBar()
         setupNavBarButtons() 
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        //NotificationCenter.default.removeObserver(self)
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        // MARK: NavigationController Hidden
+        NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         setupNewsNavigationItems()
-        /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } */
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {

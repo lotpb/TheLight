@@ -40,8 +40,8 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         refreshControl.backgroundColor = .orange
         refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        self.refreshControl.addTarget(self, action: #selector(NotificationDetailController.refreshData), for: .valueChanged)
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     

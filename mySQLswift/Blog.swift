@@ -43,7 +43,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         refreshControl.tintColor = .white
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
-        refreshControl.addTarget(self, action: #selector(Blog.refreshData), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
     
@@ -52,10 +52,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         
         navigationController?.navigationBar.isTranslucent = false
-        
-        // MARK: NavigationController Hidden
-        NotificationCenter.default.addObserver(self, selector: #selector(Blog.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
-        
+ 
         parseData()
         setupTableView()
         self.tableView!.addSubview(self.refreshControl)
@@ -63,6 +60,8 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // MARK: NavigationController Hidden
+        NotificationCenter.default.addObserver(self, selector: #selector(Blog.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         
         setupNavigationBarItems()
         setupTwitterNavigationBarItems()
@@ -72,6 +71,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidAppear(animated)
         
         refreshData(self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {

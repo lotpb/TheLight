@@ -23,9 +23,8 @@
         <!--Tab Bar Controller-->
         <scene sceneID="gsF-cV-omK">
             <objects>
-                <tabBarController storyboardIdentifier="MasterViewController" hidesBottomBarWhenPushed="YES" id="ODJ-e8-nqn" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MasterViewController" id="ODJ-e8-nqn" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
-                    <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="5pi-vn-Mti">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -5301,7 +5300,7 @@
         <!--Blog-->
         <scene sceneID="P09-oW-yOi">
             <objects>
-                <navigationController title="Blog" automaticallyAdjustsScrollViewInsets="NO" id="IMR-rO-aa6" sceneMemberID="viewController">
+                <navigationController title="Blog" id="IMR-rO-aa6" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Blog" image="note30copy.png" id="Rcj-tn-3Sk"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Cca-Ta-WqC">
@@ -5359,7 +5358,7 @@
         <!--News-->
         <scene sceneID="HcF-uc-nS4">
             <objects>
-                <navigationController title="News" automaticallyAdjustsScrollViewInsets="NO" id="CV1-sL-QRF" customClass="NavVC" customModule="TheLight" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController title="News" id="CV1-sL-QRF" customClass="NavVC" customModule="TheLight" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="News" image="display30copy.png" id="48p-0L-0Mt"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="C5L-Ac-sDM">
@@ -6079,9 +6078,8 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nav_more_icon" translatesAutoresizingMaskIntoConstraints="NO" id="zX4-DO-FRE">
-                                                    <rect key="frame" x="135" y="72" width="25" height="25"/>
-                                                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="share" translatesAutoresizingMaskIntoConstraints="NO" id="zX4-DO-FRE">
+                                                    <rect key="frame" x="135" y="70" width="25" height="25"/>
                                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="25" id="Gro-4W-Zge"/>
@@ -6130,7 +6128,7 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="zX4-DO-FRE" firstAttribute="top" secondItem="l06-By-j4f" secondAttribute="top" id="2Ml-J1-lGw"/>
+                                                <constraint firstItem="zX4-DO-FRE" firstAttribute="top" secondItem="l06-By-j4f" secondAttribute="top" constant="-2" id="2Ml-J1-lGw"/>
                                                 <constraint firstItem="nzc-8i-dOg" firstAttribute="top" secondItem="cBO-li-fWF" secondAttribute="bottom" constant="14" id="3Xp-5H-n4i"/>
                                                 <constraint firstItem="FKQ-2n-ZvE" firstAttribute="top" secondItem="79P-dX-FX1" secondAttribute="topMargin" constant="8" id="5lv-jZ-VBJ"/>
                                                 <constraint firstItem="z01-Su-Eer" firstAttribute="centerX" secondItem="zX4-DO-FRE" secondAttribute="centerX" id="6cO-rJ-Lso"/>
@@ -6155,7 +6153,7 @@
                                                 <constraint firstItem="QfE-WJ-i22" firstAttribute="top" secondItem="Xax-UY-piz" secondAttribute="bottom" constant="10" id="nzV-Hp-jDQ"/>
                                                 <constraint firstItem="cBO-li-fWF" firstAttribute="leading" secondItem="79P-dX-FX1" secondAttribute="leading" id="oRF-ae-ghC"/>
                                                 <constraint firstItem="ZsT-Xb-frH" firstAttribute="top" secondItem="l06-By-j4f" secondAttribute="bottom" constant="4" id="pwb-94-dpV"/>
-                                                <constraint firstItem="z01-Su-Eer" firstAttribute="top" secondItem="zX4-DO-FRE" secondAttribute="bottom" constant="2" id="q8J-Yh-fQy"/>
+                                                <constraint firstItem="z01-Su-Eer" firstAttribute="top" secondItem="zX4-DO-FRE" secondAttribute="bottom" constant="4" id="q8J-Yh-fQy"/>
                                                 <constraint firstItem="l06-By-j4f" firstAttribute="leading" secondItem="QfE-WJ-i22" secondAttribute="trailing" constant="34" id="qCk-dN-ApL"/>
                                                 <constraint firstItem="ZsT-Xb-frH" firstAttribute="centerX" secondItem="l06-By-j4f" secondAttribute="centerX" id="rZc-cd-RyJ"/>
                                                 <constraint firstItem="FKQ-2n-ZvE" firstAttribute="leading" secondItem="79P-dX-FX1" secondAttribute="leadingMargin" constant="8" id="uLN-hZ-rgI"/>
@@ -6169,6 +6167,7 @@
                                             <outlet property="channelTitle" destination="hdW-7j-il6" id="wOE-6O-tab"/>
                                             <outlet property="disLikes" destination="ZsT-Xb-frH" id="hcr-Cv-3Yu"/>
                                             <outlet property="likes" destination="0Pq-O4-9nU" id="o4i-tn-UXA"/>
+                                            <outlet property="shareView" destination="zX4-DO-FRE" id="32Z-od-tzV"/>
                                             <outlet property="subscribed" destination="nzc-8i-dOg" id="r3A-sW-rjD"/>
                                             <outlet property="title" destination="FKQ-2n-ZvE" id="IN6-xO-xML"/>
                                             <outlet property="viewCount" destination="Xax-UY-piz" id="tWy-HX-rcc"/>
@@ -6194,14 +6193,14 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hG0-Vk-zQA">
-                                                    <rect key="frame" x="203" y="39" width="109" height="17"/>
+                                                    <rect key="frame" x="203" y="35" width="109" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="hG0-Vk-zQA" firstAttribute="top" secondItem="bLu-ND-vqi" secondAttribute="bottom" constant="8" id="57D-p3-GNb"/>
+                                                <constraint firstItem="hG0-Vk-zQA" firstAttribute="top" secondItem="bLu-ND-vqi" secondAttribute="bottom" constant="4" id="57D-p3-GNb"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="hG0-Vk-zQA" secondAttribute="trailing" id="9wP-9U-9RN"/>
                                                 <constraint firstItem="bLu-ND-vqi" firstAttribute="leading" secondItem="1zP-8a-NT2" secondAttribute="trailing" constant="22" id="dc4-S6-67J"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="bLu-ND-vqi" secondAttribute="trailing" id="jgl-t5-j84"/>
@@ -6274,10 +6273,10 @@
         <image name="display30copy.png" width="30" height="30"/>
         <image name="home30sel.png" width="30" height="30"/>
         <image name="iosStar.png" width="12" height="12"/>
-        <image name="nav_more_icon" width="24" height="24"/>
         <image name="note30copy.png" width="30" height="30"/>
         <image name="profile-rabbit-toy" width="300" height="300"/>
         <image name="profile-rabbit-toy.png" width="300" height="300"/>
+        <image name="share" width="225" height="225"/>
         <image name="thumbDown" width="25" height="25"/>
         <image name="thumbUp" width="25" height="25"/>
     </resources>

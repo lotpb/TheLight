@@ -40,6 +40,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     var likesLookup: String?
     var dislikesLookup: String?
     var imageLookup: String?
+    var selectedImage : UIImage?
+    var selectedChannelPic : UIImage?
     
     var isPlaying = true
     
@@ -143,7 +145,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     private func playVideo(videoURL: String) {
         self.videoPlayer.pause()
-        //NotificationCenter.default.removeObserver(self)
         
         if let url = NSURL(string: videoURL) {
             DispatchQueue.main.async(execute: {
@@ -293,8 +294,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             let value = Float64(videoSlider.value) * totalSeconds
             let seekTime = CMTime(value: Int64(value), timescale: 1)
             videoPlayer.seek(to: seekTime, completionHandler: { (completedSeek) in
-                //self.videoPlayer.play()
-                //perhaps do something later here
             })
         }
     }
@@ -394,27 +393,21 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     // MARK: - Parse Subscribed
     
     func subscribedParse() {
-        /*
-        var arrayColumn:[String] = PFObject["Subscribed"]
-        let count = arrayColumn.count
-        print(count) */
         
-        print("Crazy")
-        //var array: [String] = [String]()
-        var array: [String] = [(PFUser.current()?.objectId)!]
-        let query = PFUser.query()
-    
-        //query?.whereKey("objectId", equalTo:(PFUser.current()?.username)!)
-        //query?.whereKey("Subscribed", contains: (PFUser.current()?.objectId))
-        //query?.order(byAscending: "Subscribed")
-        query?.findObjectsInBackground {(objects: [PFObject]?, error: Error?) -> Void in
-            if error == nil {
-                for object in objects! {
-                    //object.setObject(array, forKey: "Subscribed")
-                    array.append(object.object(forKey: "Subscribed") as! String)
-                }
+        let query = PFObject(className:"User")
+        query.add([(PFUser.current()?.objectId)!], forKey:"Subscribed")
+        query.saveInBackground {(success: Bool, error: Error?) -> Void in
+            if success == true {
+                print("Yes")
+            } else {
+                print("No")
             }
         }
+        /*
+         let array = ["Peter Balsamo", "Crap"]
+         let query = PFObject(className:"User")
+         query["Subscribed"] = array
+         query.saveInBackground() */
     }
     
     // MARK: - Button
@@ -434,7 +427,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             let image: UIImage = UIImage(named:"iosStarNA.png")!.withRenderingMode(.alwaysTemplate)
             sender.setImage(image, for: .normal)
             sender.tintColor = Color.DGrayColor
-            //sender.addTarget(self, action: #selector(subscribedParse), for: .touchUpInside)
+            sender.addTarget(self, action: #selector(subscribedParse), for: .touchUpInside)
         }
     }
     
@@ -454,6 +447,23 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             }
         }
     }
+    
+    func shareButton(_ sender: UITapGestureRecognizer) {
+        
+        let image: UIImage = (self.selectedImage ?? nil)!
+
+        let activityViewController = UIActivityViewController (activityItems: [(image), self.titleLookup!], applicationActivities: nil)
+        
+        if let popover = activityViewController.popoverPresentationController {
+            popover.sourceView = sender.view
+            popover.sourceRect = CGRect(
+                x: sender.location(in: sender.view).x,
+                y: sender.location(in: sender.view).y, width: 1, height: 1)
+            popover.permittedArrowDirections = [.up, .down]
+        }
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+
     
     @IBAction func minimize(_ sender: UIButton) {
         self.state = .minimized
@@ -539,10 +549,21 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             let cell = tableView.dequeueReusableCell(withIdentifier: "Header") as! headerCell
             
             cell.title.text = self.titleLookup ?? "Big Buck Bunny"
-            cell.viewCount.text = self.viewLookup ?? "0"
+            cell.viewCount.text = self.viewLookup ?? "0 views"
             cell.likes.text = self.likesLookup ?? "0"
             cell.disLikes.text = self.dislikesLookup ?? "0"
-            cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(shareButton))
+            cell.shareView.isUserInteractionEnabled = true
+            cell.shareView.addGestureRecognizer(tap) 
+            //cell.shareView.image = UIImage(named: "share.png")!.withRenderingMode(.alwaysTemplate)
+            //cell.shareView.tintColor = .red
+            //cell.shareView.contentMode = .scaleAspectFill
+            
+            cell.channelPic.layer.cornerRadius = 20
+            cell.channelPic.clipsToBounds = true
+            
+            
             
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
@@ -553,20 +574,20 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                         imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                             
                             UIView.transition(with: (cell.channelPic)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                cell.channelPic.image = UIImage(data: imageData! as Data)
+                                self.selectedChannelPic = UIImage(data: imageData! as Data)
                             }, completion: nil)
                         }
                     }
                 }
             }
-            cell.channelPic.layer.cornerRadius = 20
-            cell.channelPic.clipsToBounds = true
+            
+            cell.channelPic.image = self.selectedChannelPic
+            cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
             cell.channelSubscribers.text = "235235 subscribers"
             
             let subImage: UIImage = UIImage(named:"iosStar")!.withRenderingMode(.alwaysTemplate)
             cell.subscribed.setImage(subImage, for: .normal)
             cell.subscribed.tintColor = Color.youtubeRed
-            //cell.subscribed.backgroundColor = .white
             cell.subscribed.setTitle(" SUBSCRIBE", for: .normal)
             cell.subscribed.setTitleColor(Color.youtubeRed, for: .normal)
             cell.subscribed.addTarget(self, action: #selector(setSubscribed), for: .touchUpInside)
@@ -591,6 +612,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                     cell.tumbnail.image = UIImage(data: imageData!)
                 }, completion: nil)
             }
+            self.selectedImage = cell.tumbnail.image
             cell.tumbnail.backgroundColor = .black
             returnCell = cell
         }
@@ -703,6 +725,7 @@ class headerCell: UITableViewCell {
     @IBOutlet weak var channelPic: UIImageView!
     @IBOutlet weak var channelSubscribers: UILabel!
     @IBOutlet weak var subscribed: UIButton! //added
+    @IBOutlet weak var shareView: UIImageView! //added
     
     //MARK: Inits
     required init?(coder aDecoder: NSCoder) {

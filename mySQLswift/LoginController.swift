@@ -68,8 +68,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        observeKeyboardNotifications() //Move Keyboard
-        
         //Facebook
         fbButton.delegate = self
         if (FBSDKAccessToken.current() != nil) {
@@ -155,13 +153,21 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         }
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barTintColor = .black
+    }
+    
     //Animate Buttons
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        observeKeyboardNotifications() //Move Keyboard
+        
         UIView.animate(withDuration: 0.5, delay: 0.3, options: [], animations: {
-                self.signInButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
-                self.fbButton.frame = CGRect(x: 10, y: 325, width: 110, height: 38)
+            self.signInButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
+            self.fbButton.frame = CGRect(x: 10, y: 325, width: 110, height: 38)
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 self.twitterButton.frame = CGRect(x: self.view.frame.width/2 - 90, y: 325, width: 180, height: 40)
             } else {
@@ -172,9 +178,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barTintColor = .black
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
