@@ -53,7 +53,7 @@ class ContactTableViewCell: UITableViewCell {
         contactNameLabel.text = contact.name
         contactEmailLabel.text = contact.email ?? ""
         contactPhoneLabel.text = contact.phone ?? ""
-        contactImageView.image = contact.image ?? UIImage(named: "profile-rabbit-toy")
+        contactImageView.image = contact.image ?? #imageLiteral(resourceName: "profile-rabbit-toy")
         setCircularAvatar()
     }
 }

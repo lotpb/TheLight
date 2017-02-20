@@ -36,7 +36,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         
         navigationController?.navigationBar.isTranslucent = false
 
-        self.titleLabel.frame = CGRect(x: 0, y: 0, width: self.view.frame.width - 32, height: self.view.frame.height)
+        self.titleLabel.frame = CGRect(x: 0, y: 0, width: view.frame.width - 32, height: self.view.frame.height)
         navigationItem.titleView = self.titleLabel
 
         setupCollectionView()
@@ -86,7 +86,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
     
     func setupNavBarButtons() {
         
-        let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
+        let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(handleMore))
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(newButton))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(handleSearch))
         navigationItem.rightBarButtonItems = [moreButton,addButton,searchButton]

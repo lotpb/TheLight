@@ -187,12 +187,12 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
             if self.frm11 == "Active" {
                 theSwitch.isOn = true
                 self.active = (self.frm11)!
-                self.activeImage.image = UIImage(named:"iosStar.png")
+                self.activeImage.image = #imageLiteral(resourceName: "iosStar")
                 cell.textLabel!.text = "Active"
             } else {
                 theSwitch.isOn = false
                 self.active = ""
-                self.activeImage.image = UIImage(named:"iosStarNA.png")
+                self.activeImage.image = #imageLiteral(resourceName: "iosStarNA")
                 cell.textLabel!.text = "Inactive"
             }
             

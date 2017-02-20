@@ -48,8 +48,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }()
     
     let photoImage: UIImageView = { //tableheader
-        let imageView = UIImageView()
-        imageView.image = UIImage(named:"IMG_1133.jpg")
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "IMG_1133"))
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false

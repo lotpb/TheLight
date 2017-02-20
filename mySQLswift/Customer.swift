@@ -208,8 +208,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.custreplyButton.tintColor = .lightGray
-        let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.custreplyButton .setImage(replyimage, for: .normal)
+        cell.custreplyButton.setImage(#imageLiteral(resourceName: "Commentfilled").withRenderingMode(.alwaysTemplate), for: .normal)
         
         if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == "") {
             cell.custreplyButton!.tintColor = .lightGray
@@ -225,8 +224,7 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.custlikeButton.tintColor = .lightGray
-        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.custlikeButton .setImage(likeimage, for: .normal)
+        cell.custlikeButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
 
         if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Rate") as? String == "A" ) {
             cell.custlikeButton!.tintColor = Color.Cust.buttonColor
@@ -234,20 +232,19 @@ class Customer: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.custlikeButton!.tintColor = .lightGray
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        myLabel.backgroundColor = Color.Cust.labelColor
-        myLabel.textColor = .white
-        myLabel.textAlignment = .center
-        myLabel.layer.masksToBounds = true
-        myLabel.text = "Cust"
-        myLabel.font = Font.celltitle14m
-        myLabel.layer.cornerRadius = 25.0
-        myLabel.isUserInteractionEnabled = true
-        myLabel.tag = indexPath.row
-        cell.addSubview(myLabel)
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(Customer.imgLoadSegue))
-        myLabel.addGestureRecognizer(tap)
+        let imageLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+        imageLabel.backgroundColor = Color.Cust.labelColor
+        imageLabel.text = "Cust"
+        imageLabel.textColor = .white
+        imageLabel.textAlignment = .center
+        imageLabel.font = Font.celltitle14m
+        imageLabel.layer.cornerRadius = 25.0
+        imageLabel.layer.masksToBounds = true
+        imageLabel.isUserInteractionEnabled = true
+        imageLabel.tag = indexPath.row
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imgLoadSegue))
+        imageLabel.addGestureRecognizer(tap)
+        cell.addSubview(imageLabel)
         
         return cell
     }

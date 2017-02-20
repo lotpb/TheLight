@@ -536,7 +536,7 @@ extension GeotificationsViewController: MKMapViewDelegate {
                 
                 let removeButton = UIButton(type: .custom)
                 removeButton.frame = CGRect(x: 0, y: 0, width: 23, height: 23)
-                removeButton.setImage(UIImage(named: "DeleteGeotification")!, for: .normal)
+                removeButton.setImage(#imageLiteral(resourceName: "DeleteGeotification"), for: .normal)
                 annotationView?.leftCalloutAccessoryView = removeButton
             } else {
                 annotationView?.annotation = annotation

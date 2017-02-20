@@ -26,8 +26,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
 
     let headerImageView: UIImageView = {
-        let image = UIImage(named:"images")!.withRenderingMode(.alwaysTemplate)
-        let imageView = UIImageView(image: image)
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "images"))
         imageView.tintColor = .black
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -50,11 +49,11 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
                 }
             }
         }
-        imageView.layer.cornerRadius = 22
-        imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 22
         imageView.layer.borderColor = UIColor.lightGray.cgColor
         imageView.layer.borderWidth = 0.5
+        imageView.layer.masksToBounds = true
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -74,8 +73,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
         button.tintColor = .white
-        let image : UIImage? = UIImage(named:"minimize")!.withRenderingMode(.alwaysTemplate)
-        button.setImage(image, for: .normal)
+        button.setImage(#imageLiteral(resourceName: "minimize").withRenderingMode(.alwaysTemplate), for: .normal)
         return button
     }()
     
@@ -99,11 +97,10 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         backgroundColor = .white
         
         let floatingButton = UIButton(frame: CGRect(x: frame.size.width - 70, y: 65, width: 50, height: 50))
+        floatingButton.layer.cornerRadius = floatingButton.frame.size.width / 2
         floatingButton.backgroundColor = Color.News.navColor
         floatingButton.tintColor = .white
-        floatingButton.layer.cornerRadius = floatingButton.frame.size.width / 2
-        let floatimage: UIImage? = UIImage(named:"Camcorder")!.withRenderingMode(.alwaysTemplate)
-        floatingButton.setImage(floatimage, for: .normal)
+        floatingButton.setImage(#imageLiteral(resourceName: "Camcorder").withRenderingMode(.alwaysTemplate), for: .normal)
         floatingButton.addTarget(self, action: #selector(selectCamera), for: .touchUpInside)
         
         registerCells()
@@ -259,8 +256,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
             
             let sortButton = UIButton(frame: CGRect(x: 120, y: 18, width: 10, height: 7))
             sortButton.tintColor = .black
-            let sortimage : UIImage? = UIImage(named:"minimize")!.withRenderingMode(.alwaysTemplate)
-            sortButton.setImage(sortimage, for: .normal)
+            sortButton.setImage(#imageLiteral(resourceName: "minimize").withRenderingMode(.alwaysTemplate), for: .normal)
             vw.addSubview(sortButton)
             
             return vw
@@ -296,12 +292,11 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
 class AccountViewCell: UITableViewCell {
     
     let titleImage: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
-        iv.backgroundColor = .yellow
-        iv.image = UIImage(named: "taylor_swift_blank_space")
-        iv.clipsToBounds = true
-        return iv
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "taylor_swift_blank_space"))
+        imageView.contentMode = .scaleAspectFill
+        imageView.backgroundColor = .yellow
+        imageView.clipsToBounds = true
+        return imageView
     }()
     
     let titleLabel: UILabel = {

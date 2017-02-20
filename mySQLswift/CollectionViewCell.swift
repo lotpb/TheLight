@@ -32,9 +32,9 @@ class CollectionViewCell: UICollectionViewCell {
         //button.translatesAutoresizingMaskIntoConstraints = false
         button.alpha = 0.9
         button.isUserInteractionEnabled = true
-        let image = UIImage(named: "play_button.png")
+        //let image = UIImage(named: "play_button.png")
         button.tintColor = .white
-        button.setImage(image, for: .normal)
+        button.setImage(#imageLiteral(resourceName: "play_button"), for: .normal)
         let tap = UITapGestureRecognizer(target: self, action: #selector(CollectionViewCell.playVideo))
         button.addGestureRecognizer(tap)
         return button
@@ -169,9 +169,8 @@ class VideoCell: CollectionViewCell {
     let actionButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let imagebutton : UIImage? = UIImage(named:"nav_more_icon.png")!.withRenderingMode(.alwaysTemplate)
         button.tintColor = .lightGray
-        button.setImage(imagebutton, for: .normal)
+        button.setImage(#imageLiteral(resourceName: "nav_more_icon").withRenderingMode(.alwaysTemplate), for: .normal)
         return button
     }()
     
@@ -179,9 +178,8 @@ class VideoCell: CollectionViewCell {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
-        let imagebutton : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
         button.tintColor = .lightGray
-        button.setImage(imagebutton, for: .normal)
+        button.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         return button
     }()
     
@@ -203,9 +201,9 @@ class VideoCell: CollectionViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.alpha = 0.9
         button.isUserInteractionEnabled = true
-        let image = UIImage(named: "play_button.png")
+        //let image = UIImage(named: "play_button.png")
         button.tintColor = .white
-        button.setImage(image, for: .normal)
+        button.setImage(#imageLiteral(resourceName: "play_button"), for: .normal)
         let tap = UITapGestureRecognizer(target: self, action: #selector(handlePlay))
         button.addGestureRecognizer(tap)
         return button

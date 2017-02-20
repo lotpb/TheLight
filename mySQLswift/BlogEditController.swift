@@ -34,8 +34,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     lazy var replylikeButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .lightGray
-        let image: UIImage = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        button.setImage(image, for: .normal)
+        button.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         button.isHidden = false
         button.addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -62,8 +61,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         self.toolBar!.isTranslucent = false
         self.toolBar!.layer.masksToBounds = true
         
-        let likeImage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        self.Like!.setImage(likeImage, for: .normal)
+        self.Like!.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         self.Like!.setTitleColor(.gray, for: .normal)
         
         setupTableView()
@@ -89,8 +87,9 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         self.update?.backgroundColor = Color.twitterBlue
         self.update?.setTitleColor(.white, for: .normal)
         let btnLayer: CALayer = self.update!.layer
-        btnLayer.masksToBounds = true
         btnLayer.cornerRadius = 9.0
+        btnLayer.masksToBounds = true
+        
         
         let width = CGFloat(2.0)
         let topBorder = CALayer()
@@ -288,11 +287,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 Liked = 0
             }
             cell?.replynumLabel!.text = "\(Liked!)"
-            
-            //cell?.replylikeButton.tintColor = .lightGray
-            //let replyimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-            //cell?.replylikeButton .setImage(replyimage, for: .normal)
-            //cell?.replylikeButton .addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
+
             
             if !(cell?.replynumLabel.text == "0") {
                 cell?.replynumLabel.textColor = .red

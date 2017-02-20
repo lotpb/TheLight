@@ -19,21 +19,24 @@ import Parse
 class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
 
     //MARK: Properties
-    @IBOutlet weak var playerView: UIView!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var containView: UIView!
     
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var imageObject :PFObject!
-    var imageFile :PFFile!
+    @IBOutlet private weak var playerView: UIView!
+    @IBOutlet private weak var containView: UIView!
+    @IBOutlet weak var tableView: UITableView!
+    
+    private var player = AVPlayer.init()
+    private var playerLayer: AVPlayerLayer?
+    var videoURL: String?
+    var isPlaying = true
+    var gradientLayer = CAGradientLayer()
     
     var delegate: PlayerVCDelegate?
     var state = stateOfVC.hidden
     var direction = Direction.none
-    var videoPlayer = AVPlayer.init()
     
-    var playerLayer: AVPlayerLayer?
-    var videoURL: String?
+    var _feedItems: NSMutableArray = NSMutableArray()
+    var imageObject: PFObject!
+    var imageFile: PFFile!
     
     var titleLookup: String?
     var viewLookup: String?
@@ -42,9 +45,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     var imageLookup: String?
     var selectedImage : UIImage?
     var selectedChannelPic : UIImage?
-    
-    var isPlaying = true
-    
+
     
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -84,8 +85,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     lazy var minimizeButton: UIButton = {
         let button = UIButton(type: .system)
-        let image = UIImage(named: "minimize")
-        button.setImage(image, for: .normal)
+        //let image = UIImage(named: "minimize")
+        button.setImage(#imageLiteral(resourceName: "minimize"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
         button.isHidden = false
@@ -95,8 +96,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     lazy var pausePlayButton: UIButton = {
         let button = UIButton(type: .system)
-        let image = UIImage(named: "pause")
-        button.setImage(image, for: .normal)
+        //let image = UIImage(named: "pause")
+        button.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
         button.isHidden = false
@@ -130,9 +131,9 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     open func resetPlayer() {
         
-        self.videoPlayer.pause()
+        self.player.pause()
         self.playerLayer?.removeFromSuperlayer()
-        videoPlayer.replaceCurrentItem(with: nil)
+        player.replaceCurrentItem(with: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -144,26 +145,32 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     // MARK: - Video Player
     
     private func playVideo(videoURL: String) {
-        self.videoPlayer.pause()
+        
+        self.player.pause()
         
         if let url = NSURL(string: videoURL) {
             DispatchQueue.main.async(execute: {
-                self.videoPlayer = AVPlayer(url: url as URL)
-                self.playerLayer = AVPlayerLayer(player: self.videoPlayer)
-                self.playerLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
-                self.playerLayer?.frame = self.playerView.bounds
+                self.player = AVPlayer(url: url as URL)
+                self.playerLayer = AVPlayerLayer(player: self.player)
+                self.playerLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill //AVLayerVideoGravityResizeAspectFill
+                //self.playerLayer?.frame = self.playerView.bounds
                 self.playerView.layer.addSublayer(self.playerLayer!)
                 if self.state != .hidden {
-                    self.videoPlayer.play()
+                    self.player.play()
 
                 }
                 //self.loopVideo(videoPlayer: self.videoPlayer)
-                self.playDidEnd(videoPlayer: self.videoPlayer)
+                self.playDidEnd(videoPlayer: self.player)
                 self.setupGradientLayer()
                 self.setupTimeRanges()//must keep below videoPlayer.play()
                 self.tableView.reloadData()
             })
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.playerLayer?.frame = containView.bounds
     }
 
     
@@ -268,8 +275,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     // MARK: - Setup Video Container
     
     private func setupGradientLayer() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = containView.bounds //CGRect(x: 64, y: 64, width: 160, height: 160)
+        gradientLayer = CAGradientLayer()
+        gradientLayer.frame = playerView.bounds //CGRect(x: 64, y: 64, width: 160, height: 160)
         gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
         gradientLayer.locations = [0.7, 1.2]
         playerView.layer.addSublayer(gradientLayer)
@@ -277,11 +284,11 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     func handlePause() {
         if isPlaying {
-            videoPlayer.pause()
-            pausePlayButton.setImage(UIImage(named: "play"), for: .normal)
+            player.pause()
+            pausePlayButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
         } else {
-            videoPlayer.play()
-            pausePlayButton.setImage(UIImage(named: "pause"), for: .normal)
+            player.play()
+            pausePlayButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
         }
         isPlaying = !isPlaying
     }
@@ -289,28 +296,28 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     func handleSliderChange() {
         
         print(videoSlider.value)
-        if let duration = videoPlayer.currentItem?.duration {
+        if let duration = player.currentItem?.duration {
             let totalSeconds = CMTimeGetSeconds(duration)
             let value = Float64(videoSlider.value) * totalSeconds
             let seekTime = CMTime(value: Int64(value), timescale: 1)
-            videoPlayer.seek(to: seekTime, completionHandler: { (completedSeek) in
+            player.seek(to: seekTime, completionHandler: { (completedSeek) in
             })
         }
     }
 
     private func setupTimeRanges() {
         
-        self.videoPlayer.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
+        self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
         
         //track player progress
         let interval = CMTime(value: 1, timescale: 2)
-        self.videoPlayer.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
+        self.player.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
             let seconds = CMTimeGetSeconds(progressTime)
             let secondsString = String(format: "%02d", Int(seconds.truncatingRemainder(dividingBy: 60)))
             let minutesString = String(format: "%02d", Int(seconds / 60))
             self.currentTimeLabel.text = "\(minutesString):\(secondsString)"
             //lets move the slider thumb
-            if let duration = self.videoPlayer.currentItem?.duration {
+            if let duration = self.player.currentItem?.duration {
                 let durationSeconds = CMTimeGetSeconds(duration)
                 self.videoSlider.value = Float(seconds / durationSeconds)
             }
@@ -327,7 +334,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             self.hideControlObjects()
             isPlaying = true
             
-            if let duration = videoPlayer.currentItem?.duration {
+            if let duration = player.currentItem?.duration {
                 let seconds = CMTimeGetSeconds(duration)
                 let secondsText = Int(seconds) % 60
                 let minutesText = String(format: "%02d", Int(seconds) / 60)
@@ -344,7 +351,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             self.currentTimeLabel.alpha = 1
             self.videoSlider.alpha = 1
             self.videoLengthLabel.alpha = 1
-            //self.containView.alpha = 1
+            self.gradientLayer.isHidden = false
         }, completion: {
             Bool in
             //self.panelVisible = true
@@ -359,7 +366,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             self.currentTimeLabel.alpha = 0
             self.videoSlider.alpha = 0
             self.videoLengthLabel.alpha = 0
-            //self.containView.alpha = 0
+            self.gradientLayer.isHidden = true
+
         }, completion: {
             Bool in
             //self.panelVisible = false
@@ -370,7 +378,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     func playDidEnd(videoPlayer: AVPlayer) {
         NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { notification in
 
-            self.videoPlayer.seek(to: kCMTimeZero, completionHandler: {
+            self.player.seek(to: kCMTimeZero, completionHandler: {
                 Bool in
                 self.videoSlider.setValue(0.0, animated: true)
                 self.showControlObjects()
@@ -417,16 +425,14 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         if (sender.titleLabel!.text == " UNSUBSCRIBE")   {
             sender.setTitle(" SUBSCRIBE", for: .normal)
             sender.setTitleColor(Color.youtubeRed, for: .normal)
-            let image: UIImage = UIImage(named:"iosStar.png")!.withRenderingMode(.alwaysTemplate)
-            sender.setImage(image, for: .normal)
             sender.tintColor = Color.youtubeRed
+            sender.setImage(#imageLiteral(resourceName: "iosStar").withRenderingMode(.alwaysTemplate), for: .normal)
             sender.addTarget(self, action: #selector(subscribedParse), for: .touchUpInside)
         } else {
             sender.setTitle(" UNSUBSCRIBE", for: .normal)
             sender.setTitleColor(Color.DGrayColor, for: .normal)
-            let image: UIImage = UIImage(named:"iosStarNA.png")!.withRenderingMode(.alwaysTemplate)
-            sender.setImage(image, for: .normal)
             sender.tintColor = Color.DGrayColor
+            sender.setImage(#imageLiteral(resourceName: "iosStarNA").withRenderingMode(.alwaysTemplate), for: .normal)
             sender.addTarget(self, action: #selector(subscribedParse), for: .touchUpInside)
         }
     }
@@ -505,7 +511,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             self.animate()
             self.delegate?.didEndedSwipe(toState: self.state)
             if self.state == .hidden {
-                self.videoPlayer.pause()
+                self.player.pause()
             }
         }
     }
@@ -521,7 +527,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     func tapPlayView()  {
         showControlObjects()
-        self.videoPlayer.play()
+        self.player.play()
         self.state = .fullScreen
         self.delegate?.didmaximize()
         self.animate()
@@ -563,8 +569,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             cell.channelPic.layer.cornerRadius = 20
             cell.channelPic.clipsToBounds = true
             
-            
-            
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
@@ -585,9 +589,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
             cell.channelSubscribers.text = "235235 subscribers"
             
-            let subImage: UIImage = UIImage(named:"iosStar")!.withRenderingMode(.alwaysTemplate)
-            cell.subscribed.setImage(subImage, for: .normal)
             cell.subscribed.tintColor = Color.youtubeRed
+            cell.subscribed.setImage(#imageLiteral(resourceName: "iosStar").withRenderingMode(.alwaysTemplate), for: .normal)
             cell.subscribed.setTitle(" SUBSCRIBE", for: .normal)
             cell.subscribed.setTitleColor(Color.youtubeRed, for: .normal)
             cell.subscribed.addTarget(self, action: #selector(setSubscribed), for: .touchUpInside)
@@ -596,16 +599,17 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             returnCell = cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! videoCell
-            
+            // fix added - 1 to (indexPath).row - 1
+            cell.title.text = (self._feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "newsTitle") as? String
             cell.title.numberOfLines = 2
-            cell.title.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
             
-            var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
+            var newsView:Int? = (_feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "newsView")as? Int
             if newsView == nil { newsView = 0 }
-            let NewText = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String
+            
+            let NewText = (self._feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "newsDetail") as? String
             cell.name.text =  String(format: "%@%@", "\(NewText!)", " \(newsView!) views")
 
-            imageObject = _feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as! PFObject
+            imageObject = _feedItems.object(at: ((indexPath as NSIndexPath).row) - 1) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 UIView.transition(with: cell.tumbnail, duration: 0.5, options: .transitionCrossDissolve, animations: {
@@ -631,22 +635,22 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // fix added - 1 to (indexPath).row - 1
+        self.titleLookup = (self._feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "newsTitle") as? String
         
-        self.titleLookup = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
-        
-        var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
+        var newsView:Int? = (_feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "newsView")as? Int
         if newsView == nil { newsView = 0 }
         self.viewLookup = "\(newsView!) views"
         
-        var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
+        var Liked:Int? = (_feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "Liked")as? Int
         if Liked == nil { Liked = 0 }
         self.likesLookup = "\(Liked!)"
         
-        var Disliked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Dislikes")as? Int
+        var Disliked:Int? = (_feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "Dislikes")as? Int
         if Disliked == nil { Disliked = 0 }
         self.dislikesLookup = "\(Disliked!)"
 
-        self.imageLookup = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as? String
+        self.imageLookup = (self._feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "username") as? String
         
         //update View Count
         let query = PFQuery(className:"Newsios")
@@ -658,7 +662,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             }
         }
         
-        imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+        imageObject = _feedItems.object(at: indexPath.row - 1) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
             

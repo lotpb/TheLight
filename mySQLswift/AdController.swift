@@ -155,12 +155,12 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
         myLabel.backgroundColor = Color.Table.labelColor
-        myLabel.textColor = .white
-        myLabel.textAlignment = .center
-        myLabel.layer.masksToBounds = true
         myLabel.text = "Ad"
         myLabel.font = Font.celltitle14m
+        myLabel.textColor = .white
+        myLabel.textAlignment = .center
         myLabel.layer.cornerRadius = 20.0
+        myLabel.layer.masksToBounds = true
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
@@ -188,10 +188,10 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         myLabel1.backgroundColor = .white
         myLabel1.textColor = .black
         myLabel1.textAlignment = .center
-        myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Ad's\n", _feedItems.count)
         myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
+        myLabel1.layer.masksToBounds = true
         myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
         
@@ -204,10 +204,10 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
         myLabel2.textAlignment = .center
-        myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
         myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
+        myLabel2.layer.masksToBounds = true
         myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
         
@@ -218,12 +218,12 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
         myLabel3.numberOfLines = 0
         myLabel3.backgroundColor = .white
+        myLabel3.text = "Active"
         myLabel3.textColor = .black
         myLabel3.textAlignment = .center
-        myLabel3.layer.masksToBounds = true
-        myLabel3.text = "Active"
         myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
+        myLabel3.layer.masksToBounds = true
         myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         

@@ -155,10 +155,10 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         myLabel.backgroundColor = Color.Table.labelColor
         myLabel.textColor = .white
         myLabel.textAlignment = .center
-        myLabel.layer.masksToBounds = true
         myLabel.text = "Prod"
         myLabel.font = Font.celltitle14m
         myLabel.layer.cornerRadius = 20.0
+        myLabel.layer.masksToBounds = true
         myLabel.isUserInteractionEnabled = true
         myLabel.tag = indexPath.row
         cell.addSubview(myLabel)
@@ -186,10 +186,10 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         myLabel1.backgroundColor = .white
         myLabel1.textColor = .black
         myLabel1.textAlignment = .center
-        myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Prod's\n", _feedItems.count)
         myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
+        myLabel1.layer.masksToBounds = true
         myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
         
@@ -202,10 +202,10 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
         myLabel2.textAlignment = .center
-        myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
         myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
+        myLabel2.layer.masksToBounds = true
         myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
         
@@ -218,10 +218,10 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         myLabel3.backgroundColor = .white
         myLabel3.textColor = .black
         myLabel3.textAlignment = .center
-        myLabel3.layer.masksToBounds = true
         myLabel3.text = "Active"
         myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
+        myLabel3.layer.masksToBounds = true
         myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         

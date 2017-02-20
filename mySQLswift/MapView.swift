@@ -113,7 +113,6 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
                     
                     for route in unwrappedResponse.routes {
                         self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                        //self.mapView.addOverlay(route.polyline)
                         self.showRoute(response!)
                         self.hideActivityIndicator()
                     }
@@ -235,13 +234,12 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
             self.stepView.text = self.allSteps
         }
         
-         if mapView.overlays.count == 1 {
-         mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
-         } else {
-         let polylineBoundingRect =  MKMapRectUnion(mapView.visibleMapRect, route.polyline.boundingMapRect)
-         mapView.setVisibleMapRect(polylineBoundingRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
-         }
- 
+        if mapView.overlays.count == 1 {
+            mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
+        } else {
+            let polylineBoundingRect =  MKMapRectUnion(mapView.visibleMapRect, route.polyline.boundingMapRect)
+            mapView.setVisibleMapRect(polylineBoundingRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
+        }
     }
     
     // MARK: - Map Annotation

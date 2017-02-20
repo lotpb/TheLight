@@ -113,9 +113,9 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     func setupBorder() {
         let bottomBorder = CALayer()
         let width1 = CGFloat(2.0)
+        bottomBorder.borderWidth = width1
         bottomBorder.borderColor = UIColor.darkGray.cgColor
         bottomBorder.frame = CGRect(x: 0, y: self.mainView!.frame.size.height-1, width: view.frame.size.width, height: 0.5)
-        bottomBorder.borderWidth = width1
         self.mainView!.layer.masksToBounds = true
         self.mainView!.layer.addSublayer(bottomBorder)
     }
@@ -131,7 +131,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             self.createLabel!.text = self.create
             self.userimageView?.image = self.userimage
         } else {
-            self.userimageView?.image = UIImage(named:"profile-rabbit-toy")
+            self.userimageView?.image = #imageLiteral(resourceName: "profile-rabbit-toy")
         }
         
         self.userimageView?.backgroundColor = .white

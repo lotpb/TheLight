@@ -103,14 +103,13 @@ class MenuBar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UIC
 class MenuCell: CollectionViewCell {
     
     let imageView1: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "home")?.withRenderingMode(.alwaysTemplate)
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "home"))
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            iv.tintColor = .darkGray
+            imageView.tintColor = .darkGray
         } else {
-            iv.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
+            imageView.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
         }
-        return iv
+        return imageView
     }()
     
     override var isHighlighted: Bool {

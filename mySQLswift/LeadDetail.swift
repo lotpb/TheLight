@@ -115,10 +115,10 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     let photoImage: CustomImageView = {
         let imageView = CustomImageView()
-        imageView.image = UIImage(named:"IMG_1133.jpg")
-        imageView.layer.masksToBounds = true
+        imageView.image = #imageLiteral(resourceName: "IMG_1133")
         imageView.layer.borderColor = UIColor.lightGray.cgColor
         imageView.layer.borderWidth = 2.0
+        imageView.layer.masksToBounds = true
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -145,8 +145,8 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(mapClickButton), for: .touchUpInside)
         let btnLayer: CALayer = button.layer
-        btnLayer.masksToBounds = true
         btnLayer.cornerRadius = 9.0
+        btnLayer.masksToBounds = true
         return button
     }()
     
@@ -228,7 +228,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let topBorder = CALayer()
         let width = CGFloat(2.0)
         topBorder.borderColor = UIColor.lightGray.cgColor
-        topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
+        topBorder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 0.5)
         topBorder.borderWidth = width
         tableView!.layer.addSublayer(topBorder)
         tableView!.layer.masksToBounds = true
@@ -295,7 +295,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         } else {
             mainView?.translatesAutoresizingMaskIntoConstraints = false
             mainView?.heightAnchor.constraint(equalToConstant: 265).isActive = true
-            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: self.view.frame.width/2-25, height: 110)
+            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: view.frame.width/2-25, height: 110)
         }
         
         mapButton.translatesAutoresizingMaskIntoConstraints = false
@@ -328,12 +328,10 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         if(self.active == "1") {
             self.following!.text = "Following"
-            let replyimage : UIImage? = UIImage(named:"iosStar.png")
-            self.activebutton!.setImage(replyimage, for: .normal)
+            self.activebutton!.setImage(#imageLiteral(resourceName: "iosStar"), for: .normal)
         } else {
             self.following!.text = "Follow"
-            let replyimage : UIImage? = UIImage(named:"iosStarNA.png")
-            self.activebutton!.setImage(replyimage, for: .normal)
+            self.activebutton!.setImage(#imageLiteral(resourceName: "iosStarNA"), for: .normal)
         }
     }
     
@@ -410,7 +408,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             let width = CGFloat(2.0)
             let topBorder = CALayer()
             topBorder.borderColor = UIColor.lightGray.cgColor
-            topBorder.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0.5)
+            topBorder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 0.5)
             topBorder.borderWidth = width
             cell.layer.addSublayer(topBorder)
             cell.layer.masksToBounds = true

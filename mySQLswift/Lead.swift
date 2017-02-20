@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISplitViewControllerDelegate {
+class Lead: UIViewController, UISplitViewControllerDelegate {
     
     let searchScope = ["name","city","phone","date","active"]
     
@@ -113,130 +113,6 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         
         self.performSegue(withIdentifier: "newleadSegue", sender: self)
     }
-
-    
-    // MARK: - Table View
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        if tableView == self.tableView {
-            return _feedItems.count
-        } else {
-            return foundUsers.count
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        var cellIdentifier: String!
-        
-        if tableView == self.tableView {
-            cellIdentifier = "Cell"
-        } else {
-            cellIdentifier = "UserFoundCell"
-        }
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
-        
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: tableView.frame.width - 105, y: 0, width: 95, height: 32))
-        myLabel1.backgroundColor = Color.Lead.labelColor1
-        myLabel1.textColor = .white
-        myLabel1.textAlignment = .center
-        myLabel1.layer.masksToBounds = true
-        myLabel1.font = Font.celltitle14m
-        cell.addSubview(myLabel1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: tableView.frame.width - 105, y: 33, width: 95, height: 33))
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
-        myLabel2.textAlignment = .center
-        myLabel2.layer.masksToBounds = true
-        myLabel2.font = Font.celltitle14m
-        cell.addSubview(myLabel2)
-        
-        cell.leadsubtitleLabel!.textColor = .gray
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            
-            cell.leadtitleLabel!.font = Font.celltitle22m
-            cell.leadsubtitleLabel!.font = Font.celltitle16r
-            cell.leadreplyLabel.font = Font.celltitle16r
-            cell.leadlikeLabel.font = Font.celltitle18m
-            myLabel1.font = Font.celltitle16r
-            myLabel2.font = Font.celltitle18m
-            
-        } else {
-            
-            cell.leadtitleLabel!.font = Font.celltitle20l
-            cell.leadsubtitleLabel!.font = Font.celltitle16r
-            cell.leadreplyLabel.font = Font.celltitle16r
-            cell.leadlikeLabel.font = Font.celltitle18m
-            myLabel1.font = Font.celltitle16r
-            myLabel2.font = Font.celltitle18m
-        }
-        
-        if (tableView == self.tableView) {
-            
-            cell.leadtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String ?? ""
-            cell.leadsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""
-            myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String ?? ""
-            myLabel2.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String ?? ""
-            
-        } else {
-            
-            cell.leadtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
-            cell.leadsubtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "City") as? String
-            myLabel1.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Date") as? String
-            myLabel2.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String
-        }
-        
-        cell.leadreplyButton.tintColor = .lightGray
-        let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.leadreplyButton .setImage(replyimage, for: .normal)
-        
-        cell.leadlikeButton.tintColor = .lightGray
-        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.leadlikeButton .setImage(likeimage, for: .normal)
-        
-        cell.leadreplyLabel.text! = ""
-        
-        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Coments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Coments") as? String == "") {
-            cell.leadreplyButton!.tintColor = .lightGray
-        } else {
-            cell.leadreplyButton!.tintColor = Color.Lead.buttonColor
-        }
-        
-        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
-            cell.leadlikeButton!.tintColor = Color.Lead.buttonColor
-            cell.leadlikeLabel.text! = "Active"
-            cell.leadlikeLabel.adjustsFontSizeToFitWidth = true
-        } else {
-            cell.leadlikeButton!.tintColor = .lightGray
-            cell.leadlikeLabel.text! = ""
-        }
-        
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        myLabel.backgroundColor = Color.Cust.labelColor
-        myLabel.textColor = .white
-        myLabel.textAlignment = .center
-        myLabel.layer.masksToBounds = true
-        myLabel.text = "Lead"
-        myLabel.font = Font.celltitle14m
-        myLabel.layer.cornerRadius = 25.0
-        myLabel.isUserInteractionEnabled = true
-        myLabel.tag = indexPath.row
-        cell.addSubview(myLabel)
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(Lead.imgLoadSegue))
-        myLabel.addGestureRecognizer(tap)
-        
-        return cell
-    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
@@ -258,13 +134,13 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         myLabel1.backgroundColor = .white
         myLabel1.textColor = Color.Header.headtextColor
         myLabel1.textAlignment = .center
-        myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Leads\n", _feedItems.count)
         myLabel1.font = Font.celltitle14m
-        myLabel1.layer.cornerRadius = 25.0
         myLabel1.isUserInteractionEnabled = true
         myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel1.layer.borderWidth = 1
+        myLabel1.layer.cornerRadius = 25.0
+        myLabel1.layer.masksToBounds = true
         vw.addSubview(myLabel1)
         
         let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
@@ -276,13 +152,13 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         myLabel2.backgroundColor = .white
         myLabel2.textColor = Color.Header.headtextColor
         myLabel2.textAlignment = .center
-        myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
         myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
-        myLabel2.isUserInteractionEnabled = true
         myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel2.layer.borderWidth = 1
+        myLabel2.layer.masksToBounds = true
+        myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
         
         let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
@@ -294,13 +170,13 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         myLabel3.backgroundColor = .white
         myLabel3.textColor = Color.Header.headtextColor
         myLabel3.textAlignment = .center
-        myLabel3.layer.masksToBounds = true
         myLabel3.text = String(format: "%@%d", "Events\n", 3)
         myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
-        myLabel3.isUserInteractionEnabled = true
         myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel3.layer.borderWidth = 1
+        myLabel3.layer.masksToBounds = true
+        myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         
         let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
@@ -414,18 +290,8 @@ class Lead: UIViewController, UITableViewDelegate, UITableViewDataSource, UISpli
         titleLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "LastName") as? String)!
         self.performSegue(withIdentifier: "leaduserSegue", sender: self)
     }
-
     
     // MARK: - Segues
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if (tableView == self.tableView) {
-            self.performSegue(withIdentifier: "leaddetailSegue", sender: self)
-        } else {
-
-        }
-    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -586,6 +452,135 @@ extension Lead: UISearchResultsUpdating {
                     self.searchController.resignFirstResponder()
                 }
             }
+        }
+    }
+}
+extension Lead: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == self.tableView {
+            return _feedItems.count
+        } else {
+            return foundUsers.count
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        var cellIdentifier: String!
+        
+        if tableView == self.tableView {
+            cellIdentifier = "Cell"
+        } else {
+            cellIdentifier = "UserFoundCell"
+        }
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        
+        let myLabel1:UILabel = UILabel(frame: CGRect(x: tableView.frame.width - 105, y: 0, width: 95, height: 32))
+        myLabel1.backgroundColor = Color.Lead.labelColor1
+        myLabel1.textColor = .white
+        myLabel1.textAlignment = .center
+        myLabel1.font = Font.celltitle14m
+        myLabel1.layer.masksToBounds = true
+        cell.addSubview(myLabel1)
+        
+        let myLabel2:UILabel = UILabel(frame: CGRect(x: tableView.frame.width - 105, y: 33, width: 95, height: 33))
+        myLabel2.backgroundColor = .white
+        myLabel2.textColor = .black
+        myLabel2.textAlignment = .center
+        myLabel2.font = Font.celltitle14m
+        myLabel2.layer.masksToBounds = true
+        cell.addSubview(myLabel2)
+        
+        cell.leadsubtitleLabel!.textColor = .gray
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            
+            cell.leadtitleLabel!.font = Font.celltitle22m
+            cell.leadsubtitleLabel!.font = Font.celltitle16r
+            cell.leadreplyLabel.font = Font.celltitle16r
+            cell.leadlikeLabel.font = Font.celltitle18m
+            myLabel1.font = Font.celltitle16r
+            myLabel2.font = Font.celltitle18m
+            
+        } else {
+            
+            cell.leadtitleLabel!.font = Font.celltitle20l
+            cell.leadsubtitleLabel!.font = Font.celltitle16r
+            cell.leadreplyLabel.font = Font.celltitle16r
+            cell.leadlikeLabel.font = Font.celltitle18m
+            myLabel1.font = Font.celltitle16r
+            myLabel2.font = Font.celltitle18m
+        }
+        
+        if (tableView == self.tableView) {
+            
+            cell.leadtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "LastName") as? String ?? ""
+            cell.leadsubtitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""
+            myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Date") as? String ?? ""
+            myLabel2.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String ?? ""
+            
+        } else {
+            
+            cell.leadtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "LastName") as? String
+            cell.leadsubtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "City") as? String
+            myLabel1.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Date") as? String
+            myLabel2.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "CallBack") as? String
+        }
+        
+        cell.leadreplyButton.tintColor = .lightGray
+        cell.leadreplyButton.setImage(#imageLiteral(resourceName: "Commentfilled").withRenderingMode(.alwaysTemplate), for: .normal)
+        
+        cell.leadlikeButton.tintColor = .lightGray
+        cell.leadlikeButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
+        
+        cell.leadreplyLabel.text! = ""
+        
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Coments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Coments") as? String == "") {
+            cell.leadreplyButton!.tintColor = .lightGray
+        } else {
+            cell.leadreplyButton!.tintColor = Color.Lead.buttonColor
+        }
+        
+        if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Active") as? Int == 1 ) {
+            cell.leadlikeButton!.tintColor = Color.Lead.buttonColor
+            cell.leadlikeLabel.text! = "Active"
+            cell.leadlikeLabel.adjustsFontSizeToFitWidth = true
+        } else {
+            cell.leadlikeButton!.tintColor = .lightGray
+            cell.leadlikeLabel.text! = ""
+        }
+        
+        let imageLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+        imageLabel.backgroundColor = Color.Cust.labelColor
+        imageLabel.text = "Lead"
+        imageLabel.textColor = .white
+        imageLabel.textAlignment = .center
+        imageLabel.font = Font.celltitle14m
+        imageLabel.layer.cornerRadius = 25.0
+        imageLabel.layer.masksToBounds = true
+        imageLabel.isUserInteractionEnabled = true
+        imageLabel.tag = indexPath.row
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imgLoadSegue))
+        imageLabel.addGestureRecognizer(tap)
+        cell.addSubview(imageLabel)
+        
+        return cell
+    }
+}
+
+extension Lead: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (tableView == self.tableView) {
+            self.performSegue(withIdentifier: "leaddetailSegue", sender: self)
+        } else {
+            
         }
     }
 }

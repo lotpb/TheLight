@@ -168,13 +168,10 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.employreplyButton.tintColor = .lightGray
-        let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.employreplyButton .setImage(replyimage, for: .normal)
+        cell.employreplyButton.setImage(#imageLiteral(resourceName: "Commentfilled").withRenderingMode(.alwaysTemplate), for: .normal)
         
         cell.employlikeButton.tintColor = .lightGray
-        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.employlikeButton .setImage(likeimage, for: .normal)
-        
+        cell.employreplyButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.employreplyLabel.text! = ""
         
         if ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == nil) || ((_feedItems[indexPath.row] as AnyObject).value(forKey: "Comments") as? String == "") {
@@ -226,13 +223,13 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel1.backgroundColor = .white
         myLabel1.textColor = .black
         myLabel1.textAlignment = .center
-        myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Employ\n", _feedItems.count)
         myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
-        myLabel1.isUserInteractionEnabled = true
         myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel1.layer.borderWidth = 1
+        myLabel1.layer.masksToBounds = true
+        myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
         
         let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
@@ -244,13 +241,13 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
         myLabel2.textAlignment = .center
-        myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
         myLabel2.font = Font.celltitle14m
         myLabel2.layer.cornerRadius = 25.0
-        myLabel2.isUserInteractionEnabled = true
         myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel2.layer.borderWidth = 1
+        myLabel2.layer.masksToBounds = true
+        myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
         
         let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
@@ -262,13 +259,13 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel3.backgroundColor = .white
         myLabel3.textColor = .black
         myLabel3.textAlignment = .center
-        myLabel3.layer.masksToBounds = true
         myLabel3.text = String(format: "%@%d", "Events\n", 3)
         myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
-        myLabel3.isUserInteractionEnabled = true
         myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel3.layer.borderWidth = 1
+        myLabel3.layer.masksToBounds = true
+        myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         
         let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))

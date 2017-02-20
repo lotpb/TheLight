@@ -94,12 +94,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.tableView!.tableFooterView = UIView(frame: .zero)
         self.toolBar!.barTintColor = Color.twitterBlue
 
-        self.imageBlog!.layer.masksToBounds = true
         self.imageBlog!.layer.cornerRadius = 5
+        self.imageBlog!.layer.masksToBounds = true
         self.imageBlog!.contentMode = .scaleAspectFill
-
-        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        self.Like!.setImage(likeimage, for: .normal)
+        
+        self.Like!.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         self.Like!.setTitleColor(.white, for: .normal)
         
         parseData() //load image
@@ -297,12 +296,12 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             if (self.liked == nil || self.liked == 0) {
                 self.Like!.tintColor = .white
                 self.Like!.setTitle(" Like", for: .normal)
-                self.activeImage.image = UIImage(named:"iosStarNA.png")
+                self.activeImage.image = #imageLiteral(resourceName: "iosStarNA")
                 
             } else {
                 self.Like!.tintColor = Color.Blog.buttonColor
                 self.Like!.setTitle(" Likes \(liked!)", for: .normal)
-                self.activeImage.image = UIImage(named:"iosStar.png")
+                self.activeImage.image = #imageLiteral(resourceName: "iosStar")
             }
             cell?.contentView.addSubview(self.activeImage)
             cell?.selectionStyle = .none

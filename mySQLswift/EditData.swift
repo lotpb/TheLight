@@ -270,11 +270,11 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             if self.frm30 == "1" {
                 theSwitch.isOn = true
-                self.activeImage.image = UIImage(named:"iosStar.png")
+                self.activeImage.image = #imageLiteral(resourceName: "iosStar")
                 cell.textLabel!.text = "Active"
             } else {
                 theSwitch.isOn = false
-                self.activeImage.image = UIImage(named:"iosStarNA.png")
+                self.activeImage.image = #imageLiteral(resourceName: "iosStarNA")
                 cell.textLabel!.text = "Inactive"
             }
             theSwitch.onTintColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)

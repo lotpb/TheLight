@@ -234,23 +234,19 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.replyButton.tintColor = .lightGray
-        let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.replyButton .setImage(replyimage, for: .normal)
+        cell.replyButton.setImage(#imageLiteral(resourceName: "Commentfilled").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.replyButton .addTarget(self, action: #selector(replySetButton), for: .touchUpInside)
         
         cell.likeButton.tintColor = .lightGray
-        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.likeButton.setImage(likeimage, for: .normal)
+        cell.likeButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.likeButton.addTarget(self, action: #selector(likeSetButton), for: .touchUpInside)
 
         cell.flagButton.tintColor = .lightGray
-        let reportimage : UIImage? = UIImage(named:"Flag.png")!.withRenderingMode(.alwaysTemplate)
-        cell.flagButton .setImage(reportimage, for: .normal)
+        cell.flagButton.setImage(#imageLiteral(resourceName: "Flag").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.flagButton .addTarget(self, action: #selector(flagSetButton), for: .touchUpInside)
   
         cell.actionBtn.tintColor = .lightGray
-        let actionimage : UIImage? = UIImage(named:"nav_more_icon.png")!.withRenderingMode(.alwaysTemplate)
-        cell.actionBtn .setImage(actionimage, for: .normal)
+        cell.actionBtn.setImage(#imageLiteral(resourceName: "nav_more_icon").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.actionBtn .addTarget(self, action: #selector(showShare), for: .touchUpInside)
         
         if !(cell.numLabel.text! == "0") {

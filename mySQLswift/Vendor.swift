@@ -67,12 +67,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.Vend.navColor
-        } */
+        
         setMainNavItems()
     }
     
@@ -166,12 +161,10 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.vendreplyButton.tintColor = .lightGray
-        let replyimage : UIImage? = UIImage(named:"Commentfilled.png")!.withRenderingMode(.alwaysTemplate)
-        cell.vendreplyButton .setImage(replyimage, for: .normal)
+        cell.vendreplyButton.setImage(#imageLiteral(resourceName: "Commentfilled").withRenderingMode(.alwaysTemplate), for: .normal)
         
         cell.vendlikeButton.tintColor = .lightGray
-        let likeimage : UIImage? = UIImage(named:"Thumb Up.png")!.withRenderingMode(.alwaysTemplate)
-        cell.vendlikeButton .setImage(likeimage, for: .normal)
+        cell.vendlikeButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         
         cell.vendreplyLabel.text! = ""
         
@@ -209,7 +202,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
             return 90.0
         } else {
-            return 0.0
+            return 0
         }
     }
     
