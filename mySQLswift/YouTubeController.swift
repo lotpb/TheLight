@@ -183,7 +183,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         let targetURL = URL(string: urlString)
         
         // Get the results.
-        performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
+        performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error)  in
             if HTTPStatusCode == 200, error == nil {
                 // Convert the JSON data to a dictionary object.
                 do {
@@ -266,7 +266,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let targetURL = URL(string: urlString)
         
-        performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
+        performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error)  in
             if HTTPStatusCode == 200, error == nil {
                 
                 do {
@@ -314,7 +314,7 @@ class YouTubeController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let targetURL = NSURL(string: urlString)
         
-        performGetRequest(targetURL as URL!, completion: { (data, HTTPStatusCode, error) -> Void in
+        performGetRequest(targetURL as URL!, completion: { (data, HTTPStatusCode, error)  in
             if HTTPStatusCode == 200, error == nil {
                 do {
                     let resultsDict = try JSONSerialization.jsonObject(with: data!, options: []) as! Dictionary<String, AnyObject>

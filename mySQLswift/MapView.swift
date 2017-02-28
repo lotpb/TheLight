@@ -76,7 +76,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         let location: String = String(format: "%@ %@ %@ %@", self.mapaddress!, self.mapcity!, self.mapstate!, self.mapzip!)
         
         let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(location, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
+        geocoder.geocodeAddressString(location, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) in
             
             if error != nil{
                 print("Geocode failed with error: \(error!.localizedDescription)")
@@ -415,32 +415,32 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         
         let alertController = UIAlertController(title:"", message:"", preferredStyle: .actionSheet)
         
-        let buttonOne = UIAlertAction(title: "Show Traffic", style: .default, handler: { (action) -> Void in
+        let buttonOne = UIAlertAction(title: "Show Traffic", style: .default, handler: { (action) in
             self.trafficBtnTapped(self)
         })
-        let buttonTwo = UIAlertAction(title: "Show Scale", style: .default, handler: { (action) -> Void in
+        let buttonTwo = UIAlertAction(title: "Show Scale", style: .default, handler: { (action) in
             self.scaleBtnTapped()
         })
-        let buttonThree = UIAlertAction(title: "Show Compass", style: .default, handler: { (action) -> Void in
+        let buttonThree = UIAlertAction(title: "Show Compass", style: .default, handler: { (action) in
             self.compassBtnTapped()
         })
-        let buttonFour = UIAlertAction(title: "Show Buildings", style: .default, handler: { (action) -> Void in
+        let buttonFour = UIAlertAction(title: "Show Buildings", style: .default, handler: { (action) in
             self.buildingBtnTapped()
         })
-        let buttonFive = UIAlertAction(title: "Show User Location", style: .default, handler: { (action) -> Void in
+        let buttonFive = UIAlertAction(title: "Show User Location", style: .default, handler: { (action) in
             self.userlocationBtnTapped()
         })
-        let buttonSix = UIAlertAction(title: "Show Points of Interest", style: .default, handler: { (action) -> Void in
+        let buttonSix = UIAlertAction(title: "Show Points of Interest", style: .default, handler: { (action) in
             self.pointsofinterestBtnTapped()
         })
-        let buttonSeven = UIAlertAction(title: "Alternate Routes", style: .default, handler: { (action) -> Void in
+        let buttonSeven = UIAlertAction(title: "Alternate Routes", style: .default, handler: { (action) in
             self.requestsAlternateRoutesBtnTapped()
         })
-        let buttonEight = UIAlertAction(title: "Show Flyover", style: .default, handler: { (action) -> Void in
+        let buttonEight = UIAlertAction(title: "Show Flyover", style: .default, handler: { (action) in
             self.displayInFlyoverMode()
         })
 
-        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
+        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
         }
         
         alertController.addAction(buttonOne)

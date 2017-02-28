@@ -152,7 +152,7 @@
 		AF206E041C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "A Whiter Shade Of Pale.mp3"; path = "Music/A Whiter Shade Of Pale.mp3"; sourceTree = "<group>"; };
 		AF221C8C1C930A6400C9EF39 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		AF2817CA1C38794F00B2607A /* LeadUserController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadUserController.swift; sourceTree = "<group>"; };
-		AF2D051A1D359A4200AC2A43 /* News.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
+		AF2D051A1D359A4200AC2A43 /* News.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = News.swift; sourceTree = "<group>"; };
 		AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
 		AF46FA831C2313EE00C27445 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotController.swift; sourceTree = "<group>"; };

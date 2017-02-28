@@ -55,7 +55,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         let query = PFQuery(className:"Newsios")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -113,7 +113,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         let query = PFQuery(className:"Newsios")
         query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 object!.incrementKey("Liked")
                 object!.saveInBackground()
@@ -129,7 +129,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         imageObject = _feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
             self.selectedImage = UIImage(data: imageData! as Data)
         }
         let image: UIImage = self.selectedImage!
@@ -173,7 +173,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
             
             UIView.transition(with: cell.thumbnailImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
                 self.selectedImage = UIImage(data: imageData!)
@@ -185,10 +185,10 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo:(self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as! String)
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                         
                         UIView.transition(with: cell.userProfileImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
                             cell.userProfileImageView.image = UIImage(data: imageData!)
@@ -268,7 +268,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
             
             let imageDetailurl = self.imageFile.url
             let result1 = imageDetailurl!.contains("movie.mp4")

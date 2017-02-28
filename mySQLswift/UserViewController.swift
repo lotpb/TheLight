@@ -11,7 +11,7 @@ import Parse
 import MapKit
 import CoreLocation
 
-class UserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate,  UICollectionViewDataSource, MKMapViewDelegate {
+class UserViewController: UIViewController, UICollectionViewDelegate,  UICollectionViewDataSource, MKMapViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -93,7 +93,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         mapView!.layer.borderColor = UIColor.lightGray.cgColor
         mapView!.layer.borderWidth = 0.5
         
-        PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) -> Void in
+        PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) in
             
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.40, 0.40)
             let location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(geoPoint!.latitude, geoPoint!.longitude)
@@ -126,49 +126,6 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     // MARK: - Table View
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return _feedItems.count 
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell
-        
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
-        cell.usersubtitleLabel!.textColor = .gray
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.usertitleLabel!.font = Font.celltitle20r
-            cell.usersubtitleLabel!.font = Font.celltitle16r
-        } else {
-            cell.usertitleLabel!.font = Font.celltitle16r
-            cell.usersubtitleLabel!.font = Font.celltitle12r
-        }
-        
-        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-            
-            UIView.transition(with: cell.userImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                cell.userImageView.image = UIImage(data: imageData!)
-            }, completion: nil)
-        }
-
-        let dateUpdated = (_feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
-        let dateFormat = DateFormatter()
-        dateFormat.dateFormat = "EEE, MMM d, h:mm a"
-        
-        cell.usertitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
-        cell.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
- 
-        return cell
-    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30.0
@@ -257,7 +214,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.loadingSpinner!.isHidden = true
         cell.loadingSpinner!.startAnimating()
         
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
             
             UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                 cell.user2ImageView?.image = UIImage(data: imageData!)
@@ -279,7 +236,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         let query = PFUser.query()
         query?.whereKey("currentLocation", nearGeoPoint: geoPoint, withinMiles:50.0)
         query?.limit = 20
-        query?.findObjectsInBackground { (objects:[PFObject]?, error:Error?) -> Void in
+        query?.findObjectsInBackground { (objects:[PFObject]?, error:Error?) in
             for object in objects! {
                 let annotation = MKPointAnnotation()
                 annotation.title = object["username"] as? String
@@ -297,7 +254,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         let query = PFUser.query()
         query!.order(byDescending: "createdAt")
         query!.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query!.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query!.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -330,19 +287,6 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - Segues
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        self.formController = "TableView"
-        isFormStat = false
-        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-            self.selectedImage = UIImage(data: imageData!)
-            self.performSegue(withIdentifier: "userdetailSegue", sender: self.tableView)
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         self.formController = "CollectionView"
@@ -350,7 +294,7 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
             self.selectedImage = UIImage(data: imageData!)
             self.performSegue(withIdentifier: "userdetailSegue", sender: self.collectionView)
         }
@@ -402,5 +346,63 @@ class UserViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
     }
-
 }
+ extension UserViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return _feedItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell
+        
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.usersubtitleLabel!.textColor = .gray
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            cell.usertitleLabel!.font = Font.celltitle20r
+            cell.usersubtitleLabel!.font = Font.celltitle16r
+        } else {
+            cell.usertitleLabel!.font = Font.celltitle16r
+            cell.usersubtitleLabel!.font = Font.celltitle12r
+        }
+        
+        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
+            
+            UIView.transition(with: cell.userImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                cell.userImageView.image = UIImage(data: imageData!)
+            }, completion: nil)
+        }
+        
+        let dateUpdated = (_feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = "EEE, MMM d, h:mm a"
+        
+        cell.usertitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
+        cell.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
+        
+        return cell
+    }
+ }
+ 
+ extension UserViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.formController = "TableView"
+        isFormStat = false
+        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+        
+        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
+            self.selectedImage = UIImage(data: imageData!)
+            self.performSegue(withIdentifier: "userdetailSegue", sender: self.tableView)
+        }
+    }
+ }

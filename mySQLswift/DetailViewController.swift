@@ -195,7 +195,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
             domainIdentifier: domainIdentifier,
             attributeSet: attributeSet)
         
-        CSSearchableIndex.default().indexSearchableItems([item]) { (error: Error?) -> Void in
+        CSSearchableIndex.default().indexSearchableItems([item]) { (error: Error?) in
             if let error =  error {
                 print("Indexing error: \(error.localizedDescription)")
             } else {
@@ -206,7 +206,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     
     @IBAction func RemoveItemFromCoreSpotlight(_ sender: AnyObject) {
         CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [identifier])
-            { (error: Error?) -> Void in
+            { (error: Error?) in
                 if let error = error {
                     print("Remove error: \(error.localizedDescription)")
                 } else {

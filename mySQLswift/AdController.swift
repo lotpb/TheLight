@@ -258,7 +258,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
+                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {
                             object.deleteInBackground()
@@ -314,7 +314,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         //query.limit = 1000
         query.order(byAscending: "Advertiser")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -328,7 +328,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         query1.whereKey("Active", equalTo:"Active")
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -402,7 +402,7 @@ extension AdController: UISearchResultsUpdating {
         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)

@@ -201,26 +201,24 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             cell.replyButton.tintColor = .red
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        
+        let imageLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         if (self.formController == "Leads") {
-            myLabel.text = "Cust"
-            myLabel.backgroundColor = Color.DGrayColor
+            imageLabel.text = "Cust"
+            imageLabel.backgroundColor = Color.DGrayColor
         } else if (self.formController == "Customer") {
-            myLabel.text = "Lead"
-            myLabel.backgroundColor = Color.BlueColor
+            imageLabel.text = "Lead"
+            imageLabel.backgroundColor = Color.BlueColor
         } else if (self.formController == "Blog") {
-            myLabel.text = "Blog"
-            myLabel.backgroundColor = Color.youtubeRed
+            imageLabel.text = "Blog"
+            imageLabel.backgroundColor = Color.youtubeRed
         }
-
-        myLabel.textColor = .white
-        myLabel.textAlignment = .center
-        myLabel.layer.masksToBounds = true
-        myLabel.font = Font.celltitle14m
-        myLabel.layer.cornerRadius = 25.0
-        myLabel.isUserInteractionEnabled = true
-        cell.addSubview(myLabel)
+        imageLabel.textColor = .white
+        imageLabel.textAlignment = .center
+        imageLabel.font = Font.celltitle14m
+        imageLabel.layer.cornerRadius = 25.0
+        imageLabel.layer.masksToBounds = true
+        imageLabel.isUserInteractionEnabled = true
+        cell.addSubview(imageLabel)
         
         return cell
     }
@@ -390,7 +388,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             query.whereKey("LastName", equalTo:self.postBy!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
             query.order(byDescending: "createdAt")
-            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -412,7 +410,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             query1.whereKey("objectId", equalTo:self.objectId!)
             query1.cachePolicy = PFCachePolicy.cacheThenNetwork
             query1.order(byDescending: "createdAt")
-            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.comments = object!.object(forKey: "Coments") as? String
                     self.leadDate = object!.object(forKey: "Date") as? String
@@ -428,7 +426,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             query.whereKey("LastName", equalTo:self.postBy!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
             query.order(byDescending: "createdAt")
-            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -450,7 +448,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             query1.whereKey("objectId", equalTo:self.objectId!)
             query1.cachePolicy = PFCachePolicy.cacheThenNetwork
             query1.order(byDescending: "createdAt")
-            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.comments = object!.object(forKey: "Comments") as? String
                     self.leadDate = object!.object(forKey: "Date") as? String
@@ -466,7 +464,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             query.whereKey("PostBy", equalTo:self.postBy!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
             query.order(byDescending: "createdAt")
-            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -487,7 +485,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             query1.whereKey("username",  equalTo:self.postBy!)
             query1.limit = 1
             query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     
                     self.postBy = object!.object(forKey: "username") as? String
@@ -500,7 +498,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
 
                     /*
                     if let imageFile = object!.objectForKey("imageFile") as? PFFile {
-                        imageFile.getDataInBackgroundWithBlock { (imageData: NSData?, error: NSError?) -> Void in
+                        imageFile.getDataInBackgroundWithBlock { (imageData: NSData?, error: NSError?) in
                             self.selectedImage = UIImage(data: imageData!)
                             self.tableView!.reloadData()
                         }

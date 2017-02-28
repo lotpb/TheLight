@@ -179,10 +179,10 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             query.whereKey("username",  equalTo:self.postby!)
             query.limit = 1
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                             cell?.blogImageView?.image = UIImage(data: imageData!)
                         }
                     }
@@ -201,6 +201,36 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             
 //---------------------NSDataDetector-----------------------------
             
+            
+            let text = self.subject
+            let types: NSTextCheckingResult.CheckingType = [.date, .phoneNumber, .link]
+            let detector = try? NSDataDetector(types: types.rawValue)
+            let matches = detector?.matches(in: text!, options: [], range: NSRange(location: 0, length: (text?.utf16.count)!))
+            
+            for match in matches! {
+                
+                let webattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
+                
+                let emailattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
+                
+                let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
+                
+                let dateattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
+                
+                if match.resultType == .link {
+                    if match.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
+                        cell?.subtitleLabel!.attributedText = emailattributedText
+                    } else {
+                        cell?.subtitleLabel!.attributedText = webattributedText
+                    }
+                } else if match.resultType == .phoneNumber {
+                    cell?.subtitleLabel!.attributedText = phoneattributedText
+                } else if match.resultType == .date {
+                    cell?.subtitleLabel!.attributedText = dateattributedText
+                }
+            }
+
+/*
             let text = self.subject
             let types: NSTextCheckingResult.CheckingType = [.date, .phoneNumber, .link]
             let detector = try? NSDataDetector(types: types.rawValue)
@@ -229,7 +259,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                     
                     cell?.subtitleLabel!.attributedText = dateattributedText
                 }
-            }
+            } */
 //--------------------------------------------------
             
             return cell!
@@ -242,10 +272,10 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             query.whereKey("username",  equalTo: (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as! String)
             query.limit = 1
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                             cell?.replyImageView?.image = UIImage(data: imageData!)
                         }
                     }
@@ -329,7 +359,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         
         let query = PFQuery(className:"Blog")
         query.whereKey("objectId", equalTo:((_feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 object!.incrementKey("Liked")
                 object!.saveInBackground()
@@ -358,7 +388,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
         
         let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
+            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
@@ -384,7 +414,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         let query1 = PFQuery(className:"Blog")
         query1.whereKey("ReplyId", equalTo:self.objectId!)
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems1 = temp.mutableCopy() as! NSMutableArray

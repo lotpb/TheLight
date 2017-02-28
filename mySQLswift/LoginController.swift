@@ -17,11 +17,12 @@ import Firebase
 import TwitterKit
 
 // A delay function
+/*
 func delay(_ seconds: Double, completion: @escaping ()->Void) {
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(seconds * 1000.0))) {
         completion()
     }
-}
+} */
 
 
 class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate,  GIDSignInUIDelegate, GIDSignInDelegate {
@@ -56,8 +57,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     //Twitter
     var twitterButton : TWTRLogInButton = TWTRLogInButton()
     
-    let userImageView: UIImageView = {
-        let imageView = UIImageView()
+    let userImageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.masksToBounds = true
@@ -203,7 +204,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 
                 self.simpleAlert(title: "Oooops", message: "Your username and password does not match")
                 
-                PFUser.current()?.fetchInBackground(block: { (object, error) -> Void in
+                PFUser.current()?.fetchInBackground(block: { (object, error)  in
                     
                     let isEmailVerified = (PFUser.current()?.object(forKey: "emailVerified") as AnyObject).boolValue
                     
@@ -385,7 +386,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         pictureUrl = user.profile.imageURL(withDimension: 400)
         
         self.userimage = UIImage(data: try! Data(contentsOf: URL(string: pictureUrl)!))
-        DispatchQueue.main.async(execute: { () -> Void in
+        DispatchQueue.main.async(execute: { ()  in
             self.userImageView.image = self.userimage
         }) */
         
@@ -460,7 +461,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                     }
                     
                     self.userimage = UIImage(data: try! Data(contentsOf: URL(string: pictureUrl)!))
-                    DispatchQueue.main.async(execute: { () -> Void in
+                    DispatchQueue.main.async(execute: { ()  in
                         self.userImageView.image = self.userimage
                     })
                     
@@ -483,7 +484,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     /*
     func showFriendFB() {
         let parameters = ["fields": "name,picture.type(normal),gender"]
-        FBSDKGraphRequest(graphPath: "me/taggable_friends", parameters: parameters).startWithCompletionHandler({ (connection, user, requestError) -> Void in
+        FBSDKGraphRequest(graphPath: "me/taggable_friends", parameters: parameters).startWithCompletionHandler({ (connection, user, requestError)  in
             if requestError != nil {
                 print(requestError)
                 return
@@ -520,7 +521,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         let email = self.emailField!.text
         let finalEmail = email!.removeWhiteSpace()        
-        PFUser.requestPasswordResetForEmail(inBackground: finalEmail) { (success, error) -> Void in
+        PFUser.requestPasswordResetForEmail(inBackground: finalEmail) { (success, error)  in
             if success {
                 self.simpleAlert(title: "Alert", message: "Link to reset the password has been send to specified email")
             } else {
@@ -536,36 +537,35 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         
         let context = LAContext()
         var error: NSError?
-        let reasonString = "Authentication is needed to access your app! :)"
+        let reason = "Identify yourself!"
         
-        if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error)
-        {
-            context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reasonString, reply: { (success, policyError) -> Void in
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                    [unowned self] (success, authenticationError) in
                 
-                if success {
-                    print("Authentication successful! :) ")
-                    OperationQueue.main.addOperation({ () -> Void in
+                DispatchQueue.main.async {
+                    if success {
                         self.didAuthenticateWithTouchId()
-                    })
-                } else {
-                    
-                    switch policyError!._code {
+                    } else {
                         
-                    case LAError.systemCancel.rawValue:
-                        print("Authentication was cancelled by the system.")
-                    case LAError.userCancel.rawValue:
-                        print("Authentication was cancelled by the user.")
-                        
-                    case LAError.userFallback.rawValue:
-                        print("User selected to enter password.")
-                    default:
-                        let alert : UIAlertController = UIAlertController(title: "touch id failed", message: "Try again", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                        switch authenticationError!._code {
+                            
+                        case LAError.systemCancel.rawValue:
+                            print("Authentication was cancelled by the system.")
+                        case LAError.userCancel.rawValue:
+                            print("Authentication was cancelled by the user.")
+                            
+                        case LAError.userFallback.rawValue:
+                            print("User selected to enter password.")
+                        default:
+                            let alert = UIAlertController(title: "Authentication failed", message: "Your fingerprint could not be verified; please try again.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                            self.present(alert, animated: true)
+                        }
                     }
                 }
-                
-            })
+            }
         } else {
             print(error as Any)
         }
@@ -591,7 +591,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     func refreshLocation() {
         
-        PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) -> Void in
+        PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) in
             if error == nil {
                 PFUser.current()!.setValue(geoPoint, forKey: "currentLocation")
                 PFUser.current()!.saveInBackground()

@@ -54,7 +54,6 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Vendor.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
 
-        parseData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -156,7 +155,6 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             
             cell.vendtitleLabel!.text = (filteredString[indexPath.row] as AnyObject).value(forKey: "Vendor") as? String
-    
             cell.vendsubtitleLabel.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "Profession") as? String
         }
         
@@ -183,16 +181,16 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.vendlikeLabel.text! = ""
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        myLabel.backgroundColor = Color.Vend.labelColor
-        myLabel.textColor = .white
-        myLabel.textAlignment = .center
-        myLabel.layer.masksToBounds = true
-        myLabel.text = "Vendor"
-        myLabel.font = Font.celltitle14m
-        myLabel.layer.cornerRadius = 25.0
-        myLabel.isUserInteractionEnabled = true
-        cell.addSubview(myLabel)
+        let imageLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+        imageLabel.backgroundColor = Color.Vend.labelColor
+        imageLabel.text = "Vendor"
+        imageLabel.textColor = .white
+        imageLabel.textAlignment = .center
+        imageLabel.font = Font.celltitle14m
+        imageLabel.layer.cornerRadius = 25.0
+        imageLabel.layer.masksToBounds = true
+        imageLabel.isUserInteractionEnabled = true
+        cell.addSubview(imageLabel)
         
         return cell
     }
@@ -217,13 +215,13 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel1.backgroundColor = .white
         myLabel1.textColor = .black
         myLabel1.textAlignment = .center
-        myLabel1.layer.masksToBounds = true
         myLabel1.text = String(format: "%@%d", "Vendor\n", _feedItems.count)
         myLabel1.font = Font.celltitle14m
         myLabel1.layer.cornerRadius = 25.0
-        myLabel1.isUserInteractionEnabled = true
         myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel1.layer.borderWidth = 1
+        myLabel1.layer.masksToBounds = true
+        myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
         
         let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
@@ -235,13 +233,13 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
         myLabel2.textAlignment = .center
-        myLabel2.layer.masksToBounds = true
         myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
         myLabel2.font = Font.celltitle14m
-        myLabel2.layer.cornerRadius = 25.0
         myLabel2.isUserInteractionEnabled = true
         myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel2.layer.borderWidth = 1
+        myLabel2.layer.cornerRadius = 25.0
+        myLabel2.layer.masksToBounds = true
         vw.addSubview(myLabel2)
         
         let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
@@ -253,13 +251,13 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         myLabel3.backgroundColor = .white
         myLabel3.textColor = .black
         myLabel3.textAlignment = .center
-        myLabel3.layer.masksToBounds = true
         myLabel3.text = String(format: "%@%d", "Events\n", 3)
         myLabel3.font = Font.celltitle14m
         myLabel3.layer.cornerRadius = 25.0
-        myLabel3.isUserInteractionEnabled = true
         myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
         myLabel3.layer.borderWidth = 1
+        myLabel3.layer.masksToBounds = true
+        myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         
         let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
@@ -283,7 +281,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
+                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {
                             object.deleteInBackground()
@@ -335,7 +333,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query.limit = 1000
         query.order(byAscending: "Vendor")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects, error) -> Void in
+        query.findObjectsInBackground { (objects, error)  in
             if error == nil {
                 
                 let temp: NSArray = objects! as NSArray
@@ -343,7 +341,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 self.tableView!.reloadData()
                 
             } else {
-                print("Error")
+                print("Error5")
             }
         }
         
@@ -351,13 +349,13 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query1.whereKey("Active", equalTo:1)
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         //query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView!.reloadData()
             } else {
-                print("Error")
+                print("Error6")
             }
         }
     }
@@ -471,7 +469,7 @@ extension Vendor: UISearchResultsUpdating {
         NameQuery.whereKey("Name", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [NameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)

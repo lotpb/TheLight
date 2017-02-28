@@ -40,10 +40,10 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         query.whereKey("username", equalTo:defaults.object(forKey: "usernameKey") as! String!)
         query.limit = 1
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                         imageView.image = UIImage(data: imageData!)
                     }
                 }

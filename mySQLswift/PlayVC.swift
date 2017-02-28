@@ -85,7 +85,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     lazy var minimizeButton: UIButton = {
         let button = UIButton(type: .system)
-        //let image = UIImage(named: "minimize")
         button.setImage(#imageLiteral(resourceName: "minimize"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
@@ -96,7 +95,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     lazy var pausePlayButton: UIButton = {
         let button = UIButton(type: .system)
-        //let image = UIImage(named: "pause")
         button.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
@@ -216,7 +214,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         videoSlider.bottomAnchor.constraint(equalTo: playerView.bottomAnchor).isActive = true
         videoSlider.leftAnchor.constraint(equalTo: currentTimeLabel.rightAnchor).isActive = true
         videoSlider.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
     }
     
     func customization() {
@@ -227,8 +224,6 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         self.containView.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(PlayVC.tapPlayView)))
         
         NotificationCenter.default.addObserver(self, selector: #selector(tapPlayView), name: NSNotification.Name("open"), object: nil)
-        
-        
     }
     
     /*
@@ -404,7 +399,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         
         let query = PFObject(className:"User")
         query.add([(PFUser.current()?.objectId)!], forKey:"Subscribed")
-        query.saveInBackground {(success: Bool, error: Error?) -> Void in
+        query.saveInBackground {(success: Bool, error: Error?) in
             if success == true {
                 print("Yes")
             } else {
@@ -437,16 +432,16 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         }
     }
     
-    //not Set
-    func setLikeBtn(sender:UIButton) {
+    func setthumbUp(_ sender: UIButton) {
         
+        sender.isSelected = true
         sender.tintColor = Color.BlueColor
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
         
         let query = PFQuery(className:"Newsios")
         query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 object!.incrementKey("Liked")
                 object!.saveInBackground()
@@ -454,20 +449,35 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         }
     }
     
-    func shareButton(_ sender: UITapGestureRecognizer) {
+    func setthumbDown(_ sender: UIButton) {
+        
+        sender.isSelected = true
+        sender.tintColor = Color.BlueColor
+        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
+        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
+        
+        let query = PFQuery(className:"Newsios")
+        query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+            if error == nil {
+                object!.incrementKey("Dislikes")
+                object!.saveInBackground()
+            }
+        }
+    }
+    
+    func shareButton(_ sender: UIButton) {
         
         let image: UIImage = (self.selectedImage ?? nil)!
 
         let activityViewController = UIActivityViewController (activityItems: [(image), self.titleLookup!], applicationActivities: nil)
         
         if let popover = activityViewController.popoverPresentationController {
-            popover.sourceView = sender.view
-            popover.sourceRect = CGRect(
-                x: sender.location(in: sender.view).x,
-                y: sender.location(in: sender.view).y, width: 1, height: 1)
-            popover.permittedArrowDirections = [.up, .down]
+            popover.sourceView = sender
+            activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
+            activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
         }
-        self.present(activityViewController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true)
     }
 
     
@@ -559,23 +569,25 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             cell.likes.text = self.likesLookup ?? "0"
             cell.disLikes.text = self.dislikesLookup ?? "0"
             
-            let tap = UITapGestureRecognizer(target: self, action: #selector(shareButton))
-            cell.shareView.isUserInteractionEnabled = true
-            cell.shareView.addGestureRecognizer(tap) 
-            //cell.shareView.image = UIImage(named: "share.png")!.withRenderingMode(.alwaysTemplate)
-            //cell.shareView.tintColor = .red
-            //cell.shareView.contentMode = .scaleAspectFill
+            cell.shareView.tintColor = .lightGray
+            cell.shareView.setImage(#imageLiteral(resourceName: "share"), for: .normal)
+            cell.shareView .addTarget(self, action: #selector(shareButton), for: .touchUpInside)
             
-            cell.channelPic.layer.cornerRadius = 20
-            cell.channelPic.clipsToBounds = true
+            cell.thumbUp.tintColor = .lightGray
+            cell.thumbUp.setImage(#imageLiteral(resourceName: "thumbUp"), for: .normal)
+            cell.thumbUp .addTarget(self, action: #selector(setthumbUp), for: .touchUpInside)
+            
+            cell.thumbDown.tintColor = .lightGray
+            cell.thumbDown.setImage(#imageLiteral(resourceName: "thumbDown"), for: .normal)
+            cell.thumbDown .addTarget(self, action: #selector(setthumbDown), for: .touchUpInside)
             
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                             
                             UIView.transition(with: (cell.channelPic)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                                 self.selectedChannelPic = UIImage(data: imageData! as Data)
@@ -584,8 +596,10 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                     }
                 }
             }
-            
+            cell.channelPic.layer.cornerRadius = 20
+            cell.channelPic.clipsToBounds = true
             cell.channelPic.image = self.selectedChannelPic
+            
             cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
             cell.channelSubscribers.text = "235235 subscribers"
             
@@ -611,7 +625,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
 
             imageObject = _feedItems.object(at: ((indexPath as NSIndexPath).row) - 1) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                 UIView.transition(with: cell.tumbnail, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.tumbnail.image = UIImage(data: imageData!)
                 }, completion: nil)
@@ -654,8 +668,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         
         //update View Count
         let query = PFQuery(className:"Newsios")
-        query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)! - 1) as AnyObject).value(forKey: "objectId") as? String!)!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 object!.incrementKey("newsView")
                 object!.saveInBackground()
@@ -664,8 +678,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         
         imageObject = _feedItems.object(at: indexPath.row - 1) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
-            
+        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
             let imageDetailurl = self.imageFile.url
             let result1 = imageDetailurl!.contains("movie.mp4")
             if (result1 == true) {
@@ -688,7 +701,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
       //query.whereKey("imageFile", equalTo:"movie.mp4")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -729,7 +742,9 @@ class headerCell: UITableViewCell {
     @IBOutlet weak var channelPic: UIImageView!
     @IBOutlet weak var channelSubscribers: UILabel!
     @IBOutlet weak var subscribed: UIButton! //added
-    @IBOutlet weak var shareView: UIImageView! //added
+    @IBOutlet weak var thumbUp: UIButton! //added
+    @IBOutlet weak var thumbDown: UIButton! //added
+    @IBOutlet weak var shareView: UIButton! //added
     
     //MARK: Inits
     required init?(coder aDecoder: NSCoder) {

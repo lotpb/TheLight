@@ -47,8 +47,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         return button
     }()
     
-    let photoImage: UIImageView = { //tableheader
-        let imageView = UIImageView(image: #imageLiteral(resourceName: "IMG_1133"))
+    let photoImage: CustomImageView = { //tableheader
+        let imageView = CustomImageView(image: #imageLiteral(resourceName: "IMG_1133"))
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -66,10 +66,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.splitViewController!.preferredDisplayMode = .allVisible
         self.extendedLayoutIncludesOpaqueBars = true
         
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
-        let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
-        navigationItem.rightBarButtonItems = [addButton, searchButton]
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
+      //versionCheck()
+        setupNavBarButtons()
+        speech()
+        setupTableView()
+        updateYahoo()
+        self.navigationItem.titleView = self.titleButton
         
         // MARK: - Sound
         
@@ -92,25 +94,20 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let attributes = [NSForegroundColorAttributeName: UIColor.white]
         self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
         self.refreshControl?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        
-        updateYahoo()
-      //versionCheck()
-        setupTableView()
-        self.navigationItem.titleView = self.titleButton
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        /*
-        //Fix Grey Bar in iphone Bpttom Bar
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            if let con = self.splitViewController {
-                con.preferredDisplayMode = .primaryOverlay
-            }
-        } */
-        
+       
         setMainNavItems()
         //self.refreshData()
+        /*
+         //Fix Grey Bar in iphone Bpttom Bar
+         if UIDevice.current.userInterfaceIdiom == .phone {
+         if let con = self.splitViewController {
+         con.preferredDisplayMode = .primaryOverlay
+         }
+         } */
     }
     
     override func didReceiveMemoryWarning() {
@@ -124,6 +121,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         return true
     }
     
+    func setupNavBarButtons() {
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
+        navigationItem.rightBarButtonItems = [addButton, searchButton]
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
+    }
     
     func setupTableView() {
         self.tableView!.backgroundColor = Color.LGrayColor //.black
@@ -135,11 +138,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         resultsController.tableView.delegate = self
     }
     
-    
     func refreshData() {
-        
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-        self.updateYahoo()
+            self.updateYahoo()
         }
         self.tableView.reloadData()
         self.refreshControl?.endRefreshing()
@@ -152,25 +153,25 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
  
         let alertController = UIAlertController(title:nil, message:nil, preferredStyle: .actionSheet)
         
-        let setting = UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
+        let setting = UIAlertAction(title: "Settings", style: .default, handler: { (action) in
             let settingsUrl = URL(string: UIApplicationOpenSettingsURLString)
             
             UIApplication.shared.open(settingsUrl!, options: [:], completionHandler: nil)
             //UIApplication.shared.openURL(settingsUrl!)
         })
-        let buttonTwo = UIAlertAction(title: "Users", style: .default, handler: { (action) -> Void in
+        let buttonTwo = UIAlertAction(title: "Users", style: .default, handler: { (action) in
             self.performSegue(withIdentifier: "userSegue", sender: self)
         })
-        let buttonThree = UIAlertAction(title: "Notification", style: .default, handler: { (action) -> Void in
+        let buttonThree = UIAlertAction(title: "Notification", style: .default, handler: { (action) in
             self.performSegue(withIdentifier: "notificationSegue", sender: self)
         })
-        let buttonFour = UIAlertAction(title: "Membership Card", style: .default, handler: { (action) -> Void in
+        let buttonFour = UIAlertAction(title: "Membership Card", style: .default, handler: { (action) in
             self.performSegue(withIdentifier: "codegenSegue", sender: self)
         })
-        let buttonSocial = UIAlertAction(title: "Social", style: .default, handler: { (action) -> Void in
+        let buttonSocial = UIAlertAction(title: "Social", style: .default, handler: { (action) in
             self.performSegue(withIdentifier: "socialSegue", sender: self)
         })
-        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
+        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
         }
         
         alertController.addAction(setting)
@@ -449,14 +450,24 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         player.play()
     }
     
+    // MARK: - speech
     
-    // MARK: - upDate
+    func speech() {
+        
+        let utterance = AVSpeechUtterance(string: "Greetings from TheLight Software")
+        utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+        utterance.rate = 0.4
+        let synthesizer = AVSpeechSynthesizer()
+        synthesizer.speak(utterance)
+    }
+    
+    // MARK: - VersionCheck
     
     func versionCheck() {
         
         let query = PFQuery(className:"Version")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             
             let versionId = object?.value(forKey: "VersionId") as! String?
             if (versionId != self.defaults.string(forKey: "versionKey")) {
@@ -467,7 +478,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             }
         }
     }
-    
     
     // MARK: - updateYahoo
     

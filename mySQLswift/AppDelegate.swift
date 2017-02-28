@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
         
         // MARK: - Parse
-        PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) -> Void in
+        PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) in
             if error != nil {
                 print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
                 return
@@ -335,7 +335,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     // Schedule Notification Action
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
+        
         print("Tapped in notification")
+        
         if response.actionIdentifier == "remindLater" {
             let newDate = Date(timeInterval: 900, since: Date())
             scheduleNotification(at: newDate)

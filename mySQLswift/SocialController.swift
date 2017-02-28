@@ -66,7 +66,7 @@ class SocialController: UIViewController, UITextViewDelegate {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         
         // Configure a new action for sharing the note in Twitter.
-        let tweetAction = UIAlertAction(title: "Share on Twitter", style: UIAlertActionStyle.default) { (action) -> Void in
+        let tweetAction = UIAlertAction(title: "Share on Twitter", style: UIAlertActionStyle.default) { (action)  in
             
             // Check if sharing to Twitter is possible.
             if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeTwitter) {
@@ -92,28 +92,26 @@ class SocialController: UIViewController, UITextViewDelegate {
         
         
         // Configure a new action to share on Facebook.
-        let facebookPostAction = UIAlertAction(title: "Share on Facebook", style: UIAlertActionStyle.default) { (action) -> Void in
+        let facebookPostAction = UIAlertAction(title: "Share on Facebook", style: UIAlertActionStyle.default) { (action)  in
             
             if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
-                let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-                
-                facebookComposeVC?.setInitialText("\(self.noteTextview.text)")
-                
-                self.present(facebookComposeVC!, animated: true, completion: nil)
+                let vc = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+                vc?.setInitialText("\(self.noteTextview.text)")
+                self.present(vc!, animated: true)
             } else {
                 self.simpleAlert(title: "Alert", message: "You are not connected to your Facebook account.")
             }
         }
         
         // Configure a new action to show the UIActivityViewController
-        let moreAction = UIAlertAction(title: "More", style: UIAlertActionStyle.default) { (action) -> Void in
+        let moreAction = UIAlertAction(title: "More", style: UIAlertActionStyle.default) { (action)  in
             
             let activityViewController = UIActivityViewController(activityItems: [self.noteTextview.text], applicationActivities: nil)
             activityViewController.excludedActivityTypes = [UIActivityType.mail]
             self.present(activityViewController, animated: true, completion: nil)
         }
         
-        let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) -> Void in
+        let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action)  in
             
         }
         

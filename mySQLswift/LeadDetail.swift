@@ -12,7 +12,7 @@ import ContactsUI
 import EventKit
 import MessageUI
 
-class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
+class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     
     let defaults = UserDefaults.standard
     
@@ -342,120 +342,6 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     // MARK: - Tableview
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        if (tableView == self.listTableView) {
-            return tableData.count
-        } else if (tableView == self.listTableView2) {
-            return tableData2.count
-        } else if (tableView == self.newsTableView) {
-            return 1
-        }
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            cell.textLabel?.font = Font.Detail.celltitlePad
-            cell.detailTextLabel?.font = Font.Detail.cellsubtitlePad
-        } else {
-            cell.textLabel?.font = Font.Detail.celltitle
-            cell.detailTextLabel?.font = Font.Detail.cellsubtitle
-        }
-        cell.textLabel?.textColor = .black
-        cell.detailTextLabel?.textColor = .black
-        
-        
-        if (tableView == self.listTableView) {
-            
-            cell.textLabel?.text = tableData4.object(at: indexPath.row) as? String
-            
-            cell.detailTextLabel?.text = tableData.object(at: indexPath.row) as? String
-            
-            return cell
-            
-        } else if (tableView == self.listTableView2) {
-            
-            cell.textLabel?.text = tableData3.object(at: indexPath.row) as? String
-            
-            cell.detailTextLabel?.text = tableData2.object(at: indexPath.row) as? String
-            
-            return cell
-            
-        } else if (tableView == self.newsTableView) {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
-            
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-                cell.leadtitleDetail!.font = Font.Detail.ipadnewstitle
-                cell.leadsubtitleDetail!.font = Font.Detail.ipadnewssubtitle
-                cell.leadreadDetail!.font = Font.Detail.ipadnewsdetail
-                cell.leadnewsDetail!.font = Font.Detail.ipadnewsdetail
-            } else {
-                cell.leadtitleDetail!.font = Font.Detail.newstitle
-                cell.leadsubtitleDetail!.font = Font.Detail.newssubtitle
-                cell.leadreadDetail!.font = Font.Detail.newsdetail
-                cell.leadnewsDetail!.font = Font.Detail.newsdetail
-            }
-            
-            let width = CGFloat(2.0)
-            let topBorder = CALayer()
-            topBorder.borderColor = UIColor.lightGray.cgColor
-            topBorder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 0.5)
-            topBorder.borderWidth = width
-            cell.layer.addSublayer(topBorder)
-            cell.layer.masksToBounds = true
-
-            cell.leadtitleDetail!.text = "\(self.formController!) News: \(self.lnewsTitle!)"
-            cell.leadtitleDetail!.numberOfLines = 0
-            cell.leadtitleDetail!.textColor = .black
-            
-            //--------------------------------------------------------------
-            
-            if (self.formController == "Vendor" || self.formController == "Employee") {
-                
-                cell.leadsubtitleDetail.text = "Comments"
-                
-            } else {
-                
-                let dateStr = self.date
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-                
-                let date1 = dateFormatter.date(from: dateStr!)
-                let date2 = Date()
-                let calendar = Calendar.current
-                if date1 != nil {
-                    let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
-                    let daysCount = diffDateComponents.day
-                    cell.leadsubtitleDetail.text = "Comments, \(daysCount!) days ago"
-                }
-            }
-            
-            //--------------------------------------------------------------
-            cell.leadsubtitleDetail.textColor = .gray
-            
-            cell.leadreadDetail.text = "Read more"
-            cell.leadreadDetail.textColor = Color.BlueColor
-            
-            cell.leadnewsDetail.text = self.comments
-            cell.leadnewsDetail.numberOfLines = 0
-            cell.leadnewsDetail.textColor = .darkGray
-            
-            return cell
-            
-        } else {
-            return UITableViewCell()
-        }
-    }
-    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             if (section == 0) {
@@ -638,7 +524,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             let query1 = PFQuery(className:"Salesman")
             query1.whereKey("SalesNo", equalTo:self.tbl22!)
             query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.salesman = object!.object(forKey: "Salesman") as? String
                 }
@@ -647,7 +533,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             let query = PFQuery(className:"Job")
             query.whereKey("JobNo", equalTo:self.tbl23!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.jobdescription = object!.object(forKey: "Description") as? String
                 }
@@ -659,7 +545,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             let query = PFQuery(className:"Product")
             query.whereKey("ProductNo", equalTo:self.tbl24!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.advertiser = object!.object(forKey: "Products") as? String
                 }
@@ -671,7 +557,7 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             let query = PFQuery(className:"Advertising")
             query.whereKey("AdNo", equalTo:self.tbl24!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.advertiser = object!.object(forKey: "Advertiser") as? String
                 }
@@ -685,29 +571,29 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         let alertController = UIAlertController(title:nil, message:nil, preferredStyle: .actionSheet)
         
-        let addr = UIAlertAction(title: "Add Contact", style: .default, handler: { (action) -> Void in
+        let addr = UIAlertAction(title: "Add Contact", style: .default, handler: { (action) in
             self.createContact()
         })
-        let cal = UIAlertAction(title: "Add Calender Event", style: .default, handler: { (action) -> Void in
+        let cal = UIAlertAction(title: "Add Calender Event", style: .default, handler: { (action) in
             self.addEvent()
         })
-        let web = UIAlertAction(title: "Web Page", style: .default, handler: { (action) -> Void in
+        let web = UIAlertAction(title: "Web Page", style: .default, handler: { (action) in
             self.openurl()
         })
-        let new = UIAlertAction(title: "Add Customer", style: .default, handler: { (action) -> Void in
+        let new = UIAlertAction(title: "Add Customer", style: .default, handler: { (action) in
             self.status = "New"
             self.performSegue(withIdentifier: "editFormSegue", sender: self)
         })
-        let phone = UIAlertAction(title: "Call Phone", style: .default, handler: { (action) -> Void in
+        let phone = UIAlertAction(title: "Call Phone", style: .default, handler: { (action) in
             self.callPhone()
         })
-        let email = UIAlertAction(title: "Send Email", style: .default, handler: { (action) -> Void in
+        let email = UIAlertAction(title: "Send Email", style: .default, handler: { (action) in
             self.sendEmail()
         })
-        let bday = UIAlertAction(title: "Birthday", style: .default, handler: { (action) -> Void in
+        let bday = UIAlertAction(title: "Birthday", style: .default, handler: { (action) in
             self.getBirthday()
         })
-        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
+        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
             //print("Cancel Button Pressed")
         }
         
@@ -1238,7 +1124,125 @@ class LeadDetail: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             }
         }
     }
-    
 }
+extension LeadDetail: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (tableView == self.listTableView) {
+            return tableData.count
+        } else if (tableView == self.listTableView2) {
+            return tableData2.count
+        } else if (tableView == self.newsTableView) {
+            return 1
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            cell.textLabel?.font = Font.Detail.celltitlePad
+            cell.detailTextLabel?.font = Font.Detail.cellsubtitlePad
+        } else {
+            cell.textLabel?.font = Font.Detail.celltitle
+            cell.detailTextLabel?.font = Font.Detail.cellsubtitle
+        }
+        cell.textLabel?.textColor = .black
+        cell.detailTextLabel?.textColor = .black
+        
+        
+        if (tableView == self.listTableView) {
+            
+            cell.textLabel?.text = tableData4.object(at: indexPath.row) as? String
+            
+            cell.detailTextLabel?.text = tableData.object(at: indexPath.row) as? String
+            
+            return cell
+            
+        } else if (tableView == self.listTableView2) {
+            
+            cell.textLabel?.text = tableData3.object(at: indexPath.row) as? String
+            
+            cell.detailTextLabel?.text = tableData2.object(at: indexPath.row) as? String
+            
+            return cell
+            
+        } else if (tableView == self.newsTableView) {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
+            
+            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+                cell.leadtitleDetail!.font = Font.Detail.ipadnewstitle
+                cell.leadsubtitleDetail!.font = Font.Detail.ipadnewssubtitle
+                cell.leadreadDetail!.font = Font.Detail.ipadnewsdetail
+                cell.leadnewsDetail!.font = Font.Detail.ipadnewsdetail
+            } else {
+                cell.leadtitleDetail!.font = Font.Detail.newstitle
+                cell.leadsubtitleDetail!.font = Font.Detail.newssubtitle
+                cell.leadreadDetail!.font = Font.Detail.newsdetail
+                cell.leadnewsDetail!.font = Font.Detail.newsdetail
+            }
+            
+            let width = CGFloat(2.0)
+            let topBorder = CALayer()
+            topBorder.borderColor = UIColor.lightGray.cgColor
+            topBorder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 0.5)
+            topBorder.borderWidth = width
+            cell.layer.addSublayer(topBorder)
+            cell.layer.masksToBounds = true
+            
+            cell.leadtitleDetail!.text = "\(self.formController!) News: \(self.lnewsTitle!)"
+            cell.leadtitleDetail!.numberOfLines = 0
+            cell.leadtitleDetail!.textColor = .black
+            
+            //--------------------------------------------------------------
+            
+            if (self.formController == "Vendor" || self.formController == "Employee") {
+                
+                cell.leadsubtitleDetail.text = "Comments"
+                
+            } else {
+                
+                let dateStr = self.date
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                
+                let date1 = dateFormatter.date(from: dateStr!)
+                let date2 = Date()
+                let calendar = Calendar.current
+                if date1 != nil {
+                    let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
+                    let daysCount = diffDateComponents.day
+                    cell.leadsubtitleDetail.text = "Comments, \(daysCount!) days ago"
+                }
+            }
+            
+            //--------------------------------------------------------------
+            cell.leadsubtitleDetail.textColor = .gray
+            
+            cell.leadreadDetail.text = "Read more"
+            cell.leadreadDetail.textColor = Color.BlueColor
+            
+            cell.leadnewsDetail.text = self.comments
+            cell.leadnewsDetail.numberOfLines = 0
+            cell.leadnewsDetail.textColor = .darkGray
+            
+            return cell
+            
+        } else {
+            return UITableViewCell()
+        }
+    }
+}
+/*
+extension Lead: UITableViewDelegate {
+    
+} */
 
 

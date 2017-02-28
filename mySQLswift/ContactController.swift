@@ -127,7 +127,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
             self.authStatus = .authorized //added
             completion(true) // authorized previously
         case .denied, .notDetermined: // needs to ask for authorization
-            self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (accessGranted, error) -> Void in
+            self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (accessGranted, error) in
                 completion(accessGranted)
             })
         default: // not authorized.

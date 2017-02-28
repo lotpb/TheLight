@@ -59,7 +59,6 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
         navigationItem.rightBarButtonItems = [addBtn,searchBtn]
         
-        parseData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -114,121 +113,8 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         self.performSegue(withIdentifier: "newleadSegue", sender: self)
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            return 90.0
-        } else {
-            return 0.0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        let vw = UIView()
-        vw.backgroundColor = Color.Lead.navColor
-        //tableView.tableHeaderView = vw
-        
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
-        myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = Color.Header.headtextColor
-        myLabel1.textAlignment = .center
-        myLabel1.text = String(format: "%@%d", "Leads\n", _feedItems.count)
-        myLabel1.font = Font.celltitle14m
-        myLabel1.isUserInteractionEnabled = true
-        myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
-        myLabel1.layer.borderWidth = 1
-        myLabel1.layer.cornerRadius = 25.0
-        myLabel1.layer.masksToBounds = true
-        vw.addSubview(myLabel1)
-        
-        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
-        separatorLineView1.backgroundColor = Color.Lead.buttonColor
-        vw.addSubview(separatorLineView1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
-        myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = Color.Header.headtextColor
-        myLabel2.textAlignment = .center
-        myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
-        myLabel2.font = Font.celltitle14m
-        myLabel2.layer.cornerRadius = 25.0
-        myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
-        myLabel2.layer.borderWidth = 1
-        myLabel2.layer.masksToBounds = true
-        myLabel2.isUserInteractionEnabled = true
-        vw.addSubview(myLabel2)
-        
-        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
-        separatorLineView2.backgroundColor = Color.Lead.buttonColor
-        vw.addSubview(separatorLineView2)
-        
-        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
-        myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = .white
-        myLabel3.textColor = Color.Header.headtextColor
-        myLabel3.textAlignment = .center
-        myLabel3.text = String(format: "%@%d", "Events\n", 3)
-        myLabel3.font = Font.celltitle14m
-        myLabel3.layer.cornerRadius = 25.0
-        myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
-        myLabel3.layer.borderWidth = 1
-        myLabel3.layer.masksToBounds = true
-        myLabel3.isUserInteractionEnabled = true
-        vw.addSubview(myLabel3)
-        
-        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
-        separatorLineView3.backgroundColor = Color.Lead.buttonColor
-        vw.addSubview(separatorLineView3)
-        
-        return vw
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if editingStyle == .delete {
-            let query = PFQuery(className:"Leads")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
-            
-            let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
-            
-            let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
-                
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
-                    if error == nil {
-                        for object in objects! {
-                            object.deleteInBackground()
-                            //self.refreshData(self)
-                        }
-                    }
-                })
-            }
-            
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-                self.refreshData(self)
-            }
-            
-            alertController.addAction(cancelAction)
-            alertController.addAction(destroyAction)
-            self.present(alertController, animated: true) {
-            }
-            
-            _feedItems.removeObject(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-        }
-    }
-    
-    // MARK: - Content Menu
+    // MARK: - TableView
+    // MARK: Content Menu
     
     func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
         
@@ -258,26 +144,26 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         query.limit = 1000
         query.order(byDescending: "createdAt")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView!.reloadData()
             } else {
-                print("Error")
+                print("Error1")
             }
         }
         
         let query1 = PFQuery(className:"Leads")
         query1.whereKey("Active", equalTo:1)
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView!.reloadData()
             } else {
-                print("Error")
+                print("Error2")
             }
         }
     }
@@ -402,7 +288,6 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         }
         
     }
-    
 }
 //-----------------------end------------------------------
 
@@ -431,7 +316,7 @@ extension Lead: UISearchResultsUpdating {
         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
@@ -576,11 +461,126 @@ extension Lead: UITableViewDataSource {
 }
 
 extension Lead: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (tableView == self.tableView) {
             self.performSegue(withIdentifier: "leaddetailSegue", sender: self)
         } else {
             
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            return 90.0
+        } else {
+            return 0.0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let vw = UIView()
+        vw.backgroundColor = Color.Lead.navColor
+        //tableView.tableHeaderView = vw
+        
+        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
+        myLabel1.numberOfLines = 0
+        myLabel1.backgroundColor = .white
+        myLabel1.textColor = Color.Header.headtextColor
+        myLabel1.textAlignment = .center
+        myLabel1.text = String(format: "%@%d", "Leads\n", _feedItems.count)
+        myLabel1.font = Font.celltitle14m
+        myLabel1.isUserInteractionEnabled = true
+        myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
+        myLabel1.layer.borderWidth = 1
+        myLabel1.layer.cornerRadius = 25.0
+        myLabel1.layer.masksToBounds = true
+        vw.addSubview(myLabel1)
+        
+        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
+        separatorLineView1.backgroundColor = Color.Lead.buttonColor
+        vw.addSubview(separatorLineView1)
+        
+        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
+        myLabel2.numberOfLines = 0
+        myLabel2.backgroundColor = .white
+        myLabel2.textColor = Color.Header.headtextColor
+        myLabel2.textAlignment = .center
+        myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
+        myLabel2.font = Font.celltitle14m
+        myLabel2.layer.cornerRadius = 25.0
+        myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
+        myLabel2.layer.borderWidth = 1
+        myLabel2.layer.masksToBounds = true
+        myLabel2.isUserInteractionEnabled = true
+        vw.addSubview(myLabel2)
+        
+        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
+        separatorLineView2.backgroundColor = Color.Lead.buttonColor
+        vw.addSubview(separatorLineView2)
+        
+        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
+        myLabel3.numberOfLines = 0
+        myLabel3.backgroundColor = .white
+        myLabel3.textColor = Color.Header.headtextColor
+        myLabel3.textAlignment = .center
+        myLabel3.text = String(format: "%@%d", "Events\n", 3)
+        myLabel3.font = Font.celltitle14m
+        myLabel3.layer.cornerRadius = 25.0
+        myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
+        myLabel3.layer.borderWidth = 1
+        myLabel3.layer.masksToBounds = true
+        myLabel3.isUserInteractionEnabled = true
+        vw.addSubview(myLabel3)
+        
+        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
+        separatorLineView3.backgroundColor = Color.Lead.buttonColor
+        vw.addSubview(separatorLineView3)
+        
+        return vw
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            let query = PFQuery(className:"Leads")
+            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
+            
+            let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
+            
+            let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
+                
+                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+                    if error == nil {
+                        for object in objects! {
+                            object.deleteInBackground()
+                            //self.refreshData(self)
+                        }
+                    }
+                })
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                self.refreshData(self)
+            }
+            
+            alertController.addAction(cancelAction)
+            alertController.addAction(destroyAction)
+            self.present(alertController, animated: true) {
+            }
+            
+            _feedItems.removeObject(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
 }

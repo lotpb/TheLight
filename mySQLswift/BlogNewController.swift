@@ -78,8 +78,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         return button
     }()
     
-    let activeImage: UIImageView = { //tableheader
-        let imageView = UIImageView()
+    let activeImage: CustomImageView = { //tableheader
+        let imageView = CustomImageView()
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -120,6 +120,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     }
     
      func setupForm() {
+        self.subject?.textContainerInset = UIEdgeInsets(top: -01, left: 0, bottom: 0, right: 0)
+        
         if ((self.formStatus == "New") || (self.formStatus == "Reply")) {
             
             self.placeholderlabel!.textColor = .lightGray
@@ -488,10 +490,10 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo: self.textcontentpostby!)
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                         self.imageBlog?.image = UIImage(data: imageData!)
                     }
                 }
@@ -554,7 +556,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             if (self.formStatus == "None") {
                 let query = PFQuery(className:"Blog")
                 query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                     if error == nil {
                         updateblog!.setObject(self.msgDate ?? NSNull(), forKey:"MsgDate")
                         updateblog!.setObject(self.postby ?? NSNull(), forKey:"PostBy")
@@ -587,7 +589,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 if (self.formStatus == "Reply") {
                     let query = PFQuery(className:"Blog")
                     query.whereKey("objectId", equalTo:self.replyId!)
-                    query.getFirstObjectInBackground { (updateReply: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground { (updateReply: PFObject?, error: Error?) in
                         if error == nil {
                             updateReply!.incrementKey("CommentCount")
                             updateReply!.saveEventually()
@@ -595,7 +597,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                     }
                 }
                 
-                saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                saveblog.saveInBackground { (success: Bool, error: Error?) in
                     if success == true {
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
                         self.show(vc!, sender: self)

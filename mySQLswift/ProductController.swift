@@ -256,7 +256,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
+                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {
                             object.deleteInBackground()
@@ -312,7 +312,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         //query.limit = 1000
         query.order(byAscending: "Products")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -326,7 +326,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         query1.whereKey("Active", equalTo:"Active")
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -346,7 +346,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
             isFormStat = false
             let imageObject = _feedItems.object(at: indexPath.row) as? PFObject
             if let imageFile = imageObject!.object(forKey: "imageFile") as? PFFile {
-                imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                     self.selectedImage = UIImage(data: imageData!)
                     self.performSegue(withIdentifier: "prodDetailSegue", sender: self)
                 }
@@ -411,7 +411,7 @@ extension ProductController: UISearchResultsUpdating {
         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)

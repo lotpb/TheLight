@@ -67,7 +67,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
         
         let query = PFQuery(className:"Newsios")
         query.whereKey("objectId", equalTo: self.objectId!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 object!.incrementKey("newsView")
                 object!.saveInBackground()

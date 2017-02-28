@@ -29,8 +29,8 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     var resultsController: UITableViewController!
     var foundUsers = [String]()
     
-    var userProfileImageView: UIImageView = {
-        var imageView = UIImageView()
+    var userProfileImageView: CustomImageView = {
+        var imageView = CustomImageView()
         imageView.backgroundColor = .black
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -175,7 +175,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             
             let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
             let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 UIView.transition(with: (self.userProfileImageView), duration: 0.5, options: .transitionCrossDissolve, animations: {
                     self.userProfileImageView.image = UIImage(data: imageData!) ?? UIImage(named: "profile-rabbit-toy")
@@ -282,7 +282,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
+                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {
                             object.deleteInBackground()
@@ -335,7 +335,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         //query.limit = 1000
         query.order(byAscending: "Salesman")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -349,7 +349,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         query1.whereKey("Active", equalTo:"Active")
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -369,7 +369,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             isFormStat = false
             let imageObject = _feedItems.object(at: indexPath.row) as? PFObject
             if let imageFile = imageObject!.object(forKey: "imageFile") as? PFFile {
-                imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                     self.selectedImage = UIImage(data: imageData!)
                     self.performSegue(withIdentifier: "salesDetailSegue", sender: self)
                 }
@@ -434,7 +434,7 @@ extension SalesmanController: UISearchResultsUpdating {
         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)

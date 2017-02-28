@@ -51,6 +51,14 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         return button
     }()
     
+    let activeImage: CustomImageView = { //tableheader
+        let imageView = CustomImageView()
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .clear
@@ -60,13 +68,6 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         return refreshControl
     }()
     
-    let activeImage: UIImageView = { //tableheader
-        let imageView = UIImageView()
-        imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -378,7 +379,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     
                     let query = PFQuery(className:"Salesman")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"SalesNo")
                             updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Salesman")
@@ -401,7 +402,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Salesman")
                     saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
@@ -419,7 +420,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     
                     let query = PFQuery(className:"Job")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"JobNo")
                             updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Description")
@@ -443,7 +444,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Description")
                     saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
@@ -464,7 +465,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     
                     let query = PFQuery(className:"Product")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(myPrice , forKey:"Price")
                             updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"ProductNo")
@@ -489,7 +490,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Products")
                     saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
@@ -507,7 +508,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     
                     let query = PFQuery(className:"Advertising")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(self.salesNo.text ?? NSNull(), forKey:"AdNo")
                             updateblog!.setObject(self.salesman.text ?? NSNull(), forKey:"Advertiser")
@@ -530,7 +531,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     saveblog.setObject(self.salesman.text ?? NSNull(), forKey:"Advertiser")
                     saveblog.setObject(self.active ?? NSNull(), forKey:"Active")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")

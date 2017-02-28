@@ -15,7 +15,7 @@ class TrendingCell: FeedCell {
         let query = PFQuery(className:"Newsios")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "Liked")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray

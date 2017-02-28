@@ -41,8 +41,8 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     var pictureData : Data!
     var videoURL : URL?
     
-    let newsImageView: UIImageView = {
-        let imageView = UIImageView()
+    let newsImageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .black
@@ -239,14 +239,14 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         imagePicker.sourceType = .photoLibrary
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
         imagePicker.delegate = self
-        self.present(imagePicker, animated: true, completion: nil)
+        self.present(imagePicker, animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         self.editImage = true
         let mediaType = info[UIImagePickerControllerMediaType] as! NSString
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
         
         if mediaType.isEqual(to: kUTTypeMovie as String) {
             
@@ -264,7 +264,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         } else if mediaType.isEqual(to: kUTTypeImage as String) {
             
             pickImage = true
-            let image = info[UIImagePickerControllerEditedImage] as? UIImage
+            guard let image = info[UIImagePickerControllerEditedImage] as? UIImage else { return }
             newsImageView.contentMode = .scaleAspectFill
             newsImageView.clipsToBounds = true
             newsImageView.image = image
@@ -334,7 +334,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                 
                 let query = PFQuery(className:"Newsios")
                 query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                     if error == nil {
                         updateblog!.setObject(self.commentTitle.text ?? NSNull(), forKey:"newsTitle")
                         updateblog!.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
@@ -343,10 +343,10 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                         updateblog!.saveEventually()
                         
                         if self.editImage == true {
-                            self.file!.saveInBackground { (success: Bool, error: Error?) -> Void in
+                            self.file!.saveInBackground { (success: Bool, error: Error?) in
                                 if success {
                                     updateblog!.setObject(self.file!, forKey:"imageFile")
-                                    updateblog!.saveInBackground { (success: Bool, error: Error?) -> Void in
+                                    updateblog!.saveInBackground { (success: Bool, error: Error?) in
                                         
                                         self.simpleAlert(title: "Image Upload Complete", message: "Successfully updated the image")
                                         
@@ -372,7 +372,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                 }
                 
             } else {
-                file!.saveInBackground { (success: Bool, error: Error?) -> Void in
+                file!.saveInBackground { (success: Bool, error: Error?) in
                     if success {
                         let updateuser:PFObject = PFObject(className:"Newsios")
                         updateuser.setObject(self.file ?? NSNull(), forKey:"imageFile")
@@ -380,7 +380,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                         updateuser.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
                         updateuser.setObject(self.commentDetail.text ?? NSNull(), forKey:"storyText")
                         updateuser.setObject(PFUser.current()!.username ?? NSNull(), forKey:"username")
-                        updateuser.saveInBackground { (success: Bool, error: Error?) -> Void in
+                        updateuser.saveInBackground { (success: Bool, error: Error?) in
                             if success {
                                 self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
                                 self.newsNotification()

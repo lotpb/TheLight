@@ -322,21 +322,21 @@ class NotificationController: UIViewController {
         
         let alertController = UIAlertController(title:nil, message:nil, preferredStyle: .actionSheet)
         
-        let buttonSix = UIAlertAction(title: "Membership Status", style: .default, handler: { (action) -> Void in
+        let buttonSix = UIAlertAction(title: "Membership Status", style: .default, handler: { (action)  in
             self.memberNotification()
         })
         
-        let newBog = UIAlertAction(title: "New Blog Posted", style: .default, handler: { (action) -> Void in
+        let newBog = UIAlertAction(title: "New Blog Posted", style: .default, handler: { (action)  in
             self.blogNotification()
         })
-        let heyYou = UIAlertAction(title: "Hey You", style: .default, handler: { (action) -> Void in
+        let heyYou = UIAlertAction(title: "Hey You", style: .default, handler: { (action)  in
             self.HeyYouNotification()
         })
         
-        let promo = UIAlertAction(title: "Promo Code", style: .default, handler: { (action) -> Void in
+        let promo = UIAlertAction(title: "Promo Code", style: .default, handler: { (action)  in
             self.promoNotification()
         })
-        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
+        let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action)  in
             
         }
         

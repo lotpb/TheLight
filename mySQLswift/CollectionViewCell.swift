@@ -371,6 +371,7 @@ class VideoCell: CollectionViewCell {
     }
 }
 
+/*
 class WordCell: UICollectionViewCell {
     
     //this gets called when a cell is dequeued
@@ -448,5 +449,5 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width, height: 100)
     }
-}
+} */
 

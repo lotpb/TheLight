@@ -99,18 +99,16 @@ class CreateContactViewController: UIViewController, UIImagePickerControllerDele
     
     @IBAction func changeContactImage(_ sender: AnyObject) {
         let picker = UIImagePickerController()
-        
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = true
-        
-        present(picker, animated: true, completion: nil)
+        present(picker, animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        self.contactImage = info[UIImagePickerControllerEditedImage] as? UIImage
-        self.contactImageView.image = self.contactImage
-        self.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerControllerEditedImage] as? UIImage else { return }
+        self.contactImageView.image = image
+        self.dismiss(animated: true)
     }
     
     

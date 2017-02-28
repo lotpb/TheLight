@@ -95,8 +95,8 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return button
     }()
     
-    let activeImage: UIImageView = {
-        let imageView = UIImageView()
+    let activeImage: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -855,7 +855,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let query = PFQuery(className:"Advertising")
             query.whereKey("AdNo", equalTo:self.frm23!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.adName!.text = object!.object(forKey: "Advertiser") as? String
                 }
@@ -865,7 +865,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let query = PFQuery(className:"Product")
             query.whereKey("ProductNo", equalTo:self.frm23!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.adName!.text = object!.object(forKey: "Products") as? String
                 }
@@ -877,7 +877,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let query = PFQuery(className:"Job")
             query.whereKey("JobNo", equalTo:self.frm22!)
             query.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.jobName!.text = object!.object(forKey: "Description") as? String
                 }
@@ -886,7 +886,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let query1 = PFQuery(className:"Salesman")
             query1.whereKey("SalesNo", equalTo:self.frm21!)
             query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.salesman!.text = object!.object(forKey: "Salesman") as? String
                 }
@@ -1047,7 +1047,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     
                     let query = PFQuery(className:"Leads")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
                             updateblog!.setObject(myActive , forKey:"Active")
@@ -1103,7 +1103,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Coments")
                     saveblog.setObject(self.photo ?? NSNull(), forKey:"Photo")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
@@ -1153,7 +1153,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     
                     let query = PFQuery(className:"Customer")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(myCust ?? NSNumber(value:-1), forKey:"CustNo")
                             updateblog!.setObject(myLead ?? NSNumber(value:-1), forKey:"LeadNo")
@@ -1220,7 +1220,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Comment")
                     saveblog.setObject(NSNull(), forKey:"Photo")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
@@ -1243,7 +1243,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     
                     let query = PFQuery(className:"Vendors")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(myLead!, forKey:"VendorNo")
                             updateblog!.setObject(myActive!, forKey:"Active")
@@ -1296,7 +1296,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     saveVend.setObject(self.aptDate.text ?? NSNull(), forKey:"Assistant")
                     saveVend.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveVend.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveVend.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
@@ -1320,7 +1320,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     
                     let query = PFQuery(className:"Employee")
                     query.whereKey("objectId", equalTo:self.objectId!)
-                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) -> Void in
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
                         if error == nil {
                             updateblog!.setObject(myLead!, forKey:"EmployeeNo")
                             updateblog!.setObject(myActive!, forKey:"Active")
@@ -1375,7 +1375,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     saveblog.setObject(self.spouse.text ?? NSNull(), forKey:"Title")
                     saveblog.setObject(self.comment.text ?? NSNull(), forKey:"Comments")
                     //PFACL.setDefault(PFACL(), withAccessForCurrentUser: true)
-                    saveblog.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
                         if success == true {
                             
                             self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")

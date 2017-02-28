@@ -52,8 +52,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         
         navigationController?.navigationBar.isTranslucent = false
- 
-        parseData()
+
         setupTableView()
         self.tableView!.addSubview(self.refreshControl)
     }
@@ -168,10 +167,10 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo:(self._feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as! String)
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
                         
                         UIView.transition(with: (cell.blogImageView)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                             cell.blogImageView?.image = UIImage(data: imageData! as Data)
@@ -409,7 +408,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
+                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {
                             object.deleteInBackground()
@@ -453,7 +452,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let query = PFQuery(className:"Blog")
         query.whereKey("objectId", equalTo:((_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) -> Void in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 object!.incrementKey("Liked")
                 object!.saveInBackground()
@@ -582,13 +581,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query.whereKey("ReplyId", equalTo:NSNull())
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp : NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView?.reloadData()
             } else {
-                print("Error")
+                print("Error9")
             }
         }
         
@@ -598,13 +597,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query1.whereKey("Liked", notEqualTo:NSNull())
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems2 = temp.mutableCopy() as! NSMutableArray
                 self.tableView?.reloadData()
             } else {
-                print("Error")
+                print("Error10")
             }
         }
         
@@ -612,13 +611,13 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query3?.limit = 1000
         query3?.cachePolicy = PFCachePolicy.cacheThenNetwork
         query3?.order(byDescending: "createdAt")
-        query3?.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query3?.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems3 = temp.mutableCopy() as! NSMutableArray
                 self.tableView?.reloadData()
             } else {
-                print("Error")
+                print("Error11")
             }
         }
     }
@@ -633,7 +632,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
             
-            let tweetAction = UIAlertAction(title: "Share on Twitter", style: UIAlertActionStyle.default) { (action) -> Void in
+            let tweetAction = UIAlertAction(title: "Share on Twitter", style: UIAlertActionStyle.default) { (action) in
                 
                 if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeTwitter) {
                     let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
@@ -652,37 +651,37 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 }
             }
             
-            let facebookPostAction = UIAlertAction(title: "Share on Facebook", style: UIAlertActionStyle.default) { (action) -> Void in
+            let facebookPostAction = UIAlertAction(title: "Share on Facebook", style: UIAlertActionStyle.default) { (action) in
                 
                 if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
-                    let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-                    //facebookComposeVC.setInitialText(socialText)
-                    //facebookComposeVC.addImage(detailImageView.image!)
-                    facebookComposeVC?.add(URL(string: "http://lotpb.github.io/UnitedWebPage/index.html"))
-                    self.present(facebookComposeVC!, animated: true, completion: nil)
+                    let vc = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+                    vc?.setInitialText(socialText)
+                    //vc.add(imageView.image!)
+                    vc?.add(URL(string: "http://lotpb.github.io/UnitedWebPage/index.html"))
+                    self.present(vc!, animated: true)
                 }
                 else {
                     self.showAlertMessage(message: "You are not connected to your Facebook account.")
                 }
             }
             
-            let moreAction = UIAlertAction(title: "More", style: UIAlertActionStyle.default) { (action) -> Void in
+            let moreAction = UIAlertAction(title: "More", style: UIAlertActionStyle.default) { (action) in
                 
                 let activityViewController = UIActivityViewController(activityItems: [socialText!], applicationActivities: nil)
                 //activityViewController.excludedActivityTypes = [UIActivityTypeMail]
                 self.present(activityViewController, animated: true, completion: nil)
                 
             }
-            let follow = UIAlertAction(title: "Follow", style: .default) { (alert: UIAlertAction!) -> Void in
+            let follow = UIAlertAction(title: "Follow", style: .default) { (alert: UIAlertAction!) in
                 NSLog("You pressed button one")
             }
-            let block = UIAlertAction(title: "Block this Message", style: .default) { (alert: UIAlertAction!) -> Void in
+            let block = UIAlertAction(title: "Block this Message", style: .default) { (alert: UIAlertAction!) in
                 NSLog("You pressed button two")
             }
-            let report = UIAlertAction(title: "Report this User", style: .destructive) { (alert: UIAlertAction!) -> Void in
+            let report = UIAlertAction(title: "Report this User", style: .destructive) { (alert: UIAlertAction!) in
                 NSLog("You pressed button one")
             }
-            let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) -> Void in
+            let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) in
             }
             actionSheet.addAction(follow)
             actionSheet.addAction(block)
@@ -797,7 +796,7 @@ extension Blog: UISearchResultsUpdating {
         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)

@@ -220,7 +220,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             imagePicker.allowsEditing = true
             imagePicker.delegate = self
             imagePicker.showsCameraControls = true
-            self.present(imagePicker, animated: true, completion: nil)
+            self.present(imagePicker, animated: true)
         } else {
             print("Camera is not available")
         }
@@ -234,26 +234,24 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             imagePicker.mediaTypes = [kUTTypeImage as String]
             imagePicker.allowsEditing = true
             imagePicker.delegate = self
-            self.present(imagePicker, animated: false, completion: nil)
+            self.present(imagePicker, animated: false)
         }
     }
     
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
-        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+        guard let image = info[UIImagePickerControllerEditedImage] as? UIImage else { return }
             self.userimageView?.contentMode = .scaleAspectFill
             self.userimageView?.clipsToBounds = true
-            self.userimageView?.image = pickedImage
-            dismiss(animated: true, completion: { () -> Void in
-            })
-        }
+            self.userimageView?.image = image
+            dismiss(animated: true)
     }
     
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
     }
     
     
@@ -307,12 +305,12 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         email.setSubject((emailTitle as String?)!)
         email.setMessageBody((messageBody as String?)!, isHTML:true)
         email.modalTransitionStyle = .flipHorizontal
-        self.present(email, animated: true, completion: nil)
+        self.present(email, animated: true)
     }
     
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
     
     
@@ -328,13 +326,13 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             pictureData = UIImageJPEGRepresentation(self.userimageView!.image!, 1.0)
             let file = PFFile(name: "img", data: pictureData!)
             
-            file!.saveInBackground { (success: Bool, error: Error?) -> Void in
+            file!.saveInBackground { (success: Bool, error: Error?) in
                 if success {
                     self.user!.setObject(self.usernameField!.text!, forKey:"username")
                     self.user!.setObject(self.emailField!.text!, forKey:"email")
                     self.user!.setObject(self.phoneField!.text!, forKey:"phone")
                     self.user!.setObject(file!, forKey:"imageFile")
-                    self.user!.saveInBackground { (success: Bool, error: Error?) -> Void in
+                    self.user!.saveInBackground { (success: Bool, error: Error?) in
                     }
                     self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
                 } else {

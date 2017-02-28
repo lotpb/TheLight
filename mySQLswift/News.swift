@@ -49,6 +49,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         // MARK: NavigationController Hidden
         NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         setupNewsNavigationItems()
+        //self.tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -89,7 +90,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(handleMore))
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(newButton))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(handleSearch))
-        navigationItem.rightBarButtonItems = [moreButton,addButton,searchButton]
+        navigationItem.rightBarButtonItems = [moreButton,searchButton,addButton]
     }
     
     // MARK: - NavigationController Hidden

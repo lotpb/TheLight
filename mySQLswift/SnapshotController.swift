@@ -592,7 +592,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
             imageObject = _feedItems.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
@@ -618,7 +618,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.startAnimating()
             imageObject = _feedItems2.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
@@ -638,7 +638,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.startAnimating()
             imageObject = _feedItems3.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
 
                 UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
@@ -658,7 +658,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.startAnimating()
             imageObject = _feedItems4.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
@@ -678,7 +678,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.startAnimating()
             imageObject = _feedItems5.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
@@ -731,7 +731,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         let query = PFQuery(className:"Newsios")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -744,7 +744,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         let query2 = PFQuery(className:"jobPhoto")
         query2.cachePolicy = PFCachePolicy.cacheThenNetwork
         query2.order(byDescending: "createdAt")
-        query2.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query2.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems2 = temp.mutableCopy() as! NSMutableArray
@@ -757,7 +757,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         let query3 = PFUser.query()
         query3!.cachePolicy = PFCachePolicy.cacheThenNetwork
         query3!.order(byDescending: "createdAt")
-        query3!.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query3!.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems3 = temp.mutableCopy() as! NSMutableArray
@@ -770,7 +770,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         let query4 = PFQuery(className:"Salesman")
         query4.cachePolicy = PFCachePolicy.cacheThenNetwork
         query4.order(byAscending: "Salesman")
-        query4.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query4.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems4 = temp.mutableCopy() as! NSMutableArray
@@ -783,7 +783,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         let query5 = PFQuery(className:"Employee")
         query5.cachePolicy = PFCachePolicy.cacheThenNetwork
         query5.order(byAscending: "createdAt")
-        query5.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query5.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems5 = temp.mutableCopy() as! NSMutableArray
@@ -797,7 +797,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         query6.whereKey("ReplyId", equalTo:NSNull())
         query6.cachePolicy = PFCachePolicy.cacheThenNetwork
         query6.order(byDescending: "createdAt")
-        query6.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query6.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems6 = temp.mutableCopy() as! NSMutableArray
@@ -827,7 +827,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageObject = _feedItems.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 let imageDetailurl = self.imageFile.url
                 let result1 = imageDetailurl!.contains("movie.mp4")
@@ -863,7 +863,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageObject = _feedItems2.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 self.selectedImage = UIImage(data: imageData!)
                 self.selectedTitle = (self._feedItems2[indexPath.row] as AnyObject).value(forKey: "imageGroup") as? String
@@ -874,7 +874,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageObject = _feedItems3.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 self.selectedImage = UIImage(data: imageData!)
                 self.selectedObjectId = (self._feedItems3[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
@@ -894,7 +894,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageObject = _feedItems4.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 self.selectedImage = UIImage(data: imageData!)
                 self.selectedObjectId = (self._feedItems4[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
@@ -908,7 +908,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             imageObject = _feedItems5.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
+            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
                 
                 self.selectedObjectId = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
                 self.selectedPhone = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "EmployeeNo") as? String
@@ -1046,7 +1046,7 @@ extension SnapshotController: UISearchResultsUpdating {
         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)

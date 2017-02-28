@@ -54,8 +54,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Employee.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
-        
-        parseData()
+
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -189,16 +188,16 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.employlikeLabel.text! = ""
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
-        myLabel.backgroundColor = Color.Employ.labelColor
-        myLabel.textColor = .white
-        myLabel.textAlignment = .center
-        myLabel.layer.masksToBounds = true
-        myLabel.text = "Employ"
-        myLabel.font = Font.celltitle14m
-        myLabel.layer.cornerRadius = 25.0
-        myLabel.isUserInteractionEnabled = true
-        cell.addSubview(myLabel)
+        let imageLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+        imageLabel.backgroundColor = Color.Employ.labelColor
+        imageLabel.text = "Employ"
+        imageLabel.textColor = .white
+        imageLabel.textAlignment = .center
+        imageLabel.font = Font.celltitle14m
+        imageLabel.layer.cornerRadius = 25.0
+        imageLabel.layer.masksToBounds = true
+        imageLabel.isUserInteractionEnabled = true
+        cell.addSubview(imageLabel)
         
         return cell
     }
@@ -290,7 +289,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) -> Void in
+                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {
                             object.deleteInBackground()
@@ -341,13 +340,13 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query.limit = 100
         query.order(byAscending: "createdAt")
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView!.reloadData()
             } else {
-                print("Error")
+                print("Error7")
             }
         }
         
@@ -355,13 +354,13 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         query1.whereKey("Active", equalTo:1)
         query1.cachePolicy = PFCachePolicy.cacheThenNetwork
         //query1.orderByDescending("createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) -> Void in
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView!.reloadData()
             } else {
-                print("Error")
+                print("Error8")
             }
         }
     }
@@ -482,7 +481,7 @@ extension Employee: UISearchResultsUpdating {
         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
         
         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) -> Void in
+        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
             
             if error != nil {
                 self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)

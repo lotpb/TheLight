@@ -162,9 +162,9 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     
     @IBAction func didPressButton(_ sender: AnyObject) {
         
-        let safariVC = SFSafariViewController(url:URL(string: siteAddresses[0])!, entersReaderIfAvailable: true) // Set to false if not interested in using reader
+        let safariVC = SFSafariViewController(url:URL(string: siteAddresses[0])!, entersReaderIfAvailable: true)
         safariVC.delegate = self
-        self.present(safariVC, animated: true, completion: nil)
+        self.present(safariVC, animated: true)
     }
     
     
