@@ -17,6 +17,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var Like: UIButton?
     @IBOutlet weak var update: UIButton?
     
+    
     var _feedItems : NSMutableArray = NSMutableArray()
     var _feedItems1 : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
@@ -30,16 +31,6 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     var rating : String?
     var replyId : String?
     var liked : Int?
-    
-    lazy var replylikeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.tintColor = .lightGray
-        button.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
-        button.isHidden = false
-        button.addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -74,6 +65,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewWillAppear(animated)
         
         setupTwitterNavigationBarItems()
+        self.navigationController?.isNavigationBarHidden = false //fix
     }
 
     override func didReceiveMemoryWarning() {
@@ -94,13 +86,13 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         let width = CGFloat(2.0)
         let topBorder = CALayer()
         topBorder.borderColor = UIColor.lightGray.cgColor
-        topBorder.frame = CGRect(x: 0, y: 0, width:  self.view.frame.width, height: 0.5)
+        topBorder.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 0.5)
         topBorder.borderWidth = width
         self.toolBar!.layer.addSublayer(topBorder)
         
         let bottomBorder = CALayer()
         bottomBorder.borderColor = UIColor.lightGray.cgColor
-        bottomBorder.frame = CGRect(x: 0, y: 43, width:self.view.frame.width, height: 0.5)
+        bottomBorder.frame = CGRect(x: 0, y: 43, width: view.bounds.width, height: 0.5)
         bottomBorder.borderWidth = width
         self.toolBar!.layer.addSublayer(bottomBorder)
         
@@ -153,26 +145,22 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         
         if tableView == self.tableView {
             
-            var cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell!
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
             
-            if cell == nil {
-                cell = CustomTableCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
-            }
-            
-            cell?.selectionStyle = UITableViewCellSelectionStyle.none
-            cell?.subtitleLabel?.textColor = Color.twitterText
+            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.subtitleLabel?.textColor = Color.twitterText
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
-                cell?.titleLabel!.font = Font.Blog.celltitlePad
-                cell?.subtitleLabel!.font = Font.Blog.cellsubtitlePad
-                cell?.msgDateLabel.font = Font.Blog.celldatePad
+                cell.titleLabel!.font = Font.Blog.celltitlePad
+                cell.subtitleLabel!.font = Font.Blog.cellsubtitlePad
+                cell.msgDateLabel.font = Font.Blog.celldatePad
                 
             } else {
                 
-                cell?.titleLabel!.font = Font.Blog.celltitle
-                cell?.subtitleLabel!.font = Font.celltitle20r 
-                cell?.msgDateLabel.font = Font.Blog.celldate
+                cell.titleLabel!.font = Font.Blog.celltitle
+                cell.subtitleLabel!.font = Font.celltitle20r
+                cell.msgDateLabel.font = Font.Blog.celldate
             }
             
             let query:PFQuery = PFUser.query()!
@@ -183,7 +171,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
                         imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
-                            cell?.blogImageView?.image = UIImage(data: imageData!)
+                            cell.blogImageView?.image = UIImage(data: imageData!)
                         }
                     }
                 }
@@ -195,78 +183,47 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             let date:Date = dateFormatter.date(from: (dateStr)! as String)!
             dateFormatter.dateFormat = "MM/dd/yy, h:mm a"
             
-            cell?.titleLabel!.text = self.postby
-            cell?.subtitleLabel!.text = self.subject
-            cell?.msgDateLabel.text = dateFormatter.string(from: (date) as Date)
+            cell.titleLabel!.text = self.postby
+            cell.subtitleLabel!.text = self.subject
+            cell.msgDateLabel.text = dateFormatter.string(from: (date) as Date)
             
-//---------------------NSDataDetector-----------------------------
+//---------------------NSDataDetector 1 of 2-----------------------------
             
+            let text = (self.subject!) as NSString
+            let attributedText = NSMutableAttributedString(string: text as String)
             
-            let text = self.subject
+            let boldRange = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 24), NSForegroundColorAttributeName: Color.Blog.weblinkText]
+            let highlightedRange = [NSBackgroundColorAttributeName: Color.Blog.phonelinkText]
+            let underlinedRange = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue]
+            let tintedRange1 = [NSForegroundColorAttributeName: Color.Blog.weblinkText]
+            
+            attributedText.addAttributes(boldRange, range: text.range(of: "VCSY"))
+            attributedText.addAttributes(highlightedRange, range: text.range(of: "(516)241-4786"))
+            attributedText.addAttributes(underlinedRange, range: text.range(of: "Lost", options: .caseInsensitive))
+            attributedText.addAttributes(underlinedRange, range: text.range(of: "Made", options: .caseInsensitive))
+            
+            let input = self.subject
             let types: NSTextCheckingResult.CheckingType = [.date, .phoneNumber, .link]
             let detector = try? NSDataDetector(types: types.rawValue)
-            let matches = detector?.matches(in: text!, options: [], range: NSRange(location: 0, length: (text?.utf16.count)!))
+            let matches = detector?.matches(in: input!, options: [], range: NSRange(location: 0, length: (input?.utf16.count)!))
             
             for match in matches! {
-                
-                let webattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
-                
-                let emailattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
-                
-                let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
-                
-                let dateattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
-                
-                if match.resultType == .link {
-                    if match.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
-                        cell?.subtitleLabel!.attributedText = emailattributedText
-                    } else {
-                        cell?.subtitleLabel!.attributedText = webattributedText
-                    }
-                } else if match.resultType == .phoneNumber {
-                    cell?.subtitleLabel!.attributedText = phoneattributedText
-                } else if match.resultType == .date {
-                    cell?.subtitleLabel!.attributedText = dateattributedText
-                }
+                let url = input?.substring(with: match.range.range(for: text as String)!)
+                attributedText.addAttributes(tintedRange1, range: text.range(of: url!))
             }
-
-/*
-            let text = self.subject
-            let types: NSTextCheckingResult.CheckingType = [.date, .phoneNumber, .link]
-            let detector = try? NSDataDetector(types: types.rawValue)
             
-            detector?.enumerateMatches(in: text!, options: [], range: NSMakeRange(0, (text! as NSString).length)) { (result, flags, _) in
-                
-                let webattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
-                
-                let emailattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
-                
-                let phoneattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
-                
-                let dateattributedText = NSMutableAttributedString(string: text!, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
-                
-                if result!.resultType == .link {
-                    
-                    if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
-                        cell?.subtitleLabel!.attributedText = emailattributedText
-                    } else {
-                        cell?.subtitleLabel!.attributedText = webattributedText
-                    }
-                } else if result?.resultType == .phoneNumber {
-                    
-                    cell?.subtitleLabel!.attributedText = phoneattributedText
-                } else if result?.resultType == .date {
-                    
-                    cell?.subtitleLabel!.attributedText = dateattributedText
-                }
-            } */
+            cell.subtitleLabel!.attributedText = attributedText
+
 //--------------------------------------------------
             
-            return cell!
+            return cell
         }
-        else { //----listViewTable--------------
+        else {
+//-------------------listViewTable--------------
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
             
-            var cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell") as! CustomTableCell!
+            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.replydateLabel.textColor = .gray
             
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo: (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as! String)
@@ -276,56 +233,75 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
                         imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
-                            cell?.replyImageView?.image = UIImage(data: imageData!)
+                            cell.replyImageView?.image = UIImage(data: imageData!)
                         }
                     }
                 }
             }
             
-            if cell == nil {
-                cell = CustomTableCell(style: UITableViewCellStyle.default, reuseIdentifier: "ReplyCell")
-            }
-            
-            cell?.selectionStyle = UITableViewCellSelectionStyle.none
-            cell?.replydateLabel.textColor = .gray
-            
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
-                cell?.replytitleLabel!.font = Font.BlogEdit.replytitlePad
-                cell?.replysubtitleLabel!.font = Font.BlogEdit.replysubtitlePad
-                cell?.replynumLabel!.font = Font.BlogEdit.replytitlePad
-                cell?.replydateLabel!.font = Font.BlogEdit.replysubtitlePad
+                cell.replytitleLabel!.font = Font.BlogEdit.replytitlePad
+                cell.replysubtitleLabel!.font = Font.BlogEdit.replysubtitlePad
+                cell.replynumLabel!.font = Font.BlogEdit.replytitlePad
+                cell.replydateLabel!.font = Font.BlogEdit.replysubtitlePad
                 
             } else {
                 
-                cell?.replytitleLabel!.font = Font.BlogEdit.replytitle
-                cell?.replysubtitleLabel!.font = Font.BlogEdit.replysubtitle
-                cell?.replynumLabel.font = Font.BlogEdit.replytitle
-                cell?.replydateLabel.font = Font.BlogEdit.replysubtitle
+                cell.replytitleLabel!.font = Font.BlogEdit.replytitle
+                cell.replysubtitleLabel!.font = Font.BlogEdit.replysubtitle
+                cell.replynumLabel.font = Font.BlogEdit.replytitle
+                cell.replydateLabel.font = Font.BlogEdit.replysubtitle
             }
-
+            
+            cell.replytitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
+            cell.replysubtitleLabel.numberOfLines = 4
+            cell.replysubtitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
+            
+            cell.replylikeButton.tintColor = .lightGray
+            cell.replylikeButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
+            cell.replylikeButton.addTarget(self, action: #selector(likeButton), for: .touchUpInside)
+            
+            var Liked:Int? = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Liked") as? Int
+            if Liked == nil { Liked = 0 }
+            cell.replynumLabel!.text = "\(Liked!)"
+            
             let date1 = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
             let date2 = Date()
             let calendar = Calendar.current
             let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
+            cell.replydateLabel!.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
             
-            cell?.replytitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
-            cell?.replysubtitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
-            cell?.replydateLabel!.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
-            var Liked:Int? = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Liked") as? Int
-            if Liked == nil {
-                Liked = 0
-            }
-            cell?.replynumLabel!.text = "\(Liked!)"
-
-            
-            if !(cell?.replynumLabel.text == "0") {
-                cell?.replynumLabel.textColor = .red
+            if !(cell.replynumLabel.text! == "0") {
+                cell.replynumLabel.textColor = Color.twitterBlue
             } else {
-                cell?.replynumLabel.text? = ""
+                cell.replynumLabel.text! = ""
             }
+            
+            //---------------------NSDataDetector 2 of 2-----------------------------
+            
+            let text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as! NSString
+            let attributedText = NSMutableAttributedString(string: text as String)
+            let tintedRange1 = [NSForegroundColorAttributeName: Color.Blog.weblinkText]
 
-            return cell!
+            let textName = String(format: "%@", "@\(self.postby!.removingWhitespaces())")
+            attributedText.addAttributes(tintedRange1, range: text.range(of: textName))
+            
+            let input = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
+            let types: NSTextCheckingResult.CheckingType = [.date, .phoneNumber, .link]
+            let detector = try? NSDataDetector(types: types.rawValue)
+            let matches = detector?.matches(in: input!, options: [], range: NSRange(location: 0, length: (input?.utf16.count)!))
+            
+            for match in matches! {
+                let url = input?.substring(with: match.range.range(for: text as String)!)
+                attributedText.addAttributes(tintedRange1, range: text.range(of: url!))
+            }
+            
+            cell.replysubtitleLabel.attributedText = attributedText
+            
+            //--------------------------------------------------
+
+            return cell
         } 
     }
 
@@ -352,8 +328,8 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     
     func likeButton(sender:UIButton) {
         
-        self.Like?.isSelected = true
-        sender.tintColor = .red
+        sender.isSelected = true
+        sender.tintColor = Color.twitterBlue
         let hitPoint = sender.convert(CGPoint.zero, to: self.listTableView)
         let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
         
@@ -377,7 +353,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             popoverController.barButtonItem = sender as? UIBarButtonItem
         }
         
-        self.present(activityViewController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true)
     }
     
     func deleteButton(sender: UIButton) {

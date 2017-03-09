@@ -27,7 +27,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     var foundUsers = [String]()
     
     lazy var titleButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         button.setTitle("Advertisers", for: .normal)
         button.titleLabel?.font = Font.navlabel
@@ -388,7 +388,7 @@ extension AdController: UISearchBarDelegate {
         searchController.searchBar.scopeButtonTitles = searchScope
         searchController.searchBar.barTintColor = Color.Table.navColor
         tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true, completion: nil)
+        self.present(searchController, animated: true)
     }
 }
 

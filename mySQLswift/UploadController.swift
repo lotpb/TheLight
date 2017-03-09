@@ -226,7 +226,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             imagePicker.sourceType = .camera
             imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera)!
             imagePicker.delegate = self
-            self.present(imagePicker, animated: true, completion: nil)
+            self.present(imagePicker, animated: true)
         } else{
             self.simpleAlert(title: "Alert!", message: "Camera not available")
         }

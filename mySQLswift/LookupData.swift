@@ -66,7 +66,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         definesPresentationContext = true
         searchController.searchBar.barTintColor = Color.DGrayColor
         tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true, completion: nil)
+        self.present(searchController, animated: true)
         
         parseData()
         setupTableView()

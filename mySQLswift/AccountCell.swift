@@ -9,8 +9,7 @@
 import UIKit
 import Parse
 import MobileCoreServices //kUTTypeImage
-//import CoreLocation
-//import MessageUI
+
 
 class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
@@ -26,9 +25,15 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
 
     let headerImageView: UIImageView = {
-        let imageView = UIImageView(image: #imageLiteral(resourceName: "images"))
-        imageView.tintColor = .black
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "Acctimages"))
         imageView.contentMode = .scaleAspectFill
+        
+        //imageView.tintColor = .black
+        //imageView.backgroundColor = .black
+        //imageView.alpha = 0.1
+        let overlay = UIView(frame: imageView.bounds)
+        overlay.backgroundColor = UIColor(white: 0, alpha: 0.1)
+        imageView.addSubview(overlay)
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -180,7 +185,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         cell.detailLabel.textColor = UIColor(white: 0.5, alpha: 1)
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.tableView.separatorStyle = .none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             
@@ -279,7 +284,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
     }
     
 

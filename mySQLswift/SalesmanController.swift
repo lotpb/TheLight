@@ -420,7 +420,7 @@ extension SalesmanController: UISearchBarDelegate {
         searchController.searchBar.scopeButtonTitles = searchScope
         searchController.searchBar.barTintColor = Color.Table.navColor
         tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true, completion: nil)
+        self.present(searchController, animated: true)
     }
 }
 

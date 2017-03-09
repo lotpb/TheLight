@@ -65,7 +65,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
    //-------------------------------------
     
     lazy var titleButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             button.setTitle("TheLight Software - New Message", for: .normal)
@@ -112,6 +112,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         super.viewWillAppear(animated)
         
         setupTwitterNavigationBarItems()
+        self.navigationController?.isNavigationBarHidden = false //fix
     }
     
     override func didReceiveMemoryWarning() {
@@ -132,7 +133,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.msgDate = dateString
             
             self.rating = "4"
-            self.postby =  self.textcontentpostby
+            self.postby = self.textcontentpostby
             
         } else if ((self.formStatus == "None")) { //set in BlogEdit
             
@@ -167,7 +168,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         let itemOne = [kTitleKey : "Tap a cell to change its date:", kDateKey : ""]
         let itemTwo = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         let itemThree = [kTitleKey : "Name", kDateKey : self.postby]
-        //let itemFour = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
+      //let itemFour = [kTitleKey : "Date", kDateKey : Date()] as [String : Any]
         dataArray = [itemOne as Dictionary<String, AnyObject>, itemTwo as Dictionary<String, AnyObject>, itemThree as Dictionary<String, AnyObject>]
         
         dateFormatter.dateStyle = .medium
@@ -175,7 +176,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         NotificationCenter.default.addObserver(self, selector: #selector(localeChanged(_:)), name: NSLocale.currentLocaleDidChangeNotification, object: nil)
     }
-    
+
     
     // MARK: - textView delegate
     
@@ -188,6 +189,22 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneBarButtonItemClicked))
         
         navigationItem.setRightBarButton(doneBarButtonItem, animated: true)
+        
+        //Change font and color text in TextView
+        let attrStr = NSMutableAttributedString(string:(self.subject?.text)!)
+        let inputLength = attrStr.string.characters.count
+        let searchString = String(format: "%@", "@\(self.postby!.removingWhitespaces())")
+        let searchLength = searchString.characters.count
+        var range = NSRange(location: 0, length: attrStr.length)
+        while (range.location != NSNotFound) {
+            range = (attrStr.string as NSString).range(of: searchString, options: [], range: range)
+            if (range.location != NSNotFound) {
+                attrStr.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: NSRange(location: range.location, length: searchLength))
+                attrStr.addAttribute(NSFontAttributeName, value: Font.Blog.cellsubject, range: NSRange(location: 0, length: (inputLength)))
+                range = NSRange(location: range.location + range.length, length: inputLength - (range.location + range.length))
+                self.subject?.attributedText = attrStr
+            }
+        }
     }
     
     func textViewDidEndEditing(_ textView:UITextView) {
@@ -228,35 +245,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         } else {
             self.subject!.font = Font.Blog.cellsubject
         }
-        
-        if ((self.formStatus == "None") || (self.formStatus == "Reply")) {
-            let text = self.textcontentsubject!
-            let types: NSTextCheckingResult.CheckingType = [.phoneNumber, .link]
-            let detector = try? NSDataDetector(types: types.rawValue)
-            detector?.enumerateMatches(in: text, options: [], range: NSMakeRange(0, (text as NSString).length)) { (result, flags, _) in
-                
-                let webattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.weblinkText])
-                
-                let emailattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSForegroundColorAttributeName: Color.Blog.emaillinkText])
-                
-                let phoneattributedText = NSMutableAttributedString(string: text, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular), NSBackgroundColorAttributeName: Color.Blog.phonelinkText])
-                
-                //attributedText.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, attributedText.length))
-                
-                if result!.resultType == .link {
-                    
-                    if result?.url?.absoluteString.lowercased().range(of: "mailto:") != nil {
-                        self.subject!.attributedText = emailattributedText
-                    } else {
-                        self.subject!.attributedText = webattributedText
-                    }
-                    
-                } else if result?.resultType == .phoneNumber {
-                    
-                    self.subject!.attributedText = phoneattributedText
-                }
-            }
-        }
     }
     
     
@@ -277,7 +265,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell: UITableViewCell?
+        var cell: UITableViewCell!
         
         var cellID = kTitleCellID
         
@@ -305,8 +293,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 self.Like!.setTitle(" Likes \(liked!)", for: .normal)
                 self.activeImage.image = #imageLiteral(resourceName: "iosStar")
             }
-            cell?.contentView.addSubview(self.activeImage)
-            cell?.selectionStyle = .none
+            cell.contentView.addSubview(self.activeImage)
+            cell.selectionStyle = .none
         }
         
         var modelRow = indexPath.row
@@ -325,18 +313,18 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                 dateCell = self.dateFormatter.string(from: itemData[kDateKey] as! Date)
             }
             
-            cell?.textLabel?.text = itemData[kTitleKey] as? String
-            cell?.detailTextLabel?.text = dateCell //self.dateFormatter.string(from: itemData[kDateKey] as! Date)
+            cell.textLabel?.text = itemData[kTitleKey] as? String
+            cell.detailTextLabel?.text = dateCell //self.dateFormatter.string(from: itemData[kDateKey] as! Date)
             
         } else if cellID == kTitleCellID {
             
-            cell?.textLabel!.text = itemData[kTitleKey] as? String
-            cell?.detailTextLabel?.text = itemData[kDateKey] as! String?
-            cell?.selectionStyle = .none
+            cell.textLabel!.text = itemData[kTitleKey] as? String
+            cell.detailTextLabel?.text = itemData[kDateKey] as! String?
+            cell.selectionStyle = .none
             
         }
         
-        return cell!
+        return cell
     }
 
 //------------------------------------------------------------------

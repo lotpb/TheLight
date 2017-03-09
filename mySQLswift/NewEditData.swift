@@ -563,7 +563,7 @@ extension NewEditData: UISearchBarDelegate {
         //searchController.searchBar.scopeButtonTitles = searchScope
         searchController.searchBar.barTintColor = .brown
         tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true, completion: nil)
+        self.present(searchController, animated: true)
     }
 }
 

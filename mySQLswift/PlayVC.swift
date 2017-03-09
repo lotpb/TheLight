@@ -194,20 +194,24 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         containView.addSubview(pausePlayButton)
         pausePlayButton.centerXAnchor.constraint(equalTo: playerView.centerXAnchor).isActive = true
         pausePlayButton.centerYAnchor.constraint(equalTo: playerView.centerYAnchor).isActive = true
-        pausePlayButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        //pausePlayButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         pausePlayButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         containView.addSubview(videoLengthLabel)
         videoLengthLabel.rightAnchor.constraint(equalTo: playerView.rightAnchor, constant: -8).isActive = true
         videoLengthLabel.bottomAnchor.constraint(equalTo: playerView.bottomAnchor, constant: -2).isActive = true
-        videoLengthLabel.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        //videoLengthLabel.widthAnchor.constraint(equalToConstant: 50).isActive = true
         videoLengthLabel.heightAnchor.constraint(equalToConstant: 24).isActive = true
         
         containView.addSubview(currentTimeLabel)
         currentTimeLabel.leftAnchor.constraint(equalTo: playerView.leftAnchor, constant: 8).isActive = true
         currentTimeLabel.bottomAnchor.constraint(equalTo: playerView.bottomAnchor, constant: -2).isActive = true
-        currentTimeLabel.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        //currentTimeLabel.widthAnchor.constraint(equalToConstant: 50).isActive = true
         currentTimeLabel.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        
+        for label in [pausePlayButton, videoLengthLabel, currentTimeLabel] as [Any] {
+            (label as AnyObject).widthAnchor.constraint(equalToConstant: 50).isActive = true
+        }
         
         containView.addSubview(videoSlider)
         videoSlider.rightAnchor.constraint(equalTo: videoLengthLabel.leftAnchor).isActive = true

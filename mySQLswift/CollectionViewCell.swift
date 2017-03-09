@@ -29,10 +29,8 @@ class CollectionViewCell: UICollectionViewCell {
     
     lazy var playButton2: UIButton = {
         let button = UIButton(type: .system)
-        //button.translatesAutoresizingMaskIntoConstraints = false
         button.alpha = 0.9
         button.isUserInteractionEnabled = true
-        //let image = UIImage(named: "play_button.png")
         button.tintColor = .white
         button.setImage(#imageLiteral(resourceName: "play_button"), for: .normal)
         let tap = UITapGestureRecognizer(target: self, action: #selector(CollectionViewCell.playVideo))
@@ -201,7 +199,6 @@ class VideoCell: CollectionViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.alpha = 0.9
         button.isUserInteractionEnabled = true
-        //let image = UIImage(named: "play_button.png")
         button.tintColor = .white
         button.setImage(#imageLiteral(resourceName: "play_button"), for: .normal)
         let tap = UITapGestureRecognizer(target: self, action: #selector(handlePlay))

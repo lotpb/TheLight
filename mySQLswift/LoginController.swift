@@ -318,7 +318,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 //Goes to the Setup page which lets the user take a photo for their profile picture and also chose a username
                 
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "Home")
-                self.present(vc!, animated: true, completion: nil)
+                self.present(vc!, animated: true)
                 
             } else {
                 self.simpleAlert(title: "Alert", message: "Error: \(error)")
@@ -440,8 +440,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         })
         
         //if((FBSDKAccessToken.current()) != nil){
-            FBSDKGraphRequest(graphPath: "/me", parameters: ["fields": "id, name, first_name, last_name, picture.type(large), email"])
-                .start { (connection, result, error) in
+        FBSDKGraphRequest(graphPath: "/me", parameters: ["fields": "id, name, first_name, last_name, picture.type(large), email"])
+            .start { (connection, result, error) in
                 if (error == nil) {
                     
                     guard let result = result as? NSDictionary,
@@ -468,7 +468,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                     self.usernameField!.text = "\(firstName) \(lastName)"
                     self.emailField!.text = "\(email)"
                     self.passwordField!.text = "\(useId)" //"3911"
-
+                    
                     self.registerNewUser()
                     self.redirectToHome()
                     
@@ -476,8 +476,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                     print("Failed to start graph request:", error ?? "")
                     return
                 }
-
-            }
+                
+        }
         //}
     }
 
@@ -657,7 +657,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                     let alert = UIAlertController(title: "Oops!", message: error?.localizedDescription, preferredStyle: .alert)
                     let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                     alert.addAction(defaultAction)
-                    self.present(alert, animated: true, completion: nil)
+                    self.present(alert, animated: true)
                 } else {
                     self.firebase!.child("users/\(user!.uid)/email").setValue(user!.email!)
                 }
@@ -667,7 +667,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             let alert = UIAlertController(title: "Oops!", message: "Please enter an email and password.", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alert.addAction(defaultAction)
-            self.present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true)
         }
         
     } */

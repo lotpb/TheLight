@@ -54,8 +54,13 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        if (self.formController == "Blog") {
-        self.comments = "90 percent of my picks made $$$. The stock whisper has traded over 1000 traders worldwide"
+        let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
+        
+        if self.formController == "Blog" {
+            navigationItem.leftBarButtonItems = [backItem]
+            self.comments = "90 percent of my picks made $$$. The stock whisper has traded over 1000 traders worldwide"
+        } else {
+            navigationItem.leftBarButtonItems = nil
         }
 
         emptyLabel = UILabel(frame: self.view.bounds)
@@ -72,12 +77,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
-            self.navigationController?.navigationBar.barTintColor = .black
-        } else {
-            self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
-        } */
         setMainNavItems()
     }
     
@@ -91,6 +90,21 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: - refresh
+    
+    func refreshData(_ sender:AnyObject) {
+        self.tableView!.reloadData()
+        self.refreshControl.endRefreshing()
+    }
+    
+    // MARK: - Button
+    
+    func setbackButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Table View
+    
     func setupTableView() {
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
@@ -99,15 +113,6 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.backgroundColor = .white
         self.tableView!.tableFooterView = UIView(frame: .zero)
     }
-    
-    // MARK: - refresh
-    
-    func refreshData(_ sender:AnyObject) {
-        self.tableView!.reloadData()
-        self.refreshControl.endRefreshing()
-    }
-    
-    // MARK: - Table View
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -198,19 +203,26 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         if (cell.commentLabel.text! == "") {
             cell.replyButton.tintColor = .lightGray
         } else {
-            cell.replyButton.tintColor = .red
+
+            if (self.formController == "Leads") {
+                cell.replyButton.tintColor = Color.youtubeRed
+            } else if (self.formController == "Customer") {
+                cell.replyButton.tintColor = Color.BlueColor
+            } else if (self.formController == "Blog") {
+                cell.replyButton.tintColor = Color.twitterBlue
+            }
         }
         
         let imageLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         if (self.formController == "Leads") {
             imageLabel.text = "Cust"
-            imageLabel.backgroundColor = Color.DGrayColor
+            imageLabel.backgroundColor = Color.youtubeRed
         } else if (self.formController == "Customer") {
             imageLabel.text = "Lead"
             imageLabel.backgroundColor = Color.BlueColor
         } else if (self.formController == "Blog") {
             imageLabel.text = "Blog"
-            imageLabel.backgroundColor = Color.youtubeRed
+            imageLabel.backgroundColor = Color.twitterBlue
         }
         imageLabel.textColor = .white
         imageLabel.textAlignment = .center

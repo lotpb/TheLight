@@ -456,7 +456,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         if let popoverController = alertController.popoverPresentationController {
             popoverController.barButtonItem = sender as? UIBarButtonItem
         }
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
 
 }

@@ -89,6 +89,16 @@ class CustomTableCell: UITableViewCell {
     @IBOutlet weak var replylikeButton: UIButton!
     @IBOutlet weak var replyImageView: UIImageView!
     
+    /*
+     lazy var replylikeButton: UIButton = {
+     let button = UIButton()
+     button.tintColor = .lightGray
+     button.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
+     button.isHidden = false
+     button.addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
+     return button
+     }() */
+    
     // BlogController
     @IBOutlet weak var blogtitleLabel: UILabel!
     @IBOutlet weak var blogsubtitleLabel: UILabel!

@@ -26,7 +26,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var tableView: UIView?
     @IBOutlet weak var mySwitch: UISwitch?
     @IBOutlet weak var activebutton: UIButton?
-//    @IBOutlet weak var mapbutton: UIButton?
+//  @IBOutlet weak var mapbutton: UIButton?
     
     @IBOutlet weak var listTableView: UITableView?
     @IBOutlet weak var listTableView2: UITableView?
@@ -295,7 +295,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
         } else {
             mainView?.translatesAutoresizingMaskIntoConstraints = false
             mainView?.heightAnchor.constraint(equalToConstant: 265).isActive = true
-            photoImage.frame = CGRect(x: self.view.frame.width/2+15, y: 60, width: view.frame.width/2-25, height: 110)
+            photoImage.frame = CGRect(x: view.frame.width/2+15, y: 60, width: view.frame.width/2-25, height: 110)
         }
         
         mapButton.translatesAutoresizingMaskIntoConstraints = false
@@ -615,7 +615,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
         if let popoverController = alertController.popoverPresentationController {
             popoverController.barButtonItem = sender as? UIBarButtonItem
         }
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
     
     func callPhone() {
@@ -706,7 +706,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
         email.setSubject((emailTitle)!)
         email.setMessageBody((messageBody)!, isHTML:true)
         email.modalTransitionStyle = .flipHorizontal
-        self.present(email, animated: true, completion: nil)
+        self.present(email, animated: true)
     }
 
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {

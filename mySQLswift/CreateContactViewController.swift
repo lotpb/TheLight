@@ -76,7 +76,7 @@ class CreateContactViewController: UIViewController, UIImagePickerControllerDele
             let newContactRequest = CNSaveRequest()
             newContactRequest.add(newContact, toContainerWithIdentifier: nil)
             try CNContactStore().execute(newContactRequest)
-            self.presentingViewController?.dismiss(animated: true, completion: nil)
+            self.presentingViewController?.dismiss(animated: true)
         } catch {
             self.simpleAlert(title: "Oops!", message: "I was unable to create the new contact. An error occurred.")
         }
@@ -113,7 +113,7 @@ class CreateContactViewController: UIViewController, UIImagePickerControllerDele
     
     
     @IBAction func goBack(_ sender: AnyObject) {
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true)
     }
     
 }

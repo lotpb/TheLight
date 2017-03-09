@@ -136,7 +136,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.backgroundColor = Color.Snap.tablebackColor
         self.tableView!.tableFooterView = UIView(frame: .zero)
         self.tableView!.separatorColor = Color.Snap.lineColor //.clear
-        //self.tableView!.separatorStyle = UITableViewCellSeparatorStyle.none
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -1031,7 +1030,7 @@ extension SnapshotController: UISearchBarDelegate {
         //searchController.searchBar.scopeButtonTitles = searchScope
         searchController.searchBar.barTintColor = .black //Color.Lead.navColor
         tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true, completion: nil)
+        self.present(searchController, animated: true)
     }
 }
 

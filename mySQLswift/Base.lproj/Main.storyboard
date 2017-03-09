@@ -1566,7 +1566,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="320" height="64.5"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile-rabbit-toy.png" translatesAutoresizingMaskIntoConstraints="NO" id="fzY-yC-DHM">
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fzY-yC-DHM">
                                                                     <rect key="frame" x="15" y="8" width="40" height="40"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="40" id="KMK-6a-2kK"/>
@@ -1588,24 +1588,22 @@
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ed5-kQ-xoz" userLabel="ButtonView">
                                                                     <rect key="frame" x="64" y="35" width="243" height="18"/>
                                                                     <subviews>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bPn-r1-N9A">
-                                                                            <rect key="frame" x="0.0" y="1" width="81" height="14"/>
-                                                                            <constraints>
-                                                                                <constraint firstAttribute="width" constant="81" id="M9m-fh-yNX"/>
-                                                                            </constraints>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bPn-r1-N9A">
+                                                                            <rect key="frame" x="36" y="1" width="140" height="16"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XCP-c4-gqC">
-                                                                            <rect key="frame" x="83" y="1" width="15" height="16"/>
+                                                                            <rect key="frame" x="0.0" y="1" width="15" height="16"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="15" id="nYS-Rh-dWA"/>
                                                                             </constraints>
-                                                                            <state key="normal" image="Thumb Up.png"/>
+                                                                            <state key="normal" image="Thumb Up"/>
                                                                         </button>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KDE-nA-wYs">
-                                                                            <rect key="frame" x="98" y="1" width="19" height="16"/>
+                                                                            <rect key="frame" x="17" y="1" width="19" height="16"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="19" id="24L-Gm-7xg"/>
                                                                             </constraints>
@@ -1620,12 +1618,9 @@
                                                                         <constraint firstAttribute="height" constant="18" id="Llo-5o-Wmt"/>
                                                                         <constraint firstAttribute="bottom" secondItem="XCP-c4-gqC" secondAttribute="bottom" constant="1" id="RxE-lJ-ngv"/>
                                                                         <constraint firstItem="XCP-c4-gqC" firstAttribute="centerY" secondItem="ed5-kQ-xoz" secondAttribute="centerY" constant="0.5" id="YRh-3a-epW"/>
-                                                                        <constraint firstItem="XCP-c4-gqC" firstAttribute="leading" secondItem="ed5-kQ-xoz" secondAttribute="leading" constant="83" id="Ymj-7B-qRd"/>
+                                                                        <constraint firstItem="XCP-c4-gqC" firstAttribute="leading" secondItem="ed5-kQ-xoz" secondAttribute="leading" id="Ymj-7B-qRd"/>
                                                                         <constraint firstItem="KDE-nA-wYs" firstAttribute="top" secondItem="XCP-c4-gqC" secondAttribute="top" id="fJ5-1P-cdq"/>
-                                                                        <constraint firstItem="bPn-r1-N9A" firstAttribute="centerY" secondItem="XCP-c4-gqC" secondAttribute="centerY" constant="-1" id="gui-YJ-9Kw"/>
-                                                                        <constraint firstItem="bPn-r1-N9A" firstAttribute="top" secondItem="ed5-kQ-xoz" secondAttribute="top" constant="1" id="hWr-wF-hqQ"/>
-                                                                        <constraint firstItem="KDE-nA-wYs" firstAttribute="leading" secondItem="XCP-c4-gqC" secondAttribute="trailing" id="heN-ri-SZ9"/>
-                                                                        <constraint firstItem="bPn-r1-N9A" firstAttribute="leading" secondItem="KDE-nA-wYs" secondAttribute="trailing" constant="-117" id="tFY-rM-6d3"/>
+                                                                        <constraint firstItem="KDE-nA-wYs" firstAttribute="leading" secondItem="XCP-c4-gqC" secondAttribute="trailing" constant="2" id="heN-ri-SZ9"/>
                                                                     </constraints>
                                                                 </view>
                                                             </subviews>
@@ -2545,7 +2540,7 @@
         <scene sceneID="kjY-tw-8Vd">
             <objects>
                 <collectionViewController id="J8E-Bc-qtE" customClass="News" customModule="TheLight" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="nM4-ez-y0r">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="nM4-ez-y0r">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -6268,6 +6263,7 @@
         <image name="Commentfilled.png" width="50" height="50"/>
         <image name="CurrentLocation" width="15" height="15"/>
         <image name="Flag.png" width="25" height="25"/>
+        <image name="Thumb Up" width="25" height="25"/>
         <image name="Thumb Up.png" width="25" height="25"/>
         <image name="Upload50.png" width="50" height="50"/>
         <image name="cloud30copy" width="30" height="30"/>
@@ -6277,7 +6273,6 @@
         <image name="iosStar.png" width="12" height="12"/>
         <image name="note30copy" width="30" height="30"/>
         <image name="profile-rabbit-toy" width="300" height="300"/>
-        <image name="profile-rabbit-toy.png" width="300" height="300"/>
         <image name="share" width="225" height="225"/>
         <image name="thumbDown" width="25" height="25"/>
         <image name="thumbUp" width="25" height="25"/>

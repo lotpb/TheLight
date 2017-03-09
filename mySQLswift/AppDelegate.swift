@@ -107,7 +107,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         //locationManager.requestAlwaysAuthorization()
         
         customizeAppearance()
-        setUserNotifications()
+        registerCategories()
+        registerLocal()
         set3DTouch()
         
         return true
@@ -293,14 +294,8 @@ extension AppDelegate {
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
     }
     
-    func setUserNotifications() {
-        
+    func registerLocal() {
         let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        //setup actions categories
-        let action = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: [])
-        let category = UNNotificationCategory(identifier: "myCategory", actions: [action], intentIdentifiers: [], options: [])
-        center.setNotificationCategories([category])
         
         center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in
             if granted {
@@ -310,6 +305,16 @@ extension AppDelegate {
                 center.removeAllPendingNotificationRequests()
             }
         }
+    }
+    
+    func registerCategories() {
+        
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        //setup actions categories
+        let action = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: [])
+        let category = UNNotificationCategory(identifier: "myCategory", actions: [action], intentIdentifiers: [], options: [])
+        center.setNotificationCategories([category])
     }
     
     func set3DTouch() {
@@ -334,14 +339,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     // Schedule Notification Action
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
-        
-        print("Tapped in notification")
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+
         
         if response.actionIdentifier == "remindLater" {
             let newDate = Date(timeInterval: 900, since: Date())
             scheduleNotification(at: newDate)
         }
+        
         completionHandler()
     }
 }

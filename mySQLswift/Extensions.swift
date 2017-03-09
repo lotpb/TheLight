@@ -160,7 +160,7 @@ var searchController: UISearchController!
             static let replysubtitlePad = Font.celltitle18l
             
             static let replytitle = Font.celltitle16b
-            static let replysubtitle = Font.celltitle16r
+            static let replysubtitle = Font.celltitle16l
         }
         
         struct News {
@@ -233,10 +233,16 @@ enum Direction {
 }
 
 
-// MARK: - RemoveWhiteSpace  //EditData
+// MARK: - all RemoveWhiteSpace  //BlogEdit
 
 public extension String {
-    
+    func removingWhitespaces() -> String {
+        return components(separatedBy: .whitespaces).joined()
+    }
+}
+// MARK: - begin and ends RemoveWhiteSpace  //EditData
+
+public extension String {
     func removeWhiteSpace() -> String {
         return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
@@ -251,7 +257,7 @@ public extension UIViewController {
  
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
     
 }
@@ -269,7 +275,7 @@ extension UIImage {
     class  func contentOfURL(link: String) -> UIImage {
         let url = URL.init(string: link)!
         var image = UIImage()
-        do{
+        do {
             let data = try Data.init(contentsOf: url)
             image = UIImage.init(data: data)!
         } catch _ {
@@ -292,29 +298,53 @@ extension UIView {
     }
 }
 
+// MARK: - detect a URL in a String using NSDataDetector
+extension NSRange {
+    //NSRange rather than a Swift string range.
+    func range(for str: String) -> Range<String.Index>? {
+        guard location != NSNotFound else { return nil }
+        
+        guard let fromUTFIndex = str.utf16.index(str.utf16.startIndex, offsetBy: location, limitedBy: str.utf16.endIndex) else { return nil }
+        guard let toUTFIndex = str.utf16.index(fromUTFIndex, offsetBy: length, limitedBy: str.utf16.endIndex) else { return nil }
+        guard let fromIndex = String.Index(fromUTFIndex, within: str) else { return nil }
+        guard let toIndex = String.Index(toUTFIndex, within: str) else { return nil }
+        
+        return fromIndex ..< toIndex
+    }
+}
+
 //declared in CollectionViewCell
 let imageCache = NSCache<NSString, UIImage>()
 
 class CustomImageView: UIImageView {
     
     var imageUrlString: String?
+    
     func loadImageUsingUrlString(urlString: String) {
+        
         imageUrlString = urlString
+        
         let url = URL(string: urlString)
         image = nil
+        
+        
         if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
             self.image = imageFromCache
             return
         }
-        URLSession.shared.dataTask(with: url!, completionHandler: { (data, respones, error) in
+        
+        
+        URLSession.shared.dataTask(with: url!, completionHandler: { [weak self] (data, response, error) in
             if error != nil {
-                print(error as Any)
                 return
             }
+            
+            
+            
             DispatchQueue.main.async(execute: {
                 let imageToCache = UIImage(data: data!)
-                if self.imageUrlString == urlString {
-                    self.image = imageToCache
+                if self?.imageUrlString == urlString {
+                    self?.image = imageToCache
                 }
                 imageCache.setObject(imageToCache!, forKey: urlString as NSString)
             })

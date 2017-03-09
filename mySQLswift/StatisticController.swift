@@ -675,7 +675,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         searchController.hidesNavigationBarDuringPresentation = true
         tableView.tableFooterView = UIView(frame: .zero)
         UISearchBar.appearance().barTintColor = Color.Stat.navColor
-        self.present(searchController, animated: true, completion: nil)
+        self.present(searchController, animated: true)
     }
     
     

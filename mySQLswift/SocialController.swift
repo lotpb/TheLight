@@ -84,7 +84,7 @@ class SocialController: UIViewController, UITextViewDelegate {
                 }
                 
                 // Display the compose view controller.
-                self.present(twitterComposeVC!, animated: true, completion: nil)
+                self.present(twitterComposeVC!, animated: true)
             } else {
                 self.simpleAlert(title: "Alert", message: "You are not logged in to your Twitter account.")
             }
@@ -108,7 +108,7 @@ class SocialController: UIViewController, UITextViewDelegate {
             
             let activityViewController = UIActivityViewController(activityItems: [self.noteTextview.text], applicationActivities: nil)
             activityViewController.excludedActivityTypes = [UIActivityType.mail]
-            self.present(activityViewController, animated: true, completion: nil)
+            self.present(activityViewController, animated: true)
         }
         
         let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action)  in
@@ -119,7 +119,7 @@ class SocialController: UIViewController, UITextViewDelegate {
         actionSheet.addAction(facebookPostAction)
         actionSheet.addAction(moreAction)
         actionSheet.addAction(dismissAction)
-        self.present(actionSheet, animated: true, completion: nil)
+        self.present(actionSheet, animated: true)
     }
 
     // MARK: Custom Functions

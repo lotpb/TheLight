@@ -139,7 +139,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
         activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
         
-        UIApplication.shared.keyWindow?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+        UIApplication.shared.keyWindow?.rootViewController?.present(activityViewController, animated: true)
     }
     
     // MARK: - CollectionView

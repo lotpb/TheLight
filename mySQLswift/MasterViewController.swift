@@ -137,6 +137,14 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
     }
+    /*
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    } */
     
     func refreshData() {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
@@ -184,7 +192,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         if let popoverController = alertController.popoverPresentationController {
             popoverController.barButtonItem = sender as? UIBarButtonItem
         }
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
 
 
@@ -307,14 +315,16 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
                 
                 let vw = UIView()
-                tableView.tableHeaderView = vw
+                vw.backgroundColor = .black
+                //tableView.tableHeaderView = vw
                 
-                photoImage.frame = CGRect(x: 0, y: 0, width: tableView.tableHeaderView!.frame.size.width, height: 145)
+                /*
+                photoImage.frame = CGRect(x: 0, y: 0, width: tableView..frame.size.width, height: 145)
                 vw.addSubview(photoImage)
                 
                 let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
                 visualEffectView.frame = photoImage.bounds
-                photoImage.addSubview(visualEffectView)
+                photoImage.addSubview(visualEffectView) */
                 
                 let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 74, height: 74))
                 myLabel1.numberOfLines = 0
@@ -638,7 +648,7 @@ extension MasterViewController: UISearchBarDelegate {
         definesPresentationContext = true
         searchController.searchBar.barTintColor = .black
         tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true, completion: nil)
+        self.present(searchController, animated: true)
     }
 }
 
