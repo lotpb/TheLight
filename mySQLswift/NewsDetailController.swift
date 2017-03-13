@@ -10,7 +10,7 @@ import UIKit
 import Parse
 
 
-class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewControllerDelegate {
+class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewControllerDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newsImageview: UIImageView!
@@ -114,6 +114,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
     
     func setupImageView() {
         
+        //self.scrollView.delegate = self
         self.scrollView.minimumZoomScale = 1.0
         self.scrollView.maximumZoomScale = 6.0
         
@@ -121,7 +122,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate, UISplitViewCon
             self.newsImageview.image = self.image
         }, completion: nil)
         
-        self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
+        self.newsImageview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.newsImageview.contentMode = .scaleAspectFill //.scaleAspectFill //.scaleAspectFit
         self.newsImageview.clipsToBounds = true
         

@@ -11,7 +11,7 @@ import Firebase
 import Parse
 import Social
 
-class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class Blog: UIViewController {
     
     let searchScope = ["subject", "date", "rating", "postby"]
     
@@ -47,7 +47,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return refreshControl
     }()
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -90,12 +89,6 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.estimatedRowHeight = 110
         self.automaticallyAdjustsScrollViewInsets = false //fix headerview
-        //self.tableView!.sectionHeaderHeight = UITableViewAutomaticDimension;
-        //self.tableView!.estimatedSectionHeaderHeight = 90
-        //self.tableView!.sectionFooterHeight = UITableViewAutomaticDimension;
-        //self.tableView!.estimatedSectionFooterHeight = 0
-        //self.tableView?.contentInset = UIEdgeInsetsMake(-90,0,0,0)
-        //self.tableView?.scrollIndicatorInsets = UIEdgeInsetsMake(-90,0,0,0)
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -123,21 +116,251 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - Table View
     
+    func handleCancel() {
+        dismiss(animated: true, completion: nil)
+    }
+
+    
+    // MARK: - Button
+    
+    func newButton(sender: AnyObject) {
+        
+        isReplyClicked = false
+        self.performSegue(withIdentifier: "blognewSegue", sender: self)
+    }
+    
+    func likeSetButton(sender:UIButton) {
+
+        sender.isSelected = true
+        sender.tintColor = Color.twitterBlue
+        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
+        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
+        
+        let query = PFQuery(className:"Blog")
+        query.whereKey("objectId", equalTo:((_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+            if error == nil {
+                object!.incrementKey("Liked")
+                object!.saveInBackground()
+            }
+        }
+    }
+    
+    func replySetButton(sender:UIButton) {
+ 
+        isReplyClicked = true
+        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
+        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
+        
+        posttoIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
+        userIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
+        self.performSegue(withIdentifier: "blognewSegue", sender: self)
+    }
+    
+    func flagSetButton(_ sender:UIButton) {
+    }
+    
+    // MARK: - NavigationController Hidden
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (self.lastContentOffset > scrollView.contentOffset.y) {
+            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
+        } else {
+            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.lastContentOffset = scrollView.contentOffset.y;
+    }
+    
+    // MARK: - Parse
+
+    func parseData() {
+        
+        let query = PFQuery(className:"Blog")
+        query.limit = 1000
+        query.whereKey("ReplyId", equalTo:NSNull())
+        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.order(byDescending: "createdAt")
+        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            if error == nil {
+                let temp : NSArray = objects! as NSArray
+                self._feedItems = temp.mutableCopy() as! NSMutableArray
+                self.tableView?.reloadData()
+            } else {
+                print("Error9")
+            }
+        }
+        
+        let query1 = PFQuery(className:"Blog")
+        query1.limit = 1000
+        //query1.whereKey("Rating", equalTo:"5")
+        query1.whereKey("Liked", notEqualTo:NSNull())
+        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.order(byDescending: "createdAt")
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            if error == nil {
+                let temp: NSArray = objects! as NSArray
+                self._feedheadItems2 = temp.mutableCopy() as! NSMutableArray
+                self.tableView?.reloadData()
+            } else {
+                print("Error10")
+            }
+        }
+        
+        let query3 = PFUser.query()
+        query3?.limit = 1000
+        query3?.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query3?.order(byDescending: "createdAt")
+        query3?.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            if error == nil {
+                let temp: NSArray = objects! as NSArray
+                self._feedheadItems3 = temp.mutableCopy() as! NSMutableArray
+                self.tableView?.reloadData()
+            } else {
+                print("Error11")
+            }
+        }
+    }
+    
+    // MARK: - AlertController
+    
+    func showShare(sender: UIButton) {
+        
+        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
+        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
+        let socialText = (self._feedItems[indexPath!.row] as AnyObject).value(forKey: "Subject") as? String
+        
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        
+        let tweetAction = UIAlertAction(title: "Share on Twitter", style: UIAlertActionStyle.default) { (action) in
+            
+            if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeTwitter) {
+                let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
+                
+                if socialText!.characters.count <= 140 {
+                    twitterComposeVC?.setInitialText(socialText)
+                } else {
+                    let index = socialText!.characters.index(socialText!.startIndex, offsetBy: 140)
+                    let subText = socialText!.substring(to: index)
+                    twitterComposeVC?.setInitialText("\(subText)")
+                }
+                
+                self.present(twitterComposeVC!, animated: true)
+            } else {
+                self.simpleAlert(title: "Alert", message: "You are not logged in to your Twitter account.")
+            }
+        }
+        
+        let facebookPostAction = UIAlertAction(title: "Share on Facebook", style: UIAlertActionStyle.default) { (action) in
+            
+            if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
+                let vc = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+                vc?.setInitialText(socialText)
+                //vc.add(imageView.image!)
+                vc?.add(URL(string: "http://lotpb.github.io/UnitedWebPage/index.html"))
+                self.present(vc!, animated: true)
+            }
+            else {
+                self.simpleAlert(title: "Alert", message: "You are not connected to your Facebook account.")
+            }
+        }
+        
+        let moreAction = UIAlertAction(title: "More", style: UIAlertActionStyle.default) { (action) in
+            let activityViewController = UIActivityViewController(activityItems: [socialText!], applicationActivities: nil)
+            //activityViewController.excludedActivityTypes = [UIActivityTypeMail]
+            self.present(activityViewController, animated: true)
+        }
+        let followAction = UIAlertAction(title: "Follow", style: .default) { (alert: UIAlertAction!) in
+            NSLog("You pressed button one")
+        }
+        let blockAction = UIAlertAction(title: "Block this Message", style: .default) { (alert: UIAlertAction!) in
+            NSLog("You pressed button two")
+        }
+        let reportAction = UIAlertAction(title: "Report this User", style: .destructive) { (alert: UIAlertAction!) in
+            NSLog("You pressed button one")
+        }
+        let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) in
+        }
+        actionSheet.addAction(followAction)
+        actionSheet.addAction(blockAction)
+        actionSheet.addAction(reportAction)
+        actionSheet.addAction(tweetAction)
+        actionSheet.addAction(facebookPostAction)
+        actionSheet.addAction(moreAction)
+        actionSheet.addAction(dismissAction)
+        
+        if let popover = actionSheet.popoverPresentationController {
+            popover.sourceView = sender
+            actionSheet.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
+            //actionSheet.popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+        }
+        self.present(actionSheet, animated: true)
+    }
+    
+    // MARK: - imgLoadSegue
+    
+    func imgLoadSegue(sender:UITapGestureRecognizer) {
+        titleLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "PostBy") as? String)!
+        self.performSegue(withIdentifier: "bloguserSegue", sender: self)
+    }
+    
+    // MARK: - Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "blogeditSegue" {
+            
+            let VC = segue.destination as? BlogEditController
+            let myIndexPath = self.tableView!.indexPathForSelectedRow!.row
+            VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
+            VC!.msgNo = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgNo") as? String
+            VC!.postby = (_feedItems[myIndexPath] as AnyObject).value(forKey: "PostBy") as? String
+            VC!.subject = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Subject") as? String
+            VC!.msgDate = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgDate") as? String
+            VC!.rating = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Rating") as? String
+            VC!.liked = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Liked") as? Int
+            VC!.replyId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "ReplyId") as? String
+        }
+        if segue.identifier == "blognewSegue" {
+            
+            let VC = segue.destination as? BlogNewController
+            
+            if isReplyClicked == true {
+                VC!.formStatus = "Reply"
+                VC!.textcontentsubject = String(format: "%@", "@\(posttoIndex!.removingWhitespaces()) ")
+                VC!.textcontentpostby = defaults.string(forKey: "usernameKey")
+                VC!.replyId = String(format:"%@", userIndex!)
+            } else {
+                VC!.formStatus = "New"
+                VC!.textcontentpostby = defaults.string(forKey: "usernameKey") //PFUser.current()?.username
+            }
+        }
+        if segue.identifier == "bloguserSegue" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! LeadUserController
+            
+            controller.formController = "Blog"
+            controller.postBy = titleLabel
+            
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+        }
+    }
+    
+}
+extension Blog: UITableViewDataSource {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if tableView == self.tableView {
             return _feedItems.count
         } else {
             return filteredString.count
         }
-    }
-    
-    func handleCancel() {
-        dismiss(animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -174,11 +397,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         
                         UIView.transition(with: (cell.blogImageView)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                             cell.blogImageView?.image = UIImage(data: imageData! as Data)
-                            }, completion: nil)
+                        }, completion: nil)
                     }
                 }
             }
-        } 
+        }
         
         cell.blogImageView?.layer.cornerRadius = (cell.blogImageView?.frame.size.width)! / 2
         cell.blogImageView?.layer.borderColor = UIColor.lightGray.cgColor
@@ -204,7 +427,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else if elapsedTimeInSeconds > secondInDays {
             dateFormatter.dateFormat = "EEE"
         }
-
+        
         if (tableView == self.tableView) {
             
             cell.blogtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
@@ -235,11 +458,11 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.likeButton.tintColor = .lightGray
         cell.likeButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.likeButton.addTarget(self, action: #selector(likeSetButton), for: .touchUpInside)
-
+        
         cell.flagButton.tintColor = .lightGray
         cell.flagButton.setImage(#imageLiteral(resourceName: "Flag").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.flagButton .addTarget(self, action: #selector(flagSetButton), for: .touchUpInside)
-  
+        
         cell.actionBtn.tintColor = .lightGray
         cell.actionBtn.setImage(#imageLiteral(resourceName: "nav_more_icon").withRenderingMode(.alwaysTemplate), for: .normal)
         cell.actionBtn .addTarget(self, action: #selector(showShare), for: .touchUpInside)
@@ -262,8 +485,8 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.replyButton.tintColor = Color.Blog.buttonColor
         }
         
-//---------------------NSDataDetector-----------------------------
-
+        //---------------------NSDataDetector-----------------------------
+        
         let text = (cell.blogsubtitleLabel.text!) as NSString
         let attributedText = NSMutableAttributedString(string: text as String)
         
@@ -292,6 +515,14 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
         //--------------------------------------------------
         
         return cell
+    }
+}
+
+extension Blog: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        self.performSegue(withIdentifier: "blogeditSegue", sender: self)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -366,7 +597,7 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
             separatorLineView3.backgroundColor = Color.Blog.borderColor
             vw.addSubview(separatorLineView3)
-
+            
             return vw
         }
         return nil
@@ -412,248 +643,10 @@ class Blog: UIViewController, UITableViewDelegate, UITableViewDataSource {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
-    
-    // MARK: - Button
-    
-    func newButton(sender: AnyObject) {
-        
-        isReplyClicked = false
-        self.performSegue(withIdentifier: "blognewSegue", sender: self)
-    }
-    
-    func likeSetButton(sender:UIButton) {
-
-        sender.isSelected = true
-        sender.tintColor = Color.twitterBlue
-        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
-        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
-        
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:((_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                object!.incrementKey("Liked")
-                object!.saveInBackground()
-            }
-        }
-    }
-    
-    func replySetButton(sender:UIButton) {
- 
-        isReplyClicked = true
-        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
-        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
-        
-        posttoIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
-        print(indexPath!)
-        print(posttoIndex!)
-        userIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
-        self.performSegue(withIdentifier: "blognewSegue", sender: self)
-    }
-    
-    func flagSetButton(_ sender:UIButton) {
-    }
-    
-    // MARK: - NavigationController Hidden
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (self.lastContentOffset > scrollView.contentOffset.y) {
-            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
-        } else {
-            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
-        }
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        self.lastContentOffset = scrollView.contentOffset.y;
-    }
-    
-    // MARK: - Parse
-
-    func parseData() {
-        
-        let query = PFQuery(className:"Blog")
-        query.limit = 1000
-        query.whereKey("ReplyId", equalTo:NSNull())
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
-            if error == nil {
-                let temp : NSArray = objects! as NSArray
-                self._feedItems = temp.mutableCopy() as! NSMutableArray
-                self.tableView?.reloadData()
-            } else {
-                print("Error9")
-            }
-        }
-        
-        let query1 = PFQuery(className:"Blog")
-        query1.limit = 1000
-        //query1.whereKey("Rating", equalTo:"5")
-        query1.whereKey("Liked", notEqualTo:NSNull())
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedheadItems2 = temp.mutableCopy() as! NSMutableArray
-                self.tableView?.reloadData()
-            } else {
-                print("Error10")
-            }
-        }
-        
-        let query3 = PFUser.query()
-        query3?.limit = 1000
-        query3?.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query3?.order(byDescending: "createdAt")
-        query3?.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedheadItems3 = temp.mutableCopy() as! NSMutableArray
-                self.tableView?.reloadData()
-            } else {
-                print("Error11")
-            }
-        }
-    }
-    
-    // MARK: - AlertController
-    
-    func showShare(sender:UIButton) {
-        
-        let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
-        let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
-        let socialText = (self._feedItems[indexPath!.row] as AnyObject).value(forKey: "Subject") as? String
-        
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-            
-            let tweetAction = UIAlertAction(title: "Share on Twitter", style: UIAlertActionStyle.default) { (action) in
-                
-                if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeTwitter) {
-                    let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
-                    
-                    if socialText!.characters.count <= 140 {
-                        twitterComposeVC?.setInitialText(socialText)
-                    } else {
-                        let index = socialText!.characters.index(socialText!.startIndex, offsetBy: 140)
-                        let subText = socialText!.substring(to: index)
-                        twitterComposeVC?.setInitialText("\(subText)")
-                    }
-                    
-                    self.present(twitterComposeVC!, animated: true)
-                } else {
-                    self.showAlertMessage(message: "You are not logged in to your Twitter account.")
-                }
-            }
-            
-            let facebookPostAction = UIAlertAction(title: "Share on Facebook", style: UIAlertActionStyle.default) { (action) in
-                
-                if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
-                    let vc = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-                    vc?.setInitialText(socialText)
-                    //vc.add(imageView.image!)
-                    vc?.add(URL(string: "http://lotpb.github.io/UnitedWebPage/index.html"))
-                    self.present(vc!, animated: true)
-                }
-                else {
-                    self.showAlertMessage(message: "You are not connected to your Facebook account.")
-                }
-            }
-            
-            let moreAction = UIAlertAction(title: "More", style: UIAlertActionStyle.default) { (action) in
-                
-                let activityViewController = UIActivityViewController(activityItems: [socialText!], applicationActivities: nil)
-                //activityViewController.excludedActivityTypes = [UIActivityTypeMail]
-                self.present(activityViewController, animated: true)
-                
-            }
-            let follow = UIAlertAction(title: "Follow", style: .default) { (alert: UIAlertAction!) in
-                NSLog("You pressed button one")
-            }
-            let block = UIAlertAction(title: "Block this Message", style: .default) { (alert: UIAlertAction!) in
-                NSLog("You pressed button two")
-            }
-            let report = UIAlertAction(title: "Report this User", style: .destructive) { (alert: UIAlertAction!) in
-                NSLog("You pressed button one")
-            }
-            let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) in
-            }
-            actionSheet.addAction(follow)
-            actionSheet.addAction(block)
-            actionSheet.addAction(report)
-            actionSheet.addAction(tweetAction)
-            actionSheet.addAction(facebookPostAction)
-            actionSheet.addAction(moreAction)
-            actionSheet.addAction(dismissAction)
-            
-            self.present(actionSheet, animated: true)
-    }
-    
-    func showAlertMessage(message: String!) {
-        let alertController = UIAlertController(title: "EasyShare", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-        self.present(alertController, animated: true)
-    }
-    
-    // MARK: - imgLoadSegue
-    
-    func imgLoadSegue(sender:UITapGestureRecognizer) {
-        titleLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "PostBy") as? String)!
-        self.performSegue(withIdentifier: "bloguserSegue", sender: self)
-    }
-    
-    // MARK: - Segues
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        self.performSegue(withIdentifier: "blogeditSegue", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "blogeditSegue" {
-            
-            let VC = segue.destination as? BlogEditController
-            let myIndexPath = self.tableView!.indexPathForSelectedRow!.row
-            VC!.objectId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "objectId") as? String
-            VC!.msgNo = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgNo") as? String
-            VC!.postby = (_feedItems[myIndexPath] as AnyObject).value(forKey: "PostBy") as? String
-            VC!.subject = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Subject") as? String
-            VC!.msgDate = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgDate") as? String
-            VC!.rating = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Rating") as? String
-            VC!.liked = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Liked") as? Int
-            VC!.replyId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "ReplyId") as? String
-        }
-        if segue.identifier == "blognewSegue" {
-            
-            let VC = segue.destination as? BlogNewController
-            
-            if isReplyClicked == true {
-                VC!.formStatus = "Reply"
-                VC!.textcontentsubject = String(format: "%@", "@\(posttoIndex!.removingWhitespaces()) ")
-                VC!.textcontentpostby = defaults.string(forKey: "usernameKey")
-                VC!.replyId = String(format:"%@", userIndex!)
-            } else {
-                VC!.formStatus = "New"
-                VC!.textcontentpostby = defaults.string(forKey: "usernameKey") //PFUser.current()?.username
-            }
-        }
-        if segue.identifier == "bloguserSegue" {
-            let controller = (segue.destination as! UINavigationController).topViewController as! LeadUserController
-            
-            controller.formController = "Blog"
-            controller.postBy = titleLabel
-            
-            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            controller.navigationItem.leftItemsSupplementBackButton = true
-        }
-    }
-    
 }
+
     // MARK: - UISearchBar Delegate
 extension Blog: UISearchBarDelegate {
-    
     func searchButton(_ sender: AnyObject) {
         searchController = UISearchController(searchResultsController: resultsController)
         searchController.searchResultsUpdater = self

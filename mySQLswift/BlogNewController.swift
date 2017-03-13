@@ -11,7 +11,7 @@ import Parse
 import UserNotifications
 
 
-class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate {
+class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
     let CharacterLimit = 140
     
@@ -89,17 +89,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
   
     override func viewDidLoad() {
         super.viewDidLoad()
- 
-        self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
-        self.tableView!.tableFooterView = UIView(frame: .zero)
-        self.toolBar!.barTintColor = Color.twitterBlue
-
-        self.imageBlog!.layer.cornerRadius = 5
-        self.imageBlog!.layer.masksToBounds = true
-        self.imageBlog!.contentMode = .scaleAspectFill
-        
-        self.Like!.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
-        self.Like!.setTitleColor(.white, for: .normal)
         
         parseData() //load image
         configureTextView()
@@ -121,6 +110,18 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     }
     
      func setupForm() {
+        
+        self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
+        self.tableView!.tableFooterView = UIView(frame: .zero)
+        self.toolBar!.barTintColor = Color.twitterBlue
+        
+        self.imageBlog!.layer.cornerRadius = 5
+        self.imageBlog!.layer.masksToBounds = true
+        self.imageBlog!.contentMode = .scaleAspectFill
+        
+        self.Like!.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
+        self.Like!.setTitleColor(.white, for: .normal)
+        
         self.subject?.textContainerInset = UIEdgeInsets(top: -01, left: 0, bottom: 0, right: 0)
         
         if ((self.formStatus == "New") || (self.formStatus == "Reply")) {
@@ -181,7 +182,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     // MARK: - textView delegate
     
     func textViewDidBeginEditing(_ textView:UITextView) {
- 
+        
         if subject!.text.isEmpty {
             self.placeholderlabel?.isHidden = true
         }
@@ -190,19 +191,21 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         
         navigationItem.setRightBarButton(doneBarButtonItem, animated: true)
         
-        //Change font and color text in TextView
-        let attrStr = NSMutableAttributedString(string:(self.subject?.text)!)
-        let inputLength = attrStr.string.characters.count
-        let searchString = String(format: "%@", "@\(self.postby!.removingWhitespaces())")
-        let searchLength = searchString.characters.count
-        var range = NSRange(location: 0, length: attrStr.length)
-        while (range.location != NSNotFound) {
-            range = (attrStr.string as NSString).range(of: searchString, options: [], range: range)
-            if (range.location != NSNotFound) {
-                attrStr.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: NSRange(location: range.location, length: searchLength))
-                attrStr.addAttribute(NSFontAttributeName, value: Font.Blog.cellsubject, range: NSRange(location: 0, length: (inputLength)))
-                range = NSRange(location: range.location + range.length, length: inputLength - (range.location + range.length))
-                self.subject?.attributedText = attrStr
+        if (self.formStatus == "Reply") {
+            //Change font and color @links in TextView
+            let attrStr = NSMutableAttributedString(string:(self.subject?.text)!)
+            let inputLength = attrStr.string.characters.count
+            let searchString = String(format: "%@", "\(self.textcontentsubject!.removingWhitespaces())")
+            let searchLength = searchString.characters.count
+            var range = NSRange(location: 0, length: attrStr.length)
+            while (range.location != NSNotFound) {
+                range = (attrStr.string as NSString).range(of: searchString, options: [], range: range)
+                if (range.location != NSNotFound) {
+                    attrStr.addAttribute(NSForegroundColorAttributeName, value: Color.Blog.weblinkText, range: NSRange(location: range.location, length: searchLength))
+                    attrStr.addAttribute(NSFontAttributeName, value: Font.Blog.cellsubject, range: NSRange(location: 0, length: (inputLength)))
+                    range = NSRange(location: range.location + range.length, length: inputLength - (range.location + range.length))
+                    self.subject?.attributedText = attrStr
+                }
             }
         }
     }
@@ -235,8 +238,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func configureTextView() {
         
         subject?.delegate = self
+        subject?.isSelectable = true //added
         subject?.autocorrectionType = .yes
-        subject?.dataDetectorTypes = .all
+        subject?.dataDetectorTypes = .all //.link
         self.characterCountLabel!.text = ""
         self.characterCountLabel!.textColor = .gray
         
@@ -247,84 +251,25 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         }
     }
     
+    // MARK: - Buttons
     
-    // MARK: - TableView
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+    @IBAction func like(sender:UIButton) {
+        
+        if(self.rating == "4") {
+            self.rating = "5"
+            self.liked = 1
+        } else {
+            self.rating = "4"
+            self.liked = 0
+        }
+        self.tableView!.reloadData()
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func doneBarButtonItemClicked() {
+        // Dismiss the keyboard by removing it as the first responder.
+        self.subject?.resignFirstResponder()
         
-        if hasInlineDatePicker() {
-  
-            return dataArray.count + 1
-        }
-        return dataArray.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        var cell: UITableViewCell!
-        
-        var cellID = kTitleCellID
-        
-        if indexPathHasPicker(indexPath) {
-            // the indexPath is the one containing the inline date picker
-            cellID = kDatePickerCellID     // the current/opened date picker cell
-        } else if indexPathHasDate(indexPath) {
-            // the indexPath is one that contains the date information
-            cellID = kDateCellID       // the start/end date cells
-        }
-        
-        cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        
-        if indexPath.row == 0 {
-            
-            self.activeImage.frame = CGRect(x: tableView.frame.width-35, y: 10, width: 18, height: 22)
-            
-            if (self.liked == nil || self.liked == 0) {
-                self.Like!.tintColor = .white
-                self.Like!.setTitle(" Like", for: .normal)
-                self.activeImage.image = #imageLiteral(resourceName: "iosStarNA")
-                
-            } else {
-                self.Like!.tintColor = Color.Blog.buttonColor
-                self.Like!.setTitle(" Likes \(liked!)", for: .normal)
-                self.activeImage.image = #imageLiteral(resourceName: "iosStar")
-            }
-            cell.contentView.addSubview(self.activeImage)
-            cell.selectionStyle = .none
-        }
-        
-        var modelRow = indexPath.row
-        if (datePickerIndexPath != nil && (datePickerIndexPath?.row)! <= indexPath.row) {
-            modelRow -= 1
-        }
-        
-        let itemData = dataArray[modelRow]
-
-        if cellID == kDateCellID {
-            
-            let dateCell : String
-            if ((self.formStatus == "None")) {
-                dateCell = self.msgDate!
-            } else {
-                dateCell = self.dateFormatter.string(from: itemData[kDateKey] as! Date)
-            }
-            
-            cell.textLabel?.text = itemData[kTitleKey] as? String
-            cell.detailTextLabel?.text = dateCell //self.dateFormatter.string(from: itemData[kDateKey] as! Date)
-            
-        } else if cellID == kTitleCellID {
-            
-            cell.textLabel!.text = itemData[kTitleKey] as? String
-            cell.detailTextLabel?.text = itemData[kDateKey] as! String?
-            cell.selectionStyle = .none
-            
-        }
-        
-        return cell
+        navigationItem.setRightBarButton(nil, animated: true)
     }
 
 //------------------------------------------------------------------
@@ -333,16 +278,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func localeChanged(_ notif: Notification) {
 
         self.tableView?.reloadData()
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
-    {
-        let cell = tableView.cellForRow(at: indexPath)
-        if cell?.reuseIdentifier == kDateCellID {
-            displayInlineDatePickerForRowAtIndexPath(indexPath)
-        } else {
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
@@ -468,8 +403,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         //dateFormatter.timeZone = TimeZone.current
         let strDate = dateFormatter.string(from: (targetedDatePicker.date))
         self.msgDate = strDate
-        
     }
+//------------------------------------------------------------------
     
     // MARK: - Parse
     
@@ -486,29 +421,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                     }
                 }
             }
-        } 
-
-    }
-    
-    // MARK: - Buttons
-    
-    @IBAction func like(sender:UIButton) {
-
-        if(self.rating == "4") {
-            self.rating = "5"
-            self.liked = 1
-        } else {
-            self.rating = "4"
-            self.liked = 0
         }
-        self.tableView!.reloadData()
-    }
-    
-    func doneBarButtonItemClicked() {
-        // Dismiss the keyboard by removing it as the first responder.
-        self.subject?.resignFirstResponder()
-        
-        navigationItem.setRightBarButton(nil, animated: true)
     }
     
     // MARK: - Notification
@@ -600,3 +513,96 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     }
     
 }
+extension BlogNewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if hasInlineDatePicker() {
+            
+            return dataArray.count + 1
+        }
+        return dataArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        var cell: UITableViewCell!
+        
+        var cellID = kTitleCellID
+        
+        if indexPathHasPicker(indexPath) {
+            // the indexPath is the one containing the inline date picker
+            cellID = kDatePickerCellID     // the current/opened date picker cell
+        } else if indexPathHasDate(indexPath) {
+            // the indexPath is one that contains the date information
+            cellID = kDateCellID       // the start/end date cells
+        }
+        
+        cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        
+        if indexPath.row == 0 {
+            
+            self.activeImage.frame = CGRect(x: tableView.frame.width-35, y: 10, width: 18, height: 22)
+            
+            if (self.liked == nil || self.liked == 0) {
+                self.Like!.tintColor = .white
+                self.Like!.setTitle(" Like", for: .normal)
+                self.activeImage.image = #imageLiteral(resourceName: "iosStarNA")
+                
+            } else {
+                self.Like!.tintColor = Color.Blog.buttonColor
+                self.Like!.setTitle(" Likes \(liked!)", for: .normal)
+                self.activeImage.image = #imageLiteral(resourceName: "iosStar")
+            }
+            cell.contentView.addSubview(self.activeImage)
+            cell.selectionStyle = .none
+        }
+        
+        var modelRow = indexPath.row
+        if (datePickerIndexPath != nil && (datePickerIndexPath?.row)! <= indexPath.row) {
+            modelRow -= 1
+        }
+        
+        let itemData = dataArray[modelRow]
+        
+        if cellID == kDateCellID {
+            
+            let dateCell : String
+            if ((self.formStatus == "None")) {
+                dateCell = self.msgDate!
+            } else {
+                dateCell = self.dateFormatter.string(from: itemData[kDateKey] as! Date)
+            }
+            
+            cell.textLabel?.text = itemData[kTitleKey] as? String
+            cell.detailTextLabel?.text = dateCell //self.dateFormatter.string(from: itemData[kDateKey] as! Date)
+            
+        } else if cellID == kTitleCellID {
+            
+            cell.textLabel!.text = itemData[kTitleKey] as? String
+            cell.detailTextLabel?.text = itemData[kDateKey] as! String?
+            cell.selectionStyle = .none
+            
+        }
+        
+        return cell
+    }
+}
+
+extension BlogNewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        let cell = tableView.cellForRow(at: indexPath)
+        if cell?.reuseIdentifier == kDateCellID {
+            displayInlineDatePickerForRowAtIndexPath(indexPath)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+}
+

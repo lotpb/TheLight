@@ -339,7 +339,6 @@ class NotificationController: UIViewController {
         let buttonCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action)  in
             
         }
-        
         alertController.addAction(buttonSix)
         alertController.addAction(newBog)
         alertController.addAction(heyYou)

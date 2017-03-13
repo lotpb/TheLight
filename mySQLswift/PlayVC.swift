@@ -479,7 +479,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         if let popover = activityViewController.popoverPresentationController {
             popover.sourceView = sender
             activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
-            activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
+            //activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
         }
         self.present(activityViewController, animated: true)
     }

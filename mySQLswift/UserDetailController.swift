@@ -176,7 +176,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
             self.mapView!.addAnnotation(annotation)
             self.mapView!.showsUserLocation = true
         } catch {
-            print("")
+            print("Error")
         }
     }
     

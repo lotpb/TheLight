@@ -6,9 +6,7 @@
 //  Copyright © 2015 Peter Balsamo. All rights reserved.
 //
 
-
 import UIKit
-
 
 class CustomTableCell: UITableViewCell {
     
@@ -82,23 +80,6 @@ class CustomTableCell: UITableViewCell {
     @IBOutlet weak var msgDateLabel: UILabel!
     @IBOutlet weak var blogImageView: UIImageView!
     
-    @IBOutlet weak var replytitleLabel: UILabel!
-    @IBOutlet weak var replysubtitleLabel: UILabel!
-    @IBOutlet weak var replynumLabel: UILabel!
-    @IBOutlet weak var replydateLabel: UILabel!
-    @IBOutlet weak var replylikeButton: UIButton!
-    @IBOutlet weak var replyImageView: UIImageView!
-    
-    /*
-     lazy var replylikeButton: UIButton = {
-     let button = UIButton()
-     button.tintColor = .lightGray
-     button.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
-     button.isHidden = false
-     button.addTarget(self, action: #selector(BlogEditController.likeButton), for: .touchUpInside)
-     return button
-     }() */
-    
     // BlogController
     @IBOutlet weak var blogtitleLabel: UILabel!
     @IBOutlet weak var blogsubtitleLabel: UILabel!
@@ -113,48 +94,5 @@ class CustomTableCell: UITableViewCell {
     
     @IBOutlet weak var buttonView: UIView!
     @IBOutlet weak var blog2ImageView: UIImageView!
-    
+}
 
-}
-/*
-class LeadCell: CustomTableCell {
-    
-    let myLabel1: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Color.Lead.labelColor1
-        //label.text = ""
-        label.textColor = .white
-        label.font = Font.celltitle14m
-        label.layer.masksToBounds = true
-        return label
-    }()
-    
-    let myLabel2: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = .white
-        //label.text = ""
-        label.textColor = .black
-        label.textAlignment = .center
-        label.font = Font.celltitle14m
-        label.layer.masksToBounds = true
-        return label
-    }()
-    
-    func setupViews() {
-        addSubview(myLabel1)
-        addSubview(myLabel2)
-        
-        myLabel1.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        myLabel1.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 20).isActive = true
-        myLabel1.widthAnchor.constraint(equalToConstant: 95).isActive = true
-        myLabel1.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        
-        myLabel2.topAnchor.constraint(equalTo: self.topAnchor, constant: 33).isActive = true
-        myLabel2.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 20).isActive = true
-        myLabel2.widthAnchor.constraint(equalToConstant: 95).isActive = true
-        myLabel2.heightAnchor.constraint(equalToConstant: 33).isActive = true
-    }
-}
-*/

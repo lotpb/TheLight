@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class BlogEditController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class BlogEditController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var listTableView: UITableView?
@@ -17,11 +17,12 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var Like: UIButton?
     @IBOutlet weak var update: UIButton?
     
-    
     var _feedItems : NSMutableArray = NSMutableArray()
     var _feedItems1 : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
     var objects = [AnyObject]()
+    
+    //var deleteKey : String?
  
     var objectId : String?
     var msgNo : String?
@@ -59,6 +60,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         setupForm()
         parseData()
         self.tableView!.addSubview(self.refreshControl)
+        self.listTableView!.register(BlogEditTableCell.self, forCellReuseIdentifier: "ReplyCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -125,7 +127,291 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         self.refreshControl.endRefreshing()
     }
 
-    // MARK: - Table View
+    // MARK: - Button
+    
+    @IBAction func updateButton(sender: UIButton) {
+        
+        self.performSegue(withIdentifier: "blogeditSegue", sender: self)
+    }
+    
+    func likeButton(sender: UIButton) {
+        
+        sender.isSelected = true
+        sender.tintColor = Color.twitterBlue
+        let hitPoint = sender.convert(CGPoint.zero, to: self.listTableView)
+        let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
+        
+        let query = PFQuery(className:"Blog")
+        query.whereKey("objectId", equalTo: ((_feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+            if error == nil {
+                object!.incrementKey("Liked")
+                object!.saveInBackground()
+            }
+        }
+    }
+    
+    func shareButton(_ sender: AnyObject) {
+        
+        let activityViewController = UIActivityViewController (
+            activityItems: [self.subject! as String],
+            applicationActivities: nil)
+        
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.barButtonItem = sender as? UIBarButtonItem
+        }
+        
+        self.present(activityViewController, animated: true)
+    }
+    
+    func deleteButton(sender: UIButton) {
+        
+        let query = PFQuery(className:"Blog")
+        query.whereKey("objectId", equalTo:self.objectId!)
+        
+        let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
+        
+        let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
+            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+                if error == nil {
+                    for object in objects! {
+                        object.deleteInBackground()
+                        //self.deincrementComment()
+                        let _ = self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            })
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+        return
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(destroyAction)
+        self.present(alertController, animated: true) {
+        }
+    }
+    
+    /*
+     func deincrementComment() {
+     let query = PFQuery(className:"Blog")
+     query.whereKey("objectId", equalTo: self.deleteKey!)
+     query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+     if error == nil {
+     object?.incrementKey("CommentCount", byAmount: -1)
+     object?.saveInBackground()
+     }
+     }
+     } */
+    
+    // MARK: - AlertController
+    
+    func replyShare(sender: UIButton) {
+        
+        let hitPoint = sender.convert(CGPoint.zero, to: self.listTableView)
+        let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
+        //self.deleteKey = self.objectId
+        
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        
+        let replyAction = UIAlertAction(title: "Reply", style: .default) { (alert: UIAlertAction!) in
+            
+        }
+        let editAction = UIAlertAction(title: "Edit", style: .default) { (alert: UIAlertAction!) in
+            self.objectId = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
+            self.msgNo = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "MsgNo") as? String
+            self.postby = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
+            self.subject = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Subject") as? String
+            self.msgDate = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "MsgDate") as? String
+            self.rating = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Rating") as? String
+            self.liked = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Liked") as? Int
+            self.replyId = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "ReplyId") as? String
+            
+            self.performSegue(withIdentifier: "blogeditSegue", sender: self)
+        }
+        let copyAction = UIAlertAction(title: "Copy", style: .default) { (alert: UIAlertAction!) in
+            
+        }
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alert: UIAlertAction!) in
+            let query = PFQuery(className:"Blog")
+            query.whereKey("objectId", equalTo:((self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+                if error == nil {
+                    for object in objects! {
+                        object.deleteInBackground()
+                        self.listTableView?.reloadData()
+                    }
+                }
+            })
+        }
+        
+        let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) in
+        }
+        actionSheet.addAction(replyAction)
+        actionSheet.addAction(editAction)
+        actionSheet.addAction(copyAction)
+        actionSheet.addAction(deleteAction)
+        actionSheet.addAction(dismissAction)
+        
+        if let popover = actionSheet.popoverPresentationController {
+            popover.sourceView = sender
+            actionSheet.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
+            //actionSheet.popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+        }
+        self.present(actionSheet, animated: true)
+    }
+    
+    // MARK: - Parse
+    
+    func parseData() {
+        
+        let query1 = PFQuery(className:"Blog")
+        query1.whereKey("ReplyId", equalTo:self.objectId!)
+        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            if error == nil {
+                let temp: NSArray = objects! as NSArray
+                self._feedItems1 = temp.mutableCopy() as! NSMutableArray
+                self.listTableView!.reloadData()
+            } else {
+                print("Error")
+            }
+        }
+    }
+
+    // MARK: - Navigation
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "blogeditSegue" {
+            let VC = segue.destination as? BlogNewController
+            VC!.formStatus = "None"
+            VC!.textcontentobjectId = self.objectId
+            VC!.textcontentmsgNo = self.msgNo
+            VC!.textcontentpostby = self.postby
+            VC!.textcontentsubject = self.subject
+            VC!.textcontentdate = self.msgDate
+            VC!.textcontentrating = self.rating
+            VC!.liked = self.liked
+        }
+    }
+}
+
+class BlogEditTableCell: UITableViewCell {
+    
+        override init(style: UITableViewCellStyle, reuseIdentifier: String?){
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
+            self.setupViews()
+        }
+    
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        let replyImageView: CustomImageView = {
+            let imageView = CustomImageView()
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.image = UIImage(named: "")
+            imageView.layer.cornerRadius = 22
+            imageView.layer.masksToBounds = true
+            imageView.contentMode = .scaleAspectFill
+            imageView.layer.borderColor = UIColor.lightGray.cgColor
+            imageView.layer.borderWidth = 0.5
+            imageView.isUserInteractionEnabled = true
+            return imageView
+        }()
+        
+        let replytitleLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = ""
+            return label
+        }()
+        
+        let replysubtitleLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = ""
+            label.textColor = .lightGray
+            label.numberOfLines = 4
+            return label
+        }()
+        
+        let replylikeBtn: UIButton = {
+            let button = UIButton(type: .system)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.isUserInteractionEnabled = true
+            button.tintColor = .lightGray
+            button.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
+            return button
+        }()
+        
+        let replyactionBtn: UIButton = {
+            let button = UIButton()
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.tintColor = .lightGray
+            button.setImage(#imageLiteral(resourceName: "nav_more_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+            return button
+        }()
+        
+        let replylikeLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "10"
+            label.textColor = .blue
+            return label
+        }()
+        
+        let replydateLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "Uploaded by:"
+            return label
+        }()
+        
+    func setupViews() {
+        
+        addSubview(replyImageView)
+        replyImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
+        replyImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+        replyImageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        replyImageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        addSubview(replytitleLabel)
+        replytitleLabel.topAnchor.constraint(equalTo: replyImageView.topAnchor, constant: 0).isActive = true
+        replytitleLabel.leftAnchor.constraint(equalTo: replyImageView.rightAnchor, constant: 10).isActive = true
+        replytitleLabel.heightAnchor.constraint(equalToConstant: 21).isActive = true
+        
+        addSubview(replyactionBtn)
+        replyactionBtn.topAnchor.constraint(equalTo: replyImageView.topAnchor, constant: 2).isActive = true
+        replyactionBtn.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
+        replyactionBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        replyactionBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        addSubview(replysubtitleLabel)
+        replysubtitleLabel.topAnchor.constraint(equalTo: replytitleLabel.bottomAnchor, constant: 0).isActive = true
+        replysubtitleLabel.leftAnchor.constraint(equalTo: replyImageView.rightAnchor, constant: 10).isActive = true
+        replysubtitleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
+        
+        addSubview(replylikeBtn)
+        replylikeBtn.topAnchor.constraint(equalTo: replysubtitleLabel.bottomAnchor, constant: 0).isActive = true
+        replylikeBtn.leftAnchor.constraint(equalTo: replyImageView.rightAnchor, constant: 10).isActive = true
+        replylikeBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        replylikeBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        addSubview(replylikeLabel)
+        replylikeLabel.topAnchor.constraint(equalTo: replysubtitleLabel.bottomAnchor, constant: 0).isActive = true
+        replylikeLabel.leftAnchor.constraint(equalTo: replylikeBtn.rightAnchor, constant: 0).isActive = true
+        replylikeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        addSubview(replydateLabel)
+        replydateLabel.topAnchor.constraint(equalTo: replysubtitleLabel.bottomAnchor, constant: 0).isActive = true
+        replydateLabel.leftAnchor.constraint(equalTo: replylikeLabel.rightAnchor, constant: 6).isActive = true
+        replydateLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        replydateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
+    }
+}
+extension BlogEditController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
@@ -187,7 +473,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             cell.subtitleLabel!.text = self.subject
             cell.msgDateLabel.text = dateFormatter.string(from: (date) as Date)
             
-//---------------------NSDataDetector 1 of 2-----------------------------
+            //---------------------NSDataDetector 1 of 2-----------------------------
             
             let text = (self.subject!) as NSString
             let attributedText = NSMutableAttributedString(string: text as String)
@@ -213,14 +499,14 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             }
             
             cell.subtitleLabel!.attributedText = attributedText
-
-//--------------------------------------------------
+            
+            //--------------------------------------------------
             
             return cell
         }
         else {
-//-------------------listViewTable--------------
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
+            //-------------------listViewTable--------------
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as? BlogEditTableCell else { fatalError("Unexpected Index Path") }
             
             cell.selectionStyle = UITableViewCellSelectionStyle.none
             cell.replydateLabel.textColor = .gray
@@ -233,7 +519,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
                         imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
-                            cell.replyImageView?.image = UIImage(data: imageData!)
+                            cell.replyImageView.image = UIImage(data: imageData!)
                         }
                     }
                 }
@@ -241,41 +527,38 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 
-                cell.replytitleLabel!.font = Font.BlogEdit.replytitlePad
-                cell.replysubtitleLabel!.font = Font.BlogEdit.replysubtitlePad
-                cell.replynumLabel!.font = Font.BlogEdit.replytitlePad
-                cell.replydateLabel!.font = Font.BlogEdit.replysubtitlePad
+                cell.replytitleLabel.font = Font.BlogEdit.replytitlePad
+                cell.replysubtitleLabel.font = Font.BlogEdit.replysubtitlePad
+                cell.replylikeLabel.font = Font.BlogEdit.replytitlePad
+                cell.replydateLabel.font = Font.BlogEdit.replysubtitlePad
                 
             } else {
                 
-                cell.replytitleLabel!.font = Font.BlogEdit.replytitle
-                cell.replysubtitleLabel!.font = Font.BlogEdit.replysubtitle
-                cell.replynumLabel.font = Font.BlogEdit.replytitle
+                cell.replytitleLabel.font = Font.BlogEdit.replytitle
+                cell.replysubtitleLabel.font = Font.BlogEdit.replysubtitle
+                cell.replylikeLabel.font = Font.BlogEdit.replytitle
                 cell.replydateLabel.font = Font.BlogEdit.replysubtitle
             }
             
-            cell.replytitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
-            cell.replysubtitleLabel.numberOfLines = 4
-            cell.replysubtitleLabel!.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
-            
-            cell.replylikeButton.tintColor = .lightGray
-            cell.replylikeButton.setImage(#imageLiteral(resourceName: "Thumb Up").withRenderingMode(.alwaysTemplate), for: .normal)
-            cell.replylikeButton.addTarget(self, action: #selector(likeButton), for: .touchUpInside)
+            cell.replytitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
+            cell.replysubtitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
+            cell.replylikeBtn.addTarget(self, action: #selector(likeButton), for: .touchUpInside)
+            cell.replyactionBtn.addTarget(self, action: #selector(replyShare), for: .touchUpInside)
             
             var Liked:Int? = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Liked") as? Int
             if Liked == nil { Liked = 0 }
-            cell.replynumLabel!.text = "\(Liked!)"
+            cell.replylikeLabel.text = "\(Liked!)"
             
             let date1 = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
             let date2 = Date()
             let calendar = Calendar.current
             let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
-            cell.replydateLabel!.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
+            cell.replydateLabel.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
             
-            if !(cell.replynumLabel.text! == "0") {
-                cell.replynumLabel.textColor = Color.twitterBlue
+            if !(cell.replylikeLabel.text! == "0") {
+                cell.replylikeLabel.textColor = Color.twitterBlue
             } else {
-                cell.replynumLabel.text! = ""
+                cell.replylikeLabel.text! = ""
             }
             
             //---------------------NSDataDetector 2 of 2-----------------------------
@@ -283,7 +566,7 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             let text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as! NSString
             let attributedText = NSMutableAttributedString(string: text as String)
             let tintedRange1 = [NSForegroundColorAttributeName: Color.Blog.weblinkText]
-
+            
             let textName = String(format: "%@", "@\(self.postby!.removingWhitespaces())")
             attributedText.addAttributes(tintedRange1, range: text.range(of: textName))
             
@@ -300,11 +583,14 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
             cell.replysubtitleLabel.attributedText = attributedText
             
             //--------------------------------------------------
-
+            
             return cell
         } 
     }
+}
 
+extension BlogEditController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
@@ -317,106 +603,5 @@ class BlogEditController: UIViewController, UITableViewDelegate, UITableViewData
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
-    }
-    
-    // MARK: - Button
-    
-    @IBAction func updateButton(sender: UIButton) {
-        
-        self.performSegue(withIdentifier: "blogeditSegue", sender: self)
-    }
-    
-    func likeButton(sender:UIButton) {
-        
-        sender.isSelected = true
-        sender.tintColor = Color.twitterBlue
-        let hitPoint = sender.convert(CGPoint.zero, to: self.listTableView)
-        let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
-        
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:((_feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                object!.incrementKey("Liked")
-                object!.saveInBackground()
-            }
-        }
-    }
-    
-    func shareButton(_ sender: AnyObject) {
-        
-        let activityViewController = UIActivityViewController (
-            activityItems: [self.subject! as String],
-            applicationActivities: nil)
-        
-        if let popoverController = activityViewController.popoverPresentationController {
-            popoverController.barButtonItem = sender as? UIBarButtonItem
-        }
-        
-        self.present(activityViewController, animated: true)
-    }
-    
-    func deleteButton(sender: UIButton) {
-        
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:self.objectId!)
-        
-        let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
-        
-        let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
-                if error == nil {
-                    for object in objects! {
-                        object.deleteInBackground()
-                        let _ = self.navigationController?.popViewController(animated: true)
-                    }
-                }
-            })
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-        return
-        }
-        alertController.addAction(cancelAction)
-        alertController.addAction(destroyAction)
-        self.present(alertController, animated: true) {
-        }
-    }
-    
-    // MARK: - Parse
-    
-    func parseData() {
-        
-        let query1 = PFQuery(className:"Blog")
-        query1.whereKey("ReplyId", equalTo:self.objectId!)
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedItems1 = temp.mutableCopy() as! NSMutableArray
-                self.listTableView!.reloadData()
-            } else {
-                print("Error")
-            }
-        }
-    }
-
-    // MARK: - Navigation
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "blogeditSegue" {
-            
-            let VC = segue.destination as? BlogNewController
-            VC!.formStatus = "None"
-            VC!.textcontentobjectId = self.objectId
-            VC!.textcontentmsgNo = self.msgNo
-            VC!.textcontentpostby = self.postby
-            VC!.textcontentsubject = self.subject
-            VC!.textcontentdate = self.msgDate
-            VC!.textcontentrating = self.rating
-            VC!.liked = self.liked
-        }
-        
     }
 }
