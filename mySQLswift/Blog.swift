@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+//import Firebase
 import Parse
 import Social
 
@@ -17,10 +17,17 @@ class Blog: UIViewController {
     
     @IBOutlet weak var tableView: UITableView?
 
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedheadItems2 : NSMutableArray = NSMutableArray()
-    var _feedheadItems3 : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedheadItems2 = NSMutableArray()
+    var _feedheadItems3 = NSMutableArray()
+    var filteredString = NSMutableArray()
+    
+    var searchController: UISearchController!
+    var resultsController: UITableViewController!
+    var foundUsers = [String]()
+    
+    //var vw = UIView()
+    let header = UIView()
     
     var buttonView: UIView?
     var likeButton: UIButton?
@@ -29,10 +36,6 @@ class Blog: UIViewController {
     var userIndex: String?
     var titleLabel = String()
     var defaults = UserDefaults.standard
-    
-    var searchController: UISearchController!
-    var resultsController: UITableViewController!
-    var foundUsers = [String]()
     
     // MARK: NavigationController Hidden
     var lastContentOffset: CGFloat = 0.0
@@ -55,7 +58,12 @@ class Blog: UIViewController {
         setupTableView()
         self.tableView!.addSubview(self.refreshControl)
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        refreshData(self)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // MARK: NavigationController Hidden
@@ -63,12 +71,7 @@ class Blog: UIViewController {
         
         setupNavigationBarItems()
         setupTwitterNavigationBarItems()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
-        refreshData(self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -85,10 +88,15 @@ class Blog: UIViewController {
         
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
-        self.tableView!.backgroundColor =  UIColor(white:0.90, alpha:1.0)
-        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.backgroundColor = .clear //UIColor(white:0.90, alpha:1.0)
         self.tableView!.estimatedRowHeight = 110
-        self.automaticallyAdjustsScrollViewInsets = false //fix headerview
+        self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.tableFooterView = UIView(frame: .zero)
+        // MARK: - TableHeader
+        self.automaticallyAdjustsScrollViewInsets = false //fix
+        header.backgroundColor = Color.Blog.navColor
+        //header.frame = CGRect(x: 0, y: 0, width: (tableView?.frame.width)!, height: 90)
+        //self.tableView!.tableHeaderView = header
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -104,6 +112,20 @@ class Blog: UIViewController {
         self.navigationController?.setNavigationBarHidden(state, animated: true)
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (self.lastContentOffset > scrollView.contentOffset.y) {
+            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
+            self.tableView!.tableHeaderView = nil
+        } else {
+            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
+            self.tableView!.tableHeaderView = header
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.lastContentOffset = scrollView.contentOffset.y
+    }
+    
     
     // MARK: - refresh
     
@@ -112,14 +134,6 @@ class Blog: UIViewController {
         //self.tableView.reloadData()
         self.refreshControl.endRefreshing()
     }
-    
-    
-    // MARK: - Table View
-    
-    func handleCancel() {
-        dismiss(animated: true, completion: nil)
-    }
-
     
     // MARK: - Button
     
@@ -158,20 +172,6 @@ class Blog: UIViewController {
     }
     
     func flagSetButton(_ sender:UIButton) {
-    }
-    
-    // MARK: - NavigationController Hidden
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (self.lastContentOffset > scrollView.contentOffset.y) {
-            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
-        } else {
-            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
-        }
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        self.lastContentOffset = scrollView.contentOffset.y;
     }
     
     // MARK: - Parse
@@ -241,6 +241,8 @@ class Blog: UIViewController {
                 
                 if socialText!.characters.count <= 140 {
                     twitterComposeVC?.setInitialText(socialText)
+                    //twitterComposeVC?.add(imageView.image)
+                    twitterComposeVC?.add(URL(string: "http://lotpb.github.io/UnitedWebPage/index.html"))
                 } else {
                     let index = socialText!.characters.index(socialText!.startIndex, offsetBy: 140)
                     let subText = socialText!.substring(to: index)
@@ -524,83 +526,73 @@ extension Blog: UITableViewDelegate {
         
         self.performSegue(withIdentifier: "blogeditSegue", sender: self)
     }
-    
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
+
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
                 return 90.0
             } else {
-                return 0.0
+                return CGFloat.leastNormalMagnitude //0.0
             }
-        } else {
-            return 0
-        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if section == 0 {
-            let vw = UIView()
-            vw.backgroundColor = Color.Blog.navColor
-            //tableView.tableHeaderView = vw
-            
-            let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
-            myLabel1.numberOfLines = 0
-            myLabel1.backgroundColor = .white
-            myLabel1.textColor = Color.goldColor
-            myLabel1.textAlignment = .center
-            myLabel1.text = String(format: "%@%d", "Blog\n", _feedItems.count)
-            myLabel1.font = Font.celltitle14m
-            myLabel1.layer.cornerRadius = 25.0
-            myLabel1.layer.borderColor = Color.Blog.borderColor.cgColor
-            myLabel1.layer.borderWidth = 1
-            myLabel1.layer.masksToBounds = true
-            myLabel1.isUserInteractionEnabled = true
-            vw.addSubview(myLabel1)
-            
-            let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
-            separatorLineView1.backgroundColor = Color.Blog.borderColor
-            vw.addSubview(separatorLineView1)
-            
-            let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
-            myLabel2.numberOfLines = 0
-            myLabel2.backgroundColor = .white
-            myLabel2.textColor = Color.goldColor
-            myLabel2.textAlignment = .center
-            myLabel2.text = String(format: "%@%d", "Likes\n", _feedheadItems2.count)
-            myLabel2.font = Font.celltitle14m
-            myLabel2.layer.cornerRadius = 25.0
-            myLabel2.layer.borderColor = Color.Blog.borderColor.cgColor
-            myLabel2.layer.borderWidth = 1
-            myLabel2.layer.masksToBounds = true
-            myLabel2.isUserInteractionEnabled = true
-            vw.addSubview(myLabel2)
-            
-            let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
-            separatorLineView2.backgroundColor = Color.Blog.borderColor
-            vw.addSubview(separatorLineView2)
-            
-            let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
-            myLabel3.numberOfLines = 0
-            myLabel3.backgroundColor = .white
-            myLabel3.textColor = Color.goldColor
-            myLabel3.textAlignment = .center
-            myLabel3.text = String(format: "%@%d", "Users\n", _feedheadItems3.count)
-            myLabel3.font = Font.celltitle14m
-            myLabel3.layer.cornerRadius = 25.0
-            myLabel3.layer.borderColor = Color.Blog.borderColor.cgColor
-            myLabel3.layer.borderWidth = 1
-            myLabel3.layer.masksToBounds = true
-            myLabel3.isUserInteractionEnabled = true
-            vw.addSubview(myLabel3)
-            
-            let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
-            separatorLineView3.backgroundColor = Color.Blog.borderColor
-            vw.addSubview(separatorLineView3)
-            
-            return vw
-        }
-        return nil
+        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
+        myLabel1.numberOfLines = 0
+        myLabel1.backgroundColor = .white
+        myLabel1.textColor = Color.goldColor
+        myLabel1.textAlignment = .center
+        myLabel1.text = String(format: "%@%d", "posts\n", _feedItems.count)
+        myLabel1.font = Font.celltitle14m
+        myLabel1.layer.cornerRadius = 25.0
+        myLabel1.layer.borderColor = Color.Blog.borderColor.cgColor
+        myLabel1.layer.borderWidth = 1
+        myLabel1.layer.masksToBounds = true
+        myLabel1.isUserInteractionEnabled = true
+        header.addSubview(myLabel1)
+        
+        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
+        separatorLineView1.backgroundColor = Color.Blog.borderColor
+        header.addSubview(separatorLineView1)
+        
+        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
+        myLabel2.numberOfLines = 0
+        myLabel2.backgroundColor = .white
+        myLabel2.textColor = Color.goldColor
+        myLabel2.textAlignment = .center
+        myLabel2.text = String(format: "%@%d", "likes\n", _feedheadItems2.count)
+        myLabel2.font = Font.celltitle14m
+        myLabel2.layer.cornerRadius = 25.0
+        myLabel2.layer.borderColor = Color.Blog.borderColor.cgColor
+        myLabel2.layer.borderWidth = 1
+        myLabel2.layer.masksToBounds = true
+        myLabel2.isUserInteractionEnabled = true
+        header.addSubview(myLabel2)
+        
+        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
+        separatorLineView2.backgroundColor = Color.Blog.borderColor
+        header.addSubview(separatorLineView2)
+        
+        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
+        myLabel3.numberOfLines = 0
+        myLabel3.backgroundColor = .white
+        myLabel3.textColor = Color.goldColor
+        myLabel3.textAlignment = .center
+        myLabel3.text = String(format: "%@%d", "users\n", _feedheadItems3.count)
+        myLabel3.font = Font.celltitle14m
+        myLabel3.layer.cornerRadius = 25.0
+        myLabel3.layer.borderColor = Color.Blog.borderColor.cgColor
+        myLabel3.layer.borderWidth = 1
+        myLabel3.layer.masksToBounds = true
+        myLabel3.isUserInteractionEnabled = true
+        header.addSubview(myLabel3)
+        
+        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
+        separatorLineView3.backgroundColor = Color.Blog.borderColor
+        header.addSubview(separatorLineView3)
+        
+        return header
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -654,6 +646,10 @@ extension Blog: UISearchBarDelegate {
         searchController.searchBar.scopeButtonTitles = searchScope
         searchController.searchBar.barTintColor = Color.Blog.navColor
         tableView!.tableFooterView = UIView(frame: .zero)
+        //fix searchbar behind navbar
+        //searchController.hidesNavigationBarDuringPresentation = false //fix added
+        //searchController.searchBar.searchBarStyle = .minimal //fix added
+        //definesPresentationContext = true //fix added
         self.present(searchController, animated: true)
     }
 }
@@ -661,34 +657,6 @@ extension Blog: UISearchBarDelegate {
 extension Blog: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
-        let firstNameQuery = PFQuery(className:"Leads")
-        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
-        let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
-        
-        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
-            
-            if error != nil {
-                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
-                return
-            }
-            if let objects = results {
-                self.foundUsers.removeAll(keepingCapacity: false)
-                for object in objects {
-                    let firstName = object.object(forKey: "First") as! String
-                    let lastName = object.object(forKey: "LastName") as! String
-                    let fullName = firstName + " " + lastName
-                    
-                    self.foundUsers.append(fullName)
-                    print(fullName)
-                }
-                DispatchQueue.main.async {
-                    self.resultsController.tableView.reloadData()
-                    self.searchController.resignFirstResponder()
-                }
-            }
-        }
     }
 } 

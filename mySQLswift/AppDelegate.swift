@@ -8,7 +8,6 @@
 
 import UIKit
 import Parse
-import Bolts //added
 import GoogleSignIn
 import FBSDKCoreKit
 import Firebase
@@ -51,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 $0.applicationId = "lMUWcnNfBE2HcaGb2zhgfcTgDLKifbyi6dgmEK3M"
                 $0.clientKey = "UVyAQYRpcfZdkCa5Jzoza5fTIPdELFChJ7TVbSeX"
                 $0.server = "https://parseapi.back4app.com"
-                $0.isLocalDatastoreEnabled = false
+                //$0.isLocalDatastoreEnabled = true
             }
             Parse.initialize(with: configuration)
         }
@@ -341,7 +340,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     // Schedule Notification Action
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 
-        
         if response.actionIdentifier == "remindLater" {
             let newDate = Date(timeInterval: 900, since: Date())
             scheduleNotification(at: newDate)

@@ -109,7 +109,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         containView.backgroundColor = .clear
         self.customization()
         self.setupConstraints()
-        self.fetchVideos()
+        self.fetchPlayVCVideos()
  
         if videoURL == nil {
             videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
@@ -699,7 +699,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     //MARK: - Fetch Data
     
-    func fetchVideos() {
+    func fetchPlayVCVideos() {
         
         let query = PFQuery(className:"Newsios")
       //query.whereKey("imageFile", equalTo:"movie.mp4")
@@ -711,7 +711,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView.reloadData()
             } else {
-                print("Error")
+                print("ErrorVideo")
             }
         }
     }

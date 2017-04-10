@@ -6,12 +6,13 @@
 //  Copyright © 2016 letsbuildthatapp. All rights reserved.
 //
 
+/*
 protocol UrlLookupDelegate {
     func urlController(passedData: String)
     func titleController(passedData: String)
     //func playVideo(videoURL: String)
     //func likesController(passedData: String)
-}
+} */
 
 import UIKit
 import Parse
@@ -19,7 +20,7 @@ import AVFoundation
 
 class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    var delegate:UrlLookupDelegate?
+    //var delegate:UrlLookupDelegate?
     
     var _feedItems : NSMutableArray = NSMutableArray()
     var imageObject :PFObject!
@@ -53,6 +54,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     func fetchVideos() {
         
         let query = PFQuery(className:"Newsios")
+        //query.limit = 1000
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "createdAt")
         query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
@@ -61,7 +63,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.collectionView.reloadData()
             } else {
-                print("Error")
+                print("Errortube")
             }
         }
     }
@@ -173,12 +175,13 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
-            
-            UIView.transition(with: cell.thumbnailImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                self.selectedImage = UIImage(data: imageData!)
-                cell.thumbnailImageView.image = self.selectedImage
-            }, completion: nil)
+        imageFile!.getDataInBackground { (imageData: Data!, error: Error!) in
+            if error == nil {
+                UIView.transition(with: cell.thumbnailImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    self.selectedImage = UIImage(data: imageData)
+                    cell.thumbnailImageView.image = self.selectedImage
+                }, completion: nil)
+            }
         }
         
         //profile Image
@@ -188,10 +191,10 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                    imageFile.getDataInBackground { (imageData: Data!, error: Error?) in
                         
                         UIView.transition(with: cell.userProfileImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.userProfileImageView.image = UIImage(data: imageData!)
+                            cell.userProfileImageView.image = UIImage(data: imageData)
                         }, completion: nil)
                     }
                 }
@@ -220,9 +223,9 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         } else if elapsedTimeInSeconds > secondInDays {
             dateFormatter.dateFormat = "EEEE"
         }
-        
         let createString = dateFormatter.string(from: updated)
         cell.uploadbylabel.text = String(format: "%@ %@", "Uploaded", createString)
+        
         let imageDetailurl = self.imageFile.url
         let result1 = imageDetailurl!.contains("movie.mp4")
         cell.playButton.isHidden = result1 == false

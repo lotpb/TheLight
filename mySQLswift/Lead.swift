@@ -308,7 +308,7 @@ extension Lead: UISearchBarDelegate {
 extension Lead: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
-        
+        /*
         let firstNameQuery = PFQuery(className:"Leads")
         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
         
@@ -337,7 +337,7 @@ extension Lead: UISearchResultsUpdating {
                     self.searchController.resignFirstResponder()
                 }
             }
-        }
+        } */
     }
 }
 extension Lead: UITableViewDataSource {

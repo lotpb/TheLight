@@ -7,32 +7,31 @@
 //
 
 import UIKit
-import MediaPlayer
-
 import AVKit
 import AVFoundation
 
 class MusicController: UIViewController {
     
-    var videoPlayer: AVPlayer? = AVPlayer()
-    var searchResults = [Track]()
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var noContactsLabel: UILabel!
     
     var activeDownloads = [String: Download]()
     let defaultSession = Foundation.URLSession(configuration: URLSessionConfiguration.default)
     var dataTask: URLSessionDataTask?
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var noContactsLabel: UILabel!
+    var videoPlayer: AVPlayer? = AVPlayer()
+    var searchResults = [Track]()
+
     
     lazy var tapRecognizer: UITapGestureRecognizer = {
-        var recognizer = UITapGestureRecognizer(target:self, action: #selector(MusicController.dismissKeyboard))
+        var recognizer = UITapGestureRecognizer(target:self, action: #selector(dismissKeyboard))
         return recognizer
     }()
     
-    lazy var downloadsSession: Foundation.URLSession = {
+    lazy var downloadsSession: URLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: "bgSessionConfiguration")
-        let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         return session
     }()
     
@@ -94,7 +93,6 @@ class MusicController: UIViewController {
                 
                 // Get the results array
                 if let array: AnyObject = response["results"] {
-                    
                     for trackDictonary in array as! [AnyObject] {
                         if let trackDictonary = trackDictonary as? [String: AnyObject], let previewUrl = trackDictonary["previewUrl"] as? String {
                             // Parse the search result
@@ -151,14 +149,14 @@ class MusicController: UIViewController {
     func pauseDownload(_ track: Track) {
         if let urlString = track.previewUrl,
             let download = activeDownloads[urlString] {
-                if(download.isDownloading) {
-                    download.downloadTask?.cancel { data in
-                        if data != nil {
-                            download.resumeData = data
-                        }
+            if(download.isDownloading) {
+                download.downloadTask?.cancel(byProducingResumeData: { data in
+                    if data != nil {
+                        download.resumeData = data
                     }
-                    download.isDownloading = false
-                }
+                })
+                download.isDownloading = false
+            }
         }
     }
     
@@ -175,15 +173,15 @@ class MusicController: UIViewController {
     func resumeDownload(_ track: Track) {
         if let urlString = track.previewUrl,
             let download = activeDownloads[urlString] {
-                if let resumeData = download.resumeData {
-                    download.downloadTask = downloadsSession.downloadTask(withResumeData: resumeData)
-                    download.downloadTask!.resume()
-                    download.isDownloading = true
-                } else if let url = URL(string: download.url) {
-                    download.downloadTask = downloadsSession.downloadTask(with: url)
-                    download.downloadTask!.resume()
-                    download.isDownloading = true
-                }
+            if let resumeData = download.resumeData {
+                download.downloadTask = downloadsSession.downloadTask(withResumeData: resumeData)
+                download.downloadTask!.resume()
+                download.isDownloading = true
+            } else if let url = URL(string: download.url) {
+                download.downloadTask = downloadsSession.downloadTask(with: url)
+                download.downloadTask!.resume()
+                download.isDownloading = true
+            }
         }
     }
     
@@ -198,10 +196,9 @@ class MusicController: UIViewController {
             
             NotificationCenter.default.addObserver(self, selector: #selector(MusicController.finishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: videoPlayer!.currentItem)
             
-            self.present(playerViewController, animated: true)
-                {
-                    playerViewController.player!.play()
-                }
+            self.present(playerViewController, animated: true) {
+                playerViewController.player!.play()
+            }
         }
     }
     
@@ -234,12 +231,11 @@ class MusicController: UIViewController {
     func localFileExistsForTrack(_ track: Track) -> Bool {
         if let urlString = track.previewUrl, let localUrl = localFilePathForUrl(urlString) {
             var isDir : ObjCBool = false
-            let path = localUrl.path
-                return FileManager.default.fileExists(atPath: path, isDirectory: &isDir)
-            
+            //      if let path = localUrl.path {
+            return FileManager.default.fileExists(atPath: localUrl.path, isDirectory: &isDir)
+            //      }
         }
         return false
- 
     }
     
     func trackIndexForDownloadTask(_ downloadTask: URLSessionDownloadTask) -> Int? {
@@ -254,74 +250,67 @@ class MusicController: UIViewController {
     }
 }
 
-// MARK: - NSURLSessionDelegate
-
-extension MusicController: URLSessionDelegate {
-    
-    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            if let completionHandler = appDelegate.backgroundSessionCompletionHandler {
-                appDelegate.backgroundSessionCompletionHandler = nil
-                DispatchQueue.main.async(execute: {
-                    completionHandler()
-                })
-            }
-        }
-    }
-}
-
 // MARK: - NSURLSessionDownloadDelegate
-
 extension MusicController: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        // 1
+    
         if let originalURL = downloadTask.originalRequest?.url?.absoluteString,
             let destinationURL = localFilePathForUrl(originalURL) {
-                
-                print(destinationURL)
-                
-                // 2
-                let fileManager = FileManager.default
-                do {
-                    try fileManager.removeItem(at: destinationURL)
-                } catch {
-                    // Non-fatal: file probably doesn't exist
-                }
-                do {
-                    try fileManager.copyItem(at: location, to: destinationURL)
-                } catch let error as NSError {
-                    print("Could not copy file to disk: \(error.localizedDescription)")
-                }
+            print(destinationURL)
+
+            let fileManager = FileManager.default
+            do {
+                try fileManager.removeItem(at: destinationURL)
+            } catch {
+                // Non-fatal: file probably doesn't exist
+            }
+            do {
+                try fileManager.copyItem(at: location, to: destinationURL)
+            } catch let error as NSError {
+                print("Could not copy file to disk: \(error.localizedDescription)")
+            }
         }
         
-        // 3
         if let url = downloadTask.originalRequest?.url?.absoluteString {
             activeDownloads[url] = nil
-            // 4
+
             if let trackIndex = trackIndexForDownloadTask(downloadTask) {
-                DispatchQueue.main.async(execute: {
+                DispatchQueue.main.async {
                     self.tableView.reloadRows(at: [IndexPath(row: trackIndex, section: 0)], with: .none)
-                })
+                }
             }
         }
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         
-        // 1
         if let downloadUrl = downloadTask.originalRequest?.url?.absoluteString,
             let download = activeDownloads[downloadUrl] {
-                // 2
-                download.progress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
-                // 3
-                let totalSize = ByteCountFormatter.string(fromByteCount: totalBytesExpectedToWrite, countStyle: ByteCountFormatter.CountStyle.binary)
-                // 4
-                if let trackIndex = trackIndexForDownloadTask(downloadTask), let trackCell = tableView.cellForRow(at: IndexPath(row: trackIndex, section: 0)) as? TrackCell {
-                    DispatchQueue.main.async(execute: {
-                        trackCell.progressView.progress = download.progress
-                        trackCell.progressLabel.text =  String(format: "%.1f%% of %@",  download.progress * 100, totalSize)
-                    })
+            download.progress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
+            
+            let totalSize = ByteCountFormatter.string(fromByteCount: totalBytesExpectedToWrite, countStyle: ByteCountFormatter.CountStyle.binary)
+            
+            if let trackIndex = trackIndexForDownloadTask(downloadTask), let trackCell = tableView.cellForRow(at: IndexPath(row: trackIndex, section: 0)) as? TrackCell {
+                DispatchQueue.main.async {
+                    trackCell.progressView.progress = download.progress
+                    trackCell.progressLabel.text =  String(format: "%.1f%% of %@",  download.progress * 100, totalSize)
                 }
+            }
+        }
+    }
+}
+
+// MARK: - NSURLSessionDelegate
+extension MusicController: URLSessionDelegate {
+    
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            if let completionHandler = appDelegate.backgroundSessionCompletionHandler {
+                appDelegate.backgroundSessionCompletionHandler = nil
+                DispatchQueue.main.async {
+                    completionHandler()
+                }
+            }
         }
     }
 }
@@ -357,7 +346,7 @@ extension MusicController: UISearchBarDelegate {
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         self.updateSearchResults(data)
-
+                        
                     }
                 }
             }
@@ -380,7 +369,6 @@ extension MusicController: UISearchBarDelegate {
 }
 
 // MARK: TrackCellDelegate
-
 extension MusicController: TrackCellDelegate {
     func pauseTapped(_ cell: TrackCell) {
         if let indexPath = tableView.indexPath(for: cell) {
@@ -416,8 +404,8 @@ extension MusicController: TrackCellDelegate {
 }
 
 // MARK: UITableViewDataSource
-
 extension MusicController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
     }
@@ -465,14 +453,11 @@ extension MusicController: UITableViewDataSource {
         
         return cell
     }
-    
-    // MARK: - Button
-
 }
 
 // MARK: UITableViewDelegate
-
 extension MusicController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65.0
     }

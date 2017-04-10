@@ -8,7 +8,7 @@
 
 import UIKit
 import AVFoundation
-//import Parse
+import Parse
 
 class CollectionViewCell: UICollectionViewCell {
     
@@ -201,7 +201,7 @@ class VideoCell: CollectionViewCell {
         button.isUserInteractionEnabled = true
         button.tintColor = .white
         button.setImage(#imageLiteral(resourceName: "play_button"), for: .normal)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handlePlay))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(playVideo))
         button.addGestureRecognizer(tap)
         return button
     }()
@@ -211,7 +211,7 @@ class VideoCell: CollectionViewCell {
     var playerLayer: AVPlayerLayer?
     var player: AVPlayer?
     
-    func handlePlay(sender: UITapGestureRecognizer) {
+    override func playVideo(sender: UITapGestureRecognizer) {
         
         let button = sender.view as? UIButton
         if let videoURL = button!.titleLabel!.text {

@@ -13,6 +13,7 @@ class TrendingCell: FeedCell {
 
     override func fetchVideos() {
         let query = PFQuery(className:"Newsios")
+        query.limit = 1000
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "Liked")
         query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
@@ -21,7 +22,7 @@ class TrendingCell: FeedCell {
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.collectionView.reloadData()
             } else {
-                print("Error")
+                print("ErrorTrend")
             }
         }
     }

@@ -160,7 +160,7 @@ open class YouTubePlayerView: UIView, UIWebViewDelegate {
     
     
     // MARK: Player controls
-
+    
     open func mute() {
         evaluatePlayerCommand("mute()")
     }
@@ -207,8 +207,7 @@ open class YouTubePlayerView: UIView, UIWebViewDelegate {
         evaluatePlayerCommand("nextVideo()")
     }
     
-    //added @discardableResult to silence warning
-    @discardableResult fileprivate func evaluatePlayerCommand(_ command: String) -> String? {
+    fileprivate func evaluatePlayerCommand(_ command: String) -> String? {
         let fullCommand = "player." + command + ";"
         return webView.stringByEvaluatingJavaScript(from: fullCommand)
     }
@@ -282,7 +281,7 @@ open class YouTubePlayerView: UIView, UIWebViewDelegate {
             let jsonData = try JSONSerialization.data(withJSONObject: object, options: JSONSerialization.WritingOptions.prettyPrinted)
             
             // Succeeded
-            return NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) as String?
+            return NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) as? String
             
         } catch let jsonError {
             

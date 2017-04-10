@@ -53,7 +53,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     //Facebook
     var fbButton : FBSDKLoginButton = FBSDKLoginButton()
     //Google
-    var signInButton : GIDSignInButton = GIDSignInButton()
+    var googleButton : GIDSignInButton = GIDSignInButton()
     //Twitter
     var twitterButton : TWTRLogInButton = TWTRLogInButton()
     
@@ -115,7 +115,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.forgotPassword!.isHidden = true
             self.authentButton!.isHidden = true
             self.fbButton.isHidden = true
-            self.signInButton.isHidden = true
+            self.googleButton.isHidden = true
+            self.twitterButton.isHidden = true
             self.emailField!.isHidden = false
             self.phoneField!.isHidden = false
         } else {
@@ -126,7 +127,8 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.registerBtn!.isHidden = false
             self.forgotPassword!.isHidden = false
             self.fbButton.isHidden = false
-            self.signInButton.isHidden = false
+            self.googleButton.isHidden = false
+            self.twitterButton.isHidden = false
             self.emailField!.isHidden = true
             self.phoneField!.isHidden = true
             self.backloginBtn!.isHidden = true
@@ -144,7 +146,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     func setupConstraints() {
         self.mainView.addSubview(fbButton)
-        self.mainView.addSubview(signInButton)
+        self.mainView.addSubview(googleButton)
         
         mapView?.translatesAutoresizingMaskIntoConstraints = false
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -167,7 +169,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         observeKeyboardNotifications() //Move Keyboard
         
         UIView.animate(withDuration: 0.5, delay: 0.3, options: [], animations: {
-            self.signInButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
+            self.googleButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
             self.fbButton.frame = CGRect(x: 10, y: 325, width: 110, height: 38)
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
                 self.twitterButton.frame = CGRect(x: self.view.frame.width/2 - 90, y: 325, width: 180, height: 40)
@@ -234,7 +236,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.emailField!.isHidden = true
         self.phoneField!.isHidden = true
         self.fbButton.isHidden = false
-        self.signInButton.isHidden = false
+        self.googleButton.isHidden = false
         self.twitterButton.isHidden = false
         
     }
@@ -255,7 +257,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.emailField!.isHidden = false
             self.phoneField!.isHidden = false
             self.fbButton.isHidden = true
-            self.signInButton.isHidden = true
+            self.googleButton.isHidden = true
             self.twitterButton.isHidden = true
             
         } else {
@@ -324,8 +326,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                 self.simpleAlert(title: "Alert", message: "Error: \(error)")
             }
         } */
-        
-        
         
     }
     

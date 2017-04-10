@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8CEF38FF0F93DAF0CCA24781 /* Pods_TheLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82F39381CDFDA648D0693855 /* Pods_TheLight.framework */; };
 		AF011A721C40A798000EAF5D /* ProductController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF011A711C40A798000EAF5D /* ProductController.swift */; };
 		AF011A741C40AAE2000EAF5D /* JobController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF011A731C40AAE2000EAF5D /* JobController.swift */; };
 		AF011A761C40AB2F000EAF5D /* SalesmanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF011A751C40AB2F000EAF5D /* SalesmanController.swift */; };
@@ -27,6 +26,7 @@
 		AF206E051C1B1FA800EA60D6 /* Tornado.caf in Resources */ = {isa = PBXBuildFile; fileRef = AF206E031C1B1FA800EA60D6 /* Tornado.caf */; };
 		AF206E061C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF206E041C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 */; };
 		AF221C8D1C930A6400C9EF39 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF221C8C1C930A6400C9EF39 /* AddressBook.framework */; };
+		AF22F9E51E9BCFF80085E7CE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF22F9E41E9BCFF80085E7CE /* Default-568h@2x.png */; };
 		AF2817CB1C38794F00B2607A /* LeadUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2817CA1C38794F00B2607A /* LeadUserController.swift */; };
 		AF2D051B1D359A4200AC2A43 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2D051A1D359A4200AC2A43 /* News.swift */; };
 		AF2DB75E1C243EAA00AAE855 /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */; };
@@ -111,6 +111,7 @@
 		AFF5D5581D3AD59E00975055 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AFF5D5571D3AD59E00975055 /* GoogleService-Info.plist */; };
 		AFF5D55A1D3AD96400975055 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF5D5591D3AD96400975055 /* User.swift */; };
 		AFF7BCE51C3230EA0051DDCB /* CodeGenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF7BCE41C3230EA0051DDCB /* CodeGenController.swift */; };
+		CFB4D95F1F111E8F4A3CBD68 /* Pods_TheLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF5BF56BE5E53CAD103CC63 /* Pods_TheLight.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -127,7 +128,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		82F39381CDFDA648D0693855 /* Pods_TheLight.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TheLight.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BF5BF56BE5E53CAD103CC63 /* Pods_TheLight.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TheLight.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90951E0736B3AE6BC92ABEB2 /* Pods-TheLight.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheLight.release.xcconfig"; path = "Pods/Target Support Files/Pods-TheLight/Pods-TheLight.release.xcconfig"; sourceTree = "<group>"; };
 		9DF90075E46C8650F31D1C31 /* Pods-TheLight.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheLight.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TheLight/Pods-TheLight.debug.xcconfig"; sourceTree = "<group>"; };
 		AF011A711C40A798000EAF5D /* ProductController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductController.swift; sourceTree = "<group>"; };
@@ -151,6 +152,7 @@
 		AF206E031C1B1FA800EA60D6 /* Tornado.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Tornado.caf; path = Music/Tornado.caf; sourceTree = "<group>"; };
 		AF206E041C1B1FA800EA60D6 /* A Whiter Shade Of Pale.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "A Whiter Shade Of Pale.mp3"; path = "Music/A Whiter Shade Of Pale.mp3"; sourceTree = "<group>"; };
 		AF221C8C1C930A6400C9EF39 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		AF22F9E41E9BCFF80085E7CE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		AF2817CA1C38794F00B2607A /* LeadUserController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadUserController.swift; sourceTree = "<group>"; };
 		AF2D051A1D359A4200AC2A43 /* News.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = News.swift; sourceTree = "<group>"; };
 		AF2DB75D1C243EAA00AAE855 /* UserDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
@@ -260,7 +262,7 @@
 			files = (
 				AF9A87821C1862900091B0E3 /* libsqlite3.dylib in Frameworks */,
 				AF9A87801C18621E0091B0E3 /* libz.1.dylib in Frameworks */,
-				8CEF38FF0F93DAF0CCA24781 /* Pods_TheLight.framework in Frameworks */,
+				CFB4D95F1F111E8F4A3CBD68 /* Pods_TheLight.framework in Frameworks */,
 				AF221C8D1C930A6400C9EF39 /* AddressBook.framework in Frameworks */,
 				AFE263921C17418B007BBB90 /* CFNetwork.framework in Frameworks */,
 				AFE263931C17418B007BBB90 /* CoreGraphics.framework in Frameworks */,
@@ -378,6 +380,7 @@
 				AFF5D5571D3AD59E00975055 /* GoogleService-Info.plist */,
 				AFA039781E08B0CD00E140E4 /* TestLocations.gpx */,
 				AF0369AD1C173DDC00137D7E /* Assets.xcassets */,
+				AF22F9E41E9BCFF80085E7CE /* Default-568h@2x.png */,
 				AF0369AF1C173DDC00137D7E /* LaunchScreen.storyboard */,
 				AF0369B21C173DDC00137D7E /* Info.plist */,
 			);
@@ -494,7 +497,7 @@
 			children = (
 				AF221C8C1C930A6400C9EF39 /* AddressBook.framework */,
 				AFAEAE421C775CE700DF86B1 /* NotificationCenter.framework */,
-				82F39381CDFDA648D0693855 /* Pods_TheLight.framework */,
+				2BF5BF56BE5E53CAD103CC63 /* Pods_TheLight.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -707,6 +710,7 @@
 				AFA039791E08B0CD00E140E4 /* TestLocations.gpx in Resources */,
 				AFE2640E1C17DC11007BBB90 /* calendar.png in Resources */,
 				AFE264161C17DC11007BBB90 /* photo.png in Resources */,
+				AF22F9E51E9BCFF80085E7CE /* Default-568h@2x.png in Resources */,
 				AFE0CEFD1D3EAB5700D6D3F0 /* Main.storyboard in Resources */,
 				AF0369B11C173DDC00137D7E /* LaunchScreen.storyboard in Resources */,
 				AF0369AE1C173DDC00137D7E /* Assets.xcassets in Resources */,
@@ -917,6 +921,7 @@
 		AF0369C91C173DDC00137D7E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -938,6 +943,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -952,7 +958,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -964,6 +970,7 @@
 		AF0369CA1C173DDC00137D7E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -985,6 +992,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -993,7 +1001,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1005,63 +1013,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9DF90075E46C8650F31D1C31 /* Pods-TheLight.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_OPTIMIZATION_PROFILE_FILE = "";
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
-				CODE_SIGN_ENTITLEMENTS = TheLight.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YX8KSFWQDW;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/mySQLswift",
-				);
-				INFOPLIST_FILE = mySQLswift/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseAnalytics\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseAuth\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseDatabase\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseInstanceID\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseStorage\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/Google\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleAppUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleAuthUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleInterchangeUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSignIn\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
-				);
-				OTHER_SWIFT_FLAGS = "\"-enable-bridging-pch\"";
+				INFOPLIST_FILE = "$(SRCROOT)/mySQLswift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
-				PROVISIONING_PROFILE = "";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -1070,61 +1032,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 90951E0736B3AE6BC92ABEB2 /* Pods-TheLight.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_OPTIMIZATION_PROFILE_FILE = "";
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
-				CODE_SIGN_ENTITLEMENTS = TheLight.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = YX8KSFWQDW;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/mySQLswift",
-				);
-				INFOPLIST_FILE = mySQLswift/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseAnalytics\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseAuth\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseDatabase\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseInstanceID\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/FirebaseStorage\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/Google\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleAppUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleAuthUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleInterchangeUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleNetworkingUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSignIn\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleSymbolUtilities\"",
-					"-isystem",
-					"\"${PODS_ROOT}/Headers/Public/GoogleUtilities\"",
-				);
-				OTHER_SWIFT_FLAGS = "\"-enable-bridging-pch\"";
+				INFOPLIST_FILE = "$(SRCROOT)/mySQLswift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.PeterBalsamo.TheLight;
 				PRODUCT_NAME = TheLight;
-				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

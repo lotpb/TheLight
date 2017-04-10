@@ -101,10 +101,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
         
-        setupTableView()
-
         parseData()
-        
+        setupTableView()
         setupNavBarButtons()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -112,8 +110,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.eventStore = EKEventStore()
-        self.reminders = [EKReminder]()
         //Fix Grey Bar in iphone Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
@@ -121,6 +117,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         setMainNavItems()
+        self.eventStore = EKEventStore()
+        self.reminders = [EKReminder]()
     }
     
     override func didReceiveMemoryWarning() {
@@ -131,11 +129,11 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     func setupTableView() {
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
+        self.tableView!.backgroundColor = Color.Snap.tablebackColor
+        self.tableView!.separatorColor = Color.Snap.lineColor //.clear
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.backgroundColor = Color.Snap.tablebackColor
         self.tableView!.tableFooterView = UIView(frame: .zero)
-        self.tableView!.separatorColor = Color.Snap.lineColor //.clear
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -269,7 +267,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             return 3
         }
         return 2
-        
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -282,7 +279,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
         
-        cell.collectionView.delegate = nil
+        cell.collectionView.delegate =  nil
         cell.collectionView.dataSource = nil
         cell.collectionView.backgroundColor = Color.Snap.collectbackColor
         
@@ -615,6 +612,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
+            
             imageObject = _feedItems2.object(at: indexPath.row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
