@@ -58,7 +58,7 @@
 			<key>Title</key>
 			<string>Notify Bad Weather</string>
 			<key>Key</key>
-			<string>weatherKey</string>
+			<string>weatherNotifyKey</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

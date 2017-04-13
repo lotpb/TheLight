@@ -365,7 +365,7 @@ extension Lead: UITableViewDataSource {
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         
         let myLabel1:UILabel = UILabel(frame: CGRect(x: tableView.frame.width - 105, y: 0, width: 95, height: 32))
         myLabel1.backgroundColor = Color.Lead.labelColor1
@@ -550,13 +550,13 @@ extension Lead: UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            let query = PFQuery(className:"Leads")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
             
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
+                let query = PFQuery(className:"Leads")
+                query.whereKey("objectId", equalTo: ((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
                 query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {

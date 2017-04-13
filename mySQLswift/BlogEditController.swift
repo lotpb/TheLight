@@ -21,8 +21,7 @@ class BlogEditController: UIViewController {
     var _feedItems1 : NSMutableArray = NSMutableArray()
     var filteredString : NSMutableArray = NSMutableArray()
     var objects = [AnyObject]()
-    
-    //var deleteKey : String?
+    var pasteBoard = UIPasteboard.general
  
     var objectId : String?
     var msgNo : String?
@@ -32,6 +31,11 @@ class BlogEditController: UIViewController {
     var rating : String?
     var replyId : String?
     var liked : Int?
+    //added reply
+    var posttoIndex: String?
+    var userIndex: String?
+    var isReplyClicked = false
+    var defaults = UserDefaults.standard
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -45,9 +49,9 @@ class BlogEditController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(BlogEditController.shareButton))
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(BlogEditController.deleteButton))
-        navigationItem.rightBarButtonItems = [actionButton,trashButton]
+        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButton))
+        let trashBtn = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))
+        navigationItem.rightBarButtonItems = [actionBtn,trashBtn]
         
         self.toolBar!.barTintColor = .white
         self.toolBar!.isTranslucent = false
@@ -60,7 +64,7 @@ class BlogEditController: UIViewController {
         setupForm()
         parseData()
         self.tableView!.addSubview(self.refreshControl)
-        self.listTableView!.register(BlogEditTableCell.self, forCellReuseIdentifier: "ReplyCell")
+        self.listTableView!.register(BlogReplyTableCell.self, forCellReuseIdentifier: "ReplyCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,13 +81,11 @@ class BlogEditController: UIViewController {
     
     func setupForm() {
         self.view.backgroundColor = .lightGray
-
         self.update?.backgroundColor = Color.twitterBlue
         self.update?.setTitleColor(.white, for: .normal)
         let btnLayer: CALayer = self.update!.layer
         btnLayer.cornerRadius = 9.0
         btnLayer.masksToBounds = true
-        
         
         let width = CGFloat(2.0)
         let topBorder = CALayer()
@@ -153,38 +155,41 @@ class BlogEditController: UIViewController {
     
     func shareButton(_ sender: AnyObject) {
         
-        let activityViewController = UIActivityViewController (
+        let AV = UIActivityViewController (
             activityItems: [self.subject! as String],
             applicationActivities: nil)
         
-        if let popoverController = activityViewController.popoverPresentationController {
+        if let popoverController = AV.popoverPresentationController {
             popoverController.barButtonItem = sender as? UIBarButtonItem
         }
-        
-        self.present(activityViewController, animated: true)
+        self.present(AV, animated: true)
+    }
+ 
+    func deleteButton(_ sender: AnyObject) {
+        deleteBlog(name: self.objectId!)
     }
     
-    func deleteButton(sender: UIButton) {
-        
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:self.objectId!)
+    func deleteBlog(name: String) {
         
         let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
         
         let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
+            
+            let query = PFQuery(className:"Blog")
+            query.whereKey("objectId", equalTo: name)
             query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
                         //self.deincrementComment()
-                        let _ = self.navigationController?.popViewController(animated: true)
+                        self.navigationController?.popViewController(animated: true)
                     }
                 }
             })
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-        return
+            return
         }
         alertController.addAction(cancelAction)
         alertController.addAction(destroyAction)
@@ -192,17 +197,6 @@ class BlogEditController: UIViewController {
         }
     }
     
-    /*
-     func deincrementComment() {
-     let query = PFQuery(className:"Blog")
-     query.whereKey("objectId", equalTo: self.deleteKey!)
-     query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-     if error == nil {
-     object?.incrementKey("CommentCount", byAmount: -1)
-     object?.saveInBackground()
-     }
-     }
-     } */
     
     // MARK: - AlertController
     
@@ -210,14 +204,20 @@ class BlogEditController: UIViewController {
         
         let hitPoint = sender.convert(CGPoint.zero, to: self.listTableView)
         let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
-        //self.deleteKey = self.objectId
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         
         let replyAction = UIAlertAction(title: "Reply", style: .default) { (alert: UIAlertAction!) in
-            
+   
+            self.isReplyClicked = true
+            self.posttoIndex = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
+            self.userIndex = self.objectId
+            self.performSegue(withIdentifier: "blogeditSegue", sender: self)
         }
+        
         let editAction = UIAlertAction(title: "Edit", style: .default) { (alert: UIAlertAction!) in
+            
+            self.isReplyClicked = false
             self.objectId = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
             self.msgNo = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "MsgNo") as? String
             self.postby = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
@@ -229,20 +229,16 @@ class BlogEditController: UIViewController {
             
             self.performSegue(withIdentifier: "blogeditSegue", sender: self)
         }
+        
         let copyAction = UIAlertAction(title: "Copy", style: .default) { (alert: UIAlertAction!) in
             
+             self.pasteBoard.string = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Subject") as? String
         }
+        
         let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alert: UIAlertAction!) in
-            let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo:((self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
-                if error == nil {
-                    for object in objects! {
-                        object.deleteInBackground()
-                        self.listTableView?.reloadData()
-                    }
-                }
-            })
+            
+            self.deleteBlog(name: ((self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+            self.deincrementComment()
         }
         
         let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) in
@@ -259,6 +255,18 @@ class BlogEditController: UIViewController {
             //actionSheet.popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
         }
         self.present(actionSheet, animated: true)
+    }
+    
+    // MARK: - Deincrement Comment
+    func deincrementComment() {
+        let query = PFQuery(className:"Blog")
+        query.whereKey("objectId", equalTo: self.objectId!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+            if error == nil {
+                object?.incrementKey("CommentCount", byAmount: -1)
+                object?.saveInBackground()
+            }
+        }
     }
     
     // MARK: - Parse
@@ -284,20 +292,29 @@ class BlogEditController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "blogeditSegue" {
+            
             let VC = segue.destination as? BlogNewController
-            VC!.formStatus = "None"
-            VC!.textcontentobjectId = self.objectId
-            VC!.textcontentmsgNo = self.msgNo
-            VC!.textcontentpostby = self.postby
-            VC!.textcontentsubject = self.subject
-            VC!.textcontentdate = self.msgDate
-            VC!.textcontentrating = self.rating
-            VC!.liked = self.liked
+            if isReplyClicked == true {
+                VC!.formStatus = "Reply"
+                VC!.textcontentsubject = String(format: "%@", "@\(posttoIndex!.removingWhitespaces()) ")
+                VC!.textcontentpostby = defaults.string(forKey: "usernameKey")
+                VC!.replyId = String(format:"%@", userIndex!)
+            } else {
+                VC!.formStatus = "None"
+                VC!.textcontentobjectId = self.objectId
+                VC!.textcontentmsgNo = self.msgNo
+                VC!.textcontentpostby = self.postby
+                VC!.textcontentsubject = self.subject
+                VC!.textcontentdate = self.msgDate
+                VC!.textcontentrating = self.rating
+                VC!.textcontentreplyId = self.replyId
+                VC!.liked = self.liked
+            }
         }
     }
 }
 
-class BlogEditTableCell: UITableViewCell {
+class BlogReplyTableCell: UITableViewCell {
     
         override init(style: UITableViewCellStyle, reuseIdentifier: String?){
             super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -433,7 +450,7 @@ extension BlogEditController: UITableViewDataSource {
             
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
             
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.selectionStyle = .none
             cell.subtitleLabel?.textColor = Color.twitterText
             
             if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -506,9 +523,9 @@ extension BlogEditController: UITableViewDataSource {
         }
         else {
             //-------------------listViewTable--------------
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as? BlogEditTableCell else { fatalError("Unexpected Index Path") }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as? BlogReplyTableCell else { fatalError("Unexpected Index Path") }
             
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.selectionStyle = .none
             cell.replydateLabel.textColor = .gray
             
             let query:PFQuery = PFUser.query()!

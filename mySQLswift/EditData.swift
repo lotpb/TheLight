@@ -340,7 +340,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             } else {
                 self.city!.text = self.frm15
             }
-            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+            cell.accessoryType = .disclosureIndicator
             self.city!.placeholder = "City"
             cell.textLabel!.text = "City"
             cell.contentView.addSubview(self.city!)
@@ -436,7 +436,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             } else {
                 self.salesman!.placeholder = "Salesman"
                 cell.textLabel!.text = "Salesman"
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.accessoryType = .disclosureIndicator
             }
             
             cell.contentView.addSubview(self.salesman!)
@@ -460,7 +460,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             } else {
                 self.jobName!.placeholder = "Job"
                 cell.textLabel!.text = "Job"
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.accessoryType = .disclosureIndicator
             }
             
             cell.contentView.addSubview(self.jobName!)
@@ -475,7 +475,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             }
             
             if ((self.formController == "Leads") || (self.formController == "Customer")) {
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.accessoryType = .disclosureIndicator
             }
             if (self.formController == "Vendor") {
                 self.adName!.placeholder = "Phone 3"

@@ -361,7 +361,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomTableCell
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         cell.usersubtitleLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {

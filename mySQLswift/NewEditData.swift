@@ -161,7 +161,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)! as UITableViewCell
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         
         textframe = UITextField(frame:CGRect(x: 130, y: 7, width: 175, height: 30))
         activeImage.frame = CGRect(x: 130, y: 10, width: 18, height: 22)

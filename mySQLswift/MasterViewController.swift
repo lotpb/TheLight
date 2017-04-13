@@ -61,12 +61,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         // MARK: - SplitView
         self.splitViewController?.maximumPrimaryColumnWidth = 400
-        //fix - remove bottom bar
+        //fixed - remove bottom bar
         self.splitViewController!.delegate = self
         self.splitViewController!.preferredDisplayMode = .allVisible
         self.extendedLayoutIncludesOpaqueBars = true
         
-      //versionCheck()
+        versionCheck()
         setupNavBarButtons()
         speech()
         setupTableView()
@@ -80,11 +80,12 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         
         // yahoo bad weather warning
-        if (defaults.bool(forKey: "weatherKey"))  {
-            if (textYQL!.contains("Rain") ||
-                textYQL!.contains("Snow") ||
-                textYQL!.contains("Thunderstorms") ||
-                textYQL!.contains("Showers")) {
+        if (defaults.bool(forKey: "weatherNotifyKey"))  {
+            guard let severeYQL = textYQL else { return }
+            if (severeYQL.contains("Rain") ||
+                severeYQL.contains("Snow") ||
+                severeYQL.contains("Thunderstorms") ||
+                severeYQL.contains("Showers")) {
                 self.simpleAlert(title: "Info", message: "Bad weather today!")
             }
         }
@@ -137,14 +138,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
     }
-    /*
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    } */
     
     func refreshData() {
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
@@ -163,9 +156,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         
         let setting = UIAlertAction(title: "Settings", style: .default, handler: { (action) in
             let settingsUrl = URL(string: UIApplicationOpenSettingsURLString)
-            
+
             UIApplication.shared.open(settingsUrl!, options: [:], completionHandler: nil)
-            //UIApplication.shared.openURL(settingsUrl!)
         })
         let buttonTwo = UIAlertAction(title: "Users", style: .default, handler: { (action) in
             self.performSegue(withIdentifier: "userSegue", sender: self)
@@ -229,7 +221,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.textLabel!.font = Font.celltitle22m
@@ -479,7 +471,10 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             
-            let versionId = object?.value(forKey: "VersionId") as! String?
+            guard let versionId = object?.value(forKey: "VersionId") as! String? else {
+                print("No backend version")
+                return
+            }
             if (versionId != self.defaults.string(forKey: "versionKey")) {
                 
                 DispatchQueue.main.async {
@@ -493,9 +488,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     func updateYahoo() {
         
-        guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
+        //guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         //weather
-      //let results = YQL.query(statement: "select * from weather.forecast where woeid=2446726")
         let results = YQL.query(statement: String(format: "%@%@", "select * from weather.forecast where woeid=", self.defaults.string(forKey: "weatherKey")!))
         
         let queryResults = results?.value(forKeyPath: "query.results.channel.item") as? NSDictionary
@@ -583,14 +577,14 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
         }
         if segue.identifier == "statisticSegue" {
-                
+            /*
             guard let navController = segue.destination as? UINavigationController,
                 let viewController = navController.topViewController as? StatisticController else {
-                    fatalError("Expected DetailViewController")
+                    fatalError("Expected StatisticController")
             }
             //collapseDetailViewController = false
             viewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            viewController.navigationItem.leftItemsSupplementBackButton = true
+            viewController.navigationItem.leftItemsSupplementBackButton = true */
         }
         if segue.identifier == "geotifySegue" {
             
@@ -599,7 +593,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 else {
                     fatalError("Expected GeotificationsViewController")
             }
-            //let controller = (segue.destination as! UINavigationController).topViewController as! GeotificationsViewController
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
         }

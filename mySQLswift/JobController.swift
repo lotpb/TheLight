@@ -131,7 +131,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.jobtitleLabel!.font = Font.celltitle22m
@@ -247,13 +247,12 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         if editingStyle == .delete {
             
-            let query = PFQuery(className:"Job")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
-            
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
+                let query = PFQuery(className:"Job")
+                query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
                 query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {

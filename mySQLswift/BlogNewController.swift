@@ -38,6 +38,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     var textcontentpostby : String?
     var textcontentsubject : String?
     var textcontentrating : String?
+    var textcontentreplyId : String?
     
     var formStatus : String?
     
@@ -86,7 +87,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         return imageView
     }()
     
-  
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -127,15 +127,13 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         if ((self.formStatus == "New") || (self.formStatus == "Reply")) {
             
             self.placeholderlabel!.textColor = .lightGray
-            
+            self.rating = "4"
+            self.postby = self.textcontentpostby
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let dateString = dateFormatter.string(from: (Date()) as Date)
             self.msgDate = dateString
-            
-            self.rating = "4"
-            self.postby = self.textcontentpostby
-            
+ 
         } else if ((self.formStatus == "None")) { //set in BlogEdit
             
             self.placeholderlabel!.isHidden = true
@@ -145,6 +143,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.subject!.text = self.textcontentsubject
             self.postby = self.textcontentpostby
             self.rating = self.textcontentrating
+            self.replyId = self.textcontentreplyId
             if (self.liked == nil || self.liked == 0) {
                 self.Like!.tintColor = .white
             } else {
@@ -162,6 +161,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.subject!.becomeFirstResponder()
             self.subject!.isUserInteractionEnabled = true
         }
+        self.subject!.keyboardAppearance = .dark
     }
     
     func setupDatePicker() {
@@ -268,7 +268,6 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func doneBarButtonItemClicked() {
         // Dismiss the keyboard by removing it as the first responder.
         self.subject?.resignFirstResponder()
-        
         navigationItem.setRightBarButton(nil, animated: true)
     }
 
@@ -306,7 +305,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
 
         self.tableView?.beginUpdates()
         
-        var before = false // indicates if the date picker is below "indexPath", help us determine which row to reveal
+        var before = false
+        
         if hasInlineDatePicker() {
             before = (datePickerIndexPath?.row)! < indexPath.row
         }
@@ -329,9 +329,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         }
 
         self.tableView?.deselectRow(at: indexPath, animated:true)
-        
         self.tableView?.endUpdates()
-        
         updateDatePicker()
     }
     
@@ -342,10 +340,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         let indexPaths = [IndexPath(row: indexPath.row + 1, section: 0)]
 
         if hasPickerForIndexPath(indexPath) {
-        
             self.tableView?.deleteRows(at: indexPaths, with: .fade)
         } else {
-        
             self.tableView?.insertRows(at: indexPaths, with: .fade)
         }
         self.tableView?.endUpdates()
@@ -451,6 +447,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     @IBAction func saveData(sender: UIButton) {
         
         guard let text = self.subject?.text else { return }
+        
         if text == "" {
             self.simpleAlert(title: "Oops!", message: "No text entered.")
         } else {
@@ -522,7 +519,6 @@ extension BlogNewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if hasInlineDatePicker() {
-            
             return dataArray.count + 1
         }
         return dataArray.count
@@ -595,8 +591,7 @@ extension BlogNewController: UITableViewDataSource {
 
 extension BlogNewController: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
-    {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         if cell?.reuseIdentifier == kDateCellID {
             displayInlineDatePickerForRowAtIndexPath(indexPath)

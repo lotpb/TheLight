@@ -40,7 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "versionKey": "1.0",
             "emailtitleKey": "TheLight Support",
             "emailmessageKey": "<h3>Programming in Swift</h3>",
-            "weatherKey": "2446726"
+            "weatherKey": "2446726",
+            "weatherNotifyKey": "false"
             ])
         
         // MARK: - Parse

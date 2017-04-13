@@ -1240,9 +1240,6 @@ extension LeadDetail: UITableViewDataSource {
         }
     }
 }
-/*
-extension Lead: UITableViewDelegate {
-    
-} */
+
 
 

@@ -148,7 +148,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
 
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.salestitleLabel!.font = Font.celltitle22m
@@ -275,13 +275,12 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         if editingStyle == .delete {
             
-            let query = PFQuery(className:"Salesman")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
-            
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
+                let query = PFQuery(className:"Salesman")
+                query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
                 query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {
@@ -291,11 +290,9 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 })
             }
-            
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
                 self.refreshData(self)
             }
-            
             alertController.addAction(cancelAction)
             alertController.addAction(destroyAction)
             self.present(alertController, animated: true) {

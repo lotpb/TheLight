@@ -82,8 +82,7 @@ public extension UIViewController {
                 navigationController?.navigationBar.barTintColor = Color.News.navColor
             }
         }
-        
-        //navigationController?.navigationBar.barTintColor = Color.News.navColor
+
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.backgroundColor = .white
         

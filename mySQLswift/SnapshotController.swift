@@ -21,8 +21,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var foundUsers = [String]()
     
     var selectedImage : UIImage!
-    var eventStore: EKEventStore!
-    var reminders: [EKReminder]!
 
     var selectedObjectId : String!
     var selectedTitle : String!
@@ -69,6 +67,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var imageObject :PFObject!
     var imageFile :PFFile!
     
+    var calendars: [EKCalendar]?
+    
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
@@ -106,6 +106,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         setupNavBarButtons()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
+        loadCalendars()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -117,8 +118,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         setMainNavItems()
-        self.eventStore = EKEventStore()
-        self.reminders = [EKReminder]()
     }
     
     override func didReceiveMemoryWarning() {
@@ -283,12 +282,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         cell.collectionView.dataSource = nil
         cell.collectionView.backgroundColor = Color.Snap.collectbackColor
         
-      //cell.collectionView?.isPagingEnabled = true
-      //cell.collectionView?.isDirectionalLockEnabled = true
-      //cell.collectionView?.bounces = false
-        
         cell.backgroundColor = Color.Snap.collectbackColor
-        cell.accessoryType = UITableViewCellAccessoryType.none
+        cell.accessoryType = .none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.textLabel!.font = Font.Snapshot.celltitlePad
@@ -319,7 +314,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             
             if (indexPath.row == 0) {
                 
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.accessoryType = .disclosureIndicator
                 cell.textLabel!.text = String(format: "%@%d", "Top News ", _feedItems.count)
                 cell.collectionView.reloadData()
                 return cell
@@ -401,8 +396,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = String(format: "%@%d", "Top Jobs ", _feedItems2.count)
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.selectionStyle = .gray
+                cell.accessoryType = .disclosureIndicator
                 cell.collectionView.reloadData()
                 return cell
                 
@@ -426,8 +421,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = String(format: "%@%d", "Top Users ", _feedItems3.count)
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.selectionStyle = .gray
+                cell.accessoryType = .disclosureIndicator
                 cell.collectionView.reloadData()
                 return cell
                 
@@ -446,8 +441,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = String(format: "%@%d", "Top Salesman ", _feedItems4.count)
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.selectionStyle = .gray
+                cell.accessoryType = .disclosureIndicator
                 cell.collectionView.reloadData()
                 return cell
                 
@@ -465,8 +460,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = String(format: "%@%d", "Top Employee ", _feedItems5.count)
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.selectionStyle = .gray
+                cell.accessoryType = .disclosureIndicator
                 cell.collectionView.reloadData()
                 return cell
                 
@@ -484,8 +479,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Top Notification"
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.selectionStyle = .gray
+                cell.accessoryType = .disclosureIndicator
                 cell.collectionView.reloadData()
                 return cell
             } else if (indexPath.row == 1) {
@@ -503,20 +498,26 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.textLabel!.text = "Top Calender Event"
-                cell.selectionStyle = UITableViewCellSelectionStyle.gray
-                cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                cell.selectionStyle = .gray
+                cell.accessoryType = .disclosureIndicator
                 cell.collectionView.reloadData()
                 return cell
             } else if (indexPath.row == 1) {
                 
                 cell.collectionView.backgroundColor = .clear
                 
-                if (reminders.count == 0) {
-                    //cell.snaptitleLabel?.text = ""
+                if (calendars?.count == 0) {
                     cell.snapdetailLabel?.text = "You have no pending events :)"
                     
                 } else {
                     
+                    if let calendars = self.calendars {
+                        let calendarName = calendars[0].title
+                        cell.snapdetailLabel?.text  = calendarName
+                    } else {
+                        cell.snapdetailLabel?.text  = "Unknown Calendar Name"
+                    }
+                    /*
                     let reminder:EKReminder! = self.reminders![0]
                     cell.snapdetailLabel?.text = reminder!.title
                     
@@ -524,13 +525,19 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                     formatter.dateFormat = "yyyy-MM-dd"
                     if let dueDate = reminder.dueDateComponents?.date {
                         cell.snaptitleLabel?.text = formatter.string(from: dueDate)
-                    }
+                    } */
                 }
             }
             cell.collectionView.reloadData()
             return cell
         }
         return cell
+    }
+    
+    func loadCalendars() {
+        self.calendars = EKEventStore().calendars(for: EKEntityType.event).sorted() { (cal1, cal2) -> Bool in
+            return cal1.title < cal2.title
+        }
     }
     
     // MARK: UICollectionView
@@ -567,7 +574,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
         //cell.playButton2.center = (cell.user2ImageView?.center)!
         cell.playButton2.frame = CGRect(x: cell.user2ImageView!.frame.size.width/2-15, y: cell.user2ImageView!.frame.size.height/2-15, width: 30, height: 30)
-        //cell.playButton2.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin]
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad), (collectionView.tag == 0) {
             myLabel1 = UILabel(frame: CGRect(x: 0, y: 160, width: cell.bounds.size.width, height: 20))

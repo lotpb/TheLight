@@ -27,10 +27,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     let headerImageView: UIImageView = {
         let imageView = UIImageView(image: #imageLiteral(resourceName: "Acctimages"))
         imageView.contentMode = .scaleAspectFill
-        
-        //imageView.tintColor = .black
-        //imageView.backgroundColor = .black
-        //imageView.alpha = 0.1
+
         let overlay = UIView(frame: imageView.bounds)
         overlay.backgroundColor = UIColor(white: 0, alpha: 0.1)
         imageView.addSubview(overlay)
@@ -88,14 +85,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         return tableView
     }()
     
-    /*
-     let lineSeparatorView: UIView = {
-     let view = UIView()
-     view.backgroundColor = UIColor(white: 0.9, alpha: 1)
-     return view
-     }()*/
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -143,7 +132,6 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
     
     fileprivate func registerCells() {
-        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(AccountViewCell.self, forCellReuseIdentifier: "accountcell")
     }
     
@@ -183,7 +171,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "accountcell", for: indexPath) as! AccountViewCell
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         cell.detailLabel.textColor = UIColor(white: 0.5, alpha: 1)
         self.tableView.separatorStyle = .none
         
@@ -278,7 +266,10 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-
+        /*
+            guard let image = info[UIImagePickerControllerEditedImage] as? UIImage else { return }
+            self.headerImageView.image = image
+            picker.dismiss(animated: true) */
     }
     
     

@@ -445,7 +445,7 @@ extension MusicController: UITableViewDataSource {
         
         // If the track is already downloaded, enable cell selection and hide the Download button
         let downloaded = localFileExistsForTrack(track)
-        cell.selectionStyle = downloaded ? UITableViewCellSelectionStyle.gray : UITableViewCellSelectionStyle.none
+        cell.selectionStyle = downloaded ? UITableViewCellSelectionStyle.gray : .none
         cell.downloadButton.isHidden = downloaded || showDownloadControls
         
         cell.pauseButton.isHidden = !showDownloadControls

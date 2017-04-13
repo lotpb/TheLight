@@ -91,7 +91,7 @@ class Blog: UIViewController {
         self.tableView!.backgroundColor = .clear //UIColor(white:0.90, alpha:1.0)
         self.tableView!.estimatedRowHeight = 110
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        self.tableView!.tableFooterView = UIView(frame: .zero)
+        //self.tableView!.tableFooterView = UIView(frame: .zero)
         // MARK: - TableHeader
         self.automaticallyAdjustsScrollViewInsets = false //fix
         header.backgroundColor = Color.Blog.navColor
@@ -369,7 +369,7 @@ extension Blog: UITableViewDataSource {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         cell.blogsubtitleLabel?.textColor = Color.twitterText
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
@@ -538,7 +538,7 @@ extension Blog: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
+        let myLabel1:UILabel = UILabel(frame: CGRect.init(x: 10, y: 15, width: 50, height: 50))
         myLabel1.numberOfLines = 0
         myLabel1.backgroundColor = .white
         myLabel1.textColor = Color.goldColor
@@ -552,11 +552,11 @@ extension Blog: UITableViewDelegate {
         myLabel1.isUserInteractionEnabled = true
         header.addSubview(myLabel1)
         
-        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
+        let separatorLineView1 = UIView.init(frame: CGRect.init(x: 10, y: 75, width: 50, height: 2.5))
         separatorLineView1.backgroundColor = Color.Blog.borderColor
         header.addSubview(separatorLineView1)
         
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
+        let myLabel2:UILabel = UILabel(frame: CGRect.init(x: 80, y: 15, width: 50, height: 50))
         myLabel2.numberOfLines = 0
         myLabel2.backgroundColor = .white
         myLabel2.textColor = Color.goldColor
@@ -570,11 +570,11 @@ extension Blog: UITableViewDelegate {
         myLabel2.isUserInteractionEnabled = true
         header.addSubview(myLabel2)
         
-        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
+        let separatorLineView2 = UIView.init(frame: CGRect.init(x: 80, y: 75, width: 50, height: 2.5))
         separatorLineView2.backgroundColor = Color.Blog.borderColor
         header.addSubview(separatorLineView2)
         
-        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
+        let myLabel3:UILabel = UILabel(frame: CGRect.init(x: 150, y: 15, width: 50, height: 50))
         myLabel3.numberOfLines = 0
         myLabel3.backgroundColor = .white
         myLabel3.textColor = Color.goldColor
@@ -588,7 +588,7 @@ extension Blog: UITableViewDelegate {
         myLabel3.isUserInteractionEnabled = true
         header.addSubview(myLabel3)
         
-        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
+        let separatorLineView3 = UIView.init(frame: CGRect.init(x: 150, y: 75, width: 50, height: 2.5))
         separatorLineView3.backgroundColor = Color.Blog.borderColor
         header.addSubview(separatorLineView3)
         

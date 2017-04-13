@@ -139,7 +139,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         cell.blogsubtitleLabel!.textColor = .gray
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {

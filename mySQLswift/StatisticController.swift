@@ -91,8 +91,8 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
-        setupNewsNavigationItems()
         self.refreshData()
+        setupNewsNavigationItems()
     }
     
     override func didReceiveMemoryWarning() {
@@ -155,7 +155,8 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         let CellIdentifier: String = "Cell"
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)! as UITableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath) as UITableViewCell! else { fatalError("Unexpected Index Path") }
+
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.textLabel!.font = Font.Stat.celltitlePad
@@ -173,8 +174,8 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             label2.font = Font.celltitle18m
         }
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
-        cell.accessoryType = UITableViewCellAccessoryType.none
+        cell.selectionStyle = .none
+        cell.accessoryType = .none
         cell.textLabel!.textColor = .black
         cell.detailTextLabel!.textColor = .black
         label1.textColor = .black

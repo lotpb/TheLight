@@ -64,7 +64,7 @@ class GetAddress: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell",
                                              for: indexPath)
     
-    cell.selectionStyle = UITableViewCellSelectionStyle.none
+    cell.selectionStyle = .none
     cell.detailTextLabel!.textColor = UIColor.lightGray
     
     if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {

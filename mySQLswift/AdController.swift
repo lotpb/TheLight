@@ -28,7 +28,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     lazy var titleButton: UIButton = {
         let button = UIButton()
-        button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
+        button.frame = CGRect.init(x: 0, y: 0, width: 100, height: 32)
         button.setTitle("Advertisers", for: .normal)
         button.titleLabel?.font = Font.navlabel
         button.titleLabel?.textAlignment = .center
@@ -137,7 +137,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.selectionStyle = .none
         
         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
             cell.adtitleLabel!.font = Font.celltitle22m
@@ -153,7 +153,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
 
         }
         
-        let myLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
+        let myLabel:UILabel = UILabel.init(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
         myLabel.backgroundColor = Color.Table.labelColor
         myLabel.text = "Ad"
         myLabel.font = Font.celltitle14m
@@ -195,11 +195,11 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         myLabel1.isUserInteractionEnabled = true
         vw.addSubview(myLabel1)
         
-        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
+        let separatorLineView1 = UIView.init(frame: CGRect.init(x: 10, y: 75, width: 50, height: 2.5))
         separatorLineView1.backgroundColor = Color.Table.labelColor
         vw.addSubview(separatorLineView1)
         
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
+        let myLabel2:UILabel = UILabel(frame: CGRect.init(x: 80, y: 15, width: 50, height: 50))
         myLabel2.numberOfLines = 0
         myLabel2.backgroundColor = .white
         myLabel2.textColor = .black
@@ -211,11 +211,11 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         myLabel2.isUserInteractionEnabled = true
         vw.addSubview(myLabel2)
         
-        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
+        let separatorLineView2 = UIView.init(frame: CGRect.init(x: 80, y: 75, width: 50, height: 2.5))
         separatorLineView2.backgroundColor = Color.Table.labelColor
         vw.addSubview(separatorLineView2)
         
-        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
+        let myLabel3:UILabel = UILabel(frame: CGRect.init(x: 150, y: 15, width: 50, height: 50))
         myLabel3.numberOfLines = 0
         myLabel3.backgroundColor = .white
         myLabel3.text = "Active"
@@ -227,7 +227,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         myLabel3.isUserInteractionEnabled = true
         vw.addSubview(myLabel3)
         
-        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
+        let separatorLineView3 = UIView.init(frame: CGRect.init(x: 150, y: 75, width: 50, height: 2.5))
         separatorLineView3.backgroundColor = Color.Table.labelColor
         vw.addSubview(separatorLineView3)
         
@@ -251,13 +251,12 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         if editingStyle == .delete {
             
-            let query = PFQuery(className:"Advertising")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
-            
             let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
             
             let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
                 
+                let query = PFQuery(className:"Advertising")
+                query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
                 query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
                     if error == nil {
                         for object in objects! {

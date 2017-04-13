@@ -248,7 +248,6 @@ public extension String {
     }
 }
 
-
 // MARK: - AlertController
 
 public extension UIViewController {
@@ -327,20 +326,16 @@ class CustomImageView: UIImageView {
         let url = URL(string: urlString)
         image = nil
         
-        
         if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
             self.image = imageFromCache
             return
         }
         
-        
         URLSession.shared.dataTask(with: url!, completionHandler: { [weak self] (data, response, error) in
             if error != nil {
                 return
             }
-            
-            
-            
+
             DispatchQueue.main.async(execute: {
                 let imageToCache = UIImage(data: data!)
                 if self?.imageUrlString == urlString {
