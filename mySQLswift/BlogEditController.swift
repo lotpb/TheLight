@@ -31,6 +31,7 @@ class BlogEditController: UIViewController {
     var rating : String?
     var replyId : String?
     var liked : Int?
+    var commentNum : Int?
     //added reply
     var posttoIndex: String?
     var userIndex: String?
@@ -166,7 +167,12 @@ class BlogEditController: UIViewController {
     }
  
     func deleteButton(_ sender: AnyObject) {
-        deleteBlog(name: self.objectId!)
+        
+        if (commentNum == nil || commentNum == 0) {
+            deleteBlog(name: self.objectId!)
+        } else {
+            self.simpleAlert(title: "Oops!", message: "Record can't be deleted.")
+        }
     }
     
     func deleteBlog(name: String) {
@@ -181,8 +187,10 @@ class BlogEditController: UIViewController {
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
-                        //self.deincrementComment()
                         self.navigationController?.popViewController(animated: true)
+                        //if (self.commentNum! > 0) {
+                            self.deincrementComment()
+                        //}
                     }
                 }
             })
@@ -238,7 +246,6 @@ class BlogEditController: UIViewController {
         let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alert: UIAlertAction!) in
             
             self.deleteBlog(name: ((self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-            self.deincrementComment()
         }
         
         let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) in
@@ -257,18 +264,6 @@ class BlogEditController: UIViewController {
         self.present(actionSheet, animated: true)
     }
     
-    // MARK: - Deincrement Comment
-    func deincrementComment() {
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo: self.objectId!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                object?.incrementKey("CommentCount", byAmount: -1)
-                object?.saveInBackground()
-            }
-        }
-    }
-    
     // MARK: - Parse
     
     func parseData() {
@@ -283,6 +278,19 @@ class BlogEditController: UIViewController {
                 self.listTableView!.reloadData()
             } else {
                 print("Error")
+            }
+        }
+    }
+    
+    // MARK: Deincrement Comment
+    func deincrementComment() {
+        if (commentNum == nil || commentNum == 0) { return }
+        let query = PFQuery(className:"Blog")
+        query.whereKey("objectId", equalTo: self.objectId!)
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+            if error == nil {
+                object?.incrementKey("CommentCount", byAmount: NSNumber(value: -1))
+                object?.saveInBackground()
             }
         }
     }
@@ -608,15 +616,19 @@ extension BlogEditController: UITableViewDataSource {
 
 extension BlogEditController: UITableViewDelegate {
     
+    // MARK: - Content Menu
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
+            
             objects.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }

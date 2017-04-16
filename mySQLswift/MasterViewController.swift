@@ -341,7 +341,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel2.backgroundColor = .white
                 myLabel2.textColor = Color.goldColor
                 myLabel2.textAlignment = .center
-                myLabel2.text = "NASDAQ \n \(tradeYQL![0])"
+                myLabel2.text = String(format: "%@%@", "NASDAQ \n", tradeYQL![0] as! CVarArg)
+                //myLabel2.text = "NASDAQ \n \(tradeYQL![0])"
                 myLabel2.font = Font.celltitle14m
                 myLabel2.layer.cornerRadius = 37.0
                 myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
@@ -372,7 +373,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel3.backgroundColor = .white
                 myLabel3.textColor = Color.goldColor
                 myLabel3.textAlignment = .center
-                myLabel3.text = "S&P 500 \n \(tradeYQL![1])"
+                myLabel3.text = String(format: "%@%@", "S&P 500 \n", tradeYQL![1] as! CVarArg)
+                //myLabel3.text = "S&P 500 \n \(tradeYQL![1])"
                 myLabel3.font = Font.celltitle14m
                 myLabel3.layer.cornerRadius = 37.0
                 myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
@@ -411,7 +413,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                         myLabel4.textColor = .green
                     }
                 } else {
-                    myLabel4.text = "Not Available"
+                    myLabel4.text = "Weather not available"
                     myLabel4.textColor = .red
                 }
                 myLabel4.font = Font.celltitle16l
@@ -472,7 +474,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             
             guard let versionId = object?.value(forKey: "VersionId") as! String? else {
-                print("No backend version")
+                print("No VersionID")
                 return
             }
             if (versionId != self.defaults.string(forKey: "versionKey")) {

@@ -25,8 +25,7 @@ class Blog: UIViewController {
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers = [String]()
-    
-    //var vw = UIView()
+
     let header = UIView()
     
     var buttonView: UIView?
@@ -91,11 +90,10 @@ class Blog: UIViewController {
         self.tableView!.backgroundColor = .clear //UIColor(white:0.90, alpha:1.0)
         self.tableView!.estimatedRowHeight = 110
         self.tableView!.rowHeight = UITableViewAutomaticDimension
-        //self.tableView!.tableFooterView = UIView(frame: .zero)
+        self.tableView!.tableFooterView = UIView(frame: .zero)
         // MARK: - TableHeader
         self.automaticallyAdjustsScrollViewInsets = false //fix
         header.backgroundColor = Color.Blog.navColor
-        //header.frame = CGRect(x: 0, y: 0, width: (tableView?.frame.width)!, height: 90)
         //self.tableView!.tableHeaderView = header
         
         resultsController = UITableViewController(style: .plain)
@@ -115,7 +113,7 @@ class Blog: UIViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (self.lastContentOffset > scrollView.contentOffset.y) {
             NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
-            self.tableView!.tableHeaderView = nil
+            //self.tableView!.tableHeaderView = nil
         } else {
             NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
             self.tableView!.tableHeaderView = header
@@ -124,6 +122,8 @@ class Blog: UIViewController {
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.lastContentOffset = scrollView.contentOffset.y
+        self.tableView!.tableHeaderView = nil //added
+
     }
     
     
@@ -224,6 +224,33 @@ class Blog: UIViewController {
         }
     }
     
+    func deleteBlog(name: String) {
+        
+        let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
+        let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
+            
+            let query = PFQuery(className:"Blog")
+            query.whereKey("objectId", equalTo: name)
+            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+                if error == nil {
+                    for object in objects! {
+                        object.deleteInBackground()
+                        self.refreshData(self)
+                    }
+                }
+            })
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            self.refreshData(self)
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(destroyAction)
+        self.present(alertController, animated: true) {
+        }
+    }
+
+    
     // MARK: - AlertController
     
     func showShare(sender: UIButton) {
@@ -323,6 +350,7 @@ class Blog: UIViewController {
             VC!.msgDate = (_feedItems[myIndexPath] as AnyObject).value(forKey: "MsgDate") as? String
             VC!.rating = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Rating") as? String
             VC!.liked = (_feedItems[myIndexPath] as AnyObject).value(forKey: "Liked") as? Int
+            VC!.commentNum = (_feedItems[myIndexPath] as AnyObject).value(forKey: "CommentCount") as? Int
             VC!.replyId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "ReplyId") as? String
         }
         if segue.identifier == "blognewSegue" {
@@ -595,44 +623,30 @@ extension Blog: UITableViewDelegate {
         return header
     }
     
+    // MARK: - Content Menu
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
             
-            let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo:((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
+            let commentNum : Int? = (self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "CommentCount") as? Int
+            let deleteStr = ((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!
             
-            let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
-            
-            let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
-                    if error == nil {
-                        for object in objects! {
-                            object.deleteInBackground()
-                            self.refreshData(self)
-                        }
-                    }
-                })
+            if (commentNum == nil || commentNum == 0) {
+                self.deleteBlog(name: deleteStr)
+                _feedItems.removeObject(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            } else {
+                self.simpleAlert(title: "Oops!", message: "Record can't be deleted.")
             }
-            
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-                self.refreshData(self)
-            }
-            
-            alertController.addAction(cancelAction)
-            alertController.addAction(destroyAction)
-            self.present(alertController, animated: true) {
-            }
-            
-            _feedItems.removeObject(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            
+            self.refreshData(self)
         } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+            
         }
     }
 }

@@ -120,7 +120,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        segmentedControl.selectedSegmentIndex = 0
+        
         //Fix Grey Bar on Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {

@@ -168,6 +168,32 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         }
     }
     
+    func deleteData(name: String) {
+        
+        let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
+        let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
+            
+            let query = PFQuery(className:"Leads")
+            query.whereKey("objectId", equalTo: name)
+            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+                if error == nil {
+                    for object in objects! {
+                        object.deleteInBackground()
+                        self.refreshData(self)
+                    }
+                }
+            })
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            self.refreshData(self)
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(destroyAction)
+        self.present(alertController, animated: true) {
+        }
+    }
+    
     // MARK: - imgLoadSegue
     
     func imgLoadSegue(_ sender:UITapGestureRecognizer) {
@@ -551,31 +577,9 @@ extension Lead: UITableViewDelegate {
         
         if editingStyle == .delete {
             
-            let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
+            let deleteStr = ((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!
             
-            let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
-                
-                let query = PFQuery(className:"Leads")
-                query.whereKey("objectId", equalTo: ((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!)
-                query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
-                    if error == nil {
-                        for object in objects! {
-                            object.deleteInBackground()
-                            //self.refreshData(self)
-                        }
-                    }
-                })
-            }
-            
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-                self.refreshData(self)
-            }
-            
-            alertController.addAction(cancelAction)
-            alertController.addAction(destroyAction)
-            self.present(alertController, animated: true) {
-            }
-            
+            self.deleteData(name: deleteStr)
             _feedItems.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
