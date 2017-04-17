@@ -60,6 +60,7 @@
 		AFA039731E08328E00E140E4 /* Geotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA039721E08328E00E140E4 /* Geotification.swift */; };
 		AFA039751E08329800E140E4 /* GetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA039741E08329800E140E4 /* GetAddress.swift */; };
 		AFA039791E08B0CD00E140E4 /* TestLocations.gpx in Resources */ = {isa = PBXBuildFile; fileRef = AFA039781E08B0CD00E140E4 /* TestLocations.gpx */; };
+		AFA4150B1EA40F7B00EC067A /* Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4150A1EA40F7B00EC067A /* Parse.swift */; };
 		AFB5A71E1C2C499200F8BC56 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB5A71D1C2C499200F8BC56 /* Vendor.swift */; };
 		AFB5A7201C2C4C7700F8BC56 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB5A71F1C2C4C7700F8BC56 /* Employee.swift */; };
 		AFBB9B7B1D2D398C00618586 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB9B7A1D2D398C00618586 /* MenuBar.swift */; };
@@ -190,6 +191,7 @@
 		AFA039721E08328E00E140E4 /* Geotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geotification.swift; sourceTree = "<group>"; };
 		AFA039741E08329800E140E4 /* GetAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAddress.swift; sourceTree = "<group>"; };
 		AFA039781E08B0CD00E140E4 /* TestLocations.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = TestLocations.gpx; sourceTree = "<group>"; };
+		AFA4150A1EA40F7B00EC067A /* Parse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parse.swift; sourceTree = "<group>"; };
 		AFAEAE421C775CE700DF86B1 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		AFAEAE451C775CE700DF86B1 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		AFAEAE481C775CE700DF86B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -303,6 +305,7 @@
 		AF0369A31C173DDC00137D7E /* TheLight */ = {
 			isa = PBXGroup;
 			children = (
+				AFA4150A1EA40F7B00EC067A /* Parse.swift */,
 				AF69A34C1D7B1BF9002BE793 /* TheLight.entitlements */,
 				AFE6936E1C6A4D7E000BEDCE /* Extensions.swift */,
 				AFD1EC801E2D21B100DC991A /* TheLight+navbar.swift */,
@@ -861,6 +864,7 @@
 				AFC4002E1C6025700095333E /* PlayerViewController.swift in Sources */,
 				AFD754F41C4FFEB200021F97 /* UploadController.swift in Sources */,
 				AF1E6D561C1920FC0009230E /* CustomTableCell.swift in Sources */,
+				AFA4150B1EA40F7B00EC067A /* Parse.swift in Sources */,
 				AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */,
 				AF74E4601D1BFF58004DE7D6 /* SettingCell.swift in Sources */,
 				AF5BCEF11E0A2830007A9093 /* CreateContactViewController.swift in Sources */,

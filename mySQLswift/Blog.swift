@@ -51,11 +51,10 @@ class Blog: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationController?.navigationBar.isTranslucent = false
 
         setupTableView()
         self.tableView!.addSubview(self.refreshControl)
+        //navigationController?.navigationBar.isTranslucent = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -661,9 +660,10 @@ extension Blog: UISearchBarDelegate {
         searchController.searchBar.barTintColor = Color.Blog.navColor
         tableView!.tableFooterView = UIView(frame: .zero)
         //fix searchbar behind navbar
-        //searchController.hidesNavigationBarDuringPresentation = false //fix added
+        searchController.hidesNavigationBarDuringPresentation = false //fix added
         //searchController.searchBar.searchBarStyle = .minimal //fix added
-        //definesPresentationContext = true //fix added
+        definesPresentationContext = true //fix added
+        
         self.present(searchController, animated: true)
     }
 }

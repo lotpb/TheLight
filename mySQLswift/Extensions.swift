@@ -252,7 +252,7 @@ public extension String {
 
 public extension UIViewController {
     
-    func simpleAlert (title:String?, message:String?) { //withTitle:
+    func simpleAlert(title:String?, message:String?) { //withTitle:
  
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

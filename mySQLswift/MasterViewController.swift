@@ -82,11 +82,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         // yahoo bad weather warning
         if (defaults.bool(forKey: "weatherNotifyKey"))  {
             guard let severeYQL = textYQL else { return }
-            if (severeYQL.contains("Rain") ||
-                severeYQL.contains("Snow") ||
-                severeYQL.contains("Thunderstorms") ||
-                severeYQL.contains("Showers")) {
-                self.simpleAlert(title: "Info", message: "Bad weather today!")
+            if (severeYQL.contains("Rain") || severeYQL.contains("Snow") || severeYQL.contains("Thunderstorms") || severeYQL.contains("Showers")) {
+                
+                DispatchQueue.main.async {
+                    self.simpleAlert(title: "Alert!", message: "Bad weather today!")
+                }
             }
         }
         
