@@ -16,9 +16,17 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var tableView: UITableView!
     
+    var _feedItems : NSMutableArray = NSMutableArray() //news
+    var _feedItems2 : NSMutableArray = NSMutableArray() //job
+    var _feedItems3 : NSMutableArray = NSMutableArray() //user
+    var _feedItems4 : NSMutableArray = NSMutableArray() //salesman
+    var _feedItems5 : NSMutableArray = NSMutableArray() //employee
+    var _feedItems6 : NSMutableArray = NSMutableArray() //blog
+    var filteredString : NSMutableArray = NSMutableArray()
+    
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var foundUsers = [String]()
+    var foundUsers:[String] = []
     
     var selectedImage : UIImage!
 
@@ -56,13 +64,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var maintitle : UILabel!
     var datetitle : UILabel!
     var myLabel1 : UILabel!
-
-    var _feedItems : NSMutableArray = NSMutableArray() //news
-    var _feedItems2 : NSMutableArray = NSMutableArray() //job
-    var _feedItems3 : NSMutableArray = NSMutableArray() //user
-    var _feedItems4 : NSMutableArray = NSMutableArray() //salesman
-    var _feedItems5 : NSMutableArray = NSMutableArray() //employee
-    var _feedItems6 : NSMutableArray = NSMutableArray() //blog
     
     var imageObject :PFObject!
     var imageFile :PFFile!
@@ -97,6 +98,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         // MARK: - SplitView
+
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar'
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
@@ -260,12 +262,15 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if (section == 0) {
-            return 3
-        } else if (section == 3) {
-            return 3
+        if tableView == self.tableView {
+            if (section == 0) {
+                return 3
+            } else if (section == 3) {
+                return 3
+            }
+            return 2
         }
-        return 2
+        return foundUsers.count
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -276,7 +281,15 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
+        var cellIdentifier: String!
+        
+        if tableView == self.tableView {
+            cellIdentifier = "Cell"
+        } else {
+            cellIdentifier = "UserFoundCell"
+        }
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CustomTableCell
         
         cell.collectionView.delegate =  nil
         cell.collectionView.dataSource = nil
@@ -1042,35 +1055,6 @@ extension SnapshotController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         
-        let firstNameQuery = PFQuery(className:"Leads")
-        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
-        
-        let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
-        
-        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
-            
-            if error != nil {
-                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
-                return
-            }
-            if let objects = results {
-                self.foundUsers.removeAll(keepingCapacity: false)
-                for object in objects {
-                    let firstName = object.object(forKey: "First") as! String
-                    let lastName = object.object(forKey: "LastName") as! String
-                    let fullName = firstName + " " + lastName
-                    
-                    self.foundUsers.append(fullName)
-                    print(fullName)
-                }
-                DispatchQueue.main.async {
-                    self.resultsController.tableView.reloadData()
-                    self.searchController.resignFirstResponder()
-                }
-            }
-        }
     }
 }
 

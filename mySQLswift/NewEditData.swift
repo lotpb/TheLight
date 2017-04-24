@@ -35,7 +35,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var foundUsers = [String]()
+    var foundUsers:[String] = []
     
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)

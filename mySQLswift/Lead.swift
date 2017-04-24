@@ -22,7 +22,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
     var pasteBoard = UIPasteboard.general
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var foundUsers = [String]()
+    var foundUsers:[String] = []
     
     var objectIdLabel = String()
     var titleLabel = String()

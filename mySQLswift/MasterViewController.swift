@@ -85,7 +85,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             if (severeYQL.contains("Rain") || severeYQL.contains("Snow") || severeYQL.contains("Thunderstorms") || severeYQL.contains("Showers")) {
                 
                 DispatchQueue.main.async {
-                    self.simpleAlert(title: "Alert!", message: "Bad weather today!")
+                    self.simpleAlert(title: severeYQL, message: "Bad weather today!")
                 }
             }
         }
@@ -341,8 +341,8 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel2.backgroundColor = .white
                 myLabel2.textColor = Color.goldColor
                 myLabel2.textAlignment = .center
-                myLabel2.text = String(format: "%@%@", "NASDAQ \n", tradeYQL![0] as! CVarArg)
-                //myLabel2.text = "NASDAQ \n \(tradeYQL![0])"
+                //myLabel2.text = String(format: "%@%@", "NASDAQ \n", (tradeYQL![0] as? CVarArg ?? "na")!)
+                myLabel2.text = "NASDAQ \n \(tradeYQL?[0] ?? "na")"
                 myLabel2.font = Font.celltitle14m
                 myLabel2.layer.cornerRadius = 37.0
                 myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
@@ -354,7 +354,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 85, width: 74, height: 20))
                 myLabel25.numberOfLines = 1
                 myLabel25.textAlignment = .center
-                myLabel25.text = changeYQL[0] as? String
+                myLabel25.text = "\(changeYQL?[0] ?? "na")"
                 myLabel25.font = Font.celltitle14m
                 vw.addSubview(myLabel25)
                 
@@ -373,8 +373,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel3.backgroundColor = .white
                 myLabel3.textColor = Color.goldColor
                 myLabel3.textAlignment = .center
-                myLabel3.text = String(format: "%@%@", "S&P 500 \n", tradeYQL![1] as! CVarArg)
-                //myLabel3.text = "S&P 500 \n \(tradeYQL![1])"
+                myLabel3.text = "S&P 500 \n \(tradeYQL?[1] ?? "na")"
                 myLabel3.font = Font.celltitle14m
                 myLabel3.layer.cornerRadius = 37.0
                 myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
@@ -386,7 +385,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 85, width: 74, height: 20))
                 myLabel35.numberOfLines = 1
                 myLabel35.textAlignment = .center
-                myLabel35.text = changeYQL[1] as? String //" \(changeYQL![1])"
+                myLabel35.text = "\(changeYQL?[1] ?? "na")"
                 myLabel35.font = Font.celltitle14m
                 vw.addSubview(myLabel35)
                 

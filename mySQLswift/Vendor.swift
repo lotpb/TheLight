@@ -22,7 +22,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var pasteBoard = UIPasteboard.general
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var foundUsers:[[String:AnyObject]]!
+    var foundUsers:[String] = []
     
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
@@ -125,7 +125,8 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         var cellIdentifier: String!
-        if tableView == self.tableView{
+        
+        if tableView == self.tableView {
             cellIdentifier = "Cell"
         }else{
             cellIdentifier = "UserFoundCell"
@@ -469,33 +470,8 @@ extension Vendor: UISearchBarDelegate {
 }
 
 extension Vendor: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
         
-        let NameQuery = PFQuery(className:"Vendor")
-        NameQuery.whereKey("Name", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
-        
-        let query = PFQuery.orQuery(withSubqueries: [NameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
-            
-            if error != nil {
-                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
-                return
-            }
-            if let objects = results {
-                self.foundUsers.removeAll(keepingCapacity: false)
-                for object in objects {
-                    //let firstName = object.object(forKey: "First") as! String
-                    let Name = object.object(forKey: "Name") as! String
-                    //let fullName = firstName + " " + lastName
-                    
-                    //self.foundUsers.append(Name)
-                    print(Name)
-                }
-                DispatchQueue.main.async {
-                    self.resultsController.tableView.reloadData()
-                    self.searchController.resignFirstResponder()
-                }
-            }
-        }
     }
 }

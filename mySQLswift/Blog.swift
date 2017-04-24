@@ -24,7 +24,7 @@ class Blog: UIViewController {
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var foundUsers = [String]()
+    var foundUsers:[String] = []
 
     let header = UIView()
     
@@ -652,6 +652,7 @@ extension Blog: UITableViewDelegate {
 
     // MARK: - UISearchBar Delegate
 extension Blog: UISearchBarDelegate {
+    
     func searchButton(_ sender: AnyObject) {
         searchController = UISearchController(searchResultsController: resultsController)
         searchController.searchResultsUpdater = self
@@ -659,18 +660,19 @@ extension Blog: UISearchBarDelegate {
         searchController.searchBar.scopeButtonTitles = searchScope
         searchController.searchBar.barTintColor = Color.Blog.navColor
         tableView!.tableFooterView = UIView(frame: .zero)
+        
         //fix searchbar behind navbar
-        searchController.hidesNavigationBarDuringPresentation = false //fix added
+        //searchController.hidesNavigationBarDuringPresentation = false //fix added
         //searchController.searchBar.searchBarStyle = .minimal //fix added
-        definesPresentationContext = true //fix added
+        //definesPresentationContext = true //fix added
         
         self.present(searchController, animated: true)
     }
 }
 
 extension Blog: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
-        
         
     }
 } 

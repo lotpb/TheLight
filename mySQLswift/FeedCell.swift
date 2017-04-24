@@ -55,7 +55,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         let query = PFQuery(className:"Newsios")
         //query.limit = 1000
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        //query.cachePolicy = PFCachePolicy.cacheThenNetwork
         query.order(byDescending: "createdAt")
         query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
             if error == nil {

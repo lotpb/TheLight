@@ -27,7 +27,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     var pasteBoard = UIPasteboard.general
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var foundUsers = [String]()
+    var foundUsers:[String] = []
     
     var userProfileImageView: CustomImageView = {
         var imageView = CustomImageView()
@@ -428,36 +428,8 @@ extension SalesmanController: UISearchBarDelegate {
 }
 
 extension SalesmanController: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
         
-        let firstNameQuery = PFQuery(className:"Leads")
-        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
-        
-        let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
-        
-        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
-            
-            if error != nil {
-                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
-                return
-            }
-            if let objects = results {
-                self.foundUsers.removeAll(keepingCapacity: false)
-                for object in objects {
-                    let firstName = object.object(forKey: "First") as! String
-                    let lastName = object.object(forKey: "LastName") as! String
-                    let fullName = firstName + " " + lastName
-                    
-                    self.foundUsers.append(fullName)
-                    print(fullName)
-                }
-                DispatchQueue.main.async {
-                    self.resultsController.tableView.reloadData()
-                    self.searchController.resignFirstResponder()
-                }
-            }
-        }
     }
 }

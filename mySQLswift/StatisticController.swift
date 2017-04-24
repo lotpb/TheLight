@@ -16,7 +16,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
-    var foundUsers = [String]()
+    var foundUsers:[String] = []
     
     var _feedCustItems : NSMutableArray = NSMutableArray()
     var _feedLeadItems : NSMutableArray = NSMutableArray()
