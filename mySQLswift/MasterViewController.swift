@@ -70,7 +70,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         setupNavBarButtons()
         speech()
         setupTableView()
-        updateYahoo()
+        //updateYahoo()
         self.navigationItem.titleView = self.titleButton
         
         // MARK: - Sound
@@ -120,7 +120,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
         
         return true
-    }
+    } 
     
     func setupNavBarButtons() {
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
@@ -354,6 +354,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 85, width: 74, height: 20))
                 myLabel25.numberOfLines = 1
                 myLabel25.textAlignment = .center
+                //myLabel25.text = changeYQL[0] as? String
                 myLabel25.text = "\(changeYQL?[0] ?? "na")"
                 myLabel25.font = Font.celltitle14m
                 vw.addSubview(myLabel25)
@@ -373,6 +374,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel3.backgroundColor = .white
                 myLabel3.textColor = Color.goldColor
                 myLabel3.textAlignment = .center
+                //myLabel3.text = String(format: "%@%@", "S&P 500 \n", tradeYQL![1] as! CVarArg)
                 myLabel3.text = "S&P 500 \n \(tradeYQL?[1] ?? "na")"
                 myLabel3.font = Font.celltitle14m
                 myLabel3.layer.cornerRadius = 37.0
@@ -385,6 +387,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 85, width: 74, height: 20))
                 myLabel35.numberOfLines = 1
                 myLabel35.textAlignment = .center
+                //myLabel35.text = changeYQL[1] as? String //" \(changeYQL![1])"
                 myLabel35.text = "\(changeYQL?[1] ?? "na")"
                 myLabel35.font = Font.celltitle14m
                 vw.addSubview(myLabel35)

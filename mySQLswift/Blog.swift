@@ -94,7 +94,8 @@ class Blog: UIViewController {
         self.automaticallyAdjustsScrollViewInsets = false //fix
         header.backgroundColor = Color.Blog.navColor
         //self.tableView!.tableHeaderView = header
-        
+        //tableView?.layoutIfNeeded()
+    
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
         resultsController.tableView.dataSource = self

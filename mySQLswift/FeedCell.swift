@@ -61,7 +61,9 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
+                DispatchQueue.main.async { //added
                 self.collectionView.reloadData()
+                }
             } else {
                 print("Errortube")
             }

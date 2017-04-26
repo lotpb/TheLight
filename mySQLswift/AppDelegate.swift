@@ -224,11 +224,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     
     // MARK: - Split view opens maincontroller
-    
+    /*
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
         
         return true
-    } 
+    } */
     
      // MARK: - Music Controller
     
