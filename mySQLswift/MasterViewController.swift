@@ -70,7 +70,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         setupNavBarButtons()
         speech()
         setupTableView()
-        //updateYahoo()
+        updateYahoo()
         self.navigationItem.titleView = self.titleButton
         
         // MARK: - Sound
@@ -140,7 +140,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
     
     func refreshData() {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             self.updateYahoo()
         }
         self.tableView.reloadData()
@@ -223,7 +223,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         cell.selectionStyle = .none
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.textLabel!.font = Font.celltitle22m
         } else {
             cell.textLabel!.font = Font.celltitle20l
@@ -289,7 +289,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if (section == 0) {
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            if UI_USER_INTERFACE_IDIOM() == .phone {
                 return 145.0
             } else {
                 return 0
@@ -304,7 +304,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if (section == 0) {
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            if UI_USER_INTERFACE_IDIOM() == .phone {
                 
                 let vw = UIView()
                 vw.backgroundColor = .black
@@ -341,7 +341,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel2.backgroundColor = .white
                 myLabel2.textColor = Color.goldColor
                 myLabel2.textAlignment = .center
-                //myLabel2.text = String(format: "%@%@", "NASDAQ \n", (tradeYQL![0] as? CVarArg ?? "na")!)
                 myLabel2.text = "NASDAQ \n \(tradeYQL?[0] ?? "na")"
                 myLabel2.font = Font.celltitle14m
                 myLabel2.layer.cornerRadius = 37.0
@@ -354,7 +353,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let myLabel25:UILabel = UILabel(frame: CGRect(x: 110, y: 85, width: 74, height: 20))
                 myLabel25.numberOfLines = 1
                 myLabel25.textAlignment = .center
-                //myLabel25.text = changeYQL[0] as? String
                 myLabel25.text = "\(changeYQL?[0] ?? "na")"
                 myLabel25.font = Font.celltitle14m
                 vw.addSubview(myLabel25)
@@ -374,7 +372,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel3.backgroundColor = .white
                 myLabel3.textColor = Color.goldColor
                 myLabel3.textAlignment = .center
-                //myLabel3.text = String(format: "%@%@", "S&P 500 \n", tradeYQL![1] as! CVarArg)
                 myLabel3.text = "S&P 500 \n \(tradeYQL?[1] ?? "na")"
                 myLabel3.font = Font.celltitle14m
                 myLabel3.layer.cornerRadius = 37.0
@@ -387,7 +384,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 let myLabel35:UILabel = UILabel(frame: CGRect(x: 210, y: 85, width: 74, height: 20))
                 myLabel35.numberOfLines = 1
                 myLabel35.textAlignment = .center
-                //myLabel35.text = changeYQL[1] as? String //" \(changeYQL![1])"
                 myLabel35.text = "\(changeYQL?[1] ?? "na")"
                 myLabel35.font = Font.celltitle14m
                 vw.addSubview(myLabel35)
@@ -472,7 +468,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     func versionCheck() {
         
         let query = PFQuery(className:"Version")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             
             guard let versionId = object?.value(forKey: "VersionId") as! String? else {

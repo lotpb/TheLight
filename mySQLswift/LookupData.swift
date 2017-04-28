@@ -27,11 +27,11 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView?
  
-    var zipArray : NSMutableArray = NSMutableArray()
-    var salesArray : NSMutableArray = NSMutableArray()
-    var jobArray : NSMutableArray = NSMutableArray()
-    var adproductArray : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var zipArray = NSMutableArray()
+    var salesArray = NSMutableArray()
+    var jobArray = NSMutableArray()
+    var adproductArray = NSMutableArray()
+    var filteredString = NSMutableArray()
     
     var lookupItem : String?
     var isFilltered = false
@@ -149,7 +149,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         cell.selectionStyle = .none
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             cell.textLabel!.font = Font.celltitle20l
             
@@ -202,8 +202,8 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let query = PFQuery(className:"Zip")
         query.limit = 1000
         query.order(byAscending: "City")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self.zipArray = temp.mutableCopy() as! NSMutableArray
@@ -216,8 +216,8 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let query1 = PFQuery(className:"Salesman")
         query1.limit = 1000
         query1.order(byAscending: "Salesman")
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.cachePolicy = .cacheThenNetwork
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self.salesArray = temp.mutableCopy() as! NSMutableArray
@@ -230,8 +230,8 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let query2 = PFQuery(className:"Job")
         query2.limit = 1000
         query2.order(byAscending: "Description")
-        query2.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query2.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query2.cachePolicy = .cacheThenNetwork
+        query2.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self.jobArray = temp.mutableCopy() as! NSMutableArray
@@ -246,8 +246,8 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let query3 = PFQuery(className:"Product")
             query3.limit = 1000
             query3.order(byDescending: "Products")
-            query3.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query3.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            query3.cachePolicy = .cacheThenNetwork
+            query3.findObjectsInBackground { objects, error in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self.adproductArray = temp.mutableCopy() as! NSMutableArray
@@ -261,8 +261,8 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let query4 = PFQuery(className:"Advertising")
             query4.limit = 1000
             query4.order(byDescending: "Advertiser")
-            query4.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query4.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            query4.cachePolicy = .cacheThenNetwork
+            query4.findObjectsInBackground { objects, error in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self.adproductArray = temp.mutableCopy() as! NSMutableArray

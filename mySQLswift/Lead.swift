@@ -143,8 +143,8 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         let query = PFQuery(className:"Leads")
         query.limit = 1000
         query.order(byDescending: "createdAt")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -156,8 +156,8 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         
         let query1 = PFQuery(className:"Leads")
         query1.whereKey("Active", equalTo:1)
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.cachePolicy = .cacheThenNetwork
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -175,7 +175,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
             
             let query = PFQuery(className:"Leads")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
@@ -411,7 +411,7 @@ extension Lead: UITableViewDataSource {
         
         cell.leadsubtitleLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             cell.leadtitleLabel!.font = Font.celltitle22m
             cell.leadsubtitleLabel!.font = Font.celltitle16r
@@ -498,7 +498,7 @@ extension Lead: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0.0

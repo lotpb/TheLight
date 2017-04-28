@@ -137,7 +137,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     }
     
     func setupFonts() {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.subject?.font = Font.Detail.VtextAmount
             self.volume?.font = Font.Detail.VtextAmount
             self.pitch?.font = Font.Detail.VtextAmount

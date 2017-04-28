@@ -20,7 +20,7 @@ extension UIViewController {
             
             let query = PFQuery(className:"Blog")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()

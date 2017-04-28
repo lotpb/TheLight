@@ -173,7 +173,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
     func setupMenuBar() {
         
         let redView = UIView()
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             redView.backgroundColor = .black
         } else {
             redView.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)

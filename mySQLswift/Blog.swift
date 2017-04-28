@@ -181,9 +181,9 @@ class Blog: UIViewController {
         let query = PFQuery(className:"Blog")
         query.limit = 1000
         query.whereKey("ReplyId", equalTo:NSNull())
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp : NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -197,9 +197,9 @@ class Blog: UIViewController {
         query1.limit = 1000
         //query1.whereKey("Rating", equalTo:"5")
         query1.whereKey("Liked", notEqualTo:NSNull())
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.cachePolicy = .cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems2 = temp.mutableCopy() as! NSMutableArray
@@ -211,9 +211,9 @@ class Blog: UIViewController {
         
         let query3 = PFUser.query()
         query3?.limit = 1000
-        query3?.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query3?.cachePolicy = .cacheThenNetwork
         query3?.order(byDescending: "createdAt")
-        query3?.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query3?.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems3 = temp.mutableCopy() as! NSMutableArray
@@ -231,7 +231,7 @@ class Blog: UIViewController {
             
             let query = PFQuery(className:"Blog")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
@@ -400,7 +400,7 @@ extension Blog: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.blogsubtitleLabel?.textColor = Color.twitterText
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             cell.blogtitleLabel!.font =  Font.Blog.celltitlePad
             cell.blogsubtitleLabel!.font =  Font.Blog.cellsubtitlePad
@@ -419,7 +419,7 @@ extension Blog: UITableViewDataSource {
         
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo:(self._feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as! String)
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
@@ -557,7 +557,7 @@ extension Blog: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+            if UI_USER_INTERFACE_IDIOM() == .phone {
                 return 90.0
             } else {
                 return CGFloat.leastNormalMagnitude //0.0
@@ -566,60 +566,61 @@ extension Blog: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let myLabel1:UILabel = UILabel(frame: CGRect.init(x: 10, y: 15, width: 50, height: 50))
-        myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = Color.goldColor
-        myLabel1.textAlignment = .center
-        myLabel1.text = String(format: "%@%d", "posts\n", _feedItems.count)
-        myLabel1.font = Font.celltitle14m
-        myLabel1.layer.cornerRadius = 25.0
-        myLabel1.layer.borderColor = Color.Blog.borderColor.cgColor
-        myLabel1.layer.borderWidth = 1
-        myLabel1.layer.masksToBounds = true
-        myLabel1.isUserInteractionEnabled = true
-        header.addSubview(myLabel1)
-        
-        let separatorLineView1 = UIView.init(frame: CGRect.init(x: 10, y: 75, width: 50, height: 2.5))
-        separatorLineView1.backgroundColor = Color.Blog.borderColor
-        header.addSubview(separatorLineView1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect.init(x: 80, y: 15, width: 50, height: 50))
-        myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = Color.goldColor
-        myLabel2.textAlignment = .center
-        myLabel2.text = String(format: "%@%d", "likes\n", _feedheadItems2.count)
-        myLabel2.font = Font.celltitle14m
-        myLabel2.layer.cornerRadius = 25.0
-        myLabel2.layer.borderColor = Color.Blog.borderColor.cgColor
-        myLabel2.layer.borderWidth = 1
-        myLabel2.layer.masksToBounds = true
-        myLabel2.isUserInteractionEnabled = true
-        header.addSubview(myLabel2)
-        
-        let separatorLineView2 = UIView.init(frame: CGRect.init(x: 80, y: 75, width: 50, height: 2.5))
-        separatorLineView2.backgroundColor = Color.Blog.borderColor
-        header.addSubview(separatorLineView2)
-        
-        let myLabel3:UILabel = UILabel(frame: CGRect.init(x: 150, y: 15, width: 50, height: 50))
-        myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = .white
-        myLabel3.textColor = Color.goldColor
-        myLabel3.textAlignment = .center
-        myLabel3.text = String(format: "%@%d", "users\n", _feedheadItems3.count)
-        myLabel3.font = Font.celltitle14m
-        myLabel3.layer.cornerRadius = 25.0
-        myLabel3.layer.borderColor = Color.Blog.borderColor.cgColor
-        myLabel3.layer.borderWidth = 1
-        myLabel3.layer.masksToBounds = true
-        myLabel3.isUserInteractionEnabled = true
-        header.addSubview(myLabel3)
-        
-        let separatorLineView3 = UIView.init(frame: CGRect.init(x: 150, y: 75, width: 50, height: 2.5))
-        separatorLineView3.backgroundColor = Color.Blog.borderColor
-        header.addSubview(separatorLineView3)
-        
+        if UI_USER_INTERFACE_IDIOM() == .phone {
+            let myLabel1:UILabel = UILabel(frame: CGRect.init(x: 10, y: 15, width: 50, height: 50))
+            myLabel1.numberOfLines = 0
+            myLabel1.backgroundColor = .white
+            myLabel1.textColor = Color.goldColor
+            myLabel1.textAlignment = .center
+            myLabel1.text = String(format: "%@%d", "posts\n", _feedItems.count)
+            myLabel1.font = Font.celltitle14m
+            myLabel1.layer.cornerRadius = 25.0
+            myLabel1.layer.borderColor = Color.Blog.borderColor.cgColor
+            myLabel1.layer.borderWidth = 1
+            myLabel1.layer.masksToBounds = true
+            myLabel1.isUserInteractionEnabled = true
+            header.addSubview(myLabel1)
+            
+            let separatorLineView1 = UIView.init(frame: CGRect.init(x: 10, y: 75, width: 50, height: 2.5))
+            separatorLineView1.backgroundColor = Color.Blog.borderColor
+            header.addSubview(separatorLineView1)
+            
+            let myLabel2:UILabel = UILabel(frame: CGRect.init(x: 80, y: 15, width: 50, height: 50))
+            myLabel2.numberOfLines = 0
+            myLabel2.backgroundColor = .white
+            myLabel2.textColor = Color.goldColor
+            myLabel2.textAlignment = .center
+            myLabel2.text = String(format: "%@%d", "likes\n", _feedheadItems2.count)
+            myLabel2.font = Font.celltitle14m
+            myLabel2.layer.cornerRadius = 25.0
+            myLabel2.layer.borderColor = Color.Blog.borderColor.cgColor
+            myLabel2.layer.borderWidth = 1
+            myLabel2.layer.masksToBounds = true
+            myLabel2.isUserInteractionEnabled = true
+            header.addSubview(myLabel2)
+            
+            let separatorLineView2 = UIView.init(frame: CGRect.init(x: 80, y: 75, width: 50, height: 2.5))
+            separatorLineView2.backgroundColor = Color.Blog.borderColor
+            header.addSubview(separatorLineView2)
+            
+            let myLabel3:UILabel = UILabel(frame: CGRect.init(x: 150, y: 15, width: 50, height: 50))
+            myLabel3.numberOfLines = 0
+            myLabel3.backgroundColor = .white
+            myLabel3.textColor = Color.goldColor
+            myLabel3.textAlignment = .center
+            myLabel3.text = String(format: "%@%d", "users\n", _feedheadItems3.count)
+            myLabel3.font = Font.celltitle14m
+            myLabel3.layer.cornerRadius = 25.0
+            myLabel3.layer.borderColor = Color.Blog.borderColor.cgColor
+            myLabel3.layer.borderWidth = 1
+            myLabel3.layer.masksToBounds = true
+            myLabel3.isUserInteractionEnabled = true
+            header.addSubview(myLabel3)
+            
+            let separatorLineView3 = UIView.init(frame: CGRect.init(x: 150, y: 75, width: 50, height: 2.5))
+            separatorLineView3.backgroundColor = Color.Blog.borderColor
+            header.addSubview(separatorLineView3)
+        }
         return header
     }
     

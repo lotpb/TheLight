@@ -15,9 +15,9 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     @IBOutlet weak var tableView: UITableView?
    
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedheadItems : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedheadItems = NSMutableArray()
+    var filteredString = NSMutableArray()
 
     var isFormStat = false
     var pasteBoard = UIPasteboard.general
@@ -57,7 +57,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(AdController.searchButton))
         navigationItem.rightBarButtonItems = [addButton,searchButton]
         /*
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
         } */
 
@@ -139,7 +139,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
         cell.selectionStyle = .none
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.adtitleLabel!.font = Font.celltitle22m
         } else {
             cell.adtitleLabel!.font = Font.celltitle20l
@@ -170,7 +170,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0.0
@@ -290,8 +290,8 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         let query = PFQuery(className:"Advertising")
         //query.limit = 1000
         query.order(byAscending: "Advertiser")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -303,9 +303,9 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         let query1 = PFQuery(className:"Advertising")
         query1.whereKey("Active", equalTo:"Active")
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.cachePolicy = .cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -323,7 +323,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
             
             let query = PFQuery(className:"Advertising")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()

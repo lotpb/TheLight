@@ -36,7 +36,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - Transmit Beacon", for: .normal)
         } else {
             button.setTitle("Transmit Beacon", for: .normal)
@@ -54,7 +54,7 @@ class TransmitBeaconController: UIViewController, CBPeripheralManagerDelegate {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.lblStatus?.font = Font.Snapshot.celltitlePad
             self.txtMajor?.font = Font.Snapshot.celltitlePad
             self.txtMinor?.font = Font.Snapshot.celltitlePad

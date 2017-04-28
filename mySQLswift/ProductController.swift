@@ -17,9 +17,9 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     var isFormStat = false
     var selectedImage: UIImage?
     
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedheadItems : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedheadItems = NSMutableArray()
+    var filteredString = NSMutableArray()
  
     var pasteBoard = UIPasteboard.general
     var searchController: UISearchController!
@@ -135,7 +135,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         cell.selectionStyle = .none
         
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.prodtitleLabel!.font = Font.celltitle22m
         } else {
             cell.prodtitleLabel!.font = Font.celltitle20l
@@ -168,7 +168,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0.0
@@ -288,8 +288,8 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         let query = PFQuery(className:"Product")
         //query.limit = 1000
         query.order(byAscending: "Products")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -301,9 +301,9 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let query1 = PFQuery(className:"Product")
         query1.whereKey("Active", equalTo:"Active")
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.cachePolicy = .cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -321,7 +321,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             let query = PFQuery(className:"Product")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
@@ -349,7 +349,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
             isFormStat = false
             let imageObject = _feedItems.object(at: indexPath.row) as? PFObject
             if let imageFile = imageObject!.object(forKey: "imageFile") as? PFFile {
-                imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                imageFile.getDataInBackground { imageData, error in
                     self.selectedImage = UIImage(data: imageData!)
                     self.performSegue(withIdentifier: "prodDetailSegue", sender: self)
                 }

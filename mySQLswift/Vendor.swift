@@ -137,7 +137,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         cell.vendsubtitleLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.vendtitleLabel!.font = Font.celltitle22m
             cell.vendsubtitleLabel!.font = Font.celltitle16r
             cell.vendlikeLabel.font = Font.celltitle20l
@@ -198,7 +198,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0
@@ -313,10 +313,9 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let query = PFQuery(className:"Vendors")
         query.limit = 1000
         query.order(byAscending: "Vendor")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.findObjectsInBackground { (objects, error)  in
             if error == nil {
-                
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
                 self.tableView!.reloadData()
@@ -328,9 +327,9 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let query1 = PFQuery(className:"Vendors")
         query1.whereKey("Active", equalTo:1)
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.cachePolicy = .cacheThenNetwork
         //query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -348,7 +347,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             let query = PFQuery(className:"Vendors")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()

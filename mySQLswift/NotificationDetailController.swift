@@ -18,13 +18,13 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
     let cellsubtitle = UIFont.systemFont(ofSize: 12)
     
     @IBOutlet weak var tableView: UITableView?
-    var filteredString : NSMutableArray = NSMutableArray()
+    var filteredString = NSMutableArray()
     var objects = [AnyObject]()
     
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - Notifications", for: .normal)
         } else {
             button.setTitle("Notifications", for: .normal)
@@ -120,7 +120,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
 
         cell.textLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             cell.textLabel!.font = ipadtitle
             cell.detailTextLabel!.font = ipadsubtitle

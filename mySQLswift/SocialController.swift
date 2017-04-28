@@ -16,7 +16,7 @@ class SocialController: UIViewController, UITextViewDelegate {
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - Social", for: .normal)
         } else {
             button.setTitle("Social", for: .normal)

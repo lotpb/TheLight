@@ -23,7 +23,7 @@ class CodeGenController: UIViewController {
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - Membership", for: .normal)
         } else {
             button.setTitle("Membership", for: .normal)
@@ -44,11 +44,11 @@ class CodeGenController: UIViewController {
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo:defaults.string(forKey: "usernameKey")!)
         query.limit = 1
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                    imageFile.getDataInBackground { imageData, error in
                         self.profilePick?.image = UIImage(data: imageData!)
                     }
                 }

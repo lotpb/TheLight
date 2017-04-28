@@ -158,7 +158,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
         floatingButton.bottomAnchor.constraint( equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -85).isActive = true
         
         let buttonSize: CGFloat
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             buttonSize = 60
             floatingButton.titleLabel?.font = UIFont(name: floatingButton.titleLabel!.font.familyName , size: buttonSize)
         } else {
@@ -227,7 +227,7 @@ class GeotificationsViewController: UIViewController, RegionsProtocol {
     }
     
     func updateGeotificationsCount() {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             title = "TheLight Software - Geotifications (\(geotifications.count))"
         } else {
             title = "Geotifications (\(geotifications.count))"

@@ -83,7 +83,7 @@ class Favorite: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
       
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.textLabel!.font = Font.celltitle22m
         } else {
             cell.textLabel!.font = Font.celltitle20l

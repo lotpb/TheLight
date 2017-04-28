@@ -38,7 +38,7 @@ class MusicController: UIViewController {
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - Music", for: .normal)
             self.noContactsLabel.font = Font.celltitle20l
         } else {
@@ -416,7 +416,7 @@ extension MusicController: UITableViewDataSource {
         // Delegate cell button tap events to this view controller
         cell.delegate = self
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.titleLabel.font = Font.Stat.celltitlePad
             cell.artistLabel.font = Font.celltitle16r
         } else {

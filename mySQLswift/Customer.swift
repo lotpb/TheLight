@@ -15,9 +15,9 @@ class Customer: UIViewController {
     
     @IBOutlet weak var tableView: UITableView?
     
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedheadItems : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedheadItems = NSMutableArray()
+    var filteredString = NSMutableArray()
     
     var searchController: UISearchController!
     var resultsController: UITableViewController!
@@ -71,7 +71,7 @@ class Customer: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         /*
-         if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+         if UI_USER_INTERFACE_IDIOM() == .pad {
          self.navigationController?.navigationBar.barTintColor = .black
          } else {
          setMainNavItems()
@@ -121,9 +121,9 @@ class Customer: UIViewController {
         
         let query = PFQuery(className:"Customer")
         query.limit = 1000
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -135,8 +135,8 @@ class Customer: UIViewController {
         
         let query1 = PFQuery(className:"Customer")
         query1.whereKey("Active", equalTo:1)
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.cachePolicy = .cacheThenNetwork
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -154,7 +154,7 @@ class Customer: UIViewController {
             
             let query = PFQuery(className:"Customer")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
@@ -362,7 +362,7 @@ extension Customer: UITableViewDataSource {
         
         cell.custsubtitleLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             cell.custtitleLabel!.font = Font.celltitle22m
             cell.custsubtitleLabel!.font = Font.celltitle16r
@@ -464,7 +464,7 @@ extension Customer: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0.0

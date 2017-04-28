@@ -16,10 +16,10 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     
     let defaults = UserDefaults.standard
     
-    var tableData : NSMutableArray = NSMutableArray()
-    var tableData2 : NSMutableArray = NSMutableArray()
-    var tableData3 : NSMutableArray = NSMutableArray()
-    var tableData4 : NSMutableArray = NSMutableArray()
+    var tableData = NSMutableArray()
+    var tableData2 = NSMutableArray()
+    var tableData3 = NSMutableArray()
+    var tableData4 = NSMutableArray()
     
     @IBOutlet weak var scrollWall: UIScrollView?
     @IBOutlet weak var mainView: UIView?
@@ -126,7 +126,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle(String(format: "%@ %@", "TheLight Software - \(self.formController!)", "Profile"), for: .normal)
         } else {
             button.setTitle(String(format: "%@ %@", "\(self.formController!)", "Form"), for: .normal)
@@ -248,7 +248,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func setupFonts() {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             labelamount!.font = Font.Detail.ipadAmount
             labelname!.font = Font.Detail.ipadname
             labeldate!.font = Font.Detail.ipaddate
@@ -282,7 +282,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
         mainView?.addSubview(photoImage)
         mainView?.addSubview(mapButton)
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             mainView?.translatesAutoresizingMaskIntoConstraints = false
             mainView?.heightAnchor.constraint(equalToConstant: 350).isActive = true
@@ -343,7 +343,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     // MARK: - Tableview
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             if (section == 0) {
                 return 15
             }
@@ -352,7 +352,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             if (section == 0) {
                 let vw = UIView()
                 vw.backgroundColor = Color.LGrayColor
@@ -523,7 +523,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
             
             let query1 = PFQuery(className:"Salesman")
             query1.whereKey("SalesNo", equalTo:self.tbl22!)
-            query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query1.cachePolicy = .cacheThenNetwork
             query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.salesman = object!.object(forKey: "Salesman") as? String
@@ -532,7 +532,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
             
             let query = PFQuery(className:"Job")
             query.whereKey("JobNo", equalTo:self.tbl23!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.jobdescription = object!.object(forKey: "Description") as? String
@@ -544,7 +544,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
             
             let query = PFQuery(className:"Product")
             query.whereKey("ProductNo", equalTo:self.tbl24!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.advertiser = object!.object(forKey: "Products") as? String
@@ -556,7 +556,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
             
             let query = PFQuery(className:"Advertising")
             query.whereKey("AdNo", equalTo:self.tbl24!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.advertiser = object!.object(forKey: "Advertiser") as? String
@@ -621,7 +621,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     func callPhone() {
         
         let phoneNo : String?
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             
             if (formController == "Vendors") || (formController == "Employee") {
                 phoneNo = t11!
@@ -1146,7 +1146,7 @@ extension LeadDetail: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.textLabel?.font = Font.Detail.celltitlePad
             cell.detailTextLabel?.font = Font.Detail.cellsubtitlePad
         } else {
@@ -1177,7 +1177,7 @@ extension LeadDetail: UITableViewDataSource {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableCell
             
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 cell.leadtitleDetail!.font = Font.Detail.ipadnewstitle
                 cell.leadsubtitleDetail!.font = Font.Detail.ipadnewssubtitle
                 cell.leadreadDetail!.font = Font.Detail.ipadnewsdetail

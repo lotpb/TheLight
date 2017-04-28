@@ -23,8 +23,8 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     var selectedImage: UIImage?
     var user: PFUser?
     
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var filteredString = NSMutableArray()
 
     var objects = [AnyObject]()
     var pasteBoard = UIPasteboard.general
@@ -32,7 +32,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - Users", for: .normal)
         } else {
             button.setTitle("Users", for: .normal)
@@ -214,7 +214,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         cell.loadingSpinner!.isHidden = true
         cell.loadingSpinner!.startAnimating()
         
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
+        imageFile!.getDataInBackground { imageData, error in
             
             UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                 cell.user2ImageView?.image = UIImage(data: imageData!)
@@ -253,8 +253,8 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         
         let query = PFUser.query()
         query!.order(byDescending: "createdAt")
-        query!.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query!.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query!.cachePolicy = .cacheThenNetwork
+        query!.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -294,7 +294,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
+        imageFile!.getDataInBackground { imageData, error in
             self.selectedImage = UIImage(data: imageData!)
             self.performSegue(withIdentifier: "userdetailSegue", sender: self.collectionView)
         }
@@ -364,7 +364,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         cell.selectionStyle = .none
         cell.usersubtitleLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.usertitleLabel!.font = Font.celltitle20r
             cell.usersubtitleLabel!.font = Font.celltitle16r
         } else {
@@ -374,7 +374,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
+        imageFile!.getDataInBackground { imageData, error in
             
             UIView.transition(with: cell.userImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
                 cell.userImageView.image = UIImage(data: imageData!)
@@ -400,7 +400,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
-        imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
+        imageFile!.getDataInBackground { imageData, error in
             self.selectedImage = UIImage(data: imageData!)
             self.performSegue(withIdentifier: "userdetailSegue", sender: self.tableView)
         }

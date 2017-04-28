@@ -34,7 +34,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     var state = stateOfVC.hidden
     var direction = Direction.none
     
-    var _feedItems: NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
     var imageObject: PFObject!
     var imageFile: PFFile!
     
@@ -109,7 +109,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         containView.backgroundColor = .clear
         self.customization()
         self.setupConstraints()
-        self.fetchPlayVCVideos()
+        fetchPlayVCVideos()
  
         if videoURL == nil {
             videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
@@ -587,11 +587,11 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                        imageFile.getDataInBackground { imageData, error in
                             
                             UIView.transition(with: (cell.channelPic)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                                 self.selectedChannelPic = UIImage(data: imageData! as Data)
@@ -629,7 +629,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
 
             imageObject = _feedItems.object(at: ((indexPath as NSIndexPath).row) - 1) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+            imageFile.getDataInBackground { imageData, error in
                 UIView.transition(with: cell.tumbnail, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.tumbnail.image = UIImage(data: imageData!)
                 }, completion: nil)
@@ -682,7 +682,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         
         imageObject = _feedItems.object(at: indexPath.row - 1) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+        imageFile.getDataInBackground { imageData, error in
             let imageDetailurl = self.imageFile.url
             let result1 = imageDetailurl!.contains("movie.mp4")
             if (result1 == true) {
@@ -699,13 +699,13 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     //MARK: - Fetch Data
     
-    func fetchPlayVCVideos() {
+    private func fetchPlayVCVideos() {
         
         let query = PFQuery(className:"Newsios")
       //query.whereKey("imageFile", equalTo:"movie.mp4")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray

@@ -20,9 +20,9 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     var isFormStat = false
     var selectedImage: UIImage?
     
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedheadItems : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedheadItems = NSMutableArray()
+    var filteredString = NSMutableArray()
     
     var pasteBoard = UIPasteboard.general
     var searchController: UISearchController!
@@ -150,7 +150,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
         cell.selectionStyle = .none
 
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.salestitleLabel!.font = Font.celltitle22m
         } else {
             cell.salestitleLabel!.font = Font.celltitle20l
@@ -175,7 +175,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             
             let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
             let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-            imageFile!.getDataInBackground { (imageData: Data?, error: Error?) in
+            imageFile!.getDataInBackground { imageData, error in
                 
                 UIView.transition(with: (self.userProfileImageView), duration: 0.5, options: .transitionCrossDissolve, animations: {
                     self.userProfileImageView.image = UIImage(data: imageData!) ?? UIImage(named: "profile-rabbit-toy")
@@ -193,7 +193,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0.0
@@ -311,8 +311,8 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         let query = PFQuery(className:"Salesman")
         //query.limit = 1000
         query.order(byAscending: "Salesman")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -324,9 +324,9 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         let query1 = PFQuery(className:"Salesman")
         query1.whereKey("Active", equalTo:"Active")
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.cachePolicy = .cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -344,7 +344,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             
             let query = PFQuery(className:"Salesman")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
@@ -372,7 +372,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
             isFormStat = false
             let imageObject = _feedItems.object(at: indexPath.row) as? PFObject
             if let imageFile = imageObject!.object(forKey: "imageFile") as? PFFile {
-                imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                imageFile.getDataInBackground { imageData, error in
                     self.selectedImage = UIImage(data: imageData!)
                     self.performSegue(withIdentifier: "salesDetailSegue", sender: self)
                 }

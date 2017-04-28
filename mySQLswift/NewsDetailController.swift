@@ -156,7 +156,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewCo
     
     func setupFonts() {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.titleLabel.font = Font.celltitle36r
             self.detailLabel.font = Font.celltitle20r
             self.newsTextview.isEditable = true //bug fix

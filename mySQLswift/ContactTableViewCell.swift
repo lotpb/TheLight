@@ -40,7 +40,7 @@ class ContactTableViewCell: UITableViewCell {
     
     func configureWithContactEntry(_ contact: ContactEntry) {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             contactNameLabel.font = Font.celltitle22m
             contactEmailLabel.font = Font.celltitle20l
             contactPhoneLabel.font = Font.celltitle20l

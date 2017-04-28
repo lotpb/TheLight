@@ -68,7 +68,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     lazy var titleButton: UIButton = {
         let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight Software - New Message", for: .normal)
         } else {
             button.setTitle("New Message", for: .normal)
@@ -244,7 +244,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         self.characterCountLabel!.text = ""
         self.characterCountLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.subject!.font = Font.celltitle22l
         } else {
             self.subject!.font = Font.Blog.cellsubject
@@ -408,11 +408,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
        
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo: self.textcontentpostby!)
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query.cachePolicy = .cacheThenNetwork
         query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                    imageFile.getDataInBackground { imageData, error in
                         self.imageBlog?.image = UIImage(data: imageData!)
                     }
                 }

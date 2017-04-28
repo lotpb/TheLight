@@ -18,8 +18,8 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     var resultsController: UITableViewController!
     var foundUsers:[String] = []
     
-    var _feedCustItems : NSMutableArray = NSMutableArray()
-    var _feedLeadItems : NSMutableArray = NSMutableArray()
+    var _feedCustItems = NSMutableArray()
+    var _feedLeadItems = NSMutableArray()
     
     var segmentedControl : UISegmentedControl!
     //var mytimer: Timer = Timer()
@@ -47,7 +47,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight Software - Statistics", for: .normal)
         } else {
             button.setTitle("Statistics", for: .normal)
@@ -158,7 +158,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath) as UITableViewCell! else { fatalError("Unexpected Index Path") }
 
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.textLabel!.font = Font.Stat.celltitlePad
             cell.detailTextLabel!.font = Font.Stat.celltitlePad
             label1 = UILabel(frame: CGRect(x: tableView.frame.width-170, y: 5, width: 82, height: 25))
@@ -596,7 +596,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         if (section == 0) {
             let vw = UIView()
             //vw.frame = CGRectMake(0 , 0, tableView.frame.width, 175)
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 vw.backgroundColor = .black
             } else {
                 vw.backgroundColor = Color.Stat.navColor

@@ -178,7 +178,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     func setupConstraints() {
         mapView.addSubview(floatingButton)
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             routeviewHeight = 350
         } else {
             routeviewHeight = 220

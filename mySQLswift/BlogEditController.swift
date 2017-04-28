@@ -17,9 +17,9 @@ class BlogEditController: UIViewController {
     @IBOutlet weak var Like: UIButton?
     @IBOutlet weak var update: UIButton?
     
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedItems1 : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedItems1 = NSMutableArray()
+    var filteredString = NSMutableArray()
     var objects = [AnyObject]()
     var pasteBoard = UIPasteboard.general
  
@@ -183,7 +183,7 @@ class BlogEditController: UIViewController {
             
             let query = PFQuery(className:"Blog")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()
@@ -270,8 +270,8 @@ class BlogEditController: UIViewController {
         
         let query1 = PFQuery(className:"Blog")
         query1.whereKey("ReplyId", equalTo:self.objectId!)
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.cachePolicy = .cacheThenNetwork
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems1 = temp.mutableCopy() as! NSMutableArray
@@ -461,7 +461,7 @@ extension BlogEditController: UITableViewDataSource {
             cell.selectionStyle = .none
             cell.subtitleLabel?.textColor = Color.twitterText
             
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 
                 cell.titleLabel!.font = Font.Blog.celltitlePad
                 cell.subtitleLabel!.font = Font.Blog.cellsubtitlePad
@@ -477,11 +477,11 @@ extension BlogEditController: UITableViewDataSource {
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo:self.postby!)
             query.limit = 1
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                        imageFile.getDataInBackground { imageData, error in
                             cell.blogImageView?.image = UIImage(data: imageData!)
                         }
                     }
@@ -539,18 +539,18 @@ extension BlogEditController: UITableViewDataSource {
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo: (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as! String)
             query.limit = 1
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                        imageFile.getDataInBackground { imageData, error in
                             cell.replyImageView.image = UIImage(data: imageData!)
                         }
                     }
                 }
             }
             
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 
                 cell.replytitleLabel.font = Font.BlogEdit.replytitlePad
                 cell.replysubtitleLabel.font = Font.BlogEdit.replysubtitlePad

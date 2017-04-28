@@ -55,7 +55,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - User Profile", for: .normal)
         } else {
             button.setTitle("Profile", for: .normal)
@@ -181,7 +181,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     }
     
     func setupFonts() {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.usernameField!.font = Font.celltitle20l
             self.emailField!.font = Font.celltitle20l
             self.phoneField!.font = Font.celltitle20l
@@ -198,7 +198,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     func setupConstraints() {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
         containView.translatesAutoresizingMaskIntoConstraints = false
         containView.heightAnchor.constraint(equalToConstant: 800).isActive = true
         }
@@ -260,7 +260,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     @IBAction func callPhone(_ sender: AnyObject) {
         
         let phoneNo : String?
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             
             phoneNo = self.phoneField!.text
             if let phoneCallURL:URL = URL(string:"telprompt:\(phoneNo!)") {

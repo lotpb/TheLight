@@ -6,13 +6,6 @@
 //  Copyright © 2016 letsbuildthatapp. All rights reserved.
 //
 
-/*
-protocol UrlLookupDelegate {
-    func urlController(passedData: String)
-    func titleController(passedData: String)
-    //func playVideo(videoURL: String)
-    //func likesController(passedData: String)
-} */
 
 import UIKit
 import Parse
@@ -20,9 +13,7 @@ import AVFoundation
 
 class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    //var delegate:UrlLookupDelegate?
-    
-    var _feedItems : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
     var imageObject :PFObject!
     var imageFile :PFFile!
     var selectedImage : UIImage?
@@ -51,29 +42,11 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         return refreshControl
     }()
     
-    func fetchVideos() {
-        
-        let query = PFQuery(className:"Newsios")
-        //query.limit = 1000
-        //query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedItems = temp.mutableCopy() as! NSMutableArray
-                DispatchQueue.main.async { //added
-                self.collectionView.reloadData()
-                }
-            } else {
-                print("Errortube")
-            }
-        }
-    }
     
     override func setupViews() {
         super.setupViews()
         
-        fetchVideos()
+        
         backgroundColor = .brown
         
         addSubview(collectionView)
@@ -82,13 +55,37 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         self.collectionView.register(VideoCell.self, forCellWithReuseIdentifier: cellId)
         self.collectionView.addSubview(self.refreshControl)
+        self.fetchVideos()
+    }
+    
+    // MARK: - Parse
+    
+    func fetchVideos() {
+        
+        let query = PFQuery(className:"Newsios")
+        query.limit = 1000
+        query.cachePolicy = .cacheThenNetwork
+        query.order(byDescending: "createdAt")
+        query.findObjectsInBackground { objects, error in
+            if error == nil {
+                let temp: NSArray = objects! as NSArray
+                self._feedItems = temp.mutableCopy() as! NSMutableArray
+                //DispatchQueue.main.async { //added
+                    self.collectionView.reloadData()
+                //}
+            } else {
+                print("Errortube")
+            }
+        }
     }
     
     // MARK: - refresh
     
     func refreshData() {
         fetchVideos()
-        self.collectionView.reloadData()
+        DispatchQueue.main.async { //added
+            self.collectionView.reloadData()
+        }
         self.refreshControl.endRefreshing()
     }
     
@@ -117,7 +114,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         let query = PFQuery(className:"Newsios")
         query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+        query.getFirstObjectInBackground { object, error in
             if error == nil {
                 object!.incrementKey("Liked")
                 object!.saveInBackground()
@@ -133,8 +130,8 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         imageObject = _feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
-            self.selectedImage = UIImage(data: imageData! as Data)
+        imageFile.getDataInBackground { imageData, error in
+            self.selectedImage = UIImage(data: imageData!)
         }
         let image: UIImage = self.selectedImage!
         let activityViewController = UIActivityViewController (activityItems: [(image), socialText!], applicationActivities: nil)
@@ -157,7 +154,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? VideoCell else { fatalError("Unexpected Index Path") }
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.titleLabelnew.font = Font.News.newstitlePad
             cell.subtitleLabel.font = Font.News.newssourcePad
             cell.numberLabel.font = Font.News.newslabel1Pad
@@ -177,11 +174,11 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile!.getDataInBackground { (imageData: Data!, error: Error!) in
+        imageFile.getDataInBackground { data, error in
             if error == nil {
                 UIView.transition(with: cell.thumbnailImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                    self.selectedImage = UIImage(data: imageData)
-                    cell.thumbnailImageView.image = self.selectedImage
+                    self.selectedImage = UIImage(data: data!)
+                    cell.thumbnailImageView.image = UIImage(data: data!) //self.selectedImage
                 }, completion: nil)
             }
         }
@@ -189,14 +186,14 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         //profile Image
         let query:PFQuery = PFUser.query()!
         query.whereKey("username",  equalTo:(self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as! String)
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.getFirstObjectInBackground { object, error in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data!, error: Error?) in
+                    imageFile.getDataInBackground { imageData, error in
                         
                         UIView.transition(with: cell.userProfileImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.userProfileImageView.image = UIImage(data: imageData)
+                            cell.userProfileImageView.image = UIImage(data: imageData!)
                         }, completion: nil)
                     }
                 }
@@ -242,7 +239,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         } else {
             cell.numberLabel.text! = ""
         }
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.storyLabel.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "storyText") as? String
         } else {
             cell.storyLabel.text = ""
@@ -254,7 +251,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             let size = CGSize.init(width: UIScreen.main.bounds.width, height: 275)
             return size
         } else {
@@ -273,7 +270,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         
         imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+        imageFile.getDataInBackground { imageData, error in
             
             let imageDetailurl = self.imageFile.url
             let result1 = imageDetailurl!.contains("movie.mp4")
@@ -315,11 +312,6 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
             }
         }
     }
-    
-    func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-    }
-    
 }
 
 

@@ -16,9 +16,9 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
     @IBOutlet weak var tableView: UITableView?
     var isFormStat = false
     
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedheadItems : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedheadItems = NSMutableArray()
+    var filteredString = NSMutableArray()
 
     var pasteBoard = UIPasteboard.general
     var searchController: UISearchController!
@@ -133,7 +133,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! CustomTableCell
         cell.selectionStyle = .none
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.jobtitleLabel!.font = Font.celltitle22m
         } else {
             cell.jobtitleLabel!.font = Font.celltitle20l
@@ -166,7 +166,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0.0
@@ -286,8 +286,8 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         let query = PFQuery(className:"Job")
         //query.limit = 1000
         query.order(byAscending: "Description")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -299,9 +299,9 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         let query1 = PFQuery(className:"Job")
         query1.whereKey("Active", equalTo:"Active")
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.cachePolicy = .cacheThenNetwork
         query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -319,7 +319,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
             let query = PFQuery(className:"Job")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()

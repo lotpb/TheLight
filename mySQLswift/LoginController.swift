@@ -92,7 +92,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     }
     
     func setupFont() {
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.usernameField!.font = ipadtitle
             self.passwordField!.font = ipadtitle
             self.reEnterPasswordField!.font = ipadtitle
@@ -149,7 +149,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.mainView.addSubview(googleButton)
         
         mapView?.translatesAutoresizingMaskIntoConstraints = false
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             mapView?.heightAnchor.constraint(equalToConstant: 380).isActive = true
         } else {
             mapView?.heightAnchor.constraint(equalToConstant: 175).isActive = true
@@ -171,7 +171,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         UIView.animate(withDuration: 0.5, delay: 0.3, options: [], animations: {
             self.googleButton.frame = CGRect(x: self.view.frame.width - 125, y: 320, width: 110, height: 40)
             self.fbButton.frame = CGRect(x: 10, y: 325, width: 110, height: 38)
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 self.twitterButton.frame = CGRect(x: self.view.frame.width/2 - 90, y: 325, width: 180, height: 40)
             } else {
                 self.twitterButton.frame = CGRect(x: self.view.frame.width/2 - 55, y: 325, width: 110, height: 40)

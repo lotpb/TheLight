@@ -13,7 +13,7 @@ class MenuBar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UIC
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cv.backgroundColor = .black
         } else {
             cv.backgroundColor = UIColor.rgb(red: 230, green: 32, blue: 31)
@@ -77,7 +77,7 @@ class MenuBar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UIC
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MenuCell
         
         cell.imageView1.image = UIImage(named: imageNames[indexPath.item])?.withRenderingMode(.alwaysTemplate)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.tintColor = .darkGray
         } else {
             cell.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
@@ -104,7 +104,7 @@ class MenuCell: CollectionViewCell {
     
     let imageView1: UIImageView = {
         let imageView = UIImageView(image: #imageLiteral(resourceName: "home"))
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             imageView.tintColor = .darkGray
         } else {
             imageView.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
@@ -115,7 +115,7 @@ class MenuCell: CollectionViewCell {
     override var isHighlighted: Bool {
         didSet {
             
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 imageView1.tintColor = isHighlighted ? UIColor.white : .darkGray
             } else {
                 imageView1.tintColor = isHighlighted ? UIColor.white : UIColor.rgb(red: 91, green: 14, blue: 13)
@@ -125,7 +125,7 @@ class MenuCell: CollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 imageView1.tintColor = isSelected ? UIColor.white : .darkGray
             } else {
                 imageView1.tintColor = isSelected ? UIColor.white : UIColor.rgb(red: 91, green: 14, blue: 13)

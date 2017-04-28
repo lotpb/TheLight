@@ -138,7 +138,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.DGrayColor
@@ -214,7 +214,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         aptframe = UITextField(frame:CGRect(x: 220, y: 7, width: 80, height: 30))
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             textframe = UITextField(frame:CGRect(x: 118, y: 7, width: 250, height: 30))
             textviewframe = UITextView(frame:CGRect(x: 118, y: 7, width: 250, height: 85))
@@ -854,7 +854,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             let query = PFQuery(className:"Advertising")
             query.whereKey("AdNo", equalTo:self.frm23!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.adName!.text = object!.object(forKey: "Advertiser") as? String
@@ -864,7 +864,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             let query = PFQuery(className:"Product")
             query.whereKey("ProductNo", equalTo:self.frm23!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.adName!.text = object!.object(forKey: "Products") as? String
@@ -876,7 +876,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             let query = PFQuery(className:"Job")
             query.whereKey("JobNo", equalTo:self.frm22!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.jobName!.text = object!.object(forKey: "Description") as? String
@@ -885,7 +885,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             
             let query1 = PFQuery(className:"Salesman")
             query1.whereKey("SalesNo", equalTo:self.frm21!)
-            query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query1.cachePolicy = .cacheThenNetwork
             query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
                     self.salesman!.text = object!.object(forKey: "Salesman") as? String

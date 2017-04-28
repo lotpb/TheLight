@@ -13,9 +13,9 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView?
 
-    var _feedItems : NSMutableArray = NSMutableArray()
-    var _feedheadItems : NSMutableArray = NSMutableArray()
-    var filteredString : NSMutableArray = NSMutableArray()
+    var _feedItems = NSMutableArray()
+    var _feedheadItems = NSMutableArray()
+    var filteredString = NSMutableArray()
     var objects = [AnyObject]()
     var pasteBoard = UIPasteboard.general
     
@@ -142,7 +142,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         cell.selectionStyle = .none
         cell.blogsubtitleLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.blogtitleLabel!.font = Font.celltitle20r
             cell.blogsubtitleLabel!.font = Font.celltitle18r
             cell.blogmsgDateLabel!.font = Font.celltitle16r
@@ -250,7 +250,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         let myLabel5:UILabel = UILabel(frame: CGRect(x: 10, y: 105, width: self.tableView!.frame.size.width-20, height: 50))
         let myLabel6:UILabel = UILabel(frame: CGRect(x: 10, y: 140, width: self.tableView!.frame.size.width-20, height: 50))
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             myLabel4.font = Font.celltitle22m
             myLabel5.font = Font.celltitle18l
             myLabel6.font = Font.celltitle18r
@@ -398,9 +398,9 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             let query = PFQuery(className:"Customer")
             query.limit = 1000
             query.whereKey("LastName", equalTo:self.postBy!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.order(byDescending: "createdAt")
-            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            query.findObjectsInBackground { objects, error in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -420,7 +420,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             let query1 = PFQuery(className:"Leads")
             query1.limit = 1
             query1.whereKey("objectId", equalTo:self.objectId!)
-            query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query1.cachePolicy = .cacheThenNetwork
             query1.order(byDescending: "createdAt")
             query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
@@ -436,9 +436,9 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             let query = PFQuery(className:"Leads")
             query.limit = 1000
             query.whereKey("LastName", equalTo:self.postBy!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.order(byDescending: "createdAt")
-            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            query.findObjectsInBackground { objects, error in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -458,7 +458,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             let query1 = PFQuery(className:"Customer")
             query1.limit = 1
             query1.whereKey("objectId", equalTo:self.objectId!)
-            query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query1.cachePolicy = .cacheThenNetwork
             query1.order(byDescending: "createdAt")
             query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                 if error == nil {
@@ -474,9 +474,9 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             let query = PFQuery(className:"Blog")
             query.limit = 1000
             query.whereKey("PostBy", equalTo:self.postBy!)
-            query.cachePolicy = PFCachePolicy.cacheThenNetwork
+            query.cachePolicy = .cacheThenNetwork
             query.order(byDescending: "createdAt")
-            query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+            query.findObjectsInBackground { objects, error in
                 if error == nil {
                     let temp: NSArray = objects! as NSArray
                     self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -496,8 +496,8 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
             let query1:PFQuery = PFUser.query()!
             query1.whereKey("username",  equalTo:self.postBy!)
             query1.limit = 1
-            query1.cachePolicy = PFCachePolicy.cacheThenNetwork
-            query1.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+            query1.cachePolicy = .cacheThenNetwork
+            query1.getFirstObjectInBackground { object, error in
                 if error == nil {
                     
                     self.postBy = object!.object(forKey: "username") as? String

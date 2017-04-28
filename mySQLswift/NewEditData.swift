@@ -40,7 +40,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle(String(format: "%@", "TheLight Software - \(self.formStatus!) \(self.formController!)"), for: .normal)
         } else {
             button.setTitle(String(format: "%@ %@", self.formStatus!, self.formController!), for: .normal)
@@ -90,7 +90,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
  
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.Table.labelColor
@@ -166,7 +166,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         textframe = UITextField(frame:CGRect(x: 130, y: 7, width: 175, height: 30))
         activeImage.frame = CGRect(x: 130, y: 10, width: 18, height: 22)
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             cell.textLabel!.font = Font.Stat.celltitlePad
             self.salesman?.font = Font.Stat.celltitlePad
             self.salesNo?.font = Font.Stat.celltitlePad

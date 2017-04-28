@@ -68,7 +68,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.navigationController?.navigationBar.barTintColor = .black
         } else {
             self.navigationController?.navigationBar.barTintColor = Color.Employ.navColor
@@ -143,7 +143,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         cell.employsubtitleLabel!.textColor = .gray
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             
             cell.employtitleLabel!.font = Font.celltitle22m
             cell.employsubtitleLabel!.font = Font.celltitle16r
@@ -205,7 +205,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
             return 0.0
@@ -320,8 +320,8 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let query = PFQuery(className:"Employee")
         query.limit = 100
         query.order(byAscending: "createdAt")
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems = temp.mutableCopy() as! NSMutableArray
@@ -333,9 +333,9 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let query1 = PFQuery(className:"Employee")
         query1.whereKey("Active", equalTo:1)
-        query1.cachePolicy = PFCachePolicy.cacheThenNetwork
+        query1.cachePolicy = .cacheThenNetwork
         //query1.orderByDescending("createdAt")
-        query1.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+        query1.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedheadItems = temp.mutableCopy() as! NSMutableArray
@@ -353,7 +353,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             let query = PFQuery(className:"Employee")
             query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { (objects : [PFObject]?, error: Error?) in
+            query.findObjectsInBackground(block: { objects, error in
                 if error == nil {
                     for object in objects! {
                         object.deleteInBackground()

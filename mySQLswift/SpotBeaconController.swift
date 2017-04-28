@@ -32,7 +32,7 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 100, height: 32)
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             button.setTitle("TheLight - Spot Beacon", for: .normal)
         } else {
             button.setTitle("Spot Beacon", for: .normal)
@@ -57,7 +57,7 @@ class SpotBeaconController: UIViewController, CLLocationManagerDelegate, CBPerip
         lblBeaconDetails.isHidden = false
         btnSwitchSpotting.layer.cornerRadius = 30.0
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             //self.beaconspotLabel?.font = Font.Snapshot.celltitlePad
             self.beaconlocateLabel?.font = Font.Snapshot.celltitlePad
             self.lblBeaconDetails?.font = Font.News.newstitlePad

@@ -39,13 +39,13 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         let imageView = CustomImageView()
         let defaults = UserDefaults.standard
         let query:PFQuery = PFUser.query()!
-        query.whereKey("username", equalTo:defaults.object(forKey: "usernameKey") as! String!)
+        query.whereKey("username", equalTo: defaults.object(forKey: "usernameKey") as! String!)
         query.limit = 1
-        query.cachePolicy = PFCachePolicy.cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+        query.cachePolicy = .cacheThenNetwork
+        query.getFirstObjectInBackground { object, error in
             if error == nil {
                 if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                    imageFile.getDataInBackground { imageData, error in
                         imageView.image = UIImage(data: imageData!)
                     }
                 }

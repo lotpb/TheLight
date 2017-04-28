@@ -157,7 +157,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     
     func setupFonts() {
         
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             self.commentTitle!.font = Font.celltitle18r
             self.commentDetail.font = Font.celltitle18r
             self.commentSorce.font = Font.celltitle18r
@@ -175,7 +175,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         mainView.addSubview(clearButton)
         
         commentTitle.translatesAutoresizingMaskIntoConstraints = false
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+        if UI_USER_INTERFACE_IDIOM() == .pad {
             commentTitle.widthAnchor.constraint(equalToConstant: 450).isActive = true
         } else {
             commentTitle.widthAnchor.constraint(equalToConstant: 338).isActive = true

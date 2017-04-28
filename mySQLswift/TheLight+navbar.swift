@@ -74,7 +74,7 @@ public extension UIViewController {
         UIApplication.shared.statusBarStyle = .lightContent
         let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
         if statusBar.responds(to: #selector(setter: UIView.backgroundColor)) {
-            if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+            if UI_USER_INTERFACE_IDIOM() == .pad {
                 statusBar.backgroundColor = .black
                 navigationController?.navigationBar.barTintColor = .black
             } else {

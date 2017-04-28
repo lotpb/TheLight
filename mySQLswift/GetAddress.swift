@@ -67,7 +67,7 @@ class GetAddress: UIViewController, UITableViewDelegate, UITableViewDataSource {
     cell.selectionStyle = .none
     cell.detailTextLabel!.textColor = UIColor.lightGray
     
-    if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad {
+    if UI_USER_INTERFACE_IDIOM() == .pad {
         
         cell.textLabel!.font = Font.celltitle22m
         cell.detailTextLabel!.font = Font.celltitle16r
