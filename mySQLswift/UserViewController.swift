@@ -399,7 +399,6 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         isFormStat = false
         let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        
         imageFile!.getDataInBackground { imageData, error in
             self.selectedImage = UIImage(data: imageData!)
             self.performSegue(withIdentifier: "userdetailSegue", sender: self.tableView)

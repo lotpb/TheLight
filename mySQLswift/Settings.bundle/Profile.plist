@@ -38,7 +38,7 @@
 			<key>Key</key>
 			<string>websiteKey</string>
 			<key>DefaultValue</key>
-			<string>leadsonline.comuv.com</string>
+			<string>http://lotpb.github.io/UnitedWebPage/index.html</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -74,7 +74,7 @@
 			<key>Key</key>
 			<string>emailKey</string>
 			<key>DefaultValue</key>
-			<string>eunitedws@verizon.net</string>
+			<string>eunited@optonline.net</string>
 		</dict>
 	</array>
 	<key>Strings Table</key>

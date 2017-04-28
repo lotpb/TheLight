@@ -40,6 +40,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     var file : PFFile!
     var pictureData : Data!
     var videoURL : URL?
+    let defaults = UserDefaults.standard
     
     let newsImageView: CustomImageView = {
         let imageView = CustomImageView()
@@ -287,6 +288,8 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     // MARK: - News Notification
     
     func newsNotification() {
+        
+        guard self.defaults.bool(forKey: "newsnotifyKey") == true else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "Breaking News"

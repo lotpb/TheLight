@@ -41,6 +41,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     var textcontentreplyId : String?
     
     var formStatus : String?
+    let defaults = UserDefaults.standard
     
 //------inlineDatePicker---------
     let kPickerAnimationDuration = 0.40 // duration for the animation to slide the date picker
@@ -423,6 +424,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     // MARK: - Notification
     
     func newBlogNotification() {
+        
+        guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
+        guard self.defaults.bool(forKey: "newsnotifyKey") == true else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "Blog Post"

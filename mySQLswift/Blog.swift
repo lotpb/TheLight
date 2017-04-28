@@ -113,7 +113,7 @@ class Blog: UIViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (self.lastContentOffset > scrollView.contentOffset.y) {
             NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
-            //self.tableView!.tableHeaderView = nil
+            self.tableView!.tableHeaderView = nil
         } else {
             NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
             self.tableView!.tableHeaderView = header
@@ -122,8 +122,8 @@ class Blog: UIViewController {
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.lastContentOffset = scrollView.contentOffset.y
-        self.tableView!.tableHeaderView = nil //added
-
+        //NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
+        //self.tableView!.tableHeaderView = header //nil //added
     }
     
     

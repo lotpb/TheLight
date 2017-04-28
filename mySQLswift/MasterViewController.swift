@@ -99,16 +99,13 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       
+        //Fix Grey Bar in iphone Bpttom Bar
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            if let con = self.splitViewController {
+                con.preferredDisplayMode = .primaryOverlay
+            }
+        }
         setMainNavItems()
-        //self.refreshData()
-        /*
-         //Fix Grey Bar in iphone Bpttom Bar
-         if UIDevice.current.userInterfaceIdiom == .phone {
-         if let con = self.splitViewController {
-         con.preferredDisplayMode = .primaryOverlay
-         }
-         } */
     }
     
     override func didReceiveMemoryWarning() {

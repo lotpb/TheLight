@@ -114,7 +114,7 @@
 			<key>Key</key>
 			<string>fontKey</string>
 			<key>DefaultValue</key>
-			<string>fontKey</string>
+			<string>System</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -140,7 +140,7 @@
 			<key>Key</key>
 			<string>fontsizeKey</string>
 			<key>DefaultValue</key>
-			<string>fontsizeKey</string>
+			<string>20</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -162,7 +162,7 @@
 			<key>Key</key>
 			<string>nameColorKey</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>1</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -230,7 +230,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Event Title</string>
+			<string>Event</string>
 			<key>Titles</key>
 			<array>
 				<string>Meeting</string>
@@ -240,10 +240,10 @@
 			</array>
 			<key>Values</key>
 			<array>
-				<string>Meeting:</string>
-				<string>Appt:</string>
-				<string>Check:</string>
-				<string>Bill:</string>
+				<string>Meeting</string>
+				<string>Appt</string>
+				<string>Check</string>
+				<string>Bill</string>
 			</array>
 			<key>Key</key>
 			<string>eventtitleKey</string>

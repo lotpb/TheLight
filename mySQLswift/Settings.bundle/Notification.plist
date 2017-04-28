@@ -24,9 +24,9 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>News from TheLight</string>
+			<string>Reminder Notification</string>
 			<key>Key</key>
-			<string>productNewsKey</string>
+			<string>newsnotifyKey</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

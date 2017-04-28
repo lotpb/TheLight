@@ -16,7 +16,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var tableView: UITableView!
     
-    var _feedItems = NSMutableArray() //news
+    var _feedItems1 = NSMutableArray() //news
     var _feedItems2 = NSMutableArray() //job
     var _feedItems3 = NSMutableArray() //user
     var _feedItems4 = NSMutableArray() //salesman
@@ -65,8 +65,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var datetitle : UILabel!
     var myLabel1 : UILabel!
     
-    var imageObject :PFObject!
-    var imageFile :PFFile!
+    var imageObject: PFObject!
+    var imageFile: PFFile!
     
     var calendars: [EKCalendar]?
     
@@ -328,7 +328,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             if (indexPath.row == 0) {
                 
                 cell.accessoryType = .disclosureIndicator
-                cell.textLabel!.text = String(format: "%@%d", "Top News ", _feedItems.count)
+                cell.textLabel!.text = String(format: "%@%d", "Top News ", _feedItems1.count)
                 cell.collectionView.reloadData()
                 return cell
                 
@@ -360,18 +360,18 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 cell.collectionView.backgroundColor = .clear
                 
-                let date1 = (_feedItems.firstObject as AnyObject).value(forKey: "createdAt") as? Date
+                let date1 = (_feedItems1.firstObject as AnyObject).value(forKey: "createdAt") as? Date
                 if date1 != nil {
                     let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
                     let daysCount = diffDateComponents.day
-                    let newsString : String? = (_feedItems.firstObject as AnyObject).value(forKey: "newsDetail") as? String
+                    let newsString : String? = (_feedItems1.firstObject as AnyObject).value(forKey: "newsDetail") as? String
                     if newsString != nil {
                         cell.snaptitleLabel?.text = "\(newsString!), \(daysCount!) days ago"
                     } else {
                         cell.snaptitleLabel?.text = "none"
                     }
                 }
-                cell.snapdetailLabel?.text = (_feedItems.firstObject as AnyObject).value(forKey: "newsTitle") as? String
+                cell.snapdetailLabel?.text = (_feedItems1.firstObject as AnyObject).value(forKey: "newsTitle") as? String
                 cell.collectionView.reloadData()
                 return cell
             }
@@ -421,6 +421,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.collectionView.tag = 1
                 cell.collectionView.reloadData()
                 return cell
+                
             } else if (indexPath.row == 2) {
                 
                 cell.textLabel!.font = Font.Snapshot.celllabelPad
@@ -563,7 +564,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section:Int)->Int
     {
         if (collectionView.tag == 0) {
-            return _feedItems.count 
+            return _feedItems1.count
         } else if (collectionView.tag == 1) {
             return _feedItems2.count 
         } else if (collectionView.tag == 2) {
@@ -606,19 +607,19 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
 
-            imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageObject = _feedItems1.object(at: indexPath.row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
-                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                //UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
-                }, completion: nil)
+                //}, completion: nil)
 
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
             }
             
-            myLabel1.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
+            myLabel1.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
             cell.addSubview(myLabel1)
             
             imageDetailurl = self.imageFile.url!
@@ -634,12 +635,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.startAnimating()
             
             imageObject = _feedItems2.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
-                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                //UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
-                }, completion: nil)
+                //}, completion: nil)
                 
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -654,12 +655,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
             imageObject = _feedItems3.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
 
-                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                //UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
-                }, completion: nil)
+                //}, completion: nil)
                 
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -674,12 +675,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
             imageObject = _feedItems4.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
-                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                //UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
-                }, completion: nil)
+                //}, completion: nil)
                 
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -694,12 +695,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             cell.loadingSpinner?.isHidden = false
             cell.loadingSpinner?.startAnimating()
             imageObject = _feedItems5.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
-                UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                //UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     cell.user2ImageView?.image = UIImage(data: imageData!)
-                }, completion: nil)
+                //}, completion: nil)
                 
                 cell.loadingSpinner?.stopAnimating()
                 cell.loadingSpinner?.isHidden = true
@@ -744,15 +745,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     func parseData() {
         
-        //guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
+        guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         
         let query = PFQuery(className:"Newsios")
-        query.cachePolicy = .cacheThenNetwork
+        query.limit = 1000
         query.order(byDescending: "createdAt")
+        query.cachePolicy = .cacheThenNetwork
         query.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
-                self._feedItems = temp.mutableCopy() as! NSMutableArray
+                self._feedItems1 = temp.mutableCopy() as! NSMutableArray
                 self.tableView!.reloadData()
             } else {
                 print("Error")
@@ -760,8 +762,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         let query2 = PFQuery(className:"jobPhoto")
-        query2.cachePolicy = .cacheThenNetwork
+        query2.limit = 1000
         query2.order(byDescending: "createdAt")
+        query2.cachePolicy = .cacheThenNetwork
         query2.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
@@ -773,9 +776,10 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         let query3 = PFUser.query()
-        query3!.cachePolicy = .cacheThenNetwork
-        query3!.order(byDescending: "createdAt")
-        query3!.findObjectsInBackground { objects, error in
+        query3?.limit = 1000
+        query3?.order(byDescending: "createdAt")
+        query3?.cachePolicy = .cacheThenNetwork
+        query3?.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
                 self._feedItems3 = temp.mutableCopy() as! NSMutableArray
@@ -786,8 +790,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         let query4 = PFQuery(className:"Salesman")
-        query4.cachePolicy = .cacheThenNetwork
+        query4.limit = 1000
         query4.order(byAscending: "Salesman")
+        query4.cachePolicy = .cacheThenNetwork
         query4.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
@@ -799,8 +804,9 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         let query5 = PFQuery(className:"Employee")
-        query5.cachePolicy = .cacheThenNetwork
+        query5.limit = 1000
         query5.order(byAscending: "createdAt")
+        query5.cachePolicy = .cacheThenNetwork
         query5.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
@@ -813,8 +819,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         
         let query6 = PFQuery(className:"Blog")
         query6.whereKey("ReplyId", equalTo:NSNull())
-        query6.cachePolicy = .cacheThenNetwork
         query6.order(byDescending: "createdAt")
+        query6.cachePolicy = .cacheThenNetwork
         query6.findObjectsInBackground { objects, error in
             if error == nil {
                 let temp: NSArray = objects! as NSArray
@@ -825,16 +831,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
  
-        self.timer?.invalidate()
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+        //self.timer?.invalidate()
+        //self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
-    
+    /*
     var timer: Timer?
     func handleReloadTable() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }
+    } */
 
     
     // MARK: - Segues
@@ -843,8 +849,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     {
         if (collectionView.tag == 0) {
             
-            imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageObject = _feedItems1.object(at: indexPath.row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
                 let imageDetailurl = self.imageFile.url
@@ -867,12 +873,12 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
                 } else {
                 
                 self.selectedImage = UIImage(data: imageData!)
-                self.selectedObjectId = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
-                self.selectedTitle = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
-                self.selectedEmail = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsDetail") as? String
-                self.selectedPhone = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "storyText") as? String
+                self.selectedObjectId = (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
+                self.selectedTitle = (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
+                self.selectedEmail = (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "newsDetail") as? String
+                self.selectedPhone = (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "storyText") as? String
                 self.imageDetailurl = self.imageFile.url
-                self.selectedDate = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
+                self.selectedDate = (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
                 
                 self.performSegue(withIdentifier: "snapuploadSegue", sender:self)
                 }
@@ -880,7 +886,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         } else if (collectionView.tag == 1) {
             
             imageObject = _feedItems2.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
                 self.selectedImage = UIImage(data: imageData!)
@@ -891,7 +897,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         } else if (collectionView.tag == 2) {
             
             imageObject = _feedItems3.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
                 self.selectedImage = UIImage(data: imageData!)
@@ -911,7 +917,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         } else if (collectionView.tag == 3) {
             
             imageObject = _feedItems4.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
                 self.selectedImage = UIImage(data: imageData!)
@@ -925,7 +931,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         } else if (collectionView.tag == 4) {
             
             imageObject = _feedItems5.object(at: indexPath.row) as! PFObject
-            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile = imageObject.object(forKey: "imageFile") as! PFFile
             imageFile!.getDataInBackground { imageData, error in
                 
                 self.selectedObjectId = (self._feedItems5[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
