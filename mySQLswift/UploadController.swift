@@ -289,7 +289,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     
     func newsNotification() {
         
-        guard self.defaults.bool(forKey: "newsnotifyKey") == true else { return }
+        guard self.defaults.bool(forKey: "pushnotifyKey") == true else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "Breaking News"
@@ -387,6 +387,10 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                             if success {
                                 self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
                                 self.newsNotification()
+                                //UIFeedbackGenerator
+                                let successNotificationFeedbackGenerator = UINotificationFeedbackGenerator()
+                                successNotificationFeedbackGenerator.notificationOccurred(.success)
+
                             } else {
                                 print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
                             }

@@ -68,7 +68,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     var imageObject: PFObject!
     var imageFile: PFFile!
     
-    var calendars: [EKCalendar]?
+    //var calendar: EKCalendar!
+    var events: [EKEvent]?
     
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
@@ -87,7 +88,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .clear
-        refreshControl.tintColor = .black
+        refreshControl.tintColor = .white
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
@@ -96,6 +97,8 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loadEvents()
         
         // MARK: - SplitView
 
@@ -108,7 +111,6 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         setupNavBarButtons()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
-        loadCalendars()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -153,6 +155,32 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     func refreshData(_ sender:AnyObject) {
         parseData()
         self.refreshControl.endRefreshing()
+    }
+    
+    // MARK: - Calender Events
+    
+    func loadEvents() {
+        
+        // Create a date formatter instance to use for converting a string to a date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        // Create start and end date NSDate instances to build a predicate for which events to select
+        let startDate = dateFormatter.date(from: "2016-01-01")
+        let endDate = dateFormatter.date(from: "2017-12-31")
+        
+        if let startDate = startDate, let endDate = endDate {
+            let eventStore = EKEventStore()
+            
+            // Use an event store instance to create and properly configure an NSPredicate
+            let eventsPredicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: nil)
+            
+            // Use the configured NSPredicate to find and return events in the store that match
+            self.events = eventStore.events(matching: eventsPredicate).sorted(){
+                (e1: EKEvent, e2: EKEvent) -> Bool in
+                return e1.startDate.compare(e2.startDate) == ComparisonResult.orderedAscending
+            }
+        }
     }
     
 
@@ -270,7 +298,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             }
             return 2
         }
-        return foundUsers.count
+        return 0 //foundUsers.count
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -519,40 +547,16 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
             } else if (indexPath.row == 1) {
                 
                 cell.collectionView.backgroundColor = .clear
-                
-                if (calendars?.count == 0) {
+                if (events?.count == 0) {
                     cell.snapdetailLabel?.text = "You have no pending events :)"
-                    
                 } else {
-                    
-                    if let calendars = self.calendars {
-                        let calendarName = calendars[0].title
-                        cell.snapdetailLabel?.text  = calendarName
-                    } else {
-                        cell.snapdetailLabel?.text  = "Unknown Calendar Name"
-                    }
-                    /*
-                     let reminder:EKReminder! = self.reminders![0]
-                     cell.snapdetailLabel?.text = reminder!.title
-                     
-                     let formatter:DateFormatter = DateFormatter()
-                     formatter.dateFormat = "yyyy-MM-dd"
-                     if let dueDate = reminder.dueDateComponents?.date {
-                     cell.snaptitleLabel?.text = formatter.string(from: dueDate)
-                     } */
+                    cell.snapdetailLabel?.text = events?[0].title
                 }
                 cell.collectionView.reloadData()
                 return cell
             }
         }
-        //cell.collectionView.reloadData()
         return cell
-    }
-    
-    func loadCalendars() {
-        self.calendars = EKEventStore().calendars(for: EKEntityType.event).sorted() { (cal1, cal2) -> Bool in
-            return cal1.title < cal2.title
-        }
     }
     
     // MARK: UICollectionView

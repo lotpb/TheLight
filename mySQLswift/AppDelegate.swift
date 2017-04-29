@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "soundKey": false,
             "parsedataKey": true,
             "autolockKey": false,
-            "newsnotifyKey": false,
+            "pushnotifyKey": false,
             //"fontKey": "System",
             //"fontsizeKey": "20pt",
             //"nameColorKey": "Blue",

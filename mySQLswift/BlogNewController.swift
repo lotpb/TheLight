@@ -222,16 +222,12 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        let myTextViewString = self.subject!.text
-        characterCountLabel!.text = "\(CharacterLimit - (myTextViewString?.characters.count)!)"
+        let currentText = textView.text ?? ""
+        characterCountLabel!.text = "\(CharacterLimit - (currentText.characters.count))"
+        guard let stringRange = range.range(for: currentText) else { return false }
+        let changedText = currentText.replacingCharacters(in: stringRange, with: text)
         
-        if range.length > CharacterLimit {
-            return false
-        }
-        
-        let newLength = (myTextViewString?.characters.count)! + range.length
-        
-        return newLength < CharacterLimit
+        return changedText.characters.count <= CharacterLimit
     }
     
     // MARK: TextView configure
@@ -426,7 +422,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     func newBlogNotification() {
         
         guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
-        guard self.defaults.bool(forKey: "newsnotifyKey") == true else { return }
+        guard self.defaults.bool(forKey: "pushnotifyKey") == true else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "Blog Post"
@@ -443,7 +439,9 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
         let request = UNNotificationRequest(identifier: "newBlog-id-123", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        
+        //UIFeedbackGenerator
+        let successNotificationFeedbackGenerator = UINotificationFeedbackGenerator()
+        successNotificationFeedbackGenerator.notificationOccurred(.success)
     }
 
     // MARK: - Save Data

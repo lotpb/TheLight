@@ -24,11 +24,21 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Reminder Notification</string>
+			<string>Push Notification</string>
 			<key>Key</key>
-			<string>newsnotifyKey</string>
+			<string>pushnotifyKey</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Email Notification</string>
+			<key>Key</key>
+			<string>emailnotifyKey</string>
+			<key>DefaultValue</key>
+			<string>NO</string>
 		</dict>
 	</array>
 	<key>Strings Table</key>

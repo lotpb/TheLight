@@ -22,7 +22,6 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     var _feedLeadItems = NSMutableArray()
     
     var segmentedControl : UISegmentedControl!
-    //var mytimer: Timer = Timer()
     let defaults = UserDefaults.standard
     
     var dayYQL: NSArray!
@@ -60,10 +59,9 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
-        refreshControl.backgroundColor = Color.Stat.navColor
-        refreshControl.tintColor = .white
-        let attributes = [NSForegroundColorAttributeName: UIColor.white]
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes: attributes)
+        refreshControl.backgroundColor = Color.Stat.navColor //.clear
+        refreshControl.tintColor = .black //.white
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return refreshControl
     }()
@@ -79,19 +77,19 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
         
         setupTableView()
         self.navigationItem.titleView = self.titleButton
+        self.tableView!.addSubview(self.refreshControl)
     }
  
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         //Fix Grey Bar on Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
-        self.refreshData()
+        self.refreshData() //dont move
         setupNewsNavigationItems()
     }
     
@@ -188,7 +186,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
             cell.detailTextLabel!.text = ""
             
             if (indexPath.row == 0) {
-                if ((changeYQL[0] as AnyObject).contains("-")) {
+                if (changeYQL[0] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -204,7 +202,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 1) {
                 
-                if ((changeYQL[1] as AnyObject).contains("-")) {
+                if (changeYQL[1] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -220,7 +218,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 2) {
                 
-                if ((changeYQL[2] as AnyObject).contains("-")) {
+                if (changeYQL[2] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -236,7 +234,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 3) {
                 
-                if ((changeYQL[3] as AnyObject).contains("-")) {
+                if (changeYQL[3] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -252,7 +250,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 4) {
                 
-                if ((changeYQL[4] as AnyObject).contains("-")) {
+                if (changeYQL[4] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -268,7 +266,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 5) {
                 
-                if ((changeYQL[5] as AnyObject).contains("-")) {
+                if (changeYQL[5] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -284,7 +282,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 6) {
                 
-                if ((changeYQL[6] as AnyObject).contains("-")) {
+                if (changeYQL[6] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -300,7 +298,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 7) {
                 
-                if ((changeYQL[7] as AnyObject).contains("-")) {
+                if (changeYQL[7] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -316,7 +314,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 8) {
                 
-                if ((changeYQL[8] as AnyObject).contains("-")) {
+                if (changeYQL[8] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
@@ -332,7 +330,7 @@ class StatisticController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             } else if (indexPath.row == 9) {
                 
-                if ((changeYQL[9] as AnyObject).contains("-")) {
+                if (changeYQL[9] as AnyObject).contains("-") {
                     label2.backgroundColor = .red
                 } else {
                     label2.backgroundColor = Color.DGreenColor
