@@ -10,6 +10,7 @@ import UIKit
 import Contacts
 
 class ContactEntry: NSObject {
+    
     var name: String!
     var email: String?
     var phone: String?
@@ -44,5 +45,5 @@ class ContactEntry: NSObject {
                 self.phone = phone?.stringValue
             }
         }
-    }
+    } 
 }

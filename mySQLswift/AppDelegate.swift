@@ -30,15 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "parsedataKey": true,
             "autolockKey": false,
             "pushnotifyKey": false,
-            //"fontKey": "System",
-            //"fontsizeKey": "20pt",
-            //"nameColorKey": "Blue",
             "usernameKey": "Peter Balsamo",
             "passwordKey": "3911",
             "emailKey": "eunited@optonline.net",
             //"websiteKey": "http://lotpb.github.io/UnitedWebPage/index.html",
-            //"eventtitleKey": "Appt",
-            //"areacodeKey": "516",
             "versionKey": "1.0",
             "emailtitleKey": "TheLight Support",
             "emailmessageKey": "<h3>Programming in Swift</h3>",
@@ -129,42 +124,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
 
     
-    // MARK: - 3D Touch
-    
-    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        
-        let handledShortCutItem = handleShortCutItem(shortcutItem: shortcutItem)
-        completionHandler(handledShortCutItem)
-        
-    }
-    
-    func handleShortCutItem(shortcutItem: UIApplicationShortcutItem) -> Bool {
-       
-        var handled = false
-        
-        if shortcutItem.type == "1" {
-            
-            let rootNavigationViewController = window!.rootViewController as? UINavigationController
-            let rootViewController = rootNavigationViewController?.viewControllers.first as UIViewController?
-            
-            //rootNavigationViewController?.popToRootViewController(animated: false)
-            rootViewController?.performSegue(withIdentifier: "showleadSegue", sender: nil)
-            handled = true
-        }
-        
-        if shortcutItem.type == "2" {
-            
-            let rootNavigationViewController = window!.rootViewController as? UINavigationController
-            let rootViewController = rootNavigationViewController?.viewControllers.first as UIViewController?
-            
-            //rootNavigationViewController?.popToRootViewController(animated: false)
-            rootViewController?.performSegue(withIdentifier: "showcustSegue", sender: nil)
-            handled = true
-        }
-        return handled
-    }
-    
-    
     // MARK: - Schedule Notification set in NotificationController
     
     func scheduleNotification(at date: Date) {
@@ -225,7 +184,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     
-    // MARK: - Split view opens maincontroller
+    // MARK: - Opens MasterController on iPhone
     
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
         
@@ -270,7 +229,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     
 }
-// MARK: - setup RegisterUserNotification, 3DTouch
 extension AppDelegate {
     
     // MARK: - App Theme Customization
@@ -282,9 +240,9 @@ extension AppDelegate {
         UINavigationBar.appearance().barTintColor = .black
         UINavigationBar.appearance().tintColor = .gray 
         UINavigationBar.appearance().isTranslucent = false
-        
-        UITabBar.appearance().barTintColor = .black
-        UITabBar.appearance().tintColor = .white
+
+        UITabBar.appearance().barTintColor = .white
+        UITabBar.appearance().tintColor = Color.twitterBlue
         UITabBar.appearance().isTranslucent = false
         
         UIToolbar.appearance().barTintColor = Color.DGrayColor
@@ -296,15 +254,17 @@ extension AppDelegate {
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .gray
     }
     
+    // MARK: - Register Notifications
+    
     func registerLocal() {
-        let center = UNUserNotificationCenter.current()
         
+        let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in
             if granted {
                 UIApplication.shared.registerForRemoteNotifications()
                 UIApplication.shared.applicationIconBadgeNumber = 0
                 //center.removeAllDeliveredNotifications()
-                center.removeAllPendingNotificationRequests()
+                //center.removeAllPendingNotificationRequests()
             }
         }
     }
@@ -319,14 +279,49 @@ extension AppDelegate {
         center.setNotificationCategories([category])
     }
     
+    // MARK: - 3D Touch
+    
     func set3DTouch() {
 
-        let firstItemIcon:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .share)
-        let firstItem = UIMutableApplicationShortcutItem(type: "1", localizedTitle: "Share", localizedSubtitle: "Share an item.", icon: firstItemIcon, userInfo: nil)
+        let firstItemIcon:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
+        let firstItem = UIMutableApplicationShortcutItem(type: "1", localizedTitle: "Blog", localizedSubtitle: "Post Message.", icon: firstItemIcon, userInfo: nil)
         
         let firstItemIcon1:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .compose)
-        let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "Add", localizedSubtitle: "Add an item.", icon: firstItemIcon1, userInfo: nil)
-        UIApplication.shared.shortcutItems = [firstItem,firstItem1]
+        let firstItem1 = UIMutableApplicationShortcutItem(type: "2", localizedTitle: "News", localizedSubtitle: "View TheLight News.", icon: firstItemIcon1, userInfo: nil)
+        
+        let firstItemIcon2:UIApplicationShortcutIcon = UIApplicationShortcutIcon(type: .share)
+        let firstItem2 = UIMutableApplicationShortcutItem(type: "3", localizedTitle: "Web", localizedSubtitle: "View Webpage.", icon: firstItemIcon2, userInfo: nil)
+        
+        UIApplication.shared.shortcutItems = [firstItem2, firstItem1, firstItem]
+    }
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        
+        let handledShortCutItem = handleShortCutItem(shortcutItem: shortcutItem)
+        completionHandler(handledShortCutItem)
+        
+    }
+    
+    func handleShortCutItem(shortcutItem: UIApplicationShortcutItem) -> Bool {
+        
+        var handled = false
+        
+        if shortcutItem.type == "1" {
+            //let selectedIndex = type.number
+            (window?.rootViewController as? UITabBarController)?.selectedIndex = 1
+            handled = true
+        }
+        
+        if shortcutItem.type == "2" {
+            (window?.rootViewController as? UITabBarController)?.selectedIndex = 2
+            handled = true
+        }
+        
+        if shortcutItem.type == "3" {
+            (window?.rootViewController as? UITabBarController)?.selectedIndex = 3
+            handled = true
+        }
+        return handled
     }
 }
 

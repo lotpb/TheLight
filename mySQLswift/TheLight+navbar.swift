@@ -65,8 +65,8 @@ public extension UIViewController {
         navigationController?.navigationBar.shadowImage = nil
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         
-        tabBarController?.tabBar.barTintColor = .black
-        tabBarController?.tabBar.tintColor = .white
+        //tabBarController?.tabBar.barTintColor = .black
+        //tabBarController?.tabBar.tintColor = .white
     }
     
     private func setupNewsNavigationBarItems() {
@@ -90,8 +90,8 @@ public extension UIViewController {
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
-        tabBarController?.tabBar.barTintColor = .black
-        tabBarController?.tabBar.tintColor = .white
+        //tabBarController?.tabBar.barTintColor = .black
+        //tabBarController?.tabBar.tintColor = .white
     }
     
     private func setupTwitterNavItems() {
@@ -119,7 +119,7 @@ public extension UIViewController {
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
-        tabBarController?.tabBar.barTintColor = .white
-        tabBarController?.tabBar.tintColor = Color.twitterBlue
+        //tabBarController?.tabBar.barTintColor = .white
+        //tabBarController?.tabBar.tintColor = Color.twitterBlue
     }
 }

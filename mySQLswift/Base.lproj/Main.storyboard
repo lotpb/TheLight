@@ -4597,9 +4597,9 @@
                                     <outlet property="delegate" destination="YPk-ck-fkH" id="YDZ-yg-mf0"/>
                                 </connections>
                             </searchBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="55" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2XO-2P-uJv">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="55" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2XO-2P-uJv">
                                 <rect key="frame" x="-4" y="44" width="328" height="460"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="YPk-ck-fkH" id="xCf-yG-ZJf"/>
                                     <outlet property="delegate" destination="YPk-ck-fkH" id="qhc-xv-GbK"/>
@@ -4634,7 +4634,7 @@
                         <outlet property="noContactsLabel" destination="khm-wj-a28" id="ovw-VU-1Sz"/>
                         <outlet property="searchBar" destination="Rlg-2I-gso" id="tva-sQ-PZt"/>
                         <outlet property="tableView" destination="2XO-2P-uJv" id="E5w-FB-aeU"/>
-                        <segue destination="WsL-9K-bSq" kind="presentation" identifier="CreateContact" modalTransitionStyle="crossDissolve" id="pcq-Sf-1r1"/>
+                        <segue destination="WsL-9K-bSq" kind="show" identifier="CreateContact" id="pcq-Sf-1r1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ez4-dW-htY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5737,50 +5737,50 @@
                         <viewControllerLayoutGuide type="bottom" id="cGW-Py-c0o"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="af7-fp-qXo">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create contact" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uDJ-48-Gqx">
-                                <rect key="frame" x="20" y="28" width="280" height="37"/>
+                                <rect key="frame" x="20" y="8" width="280" height="37"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="28"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Using the framework" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9yh-nO-jDl">
-                                <rect key="frame" x="20" y="73" width="280" height="19"/>
+                                <rect key="frame" x="20" y="53" width="280" height="19"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                                 <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uqp-0A-8ZQ">
-                                <rect key="frame" x="96" y="115" width="98" height="30"/>
+                                <rect key="frame" x="96" y="95" width="98" height="30"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iOL-nX-FBk">
-                                <rect key="frame" x="202" y="115" width="98" height="30"/>
+                                <rect key="frame" x="202" y="95" width="98" height="30"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bGJ-co-XOk">
-                                <rect key="frame" x="96" y="153" width="98" height="30"/>
+                                <rect key="frame" x="96" y="133" width="98" height="30"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Phone number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OqF-Dm-Fya">
-                                <rect key="frame" x="202" y="153" width="98" height="30"/>
+                                <rect key="frame" x="202" y="133" width="98" height="30"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile-rabbit-toy" translatesAutoresizingMaskIntoConstraints="NO" id="hk9-hx-WNy">
-                                <rect key="frame" x="20" y="115" width="68" height="68"/>
+                                <rect key="frame" x="20" y="95" width="68" height="68"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="hk9-hx-WNy" secondAttribute="height" multiplier="1:1" id="JsK-na-99S"/>
                                     <constraint firstAttribute="width" constant="68" id="eeI-P1-NBz"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fln-J3-ScQ">
-                                <rect key="frame" x="20" y="220" width="107" height="45"/>
+                                <rect key="frame" x="20" y="200" width="107" height="45"/>
                                 <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="vzW-LN-MgD"/>
@@ -5793,13 +5793,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YNp-a7-Cis">
-                                <rect key="frame" x="20" y="115" width="68" height="68"/>
+                                <rect key="frame" x="20" y="95" width="68" height="68"/>
                                 <connections>
                                     <action selector="changeContactImage:" destination="WsL-9K-bSq" eventType="touchUpInside" id="Inv-J5-nyw"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2E5-ff-gvr">
-                                <rect key="frame" x="193" y="220" width="107" height="45"/>
+                                <rect key="frame" x="193" y="200" width="107" height="45"/>
                                 <color key="backgroundColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="S7D-ik-A9V"/>
@@ -6237,16 +6237,16 @@
         <image name="thumbUp" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="EIN-mO-nT7"/>
-        <segue reference="5aU-K4-aqh"/>
         <segue reference="q3J-TB-N0B"/>
+        <segue reference="EIN-mO-nT7"/>
         <segue reference="2YB-tb-gtF"/>
+        <segue reference="xRX-GL-2KH"/>
         <segue reference="oVt-V5-Vjc"/>
         <segue reference="1Wv-3R-kep"/>
+        <segue reference="K9X-H5-ULE"/>
         <segue reference="e0c-fD-YZ8"/>
         <segue reference="T0a-J2-ljk"/>
-        <segue reference="9ON-DX-ZP3"/>
-        <segue reference="xRX-GL-2KH"/>
-        <segue reference="K9X-H5-ULE"/>
+        <segue reference="vpM-0m-GXx"/>
+        <segue reference="I56-Tb-Oot"/>
     </inferredMetricsTieBreakers>
 </document>

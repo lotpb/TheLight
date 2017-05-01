@@ -8,6 +8,8 @@
 
 import UIKit
 import Contacts
+import ContactsUI
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -29,16 +31,16 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+class ContactController: UIViewController {
     
     @IBOutlet weak private var tableView: UITableView!
     @IBOutlet weak var noContactsLabel: UILabel!
     @IBOutlet weak private var searchBar: UISearchBar!
     
     // data
-    private var contactStore = CNContactStore()
-    private var contacts = [CNContact]()
-    private var contactEntry = [ContactEntry]()
+    var contacts = [CNContact]()
+    var contactStore = CNContactStore()
+    var contactEntry = [ContactEntry]()
     
     private var authStatus: CNAuthorizationStatus = .denied {
         didSet { // switch enabled search bar, depending contacts permission
@@ -86,6 +88,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
+        setMainNavItems()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -149,7 +152,7 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         }
     }
     
-    private func fetchContacts(_ name: String) -> [CNContact] {
+    func fetchContacts(_ name: String) -> [CNContact] {
         
         do {
             let request = CNContactFetchRequest(keysToFetch: [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)])
@@ -170,16 +173,56 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         }
     }
     
-    // =========================================================================
     // MARK: - UISearchBarDelegate
+    
+    private func searchContact(_ name: String) {
+        
+        do {
+            //let contacts = CNMutableContact()
+            //contacts.givenName = "Peter"
+            //contacts.familyName = "Balsamo"
+            let predicate = CNContact.predicateForContacts(matchingName: name)
+            let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey]
+            let store = CNContactStore()
+            
+            let contacts = try store.unifiedContacts(
+                matching: predicate,
+                keysToFetch: keysToFetch as [CNKeyDescriptor]
+            )
+            
+            if let firstContact = contacts.first {
+                let viewController = CNContactViewController(for: firstContact)
+                viewController.contactStore = store
+                present(viewController, animated: true, completion: nil)
+            }
+            //return contacts
+            
+        } catch let error as NSError {
+            NSLog("Fetch error \(error.localizedDescription)")
+            return 
+        }
+    }
+    
+    // MARK: - Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if let dvc = segue.destination as? CreateContactViewController {
+            dvc.type = .cnContact
+        }
+    }
+
+}
+//-----------------------end------------------------------
+extension ContactController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         contacts = fetchContacts(searchText)
-        tableView.reloadData()
+        //tableView.reloadData()
     }
-    
-    // =========================================================================
-    //MARK: - UITableViewDataSource
+}
+
+extension ContactController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -196,30 +239,18 @@ class ContactController: UIViewController, UISearchBarDelegate, UITableViewDataS
         let entry = contactEntry[(indexPath as NSIndexPath).row]
         cell.configureWithContactEntry(entry)
         cell.layoutIfNeeded()
-        /*
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let contact = contacts[indexPath.row]
-         // get the full name
-        let fullName = CNContactFormatter.string(from: contact, style: .fullName) ?? "NO NAME"
-        cell.textLabel?.text = fullName */
         
         return cell
     }
-    
-    // MARK: - Segues
+}
+
+extension ContactController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         //let indexPath = tableView.indexPathForSelectedRow!
         //let currentItem = tableView.cellForRow(at: indexPath)! as UITableViewCell
-        
         self.performSegue(withIdentifier: "CreateContact", sender: self)
+        
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dvc = segue.destination as? CreateContactViewController {
-            dvc.type = .cnContact
-        }
-    }
-
-} 
+}
