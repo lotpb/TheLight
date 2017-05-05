@@ -103,6 +103,7 @@
 		AFE34A3E1D3277EB00C78D8B /* SubscriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE34A3D1D3277EB00C78D8B /* SubscriptionCell.swift */; };
 		AFE419D41D19EDA200A6F590 /* SettingsLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE419D31D19EDA200A6F590 /* SettingsLauncher.swift */; };
 		AFE6936F1C6A4D7E000BEDCE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE6936E1C6A4D7E000BEDCE /* Extensions.swift */; };
+		AFE70CF91EB9FF8C00C8FE92 /* HeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE70CF81EB9FF8C00C8FE92 /* HeaderViewCell.swift */; };
 		AFF1423F1D67A51600CD017A /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF1423E1D67A51600CD017A /* Search.swift */; };
 		AFF3C8ED1C4E86B000D9B7BD /* SpotBeaconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF3C8EC1C4E86B000D9B7BD /* SpotBeaconController.swift */; };
 		AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF3C8EE1C4E8A0100D9B7BD /* TransmitBeaconController.swift */; };
@@ -243,6 +244,7 @@
 		AFE34A3D1D3277EB00C78D8B /* SubscriptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionCell.swift; sourceTree = "<group>"; };
 		AFE419D31D19EDA200A6F590 /* SettingsLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsLauncher.swift; sourceTree = "<group>"; };
 		AFE6936E1C6A4D7E000BEDCE /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		AFE70CF81EB9FF8C00C8FE92 /* HeaderViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderViewCell.swift; sourceTree = "<group>"; };
 		AFF1423E1D67A51600CD017A /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		AFF3C8EC1C4E86B000D9B7BD /* SpotBeaconController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotBeaconController.swift; sourceTree = "<group>"; };
 		AFF3C8EE1C4E8A0100D9B7BD /* TransmitBeaconController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransmitBeaconController.swift; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 		AF6DC0A01D3E481E00023F67 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFE70CF81EB9FF8C00C8FE92 /* HeaderViewCell.swift */,
 				AF1E6D551C1920FC0009230E /* CustomTableCell.swift */,
 				AF0C77A21C2245BA0055DDE4 /* CollectionViewCell.swift */,
 			);
@@ -833,6 +836,7 @@
 				AF9EE4C71C2771D70057B7DB /* NotificationController.swift in Sources */,
 				AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */,
 				AFD1A30B1C1E224600580F10 /* Customer.swift in Sources */,
+				AFE70CF91EB9FF8C00C8FE92 /* HeaderViewCell.swift in Sources */,
 				AFF1423F1D67A51600CD017A /* Search.swift in Sources */,
 				AFE6936F1C6A4D7E000BEDCE /* Extensions.swift in Sources */,
 				AFF3C8ED1C4E86B000D9B7BD /* SpotBeaconController.swift in Sources */,

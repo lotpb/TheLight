@@ -62,7 +62,6 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setMainNavItems()
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.tintColor = .gray
         navigationController?.hidesBarsOnSwipe = true
@@ -72,6 +71,7 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKNavigationDelegat
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
+        setMainNavItems()
         //webView.load(URLRequest(url:URL(string: siteAddresses[0])!))
     }
     

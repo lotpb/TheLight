@@ -70,13 +70,13 @@ class MusicController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         //Fix Grey Bar on Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
+        setMainNavItems()
     }
 
     override func didReceiveMemoryWarning() {
@@ -117,7 +117,7 @@ class MusicController: UIViewController {
             self.tableView.isHidden = false //added
             self.noContactsLabel.isHidden = true //added
             self.tableView.reloadData()
-            self.tableView.setContentOffset(CGPoint.zero, animated: false)
+            self.tableView.scrollToTop(animated: true)
         }
     }
     

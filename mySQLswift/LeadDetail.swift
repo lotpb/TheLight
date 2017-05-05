@@ -167,9 +167,9 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(LeadDetail.editButton))
-        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(LeadDetail.actionButton))
-        navigationItem.rightBarButtonItems = [editButton,actionButton]
+        let editBtn = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButton))
+        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
+        navigationItem.rightBarButtonItems = [editBtn,actionBtn]
         
         //Leave this setup below
         setupConstraints()

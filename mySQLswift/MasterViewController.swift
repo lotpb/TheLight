@@ -120,9 +120,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     } 
     
     func setupNavBarButtons() {
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(MasterViewController.searchButton))
-        let addButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
-        navigationItem.rightBarButtonItems = [addButton, searchButton]
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        let addBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
+        navigationItem.rightBarButtonItems = [addBtn, searchBtn]
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(handleSignOut))
     }
     

@@ -59,8 +59,8 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(MapView.shareButton))
-        navigationItem.rightBarButtonItems = [actionButton]
+        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButton))
+        navigationItem.rightBarButtonItems = [actionBtn]
         
         addActivityIndicator()
         setupForm()

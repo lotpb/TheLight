@@ -50,9 +50,9 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Vendor.searchButton))
-        navigationItem.rightBarButtonItems = [addButton,searchButton]
+        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        navigationItem.rightBarButtonItems = [addBtn,searchBtn]
 
         setupTableView()
         self.navigationItem.titleView = self.titleButton
@@ -86,6 +86,9 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView!.backgroundColor = Color.LGrayColor
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
+        // MARK: - TableHeader
+        self.tableView?.register(HeaderViewCell.self, forCellReuseIdentifier: "Header")
+        self.automaticallyAdjustsScrollViewInsets = false //fix
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -207,65 +210,17 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let vw = UIView()
-        vw.backgroundColor = Color.Vend.navColor
-        //tableView.tableHeaderView = vw
+        guard let header = tableView.dequeueReusableCell(withIdentifier: "Header") as? HeaderViewCell else { fatalError("Unexpected Index Path") }
+        //let vw = UIView()
+        header.myLabel1.text = String(format: "%@%d", "Vendor\n", _feedItems.count)
+        header.myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
+        header.myLabel3.text = String(format: "%@%d", "Events\n", 3)
+        header.separatorView1.backgroundColor = Color.Vend.buttonColor
+        header.separatorView2.backgroundColor = Color.Vend.buttonColor
+        header.separatorView3.backgroundColor = Color.Vend.buttonColor
+        self.tableView!.tableHeaderView = nil //header.header
         
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
-        myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
-        myLabel1.textAlignment = .center
-        myLabel1.text = String(format: "%@%d", "Vendor\n", _feedItems.count)
-        myLabel1.font = Font.celltitle14m
-        myLabel1.layer.cornerRadius = 25.0
-        myLabel1.layer.borderColor = Color.Header.headtextColor.cgColor
-        myLabel1.layer.borderWidth = 1
-        myLabel1.layer.masksToBounds = true
-        myLabel1.isUserInteractionEnabled = true
-        vw.addSubview(myLabel1)
-        
-        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
-        separatorLineView1.backgroundColor = Color.Vend.buttonColor
-        vw.addSubview(separatorLineView1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
-        myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
-        myLabel2.textAlignment = .center
-        myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
-        myLabel2.font = Font.celltitle14m
-        myLabel2.isUserInteractionEnabled = true
-        myLabel2.layer.borderColor = Color.Header.headtextColor.cgColor
-        myLabel2.layer.borderWidth = 1
-        myLabel2.layer.cornerRadius = 25.0
-        myLabel2.layer.masksToBounds = true
-        vw.addSubview(myLabel2)
-        
-        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
-        separatorLineView2.backgroundColor = Color.Vend.buttonColor
-        vw.addSubview(separatorLineView2)
-        
-        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
-        myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = .white
-        myLabel3.textColor = .black
-        myLabel3.textAlignment = .center
-        myLabel3.text = String(format: "%@%d", "Events\n", 3)
-        myLabel3.font = Font.celltitle14m
-        myLabel3.layer.cornerRadius = 25.0
-        myLabel3.layer.borderColor = Color.Header.headtextColor.cgColor
-        myLabel3.layer.borderWidth = 1
-        myLabel3.layer.masksToBounds = true
-        myLabel3.isUserInteractionEnabled = true
-        vw.addSubview(myLabel3)
-        
-        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
-        separatorLineView3.backgroundColor = Color.Vend.buttonColor
-        vw.addSubview(separatorLineView3)
-        
-        return vw
+        return header
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

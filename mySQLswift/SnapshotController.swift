@@ -158,7 +158,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     // MARK: - Calender Events
-    
+    //fix dont work
     func loadEvents() {
         
         // Create a date formatter instance to use for converting a string to a date

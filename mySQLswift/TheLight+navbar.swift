@@ -51,10 +51,11 @@ public extension UIViewController {
     func setMainNavItems() {
         
         UIApplication.shared.statusBarStyle = .lightContent
+        
         let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
         if statusBar.responds(to: #selector(setter: UIView.backgroundColor)) {
             statusBar.backgroundColor = .black
-        }
+        } 
         
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.tintColor = .gray
@@ -72,6 +73,7 @@ public extension UIViewController {
     private func setupNewsNavigationBarItems() {
         
         UIApplication.shared.statusBarStyle = .lightContent
+        
         let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
         if statusBar.responds(to: #selector(setter: UIView.backgroundColor)) {
             if UI_USER_INTERFACE_IDIOM() == .pad {
@@ -97,6 +99,7 @@ public extension UIViewController {
     private func setupTwitterNavItems() {
         
         UIApplication.shared.statusBarStyle = .default
+        
         let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
         if statusBar.responds(to: #selector(setter: UIView.backgroundColor)) {
             statusBar.backgroundColor = .white

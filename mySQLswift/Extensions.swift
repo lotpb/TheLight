@@ -297,6 +297,14 @@ extension UIView {
     }
 }
 
+// MARK: - Scroll to top TableView
+extension UITableView {
+    func scrollToTop(animated: Bool) {
+        setContentOffset(.zero, animated: animated)
+    }
+}
+
+
 // MARK: - detect a URL in a String using NSDataDetector
 extension NSRange {
     //NSRange rather than a Swift string range.
@@ -379,6 +387,19 @@ public extension String {
         let result = linkDetector?.firstMatch(in: self, options: .reportCompletion, range: range)
         let scheme = result?.url?.scheme ?? ""
         return scheme == "mailto" && result?.range.length == self.characters.count
+    }
+}
+//hide TabBar fix too slow
+extension UITabBarController {
+    
+    func hideTabBarAnimated(hide:Bool) {
+        UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+            if hide {
+                self.tabBar.transform = CGAffineTransform(translationX: 0, y: 50)
+            } else {
+                self.tabBar.transform = CGAffineTransform.identity
+            }
+        })
     }
 }
 

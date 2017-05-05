@@ -25,8 +25,6 @@ class Blog: UIViewController {
     var searchController: UISearchController!
     var resultsController: UITableViewController!
     var foundUsers:[String] = []
-
-    let header = UIView()
     
     var buttonView: UIView?
     var likeButton: UIButton?
@@ -36,8 +34,6 @@ class Blog: UIViewController {
     var titleLabel = String()
     var defaults = UserDefaults.standard
     
-    // MARK: NavigationController Hidden
-    var lastContentOffset: CGFloat = 0.0
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -54,7 +50,6 @@ class Blog: UIViewController {
 
         setupTableView()
         self.tableView!.addSubview(self.refreshControl)
-        //navigationController?.navigationBar.isTranslucent = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -64,17 +59,20 @@ class Blog: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // MARK: NavigationController Hidden
-        NotificationCenter.default.addObserver(self, selector: #selector(Blog.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         
         setupNavigationBarItems()
         setupTwitterNavigationBarItems()
+        //TabBar Hidden
+        self.tabBarController?.tabBar.isHidden = false
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+        //NotificationCenter.default.removeObserver(self)
+        //TabBar Hidden
+        self.tabBarController?.tabBar.isHidden = true
+         UIApplication.shared.isStatusBarHidden = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,18 +81,16 @@ class Blog: UIViewController {
     }
     
     func setupTableView() {
-        
+
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
-        self.tableView!.backgroundColor = .clear //UIColor(white:0.90, alpha:1.0)
+        self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0) //Color.Blog.navColor
         self.tableView!.estimatedRowHeight = 110
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.tableFooterView = UIView(frame: .zero)
         // MARK: - TableHeader
+        self.tableView!.register(HeaderViewCell.self, forCellReuseIdentifier: "headerCell")
         self.automaticallyAdjustsScrollViewInsets = false //fix
-        header.backgroundColor = Color.Blog.navColor
-        //self.tableView!.tableHeaderView = header
-        //tableView?.layoutIfNeeded()
     
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -103,29 +99,25 @@ class Blog: UIViewController {
     }
     
     
-    // MARK: - NavigationController Hidden
+    // MARK: - NavigationController/ TabBar Hidden
     
-    func hideBar(notification: NSNotification)  {
-        let state = notification.object as! Bool
-        self.navigationController?.setNavigationBarHidden(state, animated: true)
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (self.lastContentOffset > scrollView.contentOffset.y) {
-            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
-            self.tableView!.tableHeaderView = nil
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        if(velocity.y>0) {
+            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+                self.navigationController?.setNavigationBarHidden(true, animated: true)
+                self.tabBarController?.hideTabBarAnimated(hide: true)
+                UIApplication.shared.isStatusBarHidden = true
+            }, completion: nil)
+            
         } else {
-            NotificationCenter.default.post(name: NSNotification.Name("hide"), object: true)
-            self.tableView!.tableHeaderView = header
+            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+                self.navigationController?.setNavigationBarHidden(false, animated: true)
+                self.tabBarController?.hideTabBarAnimated(hide: false)
+                UIApplication.shared.isStatusBarHidden = false
+            }, completion: nil)    
         }
     }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        self.lastContentOffset = scrollView.contentOffset.y
-        //NotificationCenter.default.post(name: NSNotification.Name("hide"), object: false)
-        //self.tableView!.tableHeaderView = header //nil //added
-    }
-    
     
     // MARK: - refresh
     
@@ -556,72 +548,32 @@ extension Blog: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-
-            if UI_USER_INTERFACE_IDIOM() == .phone {
-                return 90.0
-            } else {
-                return CGFloat.leastNormalMagnitude //0.0
-            }
+        
+        if UI_USER_INTERFACE_IDIOM() == .phone {
+            return 90.0
+        } else {
+            return CGFloat.leastNormalMagnitude //0.0
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
+
         if UI_USER_INTERFACE_IDIOM() == .phone {
-            let myLabel1:UILabel = UILabel(frame: CGRect.init(x: 10, y: 15, width: 50, height: 50))
-            myLabel1.numberOfLines = 0
-            myLabel1.backgroundColor = .white
-            myLabel1.textColor = Color.goldColor
-            myLabel1.textAlignment = .center
-            myLabel1.text = String(format: "%@%d", "posts\n", _feedItems.count)
-            myLabel1.font = Font.celltitle14m
-            myLabel1.layer.cornerRadius = 25.0
-            myLabel1.layer.borderColor = Color.Blog.borderColor.cgColor
-            myLabel1.layer.borderWidth = 1
-            myLabel1.layer.masksToBounds = true
-            myLabel1.isUserInteractionEnabled = true
-            header.addSubview(myLabel1)
             
-            let separatorLineView1 = UIView.init(frame: CGRect.init(x: 10, y: 75, width: 50, height: 2.5))
-            separatorLineView1.backgroundColor = Color.Blog.borderColor
-            header.addSubview(separatorLineView1)
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell") as? HeaderViewCell else { fatalError("Unexpected Index Path") }
             
-            let myLabel2:UILabel = UILabel(frame: CGRect.init(x: 80, y: 15, width: 50, height: 50))
-            myLabel2.numberOfLines = 0
-            myLabel2.backgroundColor = .white
-            myLabel2.textColor = Color.goldColor
-            myLabel2.textAlignment = .center
-            myLabel2.text = String(format: "%@%d", "likes\n", _feedheadItems2.count)
-            myLabel2.font = Font.celltitle14m
-            myLabel2.layer.cornerRadius = 25.0
-            myLabel2.layer.borderColor = Color.Blog.borderColor.cgColor
-            myLabel2.layer.borderWidth = 1
-            myLabel2.layer.masksToBounds = true
-            myLabel2.isUserInteractionEnabled = true
-            header.addSubview(myLabel2)
-            
-            let separatorLineView2 = UIView.init(frame: CGRect.init(x: 80, y: 75, width: 50, height: 2.5))
-            separatorLineView2.backgroundColor = Color.Blog.borderColor
-            header.addSubview(separatorLineView2)
-            
-            let myLabel3:UILabel = UILabel(frame: CGRect.init(x: 150, y: 15, width: 50, height: 50))
-            myLabel3.numberOfLines = 0
-            myLabel3.backgroundColor = .white
-            myLabel3.textColor = Color.goldColor
-            myLabel3.textAlignment = .center
-            myLabel3.text = String(format: "%@%d", "users\n", _feedheadItems3.count)
-            myLabel3.font = Font.celltitle14m
-            myLabel3.layer.cornerRadius = 25.0
-            myLabel3.layer.borderColor = Color.Blog.borderColor.cgColor
-            myLabel3.layer.borderWidth = 1
-            myLabel3.layer.masksToBounds = true
-            myLabel3.isUserInteractionEnabled = true
-            header.addSubview(myLabel3)
-            
-            let separatorLineView3 = UIView.init(frame: CGRect.init(x: 150, y: 75, width: 50, height: 2.5))
-            separatorLineView3.backgroundColor = Color.Blog.borderColor
-            header.addSubview(separatorLineView3)
+            cell.header.backgroundColor = Color.Blog.navColor
+            cell.myLabel1.text = String(format: "%@%d", "posts\n", _feedItems.count)
+            cell.myLabel2.text = String(format: "%@%d", "likes\n", _feedheadItems2.count)
+            cell.myLabel3.text = String(format: "%@%d", "users\n", _feedheadItems3.count)
+            cell.separatorView1.backgroundColor = Color.Blog.borderColor
+            cell.separatorView2.backgroundColor = Color.Blog.borderColor
+            cell.separatorView3.backgroundColor = Color.Blog.borderColor
+            self.tableView!.tableHeaderView = nil //cell.header
+
+            return cell
         }
-        return header
+        return nil
     }
     
     // MARK: - Content Menu
@@ -662,11 +614,8 @@ extension Blog: UISearchBarDelegate {
         searchController.searchBar.scopeButtonTitles = searchScope
         searchController.searchBar.barTintColor = Color.Blog.navColor
         tableView!.tableFooterView = UIView(frame: .zero)
-        
         //fix searchbar behind navbar
-        //searchController.hidesNavigationBarDuringPresentation = false //fix added
-        //searchController.searchBar.searchBarStyle = .minimal //fix added
-        //definesPresentationContext = true //fix added
+        searchController.hidesNavigationBarDuringPresentation = false //fix added
         
         self.present(searchController, animated: true)
     }
@@ -677,4 +626,6 @@ extension Blog: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
     }
-} 
+}
+
+

@@ -28,28 +28,33 @@ class Search: UIView, UITableViewDelegate, UITableViewDataSource, UITextFieldDel
         sv.alpha = 0
         return sv
     }()
+    
     lazy var backgroundView: UIView = {
         let bv = UIView.init(frame: self.frame)
         bv.backgroundColor = UIColor.black
         bv.alpha = 0
         return bv
     }()
+    
     lazy var backButton: UIButton = {
        let bb = UIButton.init(frame: CGRect.init(x: 0, y: 20, width: 48, height: 48))
         bb.setBackgroundImage(UIImage.init(named: "cancel"), for: [])
         bb.addTarget(self, action: #selector(Search.dismiss), for: .touchUpInside)
         return bb
     }()
+    
     lazy var searchField: UITextField = {
         let sf = UITextField.init(frame: CGRect.init(x: 48, y: 20, width: self.frame.width - 50, height: 48))
         sf.placeholder = "Seach on Youtube"
         sf.keyboardAppearance = .dark
         return sf
     }()
+    
     lazy var tableView: UITableView = {
         let tv: UITableView = UITableView.init(frame: CGRect.init(x: 0, y: 68, width: self.frame.width, height: 288))
         return tv
     }()
+    
     var items = [String]()
     
     var delegate:SearchDelegate?

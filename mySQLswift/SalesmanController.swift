@@ -101,6 +101,9 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView!.estimatedRowHeight = 65
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = Color.LGrayColor
+        // MARK: - TableHeader
+        self.tableView?.register(HeaderViewCell.self, forCellReuseIdentifier: "Header")
+        self.automaticallyAdjustsScrollViewInsets = false //fix
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -202,60 +205,17 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let vw = UIView()
-        vw.backgroundColor = Color.Table.navColor
-        //tableView.tableHeaderView = vw
+        guard let header = tableView.dequeueReusableCell(withIdentifier: "Header") as? HeaderViewCell else { fatalError("Unexpected Index Path") }
         
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
-        myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
-        myLabel1.textAlignment = .center
-        myLabel1.text = String(format: "%@%d", "Sale's\n", _feedItems.count)
-        myLabel1.font = Font.celltitle14m
-        myLabel1.layer.cornerRadius = 25.0
-        myLabel1.layer.masksToBounds = true
-        myLabel1.isUserInteractionEnabled = true
-        vw.addSubview(myLabel1)
-        
-        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
-        separatorLineView1.backgroundColor = Color.Table.labelColor
-        vw.addSubview(separatorLineView1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
-        myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
-        myLabel2.textAlignment = .center
-        myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
-        myLabel2.font = Font.celltitle14m
-        myLabel2.layer.cornerRadius = 25.0
-        myLabel2.layer.masksToBounds = true
-
-        myLabel2.isUserInteractionEnabled = true
-        vw.addSubview(myLabel2)
-        
-        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
-        separatorLineView2.backgroundColor = Color.Table.labelColor
-        vw.addSubview(separatorLineView2)
-        
-        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
-        myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = .white
-        myLabel3.textColor = .black
-        myLabel3.textAlignment = .center
-        myLabel3.text = "Active"
-        myLabel3.font = Font.celltitle14m
-        myLabel3.layer.cornerRadius = 25.0
-        myLabel3.layer.masksToBounds = true
-        myLabel3.isUserInteractionEnabled = true
-        vw.addSubview(myLabel3)
-        
-        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
-        separatorLineView3.backgroundColor = Color.Table.labelColor
-        vw.addSubview(separatorLineView3)
-        
-        return vw
+        header.header.backgroundColor = Color.Table.navColor
+        header.myLabel1.text = String(format: "%@%d", "Sale's\n", _feedItems.count)
+        header.myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
+        header.myLabel3.text = String(format: "%@%d", "Active\n", 0)
+        header.separatorView1.backgroundColor = Color.Table.labelColor
+        header.separatorView2.backgroundColor = Color.Table.labelColor
+        header.separatorView3.backgroundColor = Color.Table.labelColor
+        self.tableView!.tableHeaderView = nil //header.header
+        return header
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

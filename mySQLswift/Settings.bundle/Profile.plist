@@ -38,7 +38,7 @@
 			<key>Key</key>
 			<string>websiteKey</string>
 			<key>DefaultValue</key>
-			<string>http://lotpb.github.io/UnitedWebPage/index.html</string>
+			<string>Add your website</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -50,11 +50,21 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>User Name</string>
+			<string>Username</string>
 			<key>Key</key>
 			<string>usernameKey</string>
 			<key>DefaultValue</key>
 			<string>Peter Balsamo</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Phone</string>
+			<key>Key</key>
+			<string>phonenumKey</string>
+			<key>DefaultValue</key>
+			<string>Add your phone number</string>
 		</dict>
 		<dict>
 			<key>Type</key>

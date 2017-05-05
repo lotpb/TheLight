@@ -86,7 +86,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         //Twitter
         setupTwitterButton()
         
-        setupForm()
+        setupView()
         setupFont()
         setupConstraints()
     }
@@ -107,7 +107,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         }
     }
     
-    func setupForm() {
+    fileprivate func setupView() {
         
         if ((defaults.string(forKey: "registerKey") == nil)) {
             self.registerBtn!.setTitle("Register", for: .normal)

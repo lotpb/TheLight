@@ -181,7 +181,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         if (indexPath.row == 0) {
             
             let theSwitch = UISwitch(frame:CGRect.zero)
-            theSwitch.addTarget(self, action: #selector(NewEditData.changeSwitch), for: .valueChanged)
+            theSwitch.addTarget(self, action: #selector(changeSwitch), for: .valueChanged)
             theSwitch.onTintColor = UIColor(red:0.0, green:122.0/255.0, blue:1.0, alpha: 1.0)
             theSwitch.tintColor = .lightGray
             

@@ -53,13 +53,9 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         //self.navigationItem.leftBarButtonItem = self.editButtonItem()
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(AdController.newData))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(AdController.searchButton))
-        navigationItem.rightBarButtonItems = [addButton,searchButton]
-        /*
-        if UI_USER_INTERFACE_IDIOM() == .phone {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(goHome))
-        } */
+        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        navigationItem.rightBarButtonItems = [addBtn,searchBtn]
 
         parseData()
         setupTableView()
@@ -90,6 +86,9 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.tableView!.estimatedRowHeight = 65
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.backgroundColor = UIColor(white:0.90, alpha:1.0)
+        // MARK: - TableHeader
+        self.tableView?.register(HeaderViewCell.self, forCellReuseIdentifier: "Header")
+        self.automaticallyAdjustsScrollViewInsets = false //fix
         
         resultsController = UITableViewController(style: .plain)
         resultsController.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UserFoundCell")
@@ -179,59 +178,20 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let vw = UIView()
-        vw.backgroundColor = Color.Table.navColor
-        //tableView.tableHeaderView = vw
-        
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
-        myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
-        myLabel1.textAlignment = .center
-        myLabel1.text = String(format: "%@%d", "Ad's\n", _feedItems.count)
-        myLabel1.font = Font.celltitle14m
-        myLabel1.layer.cornerRadius = 25.0
-        myLabel1.layer.masksToBounds = true
-        myLabel1.isUserInteractionEnabled = true
-        vw.addSubview(myLabel1)
-        
-        let separatorLineView1 = UIView.init(frame: CGRect.init(x: 10, y: 75, width: 50, height: 2.5))
-        separatorLineView1.backgroundColor = Color.Table.labelColor
-        vw.addSubview(separatorLineView1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect.init(x: 80, y: 15, width: 50, height: 50))
-        myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
-        myLabel2.textAlignment = .center
-        myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
-        myLabel2.font = Font.celltitle14m
-        myLabel2.layer.cornerRadius = 25.0
-        myLabel2.layer.masksToBounds = true
-        myLabel2.isUserInteractionEnabled = true
-        vw.addSubview(myLabel2)
-        
-        let separatorLineView2 = UIView.init(frame: CGRect.init(x: 80, y: 75, width: 50, height: 2.5))
-        separatorLineView2.backgroundColor = Color.Table.labelColor
-        vw.addSubview(separatorLineView2)
-        
-        let myLabel3:UILabel = UILabel(frame: CGRect.init(x: 150, y: 15, width: 50, height: 50))
-        myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = .white
-        myLabel3.text = "Active"
-        myLabel3.textColor = .black
-        myLabel3.textAlignment = .center
-        myLabel3.font = Font.celltitle14m
-        myLabel3.layer.cornerRadius = 25.0
-        myLabel3.layer.masksToBounds = true
-        myLabel3.isUserInteractionEnabled = true
-        vw.addSubview(myLabel3)
-        
-        let separatorLineView3 = UIView.init(frame: CGRect.init(x: 150, y: 75, width: 50, height: 2.5))
-        separatorLineView3.backgroundColor = Color.Table.labelColor
-        vw.addSubview(separatorLineView3)
-        
-        return vw
+        if(section == 0) {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "Header") as? HeaderViewCell else { fatalError("Unexpected Index Path") }
+            
+            cell.header.backgroundColor = Color.Table.navColor
+            cell.myLabel1.text = String(format: "%@%d", "Ad's\n", _feedItems.count)
+            cell.myLabel2.text = String(format: "%@%d", "Active\n", _feedheadItems.count)
+            cell.myLabel3.text = String(format: "%@%d", "Active\n", 0)
+            cell.separatorView1.backgroundColor = Color.Table.labelColor
+            cell.separatorView2.backgroundColor = Color.Table.labelColor
+            cell.separatorView3.backgroundColor = Color.Table.labelColor
+            self.tableView!.tableHeaderView = nil //cell.header
+            return cell
+        }
+        return nil
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
