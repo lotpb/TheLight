@@ -103,7 +103,6 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         self.lastContentOffset = scrollView.contentOffset.y;
     }
     
-    
     // MARK: - Button
     
     func likeSetButton(sender:UIButton) {

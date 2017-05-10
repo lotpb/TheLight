@@ -17,7 +17,7 @@ class Favorite: UITableViewController {
     var siteAddresses: [String]?
     
     var detailViewController: Web? = nil
-    var objects = [Any]()
+    var objects = NSMutableArray()
     
     lazy var titleButton: UIButton = {
         let button = UIButton(type: .system)
@@ -33,19 +33,22 @@ class Favorite: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        siteNames = ["Ray Wenderlich", "Use Your Loaf", "IOS Dev Feed", "Stackflow", "Letsbuildthatapp", "Cocoacasts", "Little bites of cocoa", "Farhan Syed", "Andrew Bancroft"]
+        siteAddresses = ["https://www.raywenderlich.com",
+                         "https://useyourloaf.com",
+                         "https://twitter.com/iOSDevFeed",
+                         "https://stackoverflow.com/questions/tagged/swift3",
+                         "https://videos.letsbuildthatapp.com",
+                         "https://cocoacasts.com/blog/",
+                         "https://littlebitesofcocoa.com",
+                         "https://medium.com/@farhansyed",
+                         "https://www.andrewcbancroft.com/category/software-development/ios-mac/swift/"]
+
+        
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? Web
         }
-        
-        siteNames = ["Ray Wenderlich", "Vea Software", "IOS Dev Feed", "Stackflow", "Letsbuildthatapp", "Cocoacasts"]
-        siteAddresses = ["https://www.raywenderlich.com/written",
-                             "https://www.veasoftware.com",
-                             "https://twitter.com/iOSDevFeed",
-                             "http://stackoverflow.com/questions/tagged/swift3",
-                             "https://videos.letsbuildthatapp.com",
-                             "https://cocoacasts.com/blog/"]
-
         setupTableView()
         self.navigationItem.titleView = self.titleButton
     }
@@ -120,7 +123,7 @@ class Favorite: UITableViewController {
                 
                 let controller = (segue.destination as! UINavigationController).topViewController as! Web
                 
-                controller.detailItem = urlString as AnyObject?
+                controller.detailItem = urlString as AnyObject
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }

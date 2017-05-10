@@ -41,6 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             "weatherNotifyKey": "false"
             ])
         
+        // MARK: - TabBar
+        //window?.rootViewController = CustomTabBarController()
+        
         // MARK: - Parse
         if (defaults.bool(forKey: "parsedataKey"))  {
             
@@ -245,8 +248,11 @@ extension AppDelegate {
         UITabBar.appearance().tintColor = Color.twitterBlue
         UITabBar.appearance().isTranslucent = false
         
+        //UIToolbar.appearance().barStyle = .blackTranslucent
+        //UIToolbar.appearance().backgroundColor = .white
         UIToolbar.appearance().barTintColor = Color.DGrayColor
         UIToolbar.appearance().tintColor = .white
+        UIToolbar.appearance().isTranslucent = false
         
         UISearchBar.appearance().barTintColor = .black
         UISearchBar.appearance().tintColor = .white

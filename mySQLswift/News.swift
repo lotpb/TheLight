@@ -7,7 +7,6 @@
 //
 
 import UIKit
-//import Foundation
 
 
 class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, SearchDelegate {
@@ -34,7 +33,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.isTranslucent = false
+        //navigationController?.navigationBar.isTranslucent = false
 
         self.titleLabel.frame = CGRect(x: 0, y: 0, width: view.frame.width - 32, height: self.view.frame.height)
         navigationItem.titleView = self.titleLabel
@@ -44,17 +43,25 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         setupNavBarButtons() 
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        //TabBar Hidden
+        self.tabBarController?.tabBar.isHidden = false
         // MARK: NavigationController Hidden
         NotificationCenter.default.addObserver(self, selector: #selector(News.hideBar(notification:)), name: NSNotification.Name("hide"), object: nil)
         setupNewsNavigationItems()
-        //self.tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
+        //TabBar Hidden
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -98,6 +105,9 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
     func hideBar(notification: NSNotification)  {
         let state = notification.object as! Bool
         self.navigationController?.setNavigationBarHidden(state, animated: true)
+        UIView.animate(withDuration: 0.2, animations: {
+            self.tabBarController?.hideTabBarAnimated(hide: state) //added
+        }, completion: nil)
     }
     
     
@@ -202,7 +212,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         
         setTitleForIndex(index: Int(index))
     }
-    
+
     func scrollToMenuIndex(menuIndex: Int) {
         
         let indexPath = IndexPath(item: menuIndex, section: 0)

@@ -7,9 +7,9 @@
 //
 
 import UIKit
-//import Firebase
 import Parse
 import Social
+//import Firebase
 
 class Blog: UIViewController {
     
@@ -55,16 +55,17 @@ class Blog: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshData(self)
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setupNavigationBarItems()
-        setupTwitterNavigationBarItems()
         //TabBar Hidden
         self.tabBarController?.tabBar.isHidden = false
-        
+        setupNavigationBarItems()
+        setupTwitterNavigationBarItems()
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -72,7 +73,7 @@ class Blog: UIViewController {
         //NotificationCenter.default.removeObserver(self)
         //TabBar Hidden
         self.tabBarController?.tabBar.isHidden = true
-         UIApplication.shared.isStatusBarHidden = false
+        UIApplication.shared.isStatusBarHidden = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -104,14 +105,15 @@ class Blog: UIViewController {
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         
         if(velocity.y>0) {
-            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+            UIView.animate(withDuration: 0.2, animations: {
                 self.navigationController?.setNavigationBarHidden(true, animated: true)
                 self.tabBarController?.hideTabBarAnimated(hide: true)
                 UIApplication.shared.isStatusBarHidden = true
             }, completion: nil)
             
         } else {
-            UIView.animate(withDuration: 2.5, delay: 0, options: UIViewAnimationOptions(), animations: {
+            
+            UIView.animate(withDuration: 0.2, animations: {
                 self.navigationController?.setNavigationBarHidden(false, animated: true)
                 self.tabBarController?.hideTabBarAnimated(hide: false)
                 UIApplication.shared.isStatusBarHidden = false

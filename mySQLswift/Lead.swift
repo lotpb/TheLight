@@ -67,17 +67,29 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshData(self)
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         //Fix Grey Bar in iphone Bpttom Bar
         if UIDevice.current.userInterfaceIdiom == .phone {
             if let con = self.splitViewController {
                 con.preferredDisplayMode = .primaryOverlay
             }
         }
+        //TabBar Hidden
+        self.tabBarController?.tabBar.isHidden = false
         setMainNavItems()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        //NotificationCenter.default.removeObserver(self)
+        //TabBar Hidden
+        self.tabBarController?.tabBar.isHidden = true
+        UIApplication.shared.isStatusBarHidden = false
     }
     
     
@@ -92,6 +104,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         self.tableView!.backgroundColor = Color.LGrayColor
         self.tableView!.estimatedRowHeight = 100
         self.tableView!.rowHeight = UITableViewAutomaticDimension
+        self.tableView!.tableFooterView = UIView(frame: .zero)
         // MARK: - TableHeader
         self.tableView?.register(HeaderViewCell.self, forCellReuseIdentifier: "Header")
         self.automaticallyAdjustsScrollViewInsets = false //fix
@@ -101,6 +114,26 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         resultsController.tableView.dataSource = self
         resultsController.tableView.delegate = self
     }
+    
+    // MARK: - NavigationController/ TabBar Hidden
+    /*
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        if(velocity.y>0) {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.navigationController?.setNavigationBarHidden(true, animated: true)
+                self.tabBarController?.hideTabBarAnimated(hide: true)
+                UIApplication.shared.isStatusBarHidden = true
+            }, completion: nil)
+            
+        } else {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.navigationController?.setNavigationBarHidden(false, animated: true)
+                self.tabBarController?.hideTabBarAnimated(hide: false)
+                UIApplication.shared.isStatusBarHidden = false
+            }, completion: nil)
+        }
+    } */
     
     // MARK: - Refresh
     
@@ -319,56 +352,6 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
     }
 }
 //-----------------------end------------------------------
-
-// MARK: - UISearchBar Delegate
-extension Lead: UISearchBarDelegate {
-    
-    func searchButton(_ sender: AnyObject) {
-        searchController = UISearchController(searchResultsController: resultsController)
-        searchController.searchResultsUpdater = self
-        definesPresentationContext = true
-        searchController.searchBar.scopeButtonTitles = searchScope
-        searchController.searchBar.barTintColor = Color.Lead.navColor
-        tableView!.tableFooterView = UIView(frame: .zero)
-        self.present(searchController, animated: true)
-    }
-}
-
-extension Lead: UISearchResultsUpdating {
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        /*
-        let firstNameQuery = PFQuery(className:"Leads")
-        firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
-        
-        let lastNameQuery = PFQuery(className:"Leads")
-        lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
-        
-        let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
-        query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
-            
-            if error != nil {
-                self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
-                return
-            }
-            if let objects = results {
-                self.foundUsers.removeAll(keepingCapacity: false)
-                for object in objects {
-                    let firstName = object.object(forKey: "First") as! String
-                    let lastName = object.object(forKey: "LastName") as! String
-                    let fullName = firstName + " " + lastName
-                    
-                    self.foundUsers.append(fullName)
-                    print(fullName)
-                }
-                DispatchQueue.main.async {
-                    self.resultsController.tableView.reloadData()
-                    self.searchController.resignFirstResponder()
-                }
-            }
-        } */
-    }
-}
 extension Lead: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -504,7 +487,7 @@ extension Lead: UITableViewDelegate {
         if UI_USER_INTERFACE_IDIOM() == .phone {
             return 90.0
         } else {
-            return 0.0
+            return CGFloat.leastNormalMagnitude
         }
     }
     
@@ -540,6 +523,55 @@ extension Lead: UITableViewDelegate {
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
+    }
+}
+// MARK: - UISearchBar Delegate
+extension Lead: UISearchBarDelegate {
+    
+    func searchButton(_ sender: AnyObject) {
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
+        searchController.searchBar.scopeButtonTitles = searchScope
+        searchController.searchBar.barTintColor = Color.Lead.navColor
+        tableView!.tableFooterView = UIView(frame: .zero)
+        self.present(searchController, animated: true)
+    }
+}
+
+extension Lead: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        /*
+         let firstNameQuery = PFQuery(className:"Leads")
+         firstNameQuery.whereKey("First", contains: searchController.searchBar.text)
+         
+         let lastNameQuery = PFQuery(className:"Leads")
+         lastNameQuery.whereKey("LastName", matchesRegex: "(?i)\(String(describing: searchController.searchBar.text))")
+         
+         let query = PFQuery.orQuery(withSubqueries: [firstNameQuery, lastNameQuery])
+         query.findObjectsInBackground { (results:[PFObject]?, error:Error?) in
+         
+         if error != nil {
+         self.simpleAlert(title: "Alert", message: (error?.localizedDescription)!)
+         return
+         }
+         if let objects = results {
+         self.foundUsers.removeAll(keepingCapacity: false)
+         for object in objects {
+         let firstName = object.object(forKey: "First") as! String
+         let lastName = object.object(forKey: "LastName") as! String
+         let fullName = firstName + " " + lastName
+         
+         self.foundUsers.append(fullName)
+         print(fullName)
+         }
+         DispatchQueue.main.async {
+         self.resultsController.tableView.reloadData()
+         self.searchController.resignFirstResponder()
+         }
+         }
+         } */
     }
 }
 

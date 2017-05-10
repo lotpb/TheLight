@@ -103,6 +103,7 @@ public extension UIViewController {
         let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
         if statusBar.responds(to: #selector(setter: UIView.backgroundColor)) {
             statusBar.backgroundColor = .white
+            navigationController?.navigationBar.barTintColor = .white
         }
         
         let titleImageView = UIImageView(image: #imageLiteral(resourceName: "title_icon"))
@@ -110,7 +111,6 @@ public extension UIViewController {
         titleImageView.contentMode = .scaleAspectFit
         navigationItem.titleView = titleImageView
         
-        navigationController?.navigationBar.barTintColor = .white
         navigationController?.navigationBar.tintColor = Color.twitterBlue
         navigationController?.navigationBar.backgroundColor = .white
         
@@ -119,8 +119,8 @@ public extension UIViewController {
         view.addSubview(separatorLineView1)
         
         //remove navbar line
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = nil //UIImage()
+        navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         
         //tabBarController?.tabBar.barTintColor = .white
         //tabBarController?.tabBar.tintColor = Color.twitterBlue

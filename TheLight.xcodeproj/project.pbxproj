@@ -48,6 +48,7 @@
 		AF6E27041C3AC52300612C25 /* EditData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6E27031C3AC52200612C25 /* EditData.swift */; };
 		AF7383EB1C302DD00049407C /* NotificationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7383EA1C302DD00049407C /* NotificationDetailController.swift */; };
 		AF74E4601D1BFF58004DE7D6 /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF74E45F1D1BFF58004DE7D6 /* SettingCell.swift */; };
+		AF8582601EBFD79E00180EDE /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF85825F1EBFD79E00180EDE /* CustomTabBarController.swift */; };
 		AF88129F1C61B14C007826AD /* MobyDick.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF88129E1C61B14C007826AD /* MobyDick.mp3 */; };
 		AF8CC3A71C4153AF004147F3 /* NewEditData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8CC3A61C4153AF004147F3 /* NewEditData.swift */; };
 		AF8CC3AB1C42B9FB004147F3 /* StatisticController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8CC3AA1C42B9FB004147F3 /* StatisticController.swift */; };
@@ -177,6 +178,7 @@
 		AF6E27031C3AC52200612C25 /* EditData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditData.swift; sourceTree = "<group>"; };
 		AF7383EA1C302DD00049407C /* NotificationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationDetailController.swift; sourceTree = "<group>"; };
 		AF74E45F1D1BFF58004DE7D6 /* SettingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
+		AF85825F1EBFD79E00180EDE /* CustomTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTabBarController.swift; path = "../../../Downloads/facebook_menu_tabs-master/facebookfeed2/CustomTabBarController.swift"; sourceTree = "<group>"; };
 		AF85E8181C77F4D7004B7EAF /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		AF85E81B1C77F4D7004B7EAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		AF85E81D1C77F4D7004B7EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -307,10 +309,8 @@
 		AF0369A31C173DDC00137D7E /* TheLight */ = {
 			isa = PBXGroup;
 			children = (
-				AFA4150A1EA40F7B00EC067A /* Parse.swift */,
 				AF69A34C1D7B1BF9002BE793 /* TheLight.entitlements */,
 				AFE6936E1C6A4D7E000BEDCE /* Extensions.swift */,
-				AFD1EC801E2D21B100DC991A /* TheLight+navbar.swift */,
 				AF0369A41C173DDC00137D7E /* AppDelegate.swift */,
 				AFE0CEFB1D3EAB5700D6D3F0 /* Main.storyboard */,
 				AF8CC3A91C41B34E004147F3 /* Controllers */,
@@ -404,6 +404,9 @@
 		AF6DC0A01D3E481E00023F67 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFD1EC801E2D21B100DC991A /* TheLight+navbar.swift */,
+				AFA4150A1EA40F7B00EC067A /* Parse.swift */,
+				AF85825F1EBFD79E00180EDE /* CustomTabBarController.swift */,
 				AFE70CF81EB9FF8C00C8FE92 /* HeaderViewCell.swift */,
 				AF1E6D551C1920FC0009230E /* CustomTableCell.swift */,
 				AF0C77A21C2245BA0055DDE4 /* CollectionViewCell.swift */,
@@ -753,7 +756,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		28B88D6B46557F3F2B25CC6F /* [CP] Embed Pods Frameworks */ = {
@@ -832,6 +835,7 @@
 				AF0369A71C173DDC00137D7E /* MasterViewController.swift in Sources */,
 				AFE263A41C178830007BBB90 /* Blog.swift in Sources */,
 				AFF3C8F21C4F38D500D9B7BD /* NewsDetailController.swift in Sources */,
+				AF8582601EBFD79E00180EDE /* CustomTabBarController.swift in Sources */,
 				AF0D6B331C4C554300334D03 /* YouTubeController.swift in Sources */,
 				AF9EE4C71C2771D70057B7DB /* NotificationController.swift in Sources */,
 				AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */,

@@ -389,7 +389,7 @@ public extension String {
         return scheme == "mailto" && result?.range.length == self.characters.count
     }
 }
-//hide TabBar fix too slow
+//hide TabBar
 extension UITabBarController {
     
     func hideTabBarAnimated(hide:Bool) {
