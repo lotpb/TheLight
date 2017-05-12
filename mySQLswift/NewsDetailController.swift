@@ -55,15 +55,7 @@ class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewCo
         super.viewDidLoad()
         
         self.extendedLayoutIncludesOpaqueBars = true
-        
-        let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
-        let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
-        navigationItem.rightBarButtonItems = [editItem]
-        if SnapshotBool == false {
-            navigationItem.leftBarButtonItems = [backItem]
-        } else {
-            navigationItem.leftBarButtonItems = nil
-        }
+        setupNavigationButtons()
         
         let query = PFQuery(className:"Newsios")
         query.whereKey("objectId", equalTo: self.objectId!)
@@ -106,6 +98,17 @@ class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewCo
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editData))
+        let backItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(setbackButton))
+        navigationItem.rightBarButtonItems = [editItem]
+        if SnapshotBool == false {
+            navigationItem.leftBarButtonItems = [backItem]
+        } else {
+            navigationItem.leftBarButtonItems = nil
+        }
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {

@@ -39,10 +39,7 @@ class NotificationController: UIViewController {
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-
-        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(NotificationController.actionButton))
-        let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NotificationController.editButton))
-        navigationItem.rightBarButtonItems = [editButton, actionButton]
+        setupNavigationButtons()
         
         self.customMessage.clearButtonMode = .always
         self.customMessage!.font = celltitle
@@ -57,11 +54,6 @@ class NotificationController: UIViewController {
         UITextField.appearance().tintColor = .orange
         self.navigationItem.titleView = self.titleButton
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -73,6 +65,17 @@ class NotificationController: UIViewController {
             }
         }
         setMainNavItems()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(NotificationController.actionButton))
+        let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(NotificationController.editButton))
+        navigationItem.rightBarButtonItems = [editButton, actionButton]
     }
     
     // MARK: - localNotification
@@ -280,7 +283,7 @@ class NotificationController: UIViewController {
             let imageURL = Bundle.main.url(forResource: "calendar", withExtension: "png")
             let attachment = try! UNNotificationAttachment(identifier: "", url: imageURL!, options: nil)
             content.attachments = [attachment]
-            content.userInfo = ["link":"https://www.facebook.com/himinihana/photos/a.104501733005072.5463.100117360110176/981809495274287"]
+            content.userInfo = ["message":"Hello there!", "date": NSDate()]
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
             let request = UNNotificationRequest(identifier: "promo-id-123", content: content, trigger: trigger)

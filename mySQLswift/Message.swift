@@ -7,19 +7,37 @@
 //
 
 import UIKit
+import Firebase
 
 class Message: NSObject {
-
-    var MsgDate: String?
-    var MsgNo: NSNumber?
-    var PostBy: String?
-    var Rating: String?
-    var Subject: String?
-    var createdAt: String? //Date
-    var objectId: String?
-    var updatedAt: NSNumber? //Date
-    var Liked: NSNumber?
-    var ReplyId: String?
-    var CommentCount: NSNumber?
     
+    var fromId: String?
+    var text: String?
+    var timestamp: NSNumber?
+    var toId: String?
+    
+    var imageUrl: String?
+    var imageHeight: NSNumber?
+    var imageWidth: NSNumber?
+    
+    var videoUrl: String?
+    
+    func chatPartnerId() -> String? {
+        return fromId == FIRAuth.auth()?.currentUser?.uid ? toId : fromId
+    }
+    
+    init(dictionary: [String: Any]) {
+        super.init()
+        
+        fromId = dictionary["fromId"] as? String
+        text = dictionary["text"] as? String
+        timestamp = dictionary["timestamp"] as? NSNumber
+        toId = dictionary["toId"] as? String
+        
+        imageUrl = dictionary["imageUrl"] as? String
+        imageHeight = dictionary["imageHeight"] as? NSNumber
+        imageWidth = dictionary["imageWidth"] as? NSNumber
+        
+        videoUrl = dictionary["videoUrl"] as? String
+    }
 }

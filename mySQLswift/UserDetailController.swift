@@ -72,10 +72,7 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let cameraBtn = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(selectCamera))
-        let videoBtn = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(selectVideo))
-        navigationItem.rightBarButtonItems = [cameraBtn, videoBtn]
+        setupNavigationButtons()
         
         emailTitle = defaults.string(forKey: "emailtitleKey")! as NSString
         messageBody = defaults.string(forKey: "emailmessageKey")! as NSString
@@ -108,6 +105,12 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let cameraBtn = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(selectCamera))
+        let videoBtn = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(selectVideo))
+        navigationItem.rightBarButtonItems = [cameraBtn, videoBtn]
     }
     
     func setupBorder() {

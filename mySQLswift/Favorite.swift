@@ -87,9 +87,9 @@ class Favorite: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
       
         if UI_USER_INTERFACE_IDIOM() == .pad {
-            cell.textLabel!.font = Font.celltitle22m
+            cell.textLabel!.font = Font.celltitle20r
         } else {
-            cell.textLabel!.font = Font.celltitle20l
+            cell.textLabel!.font = Font.celltitle18l
         }
 
         cell.textLabel!.text = siteNames![indexPath.row]

@@ -166,10 +166,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let editBtn = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButton))
-        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
-        navigationItem.rightBarButtonItems = [editBtn,actionBtn]
+        setupNavigationButtons()
         
         //Leave this setup below
         setupConstraints()
@@ -211,6 +208,12 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let editBtn = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButton))
+        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
+        navigationItem.rightBarButtonItems = [editBtn,actionBtn]
     }
     
     func setupTableView() {

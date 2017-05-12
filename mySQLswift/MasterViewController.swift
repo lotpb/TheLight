@@ -67,7 +67,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         self.extendedLayoutIncludesOpaqueBars = true
         
         versionCheck()
-        setupNavBarButtons()
+        setupNavigationButtons()
         speech()
         setupTableView()
         updateYahoo()
@@ -119,7 +119,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         return true
     } 
     
-    func setupNavBarButtons() {
+    func setupNavigationButtons() {
         let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
         let addBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionButton))
         navigationItem.rightBarButtonItems = [addBtn, searchBtn]

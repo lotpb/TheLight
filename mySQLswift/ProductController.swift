@@ -51,11 +51,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
-        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
-        navigationItem.rightBarButtonItems = [addBtn,searchBtn]
-
+        setupNavigationButtons()
         parseData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
@@ -76,6 +72,12 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        navigationItem.rightBarButtonItems = [addBtn,searchBtn]
     }
     
     func setupTableView() {

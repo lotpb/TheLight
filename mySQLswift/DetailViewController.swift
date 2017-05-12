@@ -91,9 +91,7 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let searchButton = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(lightcamera))
-        navigationItem.rightBarButtonItems = [searchButton]
+        setupNavigationButtons()
         
         // MARK: - locationManager
         locationManager.delegate = self
@@ -134,6 +132,11 @@ class DetailViewController: UIViewController, RPPreviewViewControllerDelegate, A
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let searchButton = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(lightcamera))
+        navigationItem.rightBarButtonItems = [searchButton]
     }
     
     func setupFonts() {

@@ -34,14 +34,14 @@ class HeaderViewCell: UITableViewCell {
     let myLabel1: UILabel = {
         let label = UILabel()
         //label.translatesAutoresizingMaskIntoConstraints = false
-        label.frame = CGRect.init(x: 10, y: 15, width: 50, height: 50)
+        label.frame = CGRect.init(x: 10, y: 10, width: 54, height: 54)
         label.text = ""
         label.numberOfLines = 0
         label.backgroundColor = .white
         label.textColor = Color.goldColor
         label.textAlignment = .center
         label.font = Font.celltitle14m
-        label.layer.cornerRadius = 25.0
+        label.layer.cornerRadius = 27.0
         label.layer.borderColor = Color.Blog.borderColor.cgColor
         label.layer.borderWidth = 1
         label.layer.masksToBounds = true
@@ -52,14 +52,14 @@ class HeaderViewCell: UITableViewCell {
     let myLabel2: UILabel = {
         let label = UILabel()
         //label.translatesAutoresizingMaskIntoConstraints = false
-        label.frame = CGRect.init(x: 80, y: 15, width: 50, height: 50)
+        label.frame = CGRect.init(x: 84, y: 10, width: 54, height: 54)
         label.text = ""
         label.numberOfLines = 0
         label.backgroundColor = .white
         label.textColor = Color.goldColor
         label.textAlignment = .center
         label.font = Font.celltitle14m
-        label.layer.cornerRadius = 25.0
+        label.layer.cornerRadius = 27.0
         label.layer.borderColor = Color.Blog.borderColor.cgColor
         label.layer.borderWidth = 1
         label.layer.masksToBounds = true
@@ -70,14 +70,14 @@ class HeaderViewCell: UITableViewCell {
     let myLabel3: UILabel = {
         let label = UILabel()
         //label.translatesAutoresizingMaskIntoConstraints = false
-        label.frame = CGRect.init(x: 150, y: 15, width: 50, height: 50)
+        label.frame = CGRect.init(x: 158, y: 10, width: 54, height: 54)
         label.text = ""
         label.numberOfLines = 0
         label.backgroundColor = .white
         label.textColor = Color.goldColor
         label.textAlignment = .center
         label.font = Font.celltitle14m
-        label.layer.cornerRadius = 25.0
+        label.layer.cornerRadius = 27.0
         label.layer.borderColor = Color.Blog.borderColor.cgColor
         label.layer.borderWidth = 1
         label.layer.masksToBounds = true
@@ -87,19 +87,19 @@ class HeaderViewCell: UITableViewCell {
     
     let separatorView1: UIView = {
         let view = UIView()
-        view.frame = CGRect.init(x: 10, y: 75, width: 50, height: 2.5)
+        view.frame = CGRect.init(x: 10, y: 75, width: 54, height: 2.5)
         return view
     }()
     
     let separatorView2: UIView = {
         let view = UIView()
-        view.frame = CGRect.init(x: 80, y: 75, width: 50, height: 2.5)
+        view.frame = CGRect.init(x: 84, y: 75, width: 54, height: 2.5)
         return view
     }()
     
     let separatorView3: UIView = {
         let view = UIView()
-        view.frame = CGRect.init(x: 150, y: 75, width: 50, height: 2.5)
+        view.frame = CGRect.init(x: 158, y: 75, width: 54, height: 2.5)
         return view
     }()
     

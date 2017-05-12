@@ -51,10 +51,7 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))
-        navigationItem.rightBarButtonItems = [trashButton]
-        
+        setupNavigationButtons()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -66,14 +63,14 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         self.navigationController?.navigationBar.barTintColor = .orange
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))
+        navigationItem.rightBarButtonItems = [trashButton]
     }
     
     func setupTableView() {
@@ -161,54 +158,6 @@ class NotificationDetailController: UIViewController, UITableViewDelegate, UITab
         let vw = UIView()
         vw.backgroundColor = .orange
         //tableView.tableHeaderView = vw
-        
-        let myLabel1:UILabel = UILabel(frame: CGRect(x: 10, y: 15, width: 50, height: 50))
-        myLabel1.numberOfLines = 0
-        myLabel1.backgroundColor = .white
-        myLabel1.textColor = .black
-        myLabel1.textAlignment = .center
-        myLabel1.layer.masksToBounds = true
-        myLabel1.text = String(format: "%@%d", "Count\n", (UIApplication.shared.scheduledLocalNotifications!.count))
-        myLabel1.font = Font.headtitle
-        myLabel1.layer.cornerRadius = 25.0
-        myLabel1.isUserInteractionEnabled = true
-        vw.addSubview(myLabel1)
-        
-        let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 75, width: 50, height: 2.5))
-        separatorLineView1.backgroundColor = .white
-        vw.addSubview(separatorLineView1)
-        
-        let myLabel2:UILabel = UILabel(frame: CGRect(x: 80, y: 15, width: 50, height: 50))
-        myLabel2.numberOfLines = 0
-        myLabel2.backgroundColor = .white
-        myLabel2.textColor = .black
-        myLabel2.textAlignment = .center
-        myLabel2.layer.masksToBounds = true
-        myLabel2.text = "Active"
-        myLabel2.font = Font.headtitle
-        myLabel2.layer.cornerRadius = 25.0
-        myLabel2.isUserInteractionEnabled = true
-        vw.addSubview(myLabel2)
-        
-        let separatorLineView2 = UIView(frame: CGRect(x: 80, y: 75, width: 50, height: 2.5))
-        separatorLineView2.backgroundColor = .white
-        vw.addSubview(separatorLineView2)
-        
-        let myLabel3:UILabel = UILabel(frame: CGRect(x: 150, y: 15, width: 50, height: 50))
-        myLabel3.numberOfLines = 0
-        myLabel3.backgroundColor = .white
-        myLabel3.textColor = .black
-        myLabel3.textAlignment = .center
-        myLabel3.layer.masksToBounds = true
-        myLabel3.text = "Events"
-        myLabel3.font = Font.headtitle
-        myLabel3.layer.cornerRadius = 25.0
-        myLabel3.isUserInteractionEnabled = true
-        vw.addSubview(myLabel3)
-        
-        let separatorLineView3 = UIView(frame: CGRect(x: 150, y: 75, width: 50, height: 2.5))
-        separatorLineView3.backgroundColor = .white
-        vw.addSubview(separatorLineView3)
         
         return vw
     }

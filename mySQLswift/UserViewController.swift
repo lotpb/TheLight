@@ -58,11 +58,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
-        navigationItem.rightBarButtonItems = [addButton, searchButton]
-        
+        setupNavigationButtons()
         setupTableView()
         parseData()
         self.navigationItem.titleView = self.titleButton
@@ -85,6 +81,12 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
+        navigationItem.rightBarButtonItems = [addButton, searchButton]
     }
     
     func setupMap() {

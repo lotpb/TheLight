@@ -74,10 +74,7 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
-        navigationItem.rightBarButtonItems = [saveButton]
-
+        setupNavigationButtons()
         if formStatus == "New" {
             self.frm11 = "Active"
         }
@@ -105,6 +102,11 @@ class NewEditData: UIViewController, UITableViewDelegate, UITableViewDataSource,
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(updateData))
+        navigationItem.rightBarButtonItems = [saveButton]
     }
     
     func setupTableView() {

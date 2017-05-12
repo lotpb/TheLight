@@ -99,10 +99,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(shootPhoto))
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(uploadImage))
-        navigationItem.rightBarButtonItems = [saveButton, cameraButton]
-        
+        setupNavigationButtons()
         setupConstraints()
         setupForm()
         setupFonts()
@@ -131,6 +128,12 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(shootPhoto))
+        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(uploadImage))
+        navigationItem.rightBarButtonItems = [saveButton, cameraButton]
     }
     
     func setupForm() {
@@ -230,7 +233,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             self.present(imagePicker, animated: true)
         } else{
             self.simpleAlert(title: "Alert!", message: "Camera not available")
-        }
+        } 
     }
     
     @IBAction func selectImage(_ sender: AnyObject) {
@@ -355,11 +358,6 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                                         
                                         let newVC = News()
                                         self.navigationController?.pushViewController(newVC, animated: true)
-                                        /*
-                                         DispatchQueue.main.async {
-                                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "newsId")
-                                         self.show(vc!, sender: self)
-                                         } */
                                     }
                                 }
                             }

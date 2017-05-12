@@ -6,19 +6,16 @@
 //  Copyright © 2016 letsbuildthatapp. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class User: NSObject {
+struct User {
+    let uid: String
+    let username: String
+    let profileImageUrl: String
     
-    var bcryptPassword: String?
-    var createdAt: String?
-    var email: String?
-    var emailVerified: Bool?
-    var objectId: String?
-    var phone: String?
-    var currentLocation: String?
-    var imageFile: String?
-    var profileImageUrl: String?
-    var updatedAt: String?
-    var username: String?
+    init(uid: String, dictionary: [String: Any]) {
+        self.uid = uid
+        self.username = dictionary["username"] as? String ?? ""
+        self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
+    }
 }

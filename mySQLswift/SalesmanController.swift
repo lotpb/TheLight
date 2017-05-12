@@ -68,11 +68,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(SalesmanController.searchButton))
-        navigationItem.rightBarButtonItems = [addButton,searchButton]
-
+        setupNavigationButtons()
         parseData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
@@ -85,14 +81,15 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         self.navigationController?.navigationBar.barTintColor = Color.Table.navColor
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-  
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(SalesmanController.searchButton))
+        navigationItem.rightBarButtonItems = [addButton,searchButton]
     }
     
     func setupTableView() {

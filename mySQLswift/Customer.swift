@@ -54,10 +54,7 @@ class Customer: UIViewController {
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Customer.newData))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Customer.searchButton))
-        navigationItem.rightBarButtonItems = [addButton,searchButton]
- 
+        setupNavigationButtons()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -70,12 +67,7 @@ class Customer: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        /*
-         if UI_USER_INTERFACE_IDIOM() == .pad {
-         self.navigationController?.navigationBar.barTintColor = .black
-         } else {
-         setMainNavItems()
-         } */
+
         setMainNavItems()
     }
     
@@ -87,6 +79,11 @@ class Customer: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    fileprivate func setupNavigationButtons() {
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(Customer.newData))
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(Customer.searchButton))
+        navigationItem.rightBarButtonItems = [addButton,searchButton]    }
     
     func setupTableView() {
         self.tableView!.delegate = self

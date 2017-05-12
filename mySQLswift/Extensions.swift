@@ -38,7 +38,7 @@ var searchController: UISearchController!
         enum Blog {
             static let navColor = Color.twitterBlue
             //static let borderbtnColor = Color.LGrayColor.cgColor
-            static let borderColor = Color.goldColor
+            static let borderColor = UIColor.white //Color.goldColor
             static let buttonColor = Color.twitterBlue
             static let weblinkText = Color.twitterBlue
             static let emaillinkText = UIColor.red
@@ -321,37 +321,44 @@ extension NSRange {
 }
 
 //declared in CollectionViewCell
-let imageCache = NSCache<NSString, UIImage>()
+var imageCache = [String: UIImage]()
 
 class CustomImageView: UIImageView {
     
-    var imageUrlString: String?
+    var lastUrlUsedToLoadImage: String?
     
-    func loadImageUsingUrlString(urlString: String) {
+    func loadImage(urlString: String){
+        guard let url = URL(string: urlString) else {return}
         
-        imageUrlString = urlString
+        lastUrlUsedToLoadImage = urlString
         
-        let url = URL(string: urlString)
-        image = nil
+        self.image = nil
         
-        if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
-            self.image = imageFromCache
+        if let cacheImage = imageCache[urlString]{
+            self.image = cacheImage
             return
         }
         
-        URLSession.shared.dataTask(with: url!, completionHandler: { [weak self] (data, response, error) in
-            if error != nil {
+        URLSession.shared.dataTask(with: url) { (data, response, err) in
+            if let err = err{
+                print("Failed to fetch post image:", err)
                 return
             }
-
-            DispatchQueue.main.async(execute: {
-                let imageToCache = UIImage(data: data!)
-                if self?.imageUrlString == urlString {
-                    self?.image = imageToCache
-                }
-                imageCache.setObject(imageToCache!, forKey: urlString as NSString)
-            })
-        }).resume()
+            //stops loading duplicate image load
+            if url.absoluteString != self.lastUrlUsedToLoadImage {
+                return
+            }
+            
+            guard let imageData = data else {return}
+            let photoImage = UIImage(data: imageData)
+            
+            imageCache[url.absoluteString] = photoImage
+            
+            DispatchQueue.main.async {
+                self.image = photoImage
+            }
+            }.resume()
+        
     }
 }
 
@@ -377,7 +384,7 @@ public extension UISearchBarDelegate {
     }
 }
 
-//valid email
+//valid email Valid
 public extension String {
     
     var isValidEmailAddress: Bool {
@@ -400,6 +407,37 @@ extension UITabBarController {
                 self.tabBar.transform = CGAffineTransform.identity
             }
         })
+    }
+}
+extension UIView {
+    func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right:NSLayoutXAxisAnchor?, paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat, paddingRight: CGFloat, width: CGFloat, height: CGFloat) {
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        if let top = top{
+            self.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+        }
+        
+        if let left = left{
+            self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
+        }
+        
+        if let bottom = bottom{
+            self.bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
+        }
+        
+        if let right = right{
+            self.rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+        }
+        
+        if width != 0{
+            self.widthAnchor.constraint(equalToConstant: width).isActive = true
+        }
+        
+        if height != 0{
+            self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        
     }
 }
 

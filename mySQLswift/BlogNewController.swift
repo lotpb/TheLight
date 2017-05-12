@@ -91,6 +91,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNavigationButtons()
         parseData() //load image
         configureTextView()
         setupForm()
@@ -108,6 +109,11 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(shootPhoto))
+        navigationItem.rightBarButtonItems = [cameraButton]
     }
     
      func setupForm() {
@@ -396,6 +402,16 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         //dateFormatter.timeZone = TimeZone.current
         let strDate = dateFormatter.string(from: (targetedDatePicker.date))
         self.msgDate = strDate
+    }
+    
+    // MARK: Camera
+    
+    func shootPhoto(_ sender: AnyObject) {
+        let layout = UICollectionViewFlowLayout()
+        let photoSelectorController = PhotoSelectorController(collectionViewLayout: layout)
+        
+        let navController = UINavigationController(rootViewController: photoSelectorController)
+        present(navController, animated: true, completion: nil)
     }
 //------------------------------------------------------------------
     

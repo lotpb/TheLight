@@ -53,15 +53,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let backItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(setbackButton))
-        
-        if self.formController == "Blog" {
-            navigationItem.leftBarButtonItems = [backItem]
-            self.comments = "90 percent of my picks made $$$. The stock whisper has traded over 1000 traders worldwide"
-        } else {
-            navigationItem.leftBarButtonItems = nil
-        }
+        setupNavigationButtons()
 
         emptyLabel = UILabel(frame: self.view.bounds)
         emptyLabel!.textAlignment = .center
@@ -88,6 +80,17 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let backItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(setbackButton))
+        
+        if self.formController == "Blog" {
+            navigationItem.leftBarButtonItems = [backItem]
+            self.comments = "90 percent of my picks made $$$. The stock whisper has traded over 1000 traders worldwide"
+        } else {
+            navigationItem.leftBarButtonItems = nil
+        }
     }
     
     // MARK: - refresh

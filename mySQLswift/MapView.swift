@@ -58,10 +58,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-        
-        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButton))
-        navigationItem.rightBarButtonItems = [actionBtn]
-        
+        setupNavigationButtons()
         addActivityIndicator()
         setupForm()
         setupConstraints()
@@ -72,7 +69,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         
         setupLocation()
         setupMap()
-
+        
         let location: String = String(format: "%@ %@ %@ %@", self.mapaddress!, self.mapcity!, self.mapstate!, self.mapzip!)
         
         let geocoder = CLGeocoder()
@@ -96,10 +93,12 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
                 // MARK:  Directions
                 
                 let request = MKDirectionsRequest()
-                
-                request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!), addressDictionary: nil))
-                
-                request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude), addressDictionary: nil))
+                request.source = MKMapItem.forCurrentLocation()
+                let destination = MKPlacemark(
+                    coordinate: (placemark.location?.coordinate)!,
+                    addressDictionary: nil
+                )
+                request.destination = MKMapItem(placemark: destination)
                 
                 // MARK:  AlternateRoutes
                 request.requestsAlternateRoutes = true
@@ -107,15 +106,29 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
                 request.transportType = .automobile
                 
                 let directions = MKDirections(request: request)
-                
                 directions.calculate { [unowned self] response, error in
-                    guard let unwrappedResponse = response else { return }
                     
-                    for route in unwrappedResponse.routes {
+                    guard let response = response else { return }
+                    let route = response.routes[0]
+                    
+                    /* //below may be needed fpr alternate routes
+                    guard let response = response else { return }
+                    for route in response.routes {
                         self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                        self.showRoute(response!)
+                        self.showRoute(response)
                         self.hideActivityIndicator()
+                    } */
+
+                    self.mapView.add(route.polyline, level: .aboveRoads)
+                    
+                    if self.mapView.overlays.count == 1 {
+                        self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
+                    } else {
+                        let polylineBoundingRect =  MKMapRectUnion(self.mapView.visibleMapRect, route.polyline.boundingMapRect)
+                        self.mapView.setVisibleMapRect(polylineBoundingRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
                     }
+                    self.showRoute(response)
+                    self.hideActivityIndicator()
                 }
             }
         })
@@ -130,6 +143,11 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButton))
+        navigationItem.rightBarButtonItems = [actionBtn]
     }
     
     func setupMap() {
@@ -215,11 +233,10 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     func showRoute(_ response: MKDirectionsResponse) {
         guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         
-        let temp:MKRoute = response.routes.first! as MKRoute
+        let temp: MKRoute = response.routes.first! as MKRoute
         self.route = temp
         self.travelTime.text = String(format:"Time: %0.1f min drive", route.expectedTravelTime/60) as String
         self.travelDistance.text = String(format:"Distance: %0.1f miles", route.distance/1609.344) as String
-        self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
         
         for i in 0 ..< self.route.steps.count {
             
@@ -232,13 +249,6 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
             self.allSteps = self.allSteps!.appending(distStep) as String?
             self.allSteps = self.allSteps!.appending("\n\n") as String?
             self.stepView.text = self.allSteps
-        }
-        
-        if mapView.overlays.count == 1 {
-            mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
-        } else {
-            let polylineBoundingRect =  MKMapRectUnion(mapView.visibleMapRect, route.polyline.boundingMapRect)
-            mapView.setVisibleMapRect(polylineBoundingRect, edgePadding: UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0), animated: false)
         }
     }
     
@@ -265,7 +275,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         if overlay is MKCircle {
             let renderer = MKCircleRenderer(overlay: overlay)
             renderer.fillColor = UIColor.black.withAlphaComponent(0.5)
-            renderer.strokeColor = UIColor.blue
+            renderer.strokeColor = .blue
             renderer.lineWidth = 2
             return renderer
             
@@ -283,7 +293,7 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
         } else if overlay is MKPolygon {
             let renderer = MKPolygonRenderer(polygon: overlay as! MKPolygon)
             renderer.fillColor = UIColor.black.withAlphaComponent(0.5)
-            renderer.strokeColor = UIColor.orange
+            renderer.strokeColor = .orange
             renderer.lineWidth = 2
             return renderer
         }
@@ -295,13 +305,13 @@ class MapView: UIViewController, MKMapViewDelegate,  CLLocationManagerDelegate {
     @IBAction func mapTypeChanged(_ sender: AnyObject) {
         
         if(mapTypeSegmentedControl.selectedSegmentIndex == 0) {
-            self.mapView.mapType = MKMapType.standard
+            self.mapView.mapType = .standard
         }
         else if(mapTypeSegmentedControl.selectedSegmentIndex == 1) {
-            self.mapView.mapType = MKMapType.hybridFlyover
+            self.mapView.mapType = .hybridFlyover
         }
         else if(mapTypeSegmentedControl.selectedSegmentIndex == 2) {
-            self.mapView.mapType = MKMapType.satellite
+            self.mapView.mapType = .satellite
         }
     }
     

@@ -49,15 +49,13 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKUIDelegate {
         super.viewDidLoad()
         
         // MARK: - SplitView
-        self.splitViewController?.maximumPrimaryColumnWidth = 300
+        self.splitViewController?.maximumPrimaryColumnWidth = 350
         self.splitViewController!.preferredDisplayMode = .primaryHidden
         //fix - remove bottom bar
         self.extendedLayoutIncludesOpaqueBars = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
-        
-        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(backButtonPressed))
-        navigationItem.rightBarButtonItems = [actionButton]
+        setupNavigationButtons()
         
         self.segControl? = UISegmentedControl(items: siteNames)
         
@@ -116,6 +114,11 @@ class Web: UIViewController, SFSafariViewControllerDelegate, WKUIDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(backButtonPressed))
+        navigationItem.rightBarButtonItems = [actionButton]
     }
     
     func configureWeb() {

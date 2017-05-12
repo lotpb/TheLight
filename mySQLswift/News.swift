@@ -40,7 +40,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
 
         setupCollectionView()
         setupMenuBar()
-        setupNavBarButtons() 
+        setupNavigationButtons() 
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -92,7 +92,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
         collectionView?.showsHorizontalScrollIndicator = false
     }
     
-    func setupNavBarButtons() {
+    func setupNavigationButtons() {
         
         let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(handleMore))
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(newButton))

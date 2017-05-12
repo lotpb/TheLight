@@ -49,11 +49,8 @@ class BlogEditController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButton))
-        let trashBtn = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))
-        navigationItem.rightBarButtonItems = [actionBtn,trashBtn]
         
+        setupNavigationButtons()
         self.toolBar!.barTintColor = .white
         self.toolBar!.isTranslucent = false
         self.toolBar!.layer.masksToBounds = true
@@ -78,6 +75,12 @@ class BlogEditController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let actionBtn = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButton))
+        let trashBtn = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteButton))
+        navigationItem.rightBarButtonItems = [actionBtn,trashBtn]
     }
     
     func setupForm() {

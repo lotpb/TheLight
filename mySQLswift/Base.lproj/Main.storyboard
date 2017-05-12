@@ -497,8 +497,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="81" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lTM-Jt-bAh">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="569"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="81" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lTM-Jt-bAh">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="JLG-Ib-AmI" customClass="CustomTableCell" customModule="TheLight" customModuleProvider="target">
@@ -6236,16 +6236,16 @@
         <image name="thumbUp" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="2YB-tb-gtF"/>
         <segue reference="q3J-TB-N0B"/>
         <segue reference="EIN-mO-nT7"/>
-        <segue reference="2YB-tb-gtF"/>
+        <segue reference="5aU-K4-aqh"/>
+        <segue reference="vpM-0m-GXx"/>
+        <segue reference="7UQ-q7-hnl"/>
+        <segue reference="1Wv-3R-kep"/>
         <segue reference="e0c-fD-YZ8"/>
         <segue reference="T0a-J2-ljk"/>
         <segue reference="xRX-GL-2KH"/>
         <segue reference="K9X-H5-ULE"/>
-        <segue reference="vpM-0m-GXx"/>
-        <segue reference="I56-Tb-Oot"/>
-        <segue reference="7UQ-q7-hnl"/>
-        <segue reference="1Wv-3R-kep"/>
     </inferredMetricsTieBreakers>
 </document>

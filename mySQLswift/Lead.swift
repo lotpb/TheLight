@@ -54,11 +54,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
-
-        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
-        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
-        navigationItem.rightBarButtonItems = [addBtn,searchBtn]
-        
+        setupNavigationButtons()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -67,7 +63,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshData(self)
-        self.tabBarController?.tabBar.isHidden = false
+        //self.tabBarController?.tabBar.isHidden = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,7 +76,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
             }
         }
         //TabBar Hidden
-        self.tabBarController?.tabBar.isHidden = false
+        //self.tabBarController?.tabBar.isHidden = false
         setMainNavItems()
     }
     
@@ -88,7 +84,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
         super.viewWillDisappear(animated)
         //NotificationCenter.default.removeObserver(self)
         //TabBar Hidden
-        self.tabBarController?.tabBar.isHidden = true
+        //self.tabBarController?.tabBar.isHidden = true
         UIApplication.shared.isStatusBarHidden = false
     }
     
@@ -96,6 +92,12 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    fileprivate func setupNavigationButtons() {
+        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
+        let searchBtn = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton))
+        navigationItem.rightBarButtonItems = [addBtn,searchBtn]
     }
     
     func setupTableView() {
