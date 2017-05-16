@@ -73,6 +73,7 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
 //---------------------------------
+
     
     // News
     @IBOutlet weak var imageView: UIImageView?
@@ -101,8 +102,34 @@ class CollectionViewCell: UICollectionViewCell {
 }
 
 class VideoCell: CollectionViewCell {
+    
+    var news: NewsModel? {
+        didSet {
+            
+            guard let newsImageUrl = news?.imageUrl else {return}
+            customImageView.loadImage(urlString: newsImageUrl)
+            
+            guard let userImageUrl = news?.imageUrl else {return}
+            userProfileImageView.loadImage(urlString: userImageUrl)
+            userProfileImageView.image = #imageLiteral(resourceName: "profile-rabbit-toy")
+            
+            titleLabelnew.text = news?.newsTitle
+            subtitleLabel.text = news?.newsDetail
+            storyLabel.text = news?.storyLabel
+            uploadbylabel.text = news?.creationDate.timeAgoDisplay()
+            
+            var Liked:Int? = news?.liked as? Int
+            if Liked == nil { Liked = 0 }
+            numberLabel.text = "\(Liked!)"
+            
+            let imageDetailurl = newsImageUrl
+            let result1 = imageDetailurl.contains("movie.mp4")
+            playButton.isHidden = result1 == false
+            playButton.setTitle(imageDetailurl, for: .normal)
+        }
+    }
  
-    let thumbnailImageView: CustomImageView = {
+    let customImageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.isUserInteractionEnabled = true
         imageView.backgroundColor = .black
@@ -114,10 +141,10 @@ class VideoCell: CollectionViewCell {
     
     let userProfileImageView: CustomImageView = {
         let imageView = CustomImageView()
-        imageView.image = UIImage(named: "")
+        //imageView.image = UIImage(named: "")
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 22
         imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFill
         imageView.layer.borderColor = UIColor.lightGray.cgColor
         imageView.layer.borderWidth = 0.5
         imageView.isUserInteractionEnabled = true
@@ -218,8 +245,8 @@ class VideoCell: CollectionViewCell {
             let URL = NSURL(string: videoURL)
             player = AVPlayer(url: URL! as URL)
             playerLayer = AVPlayerLayer(player: player)
-            playerLayer?.frame = (thumbnailImageView.bounds)
-            thumbnailImageView.layer.addSublayer(playerLayer!)
+            playerLayer?.frame = (customImageView.bounds)
+            customImageView.layer.addSublayer(playerLayer!)
             player?.play()
             activityIndicatorView.startAnimating()
             playButton.isHidden = true
@@ -234,7 +261,7 @@ class VideoCell: CollectionViewCell {
     }
     
     override func setupViews() {
-        addSubview(thumbnailImageView)
+        addSubview(customImageView)
         addSubview(separatorView)
         addSubview(userProfileImageView)
         addSubview(titleLabelnew)
@@ -247,7 +274,7 @@ class VideoCell: CollectionViewCell {
         
         if UI_USER_INTERFACE_IDIOM() == .pad {
             //width constraints
-            addConstraintsWithFormat(format: "H:|-16-[v0(400)]", views: thumbnailImageView)
+            addConstraintsWithFormat(format: "H:|-16-[v0(400)]", views: customImageView)
             addConstraintsWithFormat(format: "H:|-450-[v0]-16-|", views: titleLabelnew)
             addConstraintsWithFormat(format: "H:|-450-[v0(44)]", views: userProfileImageView)
             addConstraintsWithFormat(format: "H:|-510-[v0]-16-|", views: subtitleLabel)
@@ -256,10 +283,10 @@ class VideoCell: CollectionViewCell {
    
             //vertical constraints
             addConstraintsWithFormat(format: "V:|-0-[v0(1)]|", views: separatorView)
-            addConstraintsWithFormat(format: "V:|-16-[v0(240)]|", views: thumbnailImageView)
+            addConstraintsWithFormat(format: "V:|-16-[v0(240)]|", views: customImageView)
             
             //top constraint
-            addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .top, relatedBy: .equal, toItem: thumbnailImageView, attribute: .top, multiplier: 1, constant: 0))
+            addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .top, relatedBy: .equal, toItem: customImageView, attribute: .top, multiplier: 1, constant: 0))
             
             //top constraint
             addConstraint(NSLayoutConstraint(item: userProfileImageView, attribute: .top, relatedBy: .equal, toItem: titleLabelnew, attribute: .bottom, multiplier: 1, constant: 5))
@@ -288,19 +315,19 @@ class VideoCell: CollectionViewCell {
             addConstraint(NSLayoutConstraint(item: actionButton, attribute: .top, relatedBy: .equal, toItem: storyLabel, attribute: .bottom, multiplier: 1, constant: 10))
             
             //left constraint
-            addConstraint(NSLayoutConstraint(item: actionButton, attribute: .left, relatedBy: .equal, toItem: thumbnailImageView, attribute: .right, multiplier: 1, constant: 30))
+            addConstraint(NSLayoutConstraint(item: actionButton, attribute: .left, relatedBy: .equal, toItem: customImageView, attribute: .right, multiplier: 1, constant: 30))
 
         } else {
             
-            addConstraintsWithFormat(format: "H:|-16-[v0]-16-|", views: thumbnailImageView)
+            addConstraintsWithFormat(format: "H:|-16-[v0]-16-|", views: customImageView)
             addConstraintsWithFormat(format: "H:|-16-[v0(44)]", views: userProfileImageView)
             addConstraintsWithFormat(format: "H:|-26-[v0(25)]", views: actionButton)
             
             //vertical constraints
-            addConstraintsWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-21-[v2(25)]-10-[v3(1)]|", views: thumbnailImageView, userProfileImageView, actionButton, separatorView)
+            addConstraintsWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-21-[v2(25)]-10-[v3(1)]|", views: customImageView, userProfileImageView, actionButton, separatorView)
             
             //top constraint
-            addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .top, relatedBy: .equal, toItem: thumbnailImageView, attribute: .bottom, multiplier: 1, constant: 6))
+            addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .top, relatedBy: .equal, toItem: customImageView, attribute: .bottom, multiplier: 1, constant: 6))
             
             //left constraint
             addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: .left, relatedBy: .equal, toItem: userProfileImageView, attribute: .right, multiplier: 1, constant: 8))
@@ -323,7 +350,7 @@ class VideoCell: CollectionViewCell {
         //left constraint
         addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .left, relatedBy: .equal, toItem: userProfileImageView, attribute: .right, multiplier: 1, constant: 8))
         //right constraint
-        addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .right, relatedBy: .equal, toItem: thumbnailImageView, attribute: .right, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: titleLabelnew, attribute: .right, relatedBy: .equal, toItem: customImageView, attribute: .right, multiplier: 1, constant: 0))
         
         //height constraint
         titleLabelHeightConstraint = NSLayoutConstraint(item: titleLabelnew, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 44)
@@ -350,17 +377,17 @@ class VideoCell: CollectionViewCell {
         //height constraint
         addConstraint(NSLayoutConstraint(item: uploadbylabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 25))
         
-        thumbnailImageView.addSubview(playButton)
+        customImageView.addSubview(playButton)
         //x,y,w,h
-        playButton.centerXAnchor.constraint(equalTo: thumbnailImageView.centerXAnchor).isActive = true
-        playButton.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
+        playButton.centerXAnchor.constraint(equalTo: customImageView.centerXAnchor).isActive = true
+        playButton.centerYAnchor.constraint(equalTo: customImageView.centerYAnchor).isActive = true
         playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        thumbnailImageView.addSubview(activityIndicatorView)
+        customImageView.addSubview(activityIndicatorView)
         //x,y,w,h
-        activityIndicatorView.centerXAnchor.constraint(equalTo: thumbnailImageView.centerXAnchor).isActive = true
-        activityIndicatorView.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
+        activityIndicatorView.centerXAnchor.constraint(equalTo: customImageView.centerXAnchor).isActive = true
+        activityIndicatorView.centerYAnchor.constraint(equalTo: customImageView.centerYAnchor).isActive = true
         activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         

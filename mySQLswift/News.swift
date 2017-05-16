@@ -94,7 +94,7 @@ class News: UICollectionViewController, UICollectionViewDelegateFlowLayout, Sear
     
     func setupNavigationButtons() {
         
-        let moreButton = UIBarButtonItem(image: UIImage(named: "nav_more_icon")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(handleMore))
+        let moreButton = UIBarButtonItem(image:#imageLiteral(resourceName: "nav_more_icon").withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(handleMore))
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:#selector(newButton))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action:#selector(handleSearch))
         navigationItem.rightBarButtonItems = [moreButton,searchButton,addButton]

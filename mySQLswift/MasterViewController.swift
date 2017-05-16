@@ -12,6 +12,8 @@ import AVFoundation
 import FBSDKLoginKit
 import GoogleSignIn
 import FirebaseAnalytics
+import Firebase
+import SwiftKeychainWrapper
 
 
 class MasterViewController: UITableViewController, UISplitViewControllerDelegate {
@@ -71,6 +73,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         speech()
         setupTableView()
         updateYahoo()
+        fetchUserIds()
         self.navigationItem.titleView = self.titleButton
         
         // MARK: - Sound
@@ -329,6 +332,18 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel1.isUserInteractionEnabled = true
                 vw.addSubview(myLabel1)
                 
+                let myLabel15:UILabel = UILabel(frame: CGRect(x: 10, y: 85, width: 74, height: 20))
+                myLabel15.numberOfLines = 1
+                myLabel15.textAlignment = .center
+                myLabel15.textColor = .green
+                if (defaults.bool(forKey: "parsedataKey"))  {
+                    myLabel15.text = "Back4app"
+                } else {
+                    myLabel15.text = "Firebase"
+                }
+                myLabel15.font = Font.celltitle14m
+                vw.addSubview(myLabel15)
+                
                 let separatorLineView1 = UIView(frame: CGRect(x: 10, y: 105, width: 74, height: 3.5))
                 separatorLineView1.backgroundColor = .green
                 vw.addSubview(separatorLineView1)
@@ -510,10 +525,58 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     // MARK: - Logout
     
     func handleSignOut() {
-        PFUser.logOut()
-        FBSDKLoginManager().logOut()
-        GIDSignIn.sharedInstance().signOut()
+        do {
+            try FIRAuth.auth()?.signOut()
+            PFUser.logOut()
+            FBSDKLoginManager().logOut()
+            GIDSignIn.sharedInstance().signOut()
+            
+        } catch let signOutErr {
+            print(signOutErr)
+        }
         self.performSegue(withIdentifier: "showLogin", sender: self)
+    }
+    
+    fileprivate func fetchUserIds() {
+        
+        // MARK: - Login
+        let userId:String = defaults.object(forKey: "usernameKey") as! String!
+        let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
+        let userSuccessful: Bool = KeychainWrapper.standard.set(userId, forKey: "usernameKey")
+        let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
+        
+        // MARK: - Keychain
+        if (userSuccessful == true), (passSuccessful == true) {
+            print("Keychain successful")
+        } else {
+            print("Keychain failed")
+        }
+        //KeychainWrapper.accessGroup = "group.TheLightGroup"
+        // MARK: - Parse
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            
+            PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) in
+                if error != nil {
+                    print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
+                    return
+                }
+            }
+            
+        } else {
+            
+            guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
+            FIRDatabase.database().reference().child("following").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let userIdsDictionary = snapshot.value as? [String: Any] else {return}
+                userIdsDictionary.forEach({ (key, value) in
+                    FIRDatabase.fetchUserWithUID(uid: key
+                        , completion: { (user) in
+                            //self.fetchPostsWithUser(user: user)
+                    })
+                })
+            }) { (err) in
+                print("Failed to fetch following user ids ", err)
+            }
+        }
     }
 
     

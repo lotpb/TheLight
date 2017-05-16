@@ -34,8 +34,8 @@
 		AF30B73A1EC49CAF0034FCEB /* PhotoSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF30B7361EC49CAF0034FCEB /* PhotoSelectorCell.swift */; };
 		AF30B73B1EC49CAF0034FCEB /* PhotoSelectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF30B7371EC49CAF0034FCEB /* PhotoSelectorHeader.swift */; };
 		AF30B73C1EC49CAF0034FCEB /* SharePhotoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF30B7381EC49CAF0034FCEB /* SharePhotoController.swift */; };
-		AF30B7401EC4EE4B0034FCEB /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF30B73F1EC4EE4B0034FCEB /* Comment.swift */; };
-		AF30B7421EC4EE5E0034FCEB /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF30B7411EC4EE5E0034FCEB /* Post.swift */; };
+		AF30B7401EC4EE4B0034FCEB /* NewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF30B73F1EC4EE4B0034FCEB /* NewsModel.swift */; };
+		AF30B7421EC4EE5E0034FCEB /* BlogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF30B7411EC4EE5E0034FCEB /* BlogModel.swift */; };
 		AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF46FA831C2313EE00C27445 /* UserViewController.swift */; };
 		AF56DFC31C28947400CD7EB9 /* SnapshotController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */; };
 		AF58C8831E1E8E9000F50CA6 /* RegionsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58C8821E1E8E9000F50CA6 /* RegionsListController.swift */; };
@@ -58,6 +58,7 @@
 		AF88129F1C61B14C007826AD /* MobyDick.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF88129E1C61B14C007826AD /* MobyDick.mp3 */; };
 		AF8CC3A71C4153AF004147F3 /* NewEditData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8CC3A61C4153AF004147F3 /* NewEditData.swift */; };
 		AF8CC3AB1C42B9FB004147F3 /* StatisticController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8CC3AA1C42B9FB004147F3 /* StatisticController.swift */; };
+		AF952EE41EC621DD004F075C /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF952EE31EC621DC004F075C /* Firebase.swift */; };
 		AF9A87801C18621E0091B0E3 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF9A877F1C18621E0091B0E3 /* libz.1.dylib */; };
 		AF9A87821C1862900091B0E3 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF9A87811C1862900091B0E3 /* libsqlite3.dylib */; };
 		AF9A87841C18645C0091B0E3 /* Web.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9A87831C18645C0091B0E3 /* Web.swift */; };
@@ -169,8 +170,8 @@
 		AF30B7361EC49CAF0034FCEB /* PhotoSelectorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCell.swift; sourceTree = "<group>"; };
 		AF30B7371EC49CAF0034FCEB /* PhotoSelectorHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorHeader.swift; sourceTree = "<group>"; };
 		AF30B7381EC49CAF0034FCEB /* SharePhotoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharePhotoController.swift; sourceTree = "<group>"; };
-		AF30B73F1EC4EE4B0034FCEB /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
-		AF30B7411EC4EE5E0034FCEB /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		AF30B73F1EC4EE4B0034FCEB /* NewsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsModel.swift; sourceTree = "<group>"; };
+		AF30B7411EC4EE5E0034FCEB /* BlogModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogModel.swift; sourceTree = "<group>"; };
 		AF46FA831C2313EE00C27445 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		AF56DFC21C28947400CD7EB9 /* SnapshotController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotController.swift; sourceTree = "<group>"; };
 		AF58C8821E1E8E9000F50CA6 /* RegionsListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionsListController.swift; sourceTree = "<group>"; };
@@ -197,6 +198,7 @@
 		AF88129E1C61B14C007826AD /* MobyDick.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = MobyDick.mp3; path = Music/MobyDick.mp3; sourceTree = "<group>"; };
 		AF8CC3A61C4153AF004147F3 /* NewEditData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewEditData.swift; sourceTree = "<group>"; };
 		AF8CC3AA1C42B9FB004147F3 /* StatisticController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticController.swift; sourceTree = "<group>"; };
+		AF952EE31EC621DC004F075C /* Firebase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		AF9A877F1C18621E0091B0E3 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = /usr/lib/libz.1.dylib; sourceTree = "<absolute>"; };
 		AF9A87811C1862900091B0E3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		AF9A87831C18645C0091B0E3 /* Web.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Web.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 			children = (
 				AF69A34C1D7B1BF9002BE793 /* TheLight.entitlements */,
 				AFE6936E1C6A4D7E000BEDCE /* Extensions.swift */,
+				AF952EE31EC621DC004F075C /* Firebase.swift */,
 				AF0369A41C173DDC00137D7E /* AppDelegate.swift */,
 				AFE0CEFB1D3EAB5700D6D3F0 /* Main.storyboard */,
 				AFD1A30E1C1E32A500580F10 /* LoginController.swift */,
@@ -439,12 +442,12 @@
 		AF6DC0A01D3E481E00023F67 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				AFD1EC801E2D21B100DC991A /* TheLight+navbar.swift */,
-				AFA4150A1EA40F7B00EC067A /* Parse.swift */,
-				AF85825F1EBFD79E00180EDE /* CustomTabBarController.swift */,
-				AFE70CF81EB9FF8C00C8FE92 /* HeaderViewCell.swift */,
 				AF1E6D551C1920FC0009230E /* CustomTableCell.swift */,
 				AF0C77A21C2245BA0055DDE4 /* CollectionViewCell.swift */,
+				AF85825F1EBFD79E00180EDE /* CustomTabBarController.swift */,
+				AFD1EC801E2D21B100DC991A /* TheLight+navbar.swift */,
+				AFA4150A1EA40F7B00EC067A /* Parse.swift */,
+				AFE70CF81EB9FF8C00C8FE92 /* HeaderViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -635,9 +638,9 @@
 		AFE34A381D3132BA00C78D8B /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				AF30B7411EC4EE5E0034FCEB /* Post.swift */,
+				AF30B7411EC4EE5E0034FCEB /* BlogModel.swift */,
+				AF30B73F1EC4EE4B0034FCEB /* NewsModel.swift */,
 				AFF5D5591D3AD96400975055 /* User.swift */,
-				AF30B73F1EC4EE4B0034FCEB /* Comment.swift */,
 				AFF5D5551D3AC8E700975055 /* Message.swift */,
 				AF0D6B301C4AC5E900334D03 /* YQL.swift */,
 			);
@@ -870,11 +873,12 @@
 				AF2D051B1D359A4200AC2A43 /* News.swift in Sources */,
 				AF0369A71C173DDC00137D7E /* MasterViewController.swift in Sources */,
 				AFE263A41C178830007BBB90 /* Blog.swift in Sources */,
+				AF952EE41EC621DD004F075C /* Firebase.swift in Sources */,
 				AFF3C8F21C4F38D500D9B7BD /* NewsDetailController.swift in Sources */,
 				AF8582601EBFD79E00180EDE /* CustomTabBarController.swift in Sources */,
 				AF0D6B331C4C554300334D03 /* YouTubeController.swift in Sources */,
 				AF9EE4C71C2771D70057B7DB /* NotificationController.swift in Sources */,
-				AF30B7401EC4EE4B0034FCEB /* Comment.swift in Sources */,
+				AF30B7401EC4EE4B0034FCEB /* NewsModel.swift in Sources */,
 				AFF3C8EF1C4E8A0100D9B7BD /* TransmitBeaconController.swift in Sources */,
 				AFD1A30B1C1E224600580F10 /* Customer.swift in Sources */,
 				AFE70CF91EB9FF8C00C8FE92 /* HeaderViewCell.swift in Sources */,
@@ -912,7 +916,7 @@
 				AFD754F41C4FFEB200021F97 /* UploadController.swift in Sources */,
 				AF1E6D561C1920FC0009230E /* CustomTableCell.swift in Sources */,
 				AFA4150B1EA40F7B00EC067A /* Parse.swift in Sources */,
-				AF30B7421EC4EE5E0034FCEB /* Post.swift in Sources */,
+				AF30B7421EC4EE5E0034FCEB /* BlogModel.swift in Sources */,
 				AF46FA841C2313EE00C27445 /* UserViewController.swift in Sources */,
 				AF74E4601D1BFF58004DE7D6 /* SettingCell.swift in Sources */,
 				AF5BCEF11E0A2830007A9093 /* CreateContactViewController.swift in Sources */,

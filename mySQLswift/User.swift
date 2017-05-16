@@ -12,6 +12,10 @@ struct User {
     let uid: String
     let username: String
     let profileImageUrl: String
+    //let name: String
+    //let phone: String
+    //let emailVerified: String
+    //let currentLocation: String
     
     init(uid: String, dictionary: [String: Any]) {
         self.uid = uid

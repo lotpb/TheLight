@@ -45,6 +45,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     var imageLookup: String?
     var selectedImage : UIImage?
     var selectedChannelPic : UIImage?
+    var defaults = UserDefaults.standard
 
     
     let activityIndicatorView: UIActivityIndicatorView = {
@@ -585,26 +586,35 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             cell.thumbDown.setImage(#imageLiteral(resourceName: "thumbDown"), for: .normal)
             cell.thumbDown .addTarget(self, action: #selector(setthumbDown), for: .touchUpInside)
             
-            let query:PFQuery = PFUser.query()!
-            query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
-            query.cachePolicy = .cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-                if error == nil {
-                    if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { imageData, error in
-                            
-                            UIView.transition(with: (cell.channelPic)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                self.selectedChannelPic = UIImage(data: imageData! as Data)
-                            }, completion: nil)
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                let query:PFQuery = PFUser.query()!
+                query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
+                query.cachePolicy = .cacheThenNetwork
+                query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                    if error == nil {
+                        if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                            imageFile.getDataInBackground { imageData, error in
+                                
+                                UIView.transition(with: (cell.channelPic)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                    self.selectedChannelPic = UIImage(data: imageData! as Data)
+                                }, completion: nil)
+                            }
                         }
                     }
                 }
+            } else {
+                //firebase
             }
+            
             cell.channelPic.layer.cornerRadius = 20
             cell.channelPic.clipsToBounds = true
             cell.channelPic.image = self.selectedChannelPic
             
-            cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
+            } else {
+                //firebase
+            }
             cell.channelSubscribers.text = "235235 subscribers"
             
             cell.subscribed.tintColor = Color.youtubeRed
@@ -700,19 +710,22 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     //MARK: - Fetch Data
     
     private func fetchPlayVCVideos() {
-        
-        let query = PFQuery(className:"Newsios")
-      //query.whereKey("imageFile", equalTo:"movie.mp4")
-        query.cachePolicy = .cacheThenNetwork
-        query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { objects, error in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedItems = temp.mutableCopy() as! NSMutableArray
-                self.tableView.reloadData()
-            } else {
-                print("ErrorVideo")
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query = PFQuery(className:"Newsios")
+            //query.whereKey("imageFile", equalTo:"movie.mp4")
+            query.cachePolicy = .cacheThenNetwork
+            query.order(byDescending: "createdAt")
+            query.findObjectsInBackground { objects, error in
+                if error == nil {
+                    let temp: NSArray = objects! as NSArray
+                    self._feedItems = temp.mutableCopy() as! NSMutableArray
+                    self.tableView.reloadData()
+                } else {
+                    print("ErrorVideo")
+                }
             }
+        } else {
+            
         }
     }
     

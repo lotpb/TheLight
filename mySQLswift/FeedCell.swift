@@ -9,14 +9,18 @@
 
 import UIKit
 import Parse
+import Firebase
 import AVFoundation
 
 class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    var newslist = [NewsModel]()
     
     var _feedItems = NSMutableArray()
     var imageObject :PFObject!
     var imageFile :PFFile!
     var selectedImage : UIImage?
+    var defaults = UserDefaults.standard
     
     let cellId = "cellId"
     
@@ -62,23 +66,44 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func fetchVideos() {
         
-        let query = PFQuery(className:"Newsios")
-        query.limit = 1000
-        query.cachePolicy = .cacheThenNetwork
-        query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { objects, error in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedItems = temp.mutableCopy() as! NSMutableArray
-                //DispatchQueue.main.async { //added
+        if (self.defaults.bool(forKey: "parsedataKey"))  {
+            
+            let query = PFQuery(className:"Newsios")
+            query.limit = 1000
+            query.cachePolicy = .cacheThenNetwork
+            query.order(byDescending: "createdAt")
+            query.findObjectsInBackground { objects, error in
+                if error == nil {
+                    let temp: NSArray = objects! as NSArray
+                    self._feedItems = temp.mutableCopy() as! NSMutableArray
+                    //DispatchQueue.main.async { //added
                     self.collectionView.reloadData()
-                //}
-            } else {
-                print("Errortube")
+                    //}
+                } else {
+                    print("Errortube")
+                }
             }
+        } else {
+            //firebase
+            
+            guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
+            let ref = FIRDatabase.database().reference().child("News").child(uid)
+            ref.observe(.childAdded , with:{ (snapshot) in
+    
+                guard let dictionary = snapshot.value as? [String: Any] else {return}
+                
+                let newsTxt = NewsModel(dictionary: dictionary)
+                self.newslist.append(newsTxt)
+                print(newsTxt)
+                
+                DispatchQueue.main.async(execute: {
+                    self.collectionView.reloadData()
+                })
+            })
         }
     }
     
+  
     // MARK: - refresh
     
     func refreshData() {
@@ -111,13 +136,17 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         let hitPoint = sender.convert(CGPoint.zero, to: self.collectionView)
         let indexPath = self.collectionView.indexPathForItem(at: hitPoint)
         
-        let query = PFQuery(className:"Newsios")
-        query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
-        query.getFirstObjectInBackground { object, error in
-            if error == nil {
-                object!.incrementKey("Liked")
-                object!.saveInBackground()
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query = PFQuery(className:"Newsios")
+            query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
+            query.getFirstObjectInBackground { object, error in
+                if error == nil {
+                    object!.incrementKey("Liked")
+                    object!.saveInBackground()
+                }
             }
+        } else {
+            
         }
     }
     
@@ -130,6 +159,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         imageObject = _feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as! PFObject
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         imageFile.getDataInBackground { imageData, error in
+            
             self.selectedImage = UIImage(data: imageData!)
         }
         let image: UIImage = self.selectedImage!
@@ -146,7 +176,12 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return self._feedItems.count
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            return self._feedItems.count
+        } else {
+            return self.newslist.count
+        }
+        //return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -171,75 +206,88 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         cell.subtitleLabel.textColor = Color.DGrayColor
         cell.uploadbylabel.textColor = Color.DGrayColor
         
-        imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
-        imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { data, error in
-            if error == nil {
-                UIView.transition(with: cell.thumbnailImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                    self.selectedImage = UIImage(data: data!)
-                    cell.thumbnailImageView.image = UIImage(data: data!) //self.selectedImage
-                }, completion: nil)
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
+            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile.getDataInBackground { data, error in
+                if error == nil {
+                    UIView.transition(with: cell.customImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                        self.selectedImage = UIImage(data: data!)
+                        cell.customImageView.image = UIImage(data: data!) //self.selectedImage
+                    }, completion: nil)
+                }
             }
-        }
-        
-        //profile Image
-        let query:PFQuery = PFUser.query()!
-        query.whereKey("username",  equalTo:(self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as! String)
-        query.cachePolicy = .cacheThenNetwork
-        query.getFirstObjectInBackground { object, error in
-            if error == nil {
-                if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { imageData, error in
-                        
-                        UIView.transition(with: cell.userProfileImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.userProfileImageView.image = UIImage(data: imageData!)
-                        }, completion: nil)
+            
+            //profile Image
+            let query:PFQuery = PFUser.query()!
+            query.whereKey("username",  equalTo:(self._feedItems[(indexPath).row] as AnyObject).value(forKey: "username") as! String)
+            query.cachePolicy = .cacheThenNetwork
+            query.getFirstObjectInBackground { object, error in
+                if error == nil {
+                    if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                        imageFile.getDataInBackground { imageData, error in
+                            
+                            UIView.transition(with: cell.userProfileImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                cell.userProfileImageView.image = UIImage(data: imageData!)
+                            }, completion: nil)
+                        }
                     }
                 }
             }
+            
+            cell.titleLabelnew.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
+            cell.actionButton.addTarget(self, action: #selector(shareButton), for: .touchUpInside)
+            cell.likeBtn.addTarget(self, action: #selector(likeSetButton), for: .touchUpInside)
+            
+            var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
+            if newsView == nil { newsView = 0 }
+            let date1 = ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
+            let date2 = Date()
+            let calendar = Calendar.current
+            let diffDateComponents = calendar.dateComponents([.day], from: date1, to: date2)
+            cell.subtitleLabel.text = String(format: "%@, %@, %d%@", ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, "\(newsView!) views", diffDateComponents.day!," days ago" )
+            
+            let updated:Date = date1
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "h:mm a"
+            let elapsedTimeInSeconds = NSDate().timeIntervalSince(date1 as Date)
+            let secondInDays: TimeInterval = 60 * 60 * 24
+            if elapsedTimeInSeconds > 7 * secondInDays {
+                dateFormatter.dateFormat = "MMM dd, yyyy"
+            } else if elapsedTimeInSeconds > secondInDays {
+                dateFormatter.dateFormat = "EEEE"
+            }
+            let createString = dateFormatter.string(from: updated)
+            cell.uploadbylabel.text = String(format: "%@ %@", "Uploaded", createString)
+            
+            let imageDetailurl = self.imageFile.url
+            let result1 = imageDetailurl!.contains("movie.mp4")
+            cell.playButton.isHidden = result1 == false
+            cell.playButton.setTitle(imageDetailurl, for: .normal)
+            
+            var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
+            if Liked == nil { Liked = 0 }
+            cell.numberLabel.text = "\(Liked!)"
+            
+        } else {
+            
+            //firebase
+            cell.news = newslist[indexPath.item]
+            
         }
-        
-        cell.titleLabelnew.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
-        cell.actionButton.addTarget(self, action: #selector(shareButton), for: .touchUpInside)
-        cell.likeBtn.addTarget(self, action: #selector(likeSetButton), for: .touchUpInside)
-        
-        var newsView:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "newsView")as? Int
-        if newsView == nil { newsView = 0 }
-        let date1 = ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "createdAt") as? Date)!
-        let date2 = Date()
-        let calendar = Calendar.current
-        let diffDateComponents = calendar.dateComponents([.day], from: date1, to: date2)
-        cell.subtitleLabel.text = String(format: "%@, %@, %d%@", ((self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsDetail") as? String)!, "\(newsView!) views", diffDateComponents.day!," days ago" )
-        
-        let updated:Date = date1
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
-        let elapsedTimeInSeconds = NSDate().timeIntervalSince(date1 as Date)
-        let secondInDays: TimeInterval = 60 * 60 * 24
-        if elapsedTimeInSeconds > 7 * secondInDays {
-            dateFormatter.dateFormat = "MMM dd, yyyy"
-        } else if elapsedTimeInSeconds > secondInDays {
-            dateFormatter.dateFormat = "EEEE"
-        }
-        let createString = dateFormatter.string(from: updated)
-        cell.uploadbylabel.text = String(format: "%@ %@", "Uploaded", createString)
-        
-        let imageDetailurl = self.imageFile.url
-        let result1 = imageDetailurl!.contains("movie.mp4")
-        cell.playButton.isHidden = result1 == false
-        cell.playButton.setTitle(imageDetailurl, for: .normal)
-        
-        var Liked:Int? = (_feedItems[(indexPath).row] as AnyObject).value(forKey: "Liked")as? Int
-        if Liked == nil { Liked = 0 }
-        cell.numberLabel.text = "\(Liked!)"
         
         if !(cell.numberLabel.text! == "0") {
             cell.numberLabel.textColor = Color.News.buttonColor
         } else {
             cell.numberLabel.text! = ""
         }
+        
         if UI_USER_INTERFACE_IDIOM() == .pad {
-            cell.storyLabel.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "storyText") as? String
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                cell.storyLabel.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "storyText") as? String
+            } else {
+                //firebase
+            }
         } else {
             cell.storyLabel.text = ""
         }
@@ -267,26 +315,18 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+        } else {
+            //firebase
+        }
         imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         imageFile.getDataInBackground { imageData, error in
+            
             
             let imageDetailurl = self.imageFile.url
             let result1 = imageDetailurl!.contains("movie.mp4")
             if (result1 == true) {
-                /*
-                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-                 let vc = storyboard.instantiateViewController(withIdentifier: "PlayVC") as! PlayVC
-                 vc.videoURL = self.imageFile.url!
-                 */
-                
-                //self.delegate? .urlController(passedData: self.imageFile.url!)
-                
-                //self.delegate? .titleController(passedData: ((self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String)!)
-                
-                /*
-                 likesLookup = self.imageFile.url
-                 self.delegate? .likesController(likesLookup!) */
                 
                 NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
                 
@@ -297,11 +337,16 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
                 
-                vc.objectId = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
-                vc.newsTitle = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
-                vc.newsDetail = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsDetail") as? String
-                vc.newsDate = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
-                vc.newsStory = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "storyText") as? String
+                if (self.defaults.bool(forKey: "parsedataKey"))  {
+                    vc.objectId = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
+                    vc.newsTitle = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
+                    vc.newsDetail = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsDetail") as? String
+                    vc.newsDate = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
+                    vc.newsStory = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "storyText") as? String
+                } else {
+                    //firebase
+                }
+                
                 vc.image = self.selectedImage
                 vc.videoURL = self.imageFile.url
                 

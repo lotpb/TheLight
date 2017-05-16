@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Firebase
 import MobileCoreServices //kUTTypeImage
 import AVKit
 import AVFoundation
@@ -37,6 +38,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     var imageDetailurl : String?
     var newsImage : UIImage!
     
+    // Parse
     var file : PFFile!
     var pictureData : Data!
     var videoURL : URL?
@@ -134,6 +136,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         let cameraButton = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(shootPhoto))
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(uploadImage))
         navigationItem.rightBarButtonItems = [saveButton, cameraButton]
+        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
     }
     
     func setupForm() {
@@ -230,6 +233,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             imagePicker.sourceType = .camera
             imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera)!
             imagePicker.delegate = self
+            imagePicker.showsCameraControls = true
             self.present(imagePicker, animated: true)
         } else{
             self.simpleAlert(title: "Alert!", message: "Camera not available")
@@ -296,7 +300,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
         
         let content = UNMutableNotificationContent()
         content.title = "Breaking News"
-        content.body = "News Posted by \(PFUser.current()!.username!) at TheLight"
+        content.body = "News Posted by \(defaults.object(forKey: "usernameKey") ?? "Pete") at TheLight"
         content.badge = 1
         content.sound = UNNotificationSound.default()
         content.categoryIdentifier = "status"
@@ -338,69 +342,140 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             
             if (self.formStat == "Update") {
                 
-                let query = PFQuery(className:"Newsios")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
-                    if error == nil {
-                        updateblog!.setObject(self.commentTitle.text ?? NSNull(), forKey:"newsTitle")
-                        updateblog!.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
-                        updateblog!.setObject(self.commentDetail.text ?? NSNull(), forKey:"storyText")
-                        updateblog!.setObject(PFUser.current()!.username ?? NSNull(), forKey:"username")
-                        updateblog!.saveEventually()
-                        
-                        if self.editImage == true {
-                            self.file!.saveInBackground { (success: Bool, error: Error?) in
-                                if success {
-                                    updateblog!.setObject(self.file!, forKey:"imageFile")
-                                    updateblog!.saveInBackground { (success: Bool, error: Error?) in
-                                        
-                                        self.simpleAlert(title: "Image Upload Complete", message: "Successfully updated the image")
-                                        
-                                        let newVC = News()
-                                        self.navigationController?.pushViewController(newVC, animated: true)
+                if (defaults.bool(forKey: "parsedataKey"))  {
+                    let query = PFQuery(className:"Newsios")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateNews: PFObject?, error: Error?) in
+                        if error == nil {
+                            updateNews!.setObject(self.commentTitle.text ?? NSNull(), forKey:"newsTitle")
+                            updateNews!.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
+                            updateNews!.setObject(self.commentDetail.text ?? NSNull(), forKey:"storyText")
+                            updateNews!.setObject(PFUser.current()!.username ?? NSNull(), forKey:"username")
+                            updateNews!.saveEventually()
+                            
+                            if self.editImage == true {
+                                self.file!.saveInBackground { (success: Bool, error: Error?) in
+                                    if success {
+                                        updateNews!.setObject(self.file!, forKey:"imageFile")
+                                        updateNews!.saveInBackground { (success: Bool, error: Error?) in
+                                            
+                                            self.simpleAlert(title: "Image Upload Complete", message: "Successfully updated the image")
+                                            
+                                            let newVC = News()
+                                            self.navigationController?.pushViewController(newVC, animated: true)
+                                        }
                                     }
+                                }
+                            } else {
+                                self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            }
+                            self.navigationItem.rightBarButtonItem!.isEnabled = true
+                        } else {
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                } else {
+                    //firebase
+                    
+                }
+                
+            } else { //save
+                
+                if (defaults.bool(forKey: "parsedataKey"))  {
+                    file!.saveInBackground { (success: Bool, error: Error?) in
+                        if success {
+                            let saveNews:PFObject = PFObject(className:"Newsios")
+                            saveNews.setObject(self.file ?? NSNull(), forKey:"imageFile")
+                            saveNews.setObject(self.commentTitle.text ?? NSNull(), forKey:"newsTitle")
+                            saveNews.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
+                            saveNews.setObject(self.commentDetail.text ?? NSNull(), forKey:"storyText")
+                            saveNews.setObject(PFUser.current()!.username ?? NSNull(), forKey:"username")
+                            saveNews.saveInBackground { (success: Bool, error: Error?) in
+                                if success {
+                                    self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
+                                    self.newsNotification()
+                                    //UIFeedbackGenerator
+                                    let successNotificationFeedbackGenerator = UINotificationFeedbackGenerator()
+                                    successNotificationFeedbackGenerator.notificationOccurred(.success)
+                                } else {
+                                    print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
                                 }
                             }
                         } else {
-                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
                         }
-                        self.navigationItem.rightBarButtonItem!.isEnabled = true
-                    } else {
-                        
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                        
                     }
-                }
-                
-            } else {
-                file!.saveInBackground { (success: Bool, error: Error?) in
-                    if success {
-                        let updateuser:PFObject = PFObject(className:"Newsios")
-                        updateuser.setObject(self.file ?? NSNull(), forKey:"imageFile")
-                        updateuser.setObject(self.commentTitle.text ?? NSNull(), forKey:"newsTitle")
-                        updateuser.setObject(self.commentSorce.text ?? NSNull(), forKey:"newsDetail")
-                        updateuser.setObject(self.commentDetail.text ?? NSNull(), forKey:"storyText")
-                        updateuser.setObject(PFUser.current()!.username ?? NSNull(), forKey:"username")
-                        updateuser.saveInBackground { (success: Bool, error: Error?) in
-                            if success {
-                                self.simpleAlert(title: "Upload Complete", message: "Successfully saved the data")
-                                self.newsNotification()
-                                //UIFeedbackGenerator
-                                let successNotificationFeedbackGenerator = UINotificationFeedbackGenerator()
-                                successNotificationFeedbackGenerator.notificationOccurred(.success)
-
-                            } else {
-                                print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
-                            }
-                        }
-                    } else {
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
-                    }
+                } else {
+                    //firebase
+                     handleShare()
+                    
                 }
             }
             //self.navigationController?.popToRootViewController(animated: true)
             self.activityIndicator.stopAnimating()
             self.activityIndicator.removeFromSuperview()
+        }
+    }
+    
+    func handleShare(){
+        
+        //guard let titleTxt = self.commentTitle.text, titleTxt.characters.count > 0 else {return}
+        //guard let sourceTxt = self.commentSorce.text, sourceTxt.characters.count > 0 else {return}
+        //guard let detailTxt = self.commentDetail.text, detailTxt.characters.count > 0 else {return}
+        //newsImage = newsImage
+        
+        let uploadData = UIImageJPEGRepresentation(newsImageView.image!, 0.5)
+        
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        
+        let filename = NSUUID().uuidString
+        FIRStorage.storage().reference().child("News").child(filename).put(uploadData!, metadata: nil) { (metadata, err) in
+            if let err = err {
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                print("Failed to upload post image:", err)
+                return
+            }
+            guard let imageUrl = metadata?.downloadURL()?.absoluteString else {return}
+            print("Successfully uploading post image: ", imageUrl)
+            self.saveToDatabaseWithImageUrl(imageUrl: imageUrl)
+            FIRDatabase.database().reference()
+            
+        }
+    }
+    
+    fileprivate func saveToDatabaseWithImageUrl(imageUrl:String){
+        
+        //guard let postImage = newsImageView.image else {return}
+        //guard let caption = textView.text else {return}
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
+        let userPostRef = FIRDatabase.database().reference().child("News").child(uid)
+        let ref = userPostRef.childByAutoId()
+        
+        let values = ["imageUrl": imageUrl,
+                      "newsTitle": self.commentTitle.text ?? "",
+                      "newsDetail": self.commentSorce.text ?? "",
+                      "storyText": self.commentDetail.text ?? "",
+                      "liked": 0,
+                      "creationDate" : Date().timeIntervalSince1970,
+                      "uid": uid] as [String : Any]
+        
+        ref.updateChildValues(values) { (err, ref) in
+            if let err = err {
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                self.simpleAlert(title: "Upload Failure", message: err as? String)
+                return
+            }
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "newsController")
+            self.show(vc!, sender: self)
+            
+            self.newsNotification()
+            let successNotificationFeedbackGenerator = UINotificationFeedbackGenerator()
+            successNotificationFeedbackGenerator.notificationOccurred(.success)
+            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+
+            //self.dismiss(animated: true, completion: nil)
+            
+            //NotificationCenter.default.post(name: HomeController.updateFeedNotification, object: nil)
         }
     }
 

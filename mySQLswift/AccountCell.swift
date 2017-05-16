@@ -38,19 +38,25 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
     let userProfileImageView: CustomImageView = {
         let imageView = CustomImageView()
         let defaults = UserDefaults.standard
-        let query:PFQuery = PFUser.query()!
-        query.whereKey("username", equalTo: defaults.object(forKey: "usernameKey") as! String!)
-        query.limit = 1
-        query.cachePolicy = .cacheThenNetwork
-        query.getFirstObjectInBackground { object, error in
-            if error == nil {
-                if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { imageData, error in
-                        imageView.image = UIImage(data: imageData!)
+        
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query:PFQuery = PFUser.query()!
+            query.whereKey("username", equalTo: defaults.object(forKey: "usernameKey") as! String!)
+            query.limit = 1
+            query.cachePolicy = .cacheThenNetwork
+            query.getFirstObjectInBackground { object, error in
+                if error == nil {
+                    if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                        imageFile.getDataInBackground { imageData, error in
+                            imageView.image = UIImage(data: imageData!)
+                        }
                     }
                 }
             }
+        } else {
+            //firebase
         }
+        
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 22
         imageView.layer.borderColor = UIColor.lightGray.cgColor

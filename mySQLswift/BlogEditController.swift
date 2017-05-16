@@ -147,12 +147,14 @@ class BlogEditController: UIViewController {
         let hitPoint = sender.convert(CGPoint.zero, to: self.listTableView)
         let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
         
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo: ((_feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                object!.incrementKey("Liked")
-                object!.saveInBackground()
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query = PFQuery(className:"Blog")
+            query.whereKey("objectId", equalTo: ((_feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                if error == nil {
+                    object!.incrementKey("Liked")
+                    object!.saveInBackground()
+                }
             }
         }
     }
@@ -183,20 +185,21 @@ class BlogEditController: UIViewController {
         let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
         
         let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
-            
-            let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { objects, error in
-                if error == nil {
-                    for object in objects! {
-                        object.deleteInBackground()
-                        self.navigationController?.popViewController(animated: true)
-                        //if (self.commentNum! > 0) {
+            if (self.defaults.bool(forKey: "parsedataKey"))  {
+                let query = PFQuery(className:"Blog")
+                query.whereKey("objectId", equalTo: name)
+                query.findObjectsInBackground(block: { objects, error in
+                    if error == nil {
+                        for object in objects! {
+                            object.deleteInBackground()
+                            self.navigationController?.popViewController(animated: true)
+                            //if (self.commentNum! > 0) {
                             self.deincrementComment()
-                        //}
+                            //}
+                        }
                     }
-                }
-            })
+                })
+            }
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -219,36 +222,44 @@ class BlogEditController: UIViewController {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         
         let replyAction = UIAlertAction(title: "Reply", style: .default) { (alert: UIAlertAction!) in
-   
-            self.isReplyClicked = true
-            self.posttoIndex = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
-            self.userIndex = self.objectId
+            
+            if (self.defaults.bool(forKey: "parsedataKey"))  {
+                self.isReplyClicked = true
+                self.posttoIndex = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
+                self.userIndex = self.objectId
+            }
             self.performSegue(withIdentifier: "blogeditSegue", sender: self)
+            
         }
         
         let editAction = UIAlertAction(title: "Edit", style: .default) { (alert: UIAlertAction!) in
             
-            self.isReplyClicked = false
-            self.objectId = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
-            self.msgNo = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "MsgNo") as? String
-            self.postby = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
-            self.subject = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Subject") as? String
-            self.msgDate = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "MsgDate") as? String
-            self.rating = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Rating") as? String
-            self.liked = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Liked") as? Int
-            self.replyId = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "ReplyId") as? String
+            if (self.defaults.bool(forKey: "parsedataKey"))  {
+                self.isReplyClicked = false
+                self.objectId = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
+                self.msgNo = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "MsgNo") as? String
+                self.postby = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
+                self.subject = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Subject") as? String
+                self.msgDate = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "MsgDate") as? String
+                self.rating = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Rating") as? String
+                self.liked = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Liked") as? Int
+                self.replyId = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "ReplyId") as? String
+            }
             
             self.performSegue(withIdentifier: "blogeditSegue", sender: self)
         }
         
         let copyAction = UIAlertAction(title: "Copy", style: .default) { (alert: UIAlertAction!) in
             
-             self.pasteBoard.string = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Subject") as? String
+            if (self.defaults.bool(forKey: "parsedataKey"))  {
+                self.pasteBoard.string = (self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "Subject") as? String
+            }
         }
         
         let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alert: UIAlertAction!) in
-            
-            self.deleteBlog(name: ((self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+            if (self.defaults.bool(forKey: "parsedataKey"))  {
+                self.deleteBlog(name: ((self._feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+            }
         }
         
         let dismissAction = UIAlertAction(title: "Close", style: UIAlertActionStyle.cancel) { (action) in
@@ -271,16 +282,18 @@ class BlogEditController: UIViewController {
     
     func parseData() {
         
-        let query1 = PFQuery(className:"Blog")
-        query1.whereKey("ReplyId", equalTo:self.objectId!)
-        query1.cachePolicy = .cacheThenNetwork
-        query1.findObjectsInBackground { objects, error in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedItems1 = temp.mutableCopy() as! NSMutableArray
-                self.listTableView!.reloadData()
-            } else {
-                print("Error")
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query1 = PFQuery(className:"Blog")
+            query1.whereKey("ReplyId", equalTo:self.objectId!)
+            query1.cachePolicy = .cacheThenNetwork
+            query1.findObjectsInBackground { objects, error in
+                if error == nil {
+                    let temp: NSArray = objects! as NSArray
+                    self._feedItems1 = temp.mutableCopy() as! NSMutableArray
+                    self.listTableView!.reloadData()
+                } else {
+                    print("Error")
+                }
             }
         }
     }
@@ -288,12 +301,14 @@ class BlogEditController: UIViewController {
     // MARK: Deincrement Comment
     func deincrementComment() {
         if (commentNum == nil || commentNum == 0) { return }
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo: self.objectId!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                object?.incrementKey("CommentCount", byAmount: NSNumber(value: -1))
-                object?.saveInBackground()
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query = PFQuery(className:"Blog")
+            query.whereKey("objectId", equalTo: self.objectId!)
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                if error == nil {
+                    object?.incrementKey("CommentCount", byAmount: NSNumber(value: -1))
+                    object?.saveInBackground()
+                }
             }
         }
     }
@@ -477,15 +492,17 @@ extension BlogEditController: UITableViewDataSource {
                 cell.msgDateLabel.font = Font.Blog.celldate
             }
             
-            let query:PFQuery = PFUser.query()!
-            query.whereKey("username",  equalTo:self.postby!)
-            query.limit = 1
-            query.cachePolicy = .cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-                if error == nil {
-                    if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { imageData, error in
-                            cell.blogImageView?.image = UIImage(data: imageData!)
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                let query:PFQuery = PFUser.query()!
+                query.whereKey("username",  equalTo:self.postby!)
+                query.limit = 1
+                query.cachePolicy = .cacheThenNetwork
+                query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                    if error == nil {
+                        if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                            imageFile.getDataInBackground { imageData, error in
+                                cell.blogImageView?.image = UIImage(data: imageData!)
+                            }
                         }
                     }
                 }
@@ -539,15 +556,17 @@ extension BlogEditController: UITableViewDataSource {
             cell.selectionStyle = .none
             cell.replydateLabel.textColor = .gray
             
-            let query:PFQuery = PFUser.query()!
-            query.whereKey("username",  equalTo: (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as! String)
-            query.limit = 1
-            query.cachePolicy = .cacheThenNetwork
-            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-                if error == nil {
-                    if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                        imageFile.getDataInBackground { imageData, error in
-                            cell.replyImageView.image = UIImage(data: imageData!)
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                let query:PFQuery = PFUser.query()!
+                query.whereKey("username",  equalTo: (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as! String)
+                query.limit = 1
+                query.cachePolicy = .cacheThenNetwork
+                query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                    if error == nil {
+                        if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                            imageFile.getDataInBackground { imageData, error in
+                                cell.replyImageView.image = UIImage(data: imageData!)
+                            }
                         }
                     }
                 }
@@ -568,21 +587,24 @@ extension BlogEditController: UITableViewDataSource {
                 cell.replydateLabel.font = Font.BlogEdit.replysubtitle
             }
             
-            cell.replytitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
-            cell.replysubtitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                cell.replytitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
+                cell.replysubtitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
+                
+                var Liked:Int? = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Liked") as? Int
+                if Liked == nil { Liked = 0 }
+                cell.replylikeLabel.text = "\(Liked!)"
+                
+                let date1 = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
+                let date2 = Date()
+                let calendar = Calendar.current
+                let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
+                cell.replydateLabel.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
+            }
+            
             cell.replylikeBtn.addTarget(self, action: #selector(likeButton), for: .touchUpInside)
             cell.replyactionBtn.addTarget(self, action: #selector(replyShare), for: .touchUpInside)
-            
-            var Liked:Int? = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Liked") as? Int
-            if Liked == nil { Liked = 0 }
-            cell.replylikeLabel.text = "\(Liked!)"
-            
-            let date1 = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
-            let date2 = Date()
-            let calendar = Calendar.current
-            let diffDateComponents = calendar.dateComponents([.day], from: date1!, to: date2)
-            cell.replydateLabel.text = String(format: "%d%@", diffDateComponents.day!," days ago" )
-            
+
             if !(cell.replylikeLabel.text! == "0") {
                 cell.replylikeLabel.textColor = Color.twitterBlue
             } else {

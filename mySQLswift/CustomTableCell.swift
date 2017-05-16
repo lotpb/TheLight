@@ -9,7 +9,62 @@
 import UIKit
 
 class CustomTableCell: UITableViewCell {
+    //firebase
+    var post: BlogModel? {
+        didSet {
+
+            guard let postImageUrl = post?.imageUrl else {return}
+            customImageView.loadImage(urlString: postImageUrl)
+            //customImageView.image = #imageLiteral(resourceName: "profile-rabbit-toy")
+            
+            //usernameLabel.text = post?.user.username
+            //print(post?.user.username)
+            //guard let profileImageUrl = post?.user.profileImageUrl else {return}
+            //customImageView.loadImage(urlString: profileImageUrl)
+            
+            blogtitleLabel.text = post?.postBy
+            blogsubtitleLabel.text = post?.subject
+            blogmsgDateLabel.text = post?.creationDate.timeAgoDisplay()
+            
+            var Liked:Int? = post?.liked as? Int
+            if Liked == nil { Liked = 0 }
+            numLabel?.text = "\(Liked!)"
+            
+            var CommentCount:Int? = post?.commentCount as? Int
+            if CommentCount == nil { CommentCount = 0 }
+            commentLabel?.text = "\(CommentCount!)"
+
+            //setupAttributedCaption()
+        }
+    }
     
+    let customImageView: CustomImageView = {
+        let imageView = CustomImageView()
+        imageView.frame = CGRect(x: 15, y: 11, width: 50, height: 50)
+        imageView.isUserInteractionEnabled = true
+        //imageView.image = UIImage(named: "")
+        imageView.contentMode = .scaleAspectFill
+        //imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = (imageView.frame.size.width) / 2
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderWidth = 0.5
+        imageView.layer.masksToBounds = true
+        //imageView.tag = indexPath.row
+        return imageView
+    }()
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupViews()
+    }
+    
+    func setupViews() {
+        
+        addSubview(customImageView)
+    }
+
+
+
     // Snapshot Controller
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var snaptitleLabel: UILabel!
@@ -93,6 +148,6 @@ class CustomTableCell: UITableViewCell {
     @IBOutlet weak var actionBtn: UIButton!
     
     @IBOutlet weak var buttonView: UIView!
-    @IBOutlet weak var blog2ImageView: UIImageView!
+    
 }
 

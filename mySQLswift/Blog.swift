@@ -8,14 +8,19 @@
 
 import UIKit
 import Parse
+import Firebase
 import Social
-//import Firebase
+
+//var currentUser: User? //firebase
 
 class Blog: UIViewController {
     
-    let searchScope = ["subject", "date", "rating", "postby"]
-    
     @IBOutlet weak var tableView: UITableView?
+
+    var bloglist = [BlogModel]()
+    var defaults = UserDefaults.standard
+    
+    let searchScope = ["subject", "date", "rating", "postby"]
 
     var _feedItems = NSMutableArray()
     var _feedheadItems2 = NSMutableArray()
@@ -32,7 +37,8 @@ class Blog: UIViewController {
     var posttoIndex: String?
     var userIndex: String?
     var titleLabel = String()
-    var defaults = UserDefaults.standard
+    //var profileImage: UIImage?
+    
     
     
     lazy var refreshControl: UIRefreshControl = {
@@ -65,7 +71,6 @@ class Blog: UIViewController {
         self.tabBarController?.tabBar.isHidden = false
         setupNavigationBarItems()
         setupTwitterNavigationBarItems()
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -124,7 +129,7 @@ class Blog: UIViewController {
     // MARK: - refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        fetchData()
         //self.tableView.reloadData()
         self.refreshControl.endRefreshing()
     }
@@ -138,19 +143,23 @@ class Blog: UIViewController {
     }
     
     func likeSetButton(sender:UIButton) {
-
+        
         sender.isSelected = true
         sender.tintColor = Color.twitterBlue
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
         
-        let query = PFQuery(className:"Blog")
-        query.whereKey("objectId", equalTo:((_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                object!.incrementKey("Liked")
-                object!.saveInBackground()
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query = PFQuery(className:"Blog")
+            query.whereKey("objectId", equalTo:((_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                if error == nil {
+                    object!.incrementKey("Liked")
+                    object!.saveInBackground()
+                }
             }
+        } else {
+            //firebase
         }
     }
     
@@ -160,60 +169,107 @@ class Blog: UIViewController {
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
         
-        posttoIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
-        userIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            posttoIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "PostBy") as? String
+            userIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
+        } else {
+            //firebase
+        }
         self.performSegue(withIdentifier: "blognewSegue", sender: self)
     }
     
     func flagSetButton(_ sender:UIButton) {
+        
     }
+    
+    // MARK: - Firebase
+
     
     // MARK: - Parse
 
-    func parseData() {
-        
-        let query = PFQuery(className:"Blog")
-        query.limit = 1000
-        query.whereKey("ReplyId", equalTo:NSNull())
+    /*
+    fileprivate func fetchProfileImage(name: String) {
+        let query:PFQuery = PFUser.query()!
+        query.whereKey("username",  equalTo: name)
         query.cachePolicy = .cacheThenNetwork
-        query.order(byDescending: "createdAt")
-        query.findObjectsInBackground { objects, error in
+        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
             if error == nil {
-                let temp : NSArray = objects! as NSArray
-                self._feedItems = temp.mutableCopy() as! NSMutableArray
-                self.tableView?.reloadData()
-            } else {
-                print("Error9")
+                if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                     self.profileImage = UIImage(data: imageData! as Data)
+                    }
+                }
             }
         }
+    } */
+
+    fileprivate func fetchData() {
         
-        let query1 = PFQuery(className:"Blog")
-        query1.limit = 1000
-        //query1.whereKey("Rating", equalTo:"5")
-        query1.whereKey("Liked", notEqualTo:NSNull())
-        query1.cachePolicy = .cacheThenNetwork
-        query1.order(byDescending: "createdAt")
-        query1.findObjectsInBackground { objects, error in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedheadItems2 = temp.mutableCopy() as! NSMutableArray
-                self.tableView?.reloadData()
-            } else {
-                print("Error10")
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            
+            let query = PFQuery(className:"Blog")
+            query.limit = 1000
+            query.whereKey("ReplyId", equalTo:NSNull())
+            query.cachePolicy = .cacheThenNetwork
+            query.order(byDescending: "createdAt")
+            query.findObjectsInBackground { objects, error in
+                if error == nil {
+                    let temp : NSArray = objects! as NSArray
+                    self._feedItems = temp.mutableCopy() as! NSMutableArray
+                    self.tableView?.reloadData()
+                } else {
+                    print("Error9")
+                }
             }
-        }
-        
-        let query3 = PFUser.query()
-        query3?.limit = 1000
-        query3?.cachePolicy = .cacheThenNetwork
-        query3?.order(byDescending: "createdAt")
-        query3?.findObjectsInBackground { objects, error in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedheadItems3 = temp.mutableCopy() as! NSMutableArray
-                self.tableView?.reloadData()
-            } else {
-                print("Error11")
+            
+            let query1 = PFQuery(className:"Blog")
+            query1.limit = 1000
+          //query1.whereKey("Rating", equalTo:"5")
+            query1.whereKey("Liked", notEqualTo:NSNull())
+            query1.cachePolicy = .cacheThenNetwork
+            query1.order(byDescending: "createdAt")
+            query1.findObjectsInBackground { objects, error in
+                if error == nil {
+                    let temp: NSArray = objects! as NSArray
+                    self._feedheadItems2 = temp.mutableCopy() as! NSMutableArray
+                    self.tableView?.reloadData()
+                } else {
+                    print("Error10")
+                }
+            }
+            
+            let query3 = PFUser.query()
+            query3?.limit = 1000
+            query3?.cachePolicy = .cacheThenNetwork
+            query3?.order(byDescending: "createdAt")
+            query3?.findObjectsInBackground { objects, error in
+                if error == nil {
+                    let temp: NSArray = objects! as NSArray
+                    self._feedheadItems3 = temp.mutableCopy() as! NSMutableArray
+                    self.tableView?.reloadData()
+                } else {
+                    print("Error11")
+                }
+            }
+        } else {
+                        //firebase
+            let ref = FIRDatabase.database().reference().child("Blog")
+            ref.observe(.childAdded , with:{ (snapshot) in
+                
+                guard let dictionary = snapshot.value as? [String: Any] else {return}
+
+                let post = BlogModel(dictionary: dictionary)
+                self.bloglist.append(post)
+                
+                self.bloglist.sort(by: { (p1, p2) -> Bool in
+                    return p1.creationDate.compare(p2.creationDate) == .orderedDescending
+                })
+                
+                DispatchQueue.main.async(execute: {
+                    self.tableView?.reloadData()
+                })
+            }) { (err) in
+                print("Failed to fetch posts:", err)
             }
         }
     }
@@ -223,16 +279,22 @@ class Blog: UIViewController {
         let alertController = UIAlertController(title: "Delete", message: "Confirm Delete", preferredStyle: .alert)
         let destroyAction = UIAlertAction(title: "Delete!", style: .destructive) { (action) in
             
-            let query = PFQuery(className:"Blog")
-            query.whereKey("objectId", equalTo: name)
-            query.findObjectsInBackground(block: { objects, error in
-                if error == nil {
-                    for object in objects! {
-                        object.deleteInBackground()
-                        self.refreshData(self)
-                    }
+            if (self.defaults.bool(forKey: "parsedataKey"))  {
+                if (self.defaults.bool(forKey: "parsedataKey"))  {
+                    let query = PFQuery(className:"Blog")
+                    query.whereKey("objectId", equalTo: name)
+                    query.findObjectsInBackground(block: { objects, error in
+                        if error == nil {
+                            for object in objects! {
+                                object.deleteInBackground()
+                                self.refreshData(self)
+                            }
+                        }
+                    })
                 }
-            })
+            } else {
+                //firebase
+            }
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -251,6 +313,7 @@ class Blog: UIViewController {
         
         let hitPoint = sender.convert(CGPoint.zero, to: self.tableView)
         let indexPath = self.tableView!.indexPathForRow(at: hitPoint)
+        
         let socialText = (self._feedItems[indexPath!.row] as AnyObject).value(forKey: "Subject") as? String
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
@@ -325,7 +388,10 @@ class Blog: UIViewController {
     // MARK: - imgLoadSegue
     
     func imgLoadSegue(sender:UITapGestureRecognizer) {
-        titleLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "PostBy") as? String)!
+        
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            titleLabel = ((_feedItems.object(at: (sender.view!.tag)) as AnyObject).value(forKey: "PostBy") as? String)!
+        }
         self.performSegue(withIdentifier: "bloguserSegue", sender: self)
     }
     
@@ -380,8 +446,13 @@ extension Blog: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         if tableView == self.tableView {
-            return _feedItems.count
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                return self._feedItems.count
+            } else {
+                return self.bloglist.count
+            }
         } else {
             return filteredString.count
         }
@@ -390,7 +461,6 @@ extension Blog: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomTableCell else { fatalError("Unexpected Index Path") }
-        
         cell.selectionStyle = .none
         cell.blogsubtitleLabel?.textColor = Color.twitterText
         
@@ -410,61 +480,68 @@ extension Blog: UITableViewDataSource {
             cell.numLabel.font = Font.Blog.cellLabel
             cell.commentLabel.font = Font.Blog.cellLabel
         }
+        //fetchProfileImage(name: (self._feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as! String)
         
-        let query:PFQuery = PFUser.query()!
-        query.whereKey("username",  equalTo:(self._feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as! String)
-        query.cachePolicy = .cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
-                        
-                        UIView.transition(with: (cell.blogImageView)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.blogImageView?.image = UIImage(data: imageData! as Data)
-                        }, completion: nil)
-                    }
-                }
-            }
-        }
-        
-        cell.blogImageView?.layer.cornerRadius = (cell.blogImageView?.frame.size.width)! / 2
-        cell.blogImageView?.layer.borderColor = UIColor.lightGray.cgColor
-        cell.blogImageView?.layer.borderWidth = 0.5
-        cell.blogImageView?.layer.masksToBounds = true
-        cell.blogImageView?.isUserInteractionEnabled = true
-        cell.blogImageView?.contentMode = .scaleAspectFill
-        cell.blogImageView?.tag = indexPath.row
+        /*
+        cell.blogImageView?.tag = indexPath.row */
         
         let tap = UITapGestureRecognizer(target: self, action:#selector(imgLoadSegue))
-        cell.blogImageView.addGestureRecognizer(tap)
-        
-        let dateStr = (_feedItems[indexPath.row] as AnyObject).value(forKey: "MsgDate") as? String
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let date:NSDate = dateFormatter.date(from: dateStr!)as NSDate!
-        
-        dateFormatter.dateFormat = "h:mm a"
-        let elapsedTimeInSeconds = NSDate().timeIntervalSince(date as Date)
-        let secondInDays: TimeInterval = 60 * 60 * 24
-        if elapsedTimeInSeconds > 7 * secondInDays {
-            dateFormatter.dateFormat = "MMM-dd"
-        } else if elapsedTimeInSeconds > secondInDays {
-            dateFormatter.dateFormat = "EEE"
-        }
-        
+        cell.customImageView.addGestureRecognizer(tap)
+
         if (tableView == self.tableView) {
             
-            cell.blogtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
-            cell.blogsubtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
-            cell.blogmsgDateLabel?.text = dateFormatter.string(from: date as Date)as String!
-            
-            var Liked:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Liked")as? Int
-            if Liked == nil { Liked = 0 }
-            cell.numLabel?.text = "\(Liked!)"
-            
-            var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? Int
-            if CommentCount == nil { CommentCount = 0 }
-            cell.commentLabel?.text = "\(CommentCount!)"
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                
+                let dateStr = (_feedItems[indexPath.row] as AnyObject).value(forKey: "MsgDate") as? String
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let date:NSDate = dateFormatter.date(from: dateStr!)as NSDate!
+                
+                dateFormatter.dateFormat = "h:mm a"
+                let elapsedTimeInSeconds = NSDate().timeIntervalSince(date as Date)
+                let secondInDays: TimeInterval = 60 * 60 * 24
+                if elapsedTimeInSeconds > 7 * secondInDays {
+                    dateFormatter.dateFormat = "MMM-dd"
+                } else if elapsedTimeInSeconds > secondInDays {
+                    dateFormatter.dateFormat = "EEE"
+                }
+
+                let query:PFQuery = PFUser.query()!
+                query.whereKey("username",  equalTo: (self._feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as! String)
+                query.cachePolicy = .cacheThenNetwork
+                query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                    if error == nil {
+                        if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                            imageFile.getDataInBackground { (imageData: Data?, error: Error?) in
+                                cell.customImageView.image = UIImage(data: imageData! as Data)
+                            }
+                        }
+                    }
+                }
+                
+                //cell.blogImageView?.image = self.profileImage
+                
+                /*
+                 UIView.transition(with: (cell.blogImageView)!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                 cell.blogImageView?.image = self.profileImage
+                 }, completion: nil) */
+                
+                cell.blogtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"PostBy") as? String
+                cell.blogsubtitleLabel?.text = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Subject") as? String
+                cell.blogmsgDateLabel?.text = dateFormatter.string(from: date as Date)as String!
+                
+                var Liked:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"Liked")as? Int
+                if Liked == nil { Liked = 0 }
+                cell.numLabel?.text = "\(Liked!)"
+                
+                var CommentCount:Int? = (_feedItems[indexPath.row] as AnyObject).value(forKey:"CommentCount") as? Int
+                if CommentCount == nil { CommentCount = 0 }
+                cell.commentLabel?.text = "\(CommentCount!)"
+                
+            } else {
+                //firebase
+                cell.post = bloglist[indexPath.item]
+            }
             
         } else {
             
@@ -559,20 +636,26 @@ extension Blog: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
+        
         if UI_USER_INTERFACE_IDIOM() == .phone {
-            
+ 
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell") as? HeaderViewCell else { fatalError("Unexpected Index Path") }
             
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                cell.myLabel1.text = String(format: "%@%d", "posts\n", _feedItems.count)
+                cell.myLabel2.text = String(format: "%@%d", "likes\n", _feedheadItems2.count)
+                cell.myLabel3.text = String(format: "%@%d", "users\n", _feedheadItems3.count)
+            } else {
+                cell.myLabel1.text = String(format: "%@%d", "posts\n", 0)
+                cell.myLabel2.text = String(format: "%@%d", "likes\n", 0)
+                cell.myLabel3.text = String(format: "%@%d", "users\n", 0)
+            }
             cell.header.backgroundColor = Color.Blog.navColor
-            cell.myLabel1.text = String(format: "%@%d", "posts\n", _feedItems.count)
-            cell.myLabel2.text = String(format: "%@%d", "likes\n", _feedheadItems2.count)
-            cell.myLabel3.text = String(format: "%@%d", "users\n", _feedheadItems3.count)
             cell.separatorView1.backgroundColor = Color.Blog.borderColor
             cell.separatorView2.backgroundColor = Color.Blog.borderColor
             cell.separatorView3.backgroundColor = Color.Blog.borderColor
             self.tableView!.tableHeaderView = nil //cell.header
-
+            
             return cell
         }
         return nil
@@ -587,19 +670,29 @@ extension Blog: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
+        let commentNum : Int?
+        let deleteStr : String?
+        
         if editingStyle == .delete {
             
-            let commentNum : Int? = (self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "CommentCount") as? Int
-            let deleteStr = ((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!
-            
-            if (commentNum == nil || commentNum == 0) {
-                self.deleteBlog(name: deleteStr)
-                _feedItems.removeObject(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
+            if (defaults.bool(forKey: "parsedataKey"))  {
+                commentNum = (self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "CommentCount") as? Int
+                deleteStr = ((self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "objectId") as? String)!
             } else {
-                self.simpleAlert(title: "Oops!", message: "Record can't be deleted.")
+                //firebase
+                commentNum = 0
+                deleteStr = ""
             }
-            self.refreshData(self)
+            
+                if (commentNum == nil || commentNum == 0) {
+                    self.deleteBlog(name: deleteStr!)
+                    _feedItems.removeObject(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                } else {
+                    self.simpleAlert(title: "Oops!", message: "Record can't be deleted.")
+                }
+                self.refreshData(self)
+            
         } else if editingStyle == .insert {
             
         }

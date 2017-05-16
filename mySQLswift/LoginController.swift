@@ -25,7 +25,7 @@ func delay(_ seconds: Double, completion: @escaping ()->Void) {
 } */
 
 
-class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate,  GIDSignInUIDelegate, GIDSignInDelegate {
+class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, FBSDKLoginButtonDelegate,  GIDSignInUIDelegate, GIDSignInDelegate {
     
     let ipadtitle = UIFont.systemFont(ofSize: 20)
     let celltitle = UIFont.systemFont(ofSize: 18)
@@ -47,7 +47,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     
     var defaults = UserDefaults.standard
     var pictureData : Data?
-    var userimage : UIImage?
     var user : PFUser?
     
     //Facebook
@@ -57,17 +56,61 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     //Twitter
     var twitterButton : TWTRLogInButton = TWTRLogInButton()
     
+    //var userimage : UIImage?
+    /*
     let userImageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.masksToBounds = true
         return imageView
+    }() */
+    
+    let plusPhotoButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(handlePhotoButton), for: .touchUpInside)
+        
+        return button
     }()
+    
+    func handlePhotoButton () {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        
+        present(imagePickerController, animated:true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        
+        if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+            
+        else if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
+            
+        }
+        
+        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
+        plusPhotoButton.layer.masksToBounds = true
+        plusPhotoButton.layer.borderColor = UIColor.black.cgColor
+        plusPhotoButton.layer.borderWidth = 3
+        
+        dismiss(animated: true, completion: nil)
+    }
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.addSubview(plusPhotoButton)
+        
+        plusPhotoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 30, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 140, height: 140)
+        
+        plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         //Facebook
         fbButton.delegate = self
@@ -119,6 +162,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.twitterButton.isHidden = true
             self.emailField!.isHidden = false
             self.phoneField!.isHidden = false
+            self.plusPhotoButton.isHidden = false
         } else {
             //Keychain
             self.usernameField!.text = KeychainWrapper.standard.string(forKey: "usernameKey")
@@ -132,6 +176,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.emailField!.isHidden = true
             self.phoneField!.isHidden = true
             self.backloginBtn!.isHidden = true
+            self.plusPhotoButton.isHidden = true
         }
 
         self.registerBtn!.setTitleColor(.white, for: .normal)
@@ -141,7 +186,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.phoneField!.keyboardType = .numbersAndPunctuation
         
         self.passwordField!.text = ""
-        self.userimage = nil
+        //self.userimage = nil
     }
     
     func setupConstraints() {
@@ -195,28 +240,46 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     // MARK: - LoginUser
     
     @IBAction func LoginUser(_ sender:AnyObject) {
-        
-        PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
-            if user != nil {
+        // MARK: - Parse
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            
+            PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
+                if user != nil {
+                    
+                    self.refreshLocation()
+                    
+                } else {
+                    
+                    self.simpleAlert(title: "Oooops", message: "Your username and password does not match")
+                    
+                    PFUser.current()?.fetchInBackground(block: { (object, error)  in
+                        
+                        let isEmailVerified = (PFUser.current()?.object(forKey: "emailVerified") as AnyObject).boolValue
+                        
+                        if isEmailVerified == true {
+                            self.emailField!.text = "Email has been verified."
+                        } else {
+                            self.emailField!.text = "Email is not verified."
+                        }
+                    })
+                }
+            }
+        } else {
+            
+            guard let email = usernameField?.text else {return}
+            guard let password = passwordField?.text else {return}
+            
+            FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, err) in
+                if let err = err{
+                    self.simpleAlert(title: "Oooops", message: "Your username and password does not match")
+                    print("Failed to login:", err)
+                    return
+                }
+                
+                print("Succesfully logged back in with user:", user?.uid ?? "")
                 
                 self.refreshLocation()
-                //self.redirectToHome()
-                
-            } else {
-                
-                self.simpleAlert(title: "Oooops", message: "Your username and password does not match")
-                
-                PFUser.current()?.fetchInBackground(block: { (object, error)  in
-                    
-                    let isEmailVerified = (PFUser.current()?.object(forKey: "emailVerified") as AnyObject).boolValue
-                    
-                    if isEmailVerified == true {
-                        self.emailField!.text = "Email has been verified."
-                    } else {
-                        self.emailField!.text = "Email is not verified."
-                    }
-                })
-            }
+            })
         }
     }
     
@@ -238,7 +301,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.fbButton.isHidden = false
         self.googleButton.isHidden = false
         self.twitterButton.isHidden = false
-        
+        self.plusPhotoButton.isHidden = true
     }
     
     // MARK: - RegisterUser
@@ -259,6 +322,7 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             self.fbButton.isHidden = true
             self.googleButton.isHidden = true
             self.twitterButton.isHidden = true
+            self.plusPhotoButton.isHidden = false
             
         } else {
             //check if all text fields are completed
@@ -285,47 +349,97 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     }
     
     func registerNewUser() {
-        
-        if (self.userimage == nil) {
-            self.userimage = UIImage(named:"profile-rabbit-toy.png")
-        }
-        pictureData = UIImageJPEGRepresentation(self.userimage!, 0.9)
-        let file = PFFile(name: "Image.jpg", data: pictureData!)
-        
-        let user = PFUser()
-        user.username = usernameField!.text
-        user.password = passwordField!.text
-        user.email = emailField!.text
-        
-        user.setObject(file!, forKey:"imageFile")
-        user.signUpInBackground { succeeded, error in
-            if (succeeded) {
-                
-                self.refreshLocation()
-                self.usernameField!.text = nil
-                self.passwordField!.text = nil
-                self.emailField!.text = nil
-                self.phoneField!.text = nil
-                self.simpleAlert(title: "Success", message: "You have registered a new user")
-                
-            } else {
-                self.simpleAlert(title: "Alert", message: "Error: \(String(describing: error))")
-            }
-        }
-        /*
-        FIRAuth.auth()?.createUser(withEmail: (emailField?.text!)!, password: (passwordField?.text!)!) { (user, error) in
+        // MARK: - Parse
+        if (defaults.bool(forKey: "parsedataKey"))  {
             
-            if error == nil {
-                print("You have successfully signed up")
-                //Goes to the Setup page which lets the user take a photo for their profile picture and also chose a username
-                
-                let vc = self.storyboard?.instantiateViewController(withIdentifier: "Home")
-                self.present(vc!, animated: true)
-                
-            } else {
-                self.simpleAlert(title: "Alert", message: "Error: \(error)")
+            if (self.self.plusPhotoButton.imageView?.image == nil) {
+                self.self.plusPhotoButton.imageView?.image = UIImage(named:"profile-rabbit-toy.png")
             }
-        } */
+            pictureData = UIImageJPEGRepresentation((self.plusPhotoButton.imageView?.image)!, 0.9)
+            let file = PFFile(name: "Image.jpg", data: pictureData!)
+            
+            let user = PFUser()
+            user.username = usernameField!.text
+            user.password = passwordField!.text
+            user.email = emailField!.text
+            
+            user.setObject(file!, forKey:"imageFile")
+            user.signUpInBackground { succeeded, error in
+                if (succeeded) {
+                    
+                    self.refreshLocation()
+                    self.usernameField!.text = nil
+                    self.passwordField!.text = nil
+                    self.emailField!.text = nil
+                    self.phoneField!.text = nil
+                    self.simpleAlert(title: "Success", message: "You have registered a new user")
+                    
+                } else {
+                    self.simpleAlert(title: "Alert", message: "Error: \(String(describing: error))")
+                }
+            }
+            
+        } else {
+            // firebase
+            guard let email = emailField?.text, email.characters.count > 0 else { return }
+            guard let username = usernameField?.text, username.characters.count > 0 else { return }
+            guard let password = passwordField?.text, password.characters.count > 0 else { return }
+            
+            FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user, error) in
+                if let err = error {
+                    print("Failed to create user: ", err)
+                    return
+                    
+                } else {
+                    
+                    print("Successfully created user: ", user?.uid ?? "")
+                    guard let image = self.plusPhotoButton.imageView?.image else {return}
+                    guard let uploadData = UIImageJPEGRepresentation(image, 0.3) else {return}
+                    
+                    let fileName = NSUUID().uuidString
+                    FIRStorage.storage().reference().child("profile_images").child(fileName).put(uploadData, metadata: nil, completion: {(metadata, err) in
+                        
+                        if let err = err{
+                            print("Failed to upload profile image:" , err)
+                            return
+                        }
+                        
+                        guard let profileImageUrl = metadata?.downloadURL()?.absoluteString else {return}
+                        
+                        print("Successfully Uploaded profile image")
+                        print(profileImageUrl)
+                        
+                        guard let uid = user?.uid else { return }
+                        
+                        let dictionaryValues = ["username": username, "profileImageUrl": profileImageUrl]
+                        let values =  [uid: dictionaryValues]
+                        
+                        FIRDatabase.database().reference().child("users").updateChildValues(values, withCompletionBlock: {(err, ref) in
+                            
+                            if let err = err{
+                                print("Failed to save user info to database: ", err)
+                                return
+                            }
+                            else {
+                                print("Succefully saved user info to db")
+                                self.refreshLocation()
+                                self.usernameField!.text = nil
+                                self.passwordField!.text = nil
+                                self.emailField!.text = nil
+                                self.phoneField!.text = nil
+                                self.simpleAlert(title: "Success", message: "You have registered a new user")
+                                /*
+                                 guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else {return}
+                                 
+                                 mainTabBarController.setupViewController()
+                                 
+                                 self.dismiss(animated: true, completion: nil) */
+                            }
+                        })
+                    })
+                }
+            })
+        }
         
     }
     
@@ -460,9 +574,9 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
                         pictureUrl = url
                     }
                     
-                    self.userimage = UIImage(data: try! Data(contentsOf: URL(string: pictureUrl)!))
+                    self.plusPhotoButton.imageView?.image = UIImage(data: try! Data(contentsOf: URL(string: pictureUrl)!))
                     DispatchQueue.main.async(execute: { ()  in
-                        self.userImageView.image = self.userimage
+                        //self.userImageView.image = self.plusPhotoButton.imageView?.image
                     })
                     
                     self.usernameField!.text = "\(firstName) \(lastName)"
@@ -520,13 +634,18 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         self.emailField!.isHidden = false
         
         let email = self.emailField!.text
-        let finalEmail = email!.removeWhiteSpace()        
-        PFUser.requestPasswordResetForEmail(inBackground: finalEmail) { (success, error)  in
-            if success {
-                self.simpleAlert(title: "Alert", message: "Link to reset the password has been send to specified email")
-            } else {
-                self.simpleAlert(title: "Alert", message: "Enter email in field: %@")
+        let finalEmail = email!.removeWhiteSpace()
+        
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            PFUser.requestPasswordResetForEmail(inBackground: finalEmail) { (success, error)  in
+                if success {
+                    self.simpleAlert(title: "Alert", message: "Link to reset the password has been send to specified email")
+                } else {
+                    self.simpleAlert(title: "Alert", message: "Enter email in field: %@")
+                }
             }
+        } else {
+            //firebase
         }
     }
 
@@ -573,32 +692,46 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
     }
     
     func didAuthenticateWithTouchId() {
-        
-        self.usernameField!.text = "Peter Balsamo"
-        self.passwordField!.text = "3911"
         self.emailField!.text = "eunited@optonline.net"
         self.phoneField!.text = "(516)241-4786"
-
-        PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
-            if user != nil {
-                self.refreshLocation()
+        
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            self.usernameField!.text = "Peter Balsamo"
+            self.passwordField!.text = "3911"
+            
+            PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
+                if user != nil {
+                    self.refreshLocation()
+                }
             }
+        } else {
+            self.usernameField!.text = "eunited@optonline.net"
+            self.passwordField!.text = "united"
+            FIRAuth.auth()?.signIn(withEmail: usernameField!.text!, password: passwordField!.text!, completion: { (user, err) in
+                if user != nil {
+                    self.refreshLocation()
+                }
+            })
+            
         }
+        
     }
-    
     
     // MARK: - Map
     
     func refreshLocation() {
         
-        PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) in
-            if error == nil {
-                PFUser.current()!.setValue(geoPoint, forKey: "currentLocation")
-                PFUser.current()!.saveInBackground()
-                self.redirectToHome()
-                //self.performSegue(withIdentifier: "loginSegue", sender: nil)
+        if (defaults.bool(forKey: "parsedataKey")) {
+            PFGeoPoint.geoPointForCurrentLocation {(geoPoint: PFGeoPoint?, error: Error?) in
+                if error == nil {
+                    PFUser.current()!.setValue(geoPoint, forKey: "currentLocation")
+                    PFUser.current()!.saveInBackground()
+                }
             }
+        } else {
+            //firebase
         }
+        
         self.defaults.set(self.usernameField!.text, forKey: "usernameKey")
         self.defaults.set(self.passwordField!.text, forKey: "passwordKey")
         self.defaults.set(self.phoneField!.text, forKey: "phone")
@@ -606,9 +739,10 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
         if (self.emailField!.text != nil) {
             self.defaults.set(self.emailField!.text, forKey: "emailKey")
         }
+        self.redirectToHome()
         self.defaults.set(true, forKey: "registerKey")
+        
     }
-    
     
     // MARK: - RedirectToHome
     
@@ -641,36 +775,6 @@ class LoginController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDe
             
             }, completion: nil)
     }
-    
-//--------------Firebase----------------------------------
-    /*
-    @IBAction func createAccountAction(_ sender: AnyObject) {
-        
-        guard let email = self.emailField?.text else { return }
-        guard let password = self.passwordField?.text else { return }
-        
-        if email != "", password != "" {
-            let credential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
-            
-            FIRAuth.auth()?.currentUser?.link(with: credential, completion: { (user, error) in
-                if error != nil {
-                    let alert = UIAlertController(title: "Oops!", message: error?.localizedDescription, preferredStyle: .alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alert.addAction(defaultAction)
-                    self.present(alert, animated: true)
-                } else {
-                    self.firebase!.child("users/\(user!.uid)/email").setValue(user!.email!)
-                }
-            })
-            
-        } else {
-            let alert = UIAlertController(title: "Oops!", message: "Please enter an email and password.", preferredStyle: .alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alert.addAction(defaultAction)
-            self.present(alert, animated: true)
-        }
-        
-    } */
     
 }
 

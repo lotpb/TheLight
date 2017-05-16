@@ -8,11 +8,13 @@
 
 import UIKit
 import Parse
+import Firebase
 import UserNotifications
 
 
 class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
+    var post: BlogModel?
     let CharacterLimit = 140
     
     @IBOutlet weak var tableView: UITableView?
@@ -92,7 +94,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         super.viewDidLoad()
         
         setupNavigationButtons()
-        parseData() //load image
+        fetchData() //load image
         configureTextView()
         setupForm()
         setupDatePicker()
@@ -417,19 +419,25 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     // MARK: - Parse
     
-    func parseData() {
-       
-        let query:PFQuery = PFUser.query()!
-        query.whereKey("username",  equalTo: self.textcontentpostby!)
-        query.cachePolicy = .cacheThenNetwork
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
-                    imageFile.getDataInBackground { imageData, error in
-                        self.imageBlog?.image = UIImage(data: imageData!)
+    func fetchData() {
+        if (defaults.bool(forKey: "parsedataKey"))  {
+            let query:PFQuery = PFUser.query()!
+            query.whereKey("username",  equalTo: self.textcontentpostby!)
+            query.cachePolicy = .cacheThenNetwork
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                if error == nil {
+                    if let imageFile = object!.object(forKey: "imageFile") as? PFFile {
+                        imageFile.getDataInBackground { imageData, error in
+                            self.imageBlog?.image = UIImage(data: imageData!)
+                        }
                     }
                 }
             }
+        } else {
+            
+            
+            
+            
         }
     }
     
@@ -470,59 +478,93 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
             self.simpleAlert(title: "Oops!", message: "No text entered.")
         } else {
             if (self.formStatus == "None") {
-                let query = PFQuery(className:"Blog")
-                query.whereKey("objectId", equalTo:self.objectId!)
-                query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
-                    if error == nil {
-                        updateblog!.setObject(self.msgDate ?? NSNull(), forKey:"MsgDate")
-                        updateblog!.setObject(self.postby ?? NSNull(), forKey:"PostBy")
-                        updateblog!.setObject(self.rating ?? NSNull(), forKey:"Rating")
-                        updateblog!.setObject(self.subject?.text ?? NSNull(), forKey:"Subject")
-                        updateblog!.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
-                        updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
-                        updateblog!.saveEventually()
-                        
-                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
-                        self.show(vc!, sender: self)
-                        //self.present(vc!, animated: true)
-                        self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                    } else {
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                if (defaults.bool(forKey: "parsedataKey")) {
+                    let query = PFQuery(className:"Blog")
+                    query.whereKey("objectId", equalTo:self.objectId!)
+                    query.getFirstObjectInBackground {(updateblog: PFObject?, error: Error?) in
+                        if error == nil {
+                            updateblog!.setObject(self.msgDate ?? NSNull(), forKey:"MsgDate")
+                            updateblog!.setObject(self.postby ?? NSNull(), forKey:"PostBy")
+                            updateblog!.setObject(self.rating ?? NSNull(), forKey:"Rating")
+                            updateblog!.setObject(self.subject?.text ?? NSNull(), forKey:"Subject")
+                            updateblog!.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
+                            updateblog!.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
+                            updateblog!.saveEventually()
+                            
+                            let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
+                            self.show(vc!, sender: self)
+                            //self.present(vc!, animated: true)
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                        } else {
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
                     }
+                } else {
+                    
                 }
                 
             } else if (self.formStatus == "New" || self.formStatus == "Reply") {
                 
-                let saveblog: PFObject = PFObject(className:"Blog")
-                saveblog.setObject(self.msgDate ?? NSNull(), forKey:"MsgDate")
-                saveblog.setObject(self.postby ?? NSNull(), forKey:"PostBy")
-                saveblog.setObject(self.rating ?? NSNull(), forKey:"Rating")
-                saveblog.setObject(self.subject?.text ?? NSNull(), forKey:"Subject")
-                saveblog.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
-                saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
-                saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
-                
-                if (self.formStatus == "Reply") {
-                    let query = PFQuery(className:"Blog")
-                    query.whereKey("objectId", equalTo:self.replyId!)
-                    query.getFirstObjectInBackground { (updateReply: PFObject?, error: Error?) in
-                        if error == nil {
-                            updateReply!.incrementKey("CommentCount")
-                            updateReply!.saveEventually()
+                if (defaults.bool(forKey: "parsedataKey")) {
+                    
+                    let saveblog: PFObject = PFObject(className:"Blog")
+                    saveblog.setObject(self.msgDate ?? NSNull(), forKey:"MsgDate")
+                    saveblog.setObject(self.postby ?? NSNull(), forKey:"PostBy")
+                    saveblog.setObject(self.rating ?? NSNull(), forKey:"Rating")
+                    saveblog.setObject(self.subject?.text ?? NSNull(), forKey:"Subject")
+                    saveblog.setObject(self.msgNo ?? NSNumber(value:-1), forKey:"MsgNo")
+                    saveblog.setObject(self.replyId ?? NSNull(), forKey:"ReplyId")
+                    saveblog.setObject(self.liked ?? NSNumber(value:0), forKey:"Liked")
+                    
+                    if (self.formStatus == "Reply") {
+                        let query = PFQuery(className:"Blog")
+                        query.whereKey("objectId", equalTo:self.replyId!)
+                        query.getFirstObjectInBackground { (updateReply: PFObject?, error: Error?) in
+                            if error == nil {
+                                updateReply!.incrementKey("CommentCount")
+                                updateReply!.saveEventually()
+                            }
                         }
                     }
-                }
-                
-                saveblog.saveInBackground { (success: Bool, error: Error?) in
-                    if success == true {
+                    
+                    saveblog.saveInBackground { (success: Bool, error: Error?) in
+                        if success == true {
+                            let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
+                            self.show(vc!, sender: self)
+                            self.newBlogNotification()
+                            self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
+                        } else {
+                            self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
+                        }
+                    }
+                    
+                } else {
+                    
+                    guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
+                    let values = ["subject": self.subject?.text ?? "",
+                                  "replyId": self.replyId ?? "",
+                                  "rating": self.rating  ?? "",
+                                  "postBy": self.postby ?? "",
+                                  "liked": self.liked ?? 0,
+                                  "CommentCount": 0,
+                                  "user": self.postby ?? "",
+                                  "creationDate": Date().timeIntervalSince1970,
+                                  "uid": uid] as [String: Any]
+                    
+                    //guard let postId = post?.id else {return}
+                    //FIRDatabase.database().reference().child("Blog").childByAutoId().setValue(values)
+                    FIRDatabase.database().reference().child("Blog").childByAutoId().updateChildValues(values) { (err, ref) in
+                        if let err = err {
+                            self.simpleAlert(title: "Upload Failure", message: err as? String)
+                            return
+                        }
                         let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
                         self.show(vc!, sender: self)
                         self.newBlogNotification()
                         self.simpleAlert(title: "Upload Complete", message: "Successfully updated the data")
-                    } else {
-                        self.simpleAlert(title: "Upload Failure", message: "Failure updated the data")
                     }
                 }
+                
             }
         }
     }

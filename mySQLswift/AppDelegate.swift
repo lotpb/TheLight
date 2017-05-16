@@ -11,7 +11,7 @@ import Parse
 import GoogleSignIn
 import FBSDKCoreKit
 import Firebase
-import SwiftKeychainWrapper
+//import SwiftKeychainWrapper
 import UserNotifications
 
 @UIApplicationMain
@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     //let locationManager = CLLocationManager()
     var defaults = UserDefaults.standard
     var backgroundSessionCompletionHandler: (() -> Void)?
+    //var currentUser: User?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
@@ -73,29 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.window?.rootViewController = initialViewController
             self.window?.makeKeyAndVisible()
         }
-        
-        // MARK: - Login
-        let userId:String = defaults.object(forKey: "usernameKey") as! String!
-        let userpassword:String = defaults.object(forKey: "passwordKey") as! String!
-        let userSuccessful: Bool = KeychainWrapper.standard.set(userId, forKey: "usernameKey")
-        let passSuccessful: Bool = KeychainWrapper.standard.set(userpassword, forKey: "passwordKey")
-        
-        // MARK: - Keychain
-        if (userSuccessful == true), (passSuccessful == true) {
-            print("Keychain successful")
-        } else {
-            print("Keychain failed")
-        }
-        //KeychainWrapper.accessGroup = "group.TheLightGroup"
-        
-        // MARK: - Parse
-        PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) in
-            if error != nil {
-                print("Error: \(String(describing: error)) \(String(describing: error!._userInfo))")
-                return
-            }
-        }
-
+ 
         // MARK: - Facebook Sign-in
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
        

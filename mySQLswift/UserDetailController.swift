@@ -108,9 +108,9 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     }
     
     fileprivate func setupNavigationButtons() {
-        let cameraBtn = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(selectCamera))
-        let videoBtn = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(selectVideo))
-        navigationItem.rightBarButtonItems = [cameraBtn, videoBtn]
+        let albumBtn = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(selectPhotosAlbum))
+        let cameraBtn = UIBarButtonItem(image: #imageLiteral(resourceName: "Camcorder").withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(selectCamera))
+        navigationItem.rightBarButtonItems = [albumBtn, cameraBtn]
     }
     
     func setupBorder() {
@@ -215,22 +215,22 @@ class UserDetailController: UIViewController, UINavigationControllerDelegate, UI
     
     // MARK: - Button
     
-    func selectVideo() {
+    func selectCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            imagePicker = UIImagePickerController()
-            imagePicker.sourceType = .camera
-            imagePicker.mediaTypes = [kUTTypeImage as String]
+            let imagePicker = UIImagePickerController()
             imagePicker.allowsEditing = true
+            imagePicker.sourceType = .camera
+            imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera)!
             imagePicker.delegate = self
             imagePicker.showsCameraControls = true
             self.present(imagePicker, animated: true)
-        } else {
-            print("Camera is not available")
+        } else{
+            self.simpleAlert(title: "Alert!", message: "Camera not available")
         }
     }
     
     
-    func selectCamera() {
+    func selectPhotosAlbum() {
         if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
             imagePicker = UIImagePickerController()
             imagePicker.sourceType = .savedPhotosAlbum
