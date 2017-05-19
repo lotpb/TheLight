@@ -140,7 +140,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -176,7 +176,7 @@ class Lead: UIViewController, UISplitViewControllerDelegate {
 
     // MARK: - Parse
 
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Leads")
         query.limit = 1000

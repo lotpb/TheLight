@@ -69,7 +69,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         setupNavigationButtons()
-        parseData()
+        loadData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -111,7 +111,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -263,7 +263,7 @@ class SalesmanController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Salesman")
         //query.limit = 1000

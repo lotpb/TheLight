@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import Firebase
 
 struct BlogModel {
     
-    var id: String?
+    var blogId: String?
     //let uid: String
-    //let user: User
+    //let user: UserModel
     let imageUrl: String
     let replyId: String
     let rating: String
@@ -22,10 +23,16 @@ struct BlogModel {
     let commentCount: NSNumber
     let creationDate: Date
     
+    /*
+    func blogPartnerId() -> String? {
+        return blogId == "" //FIRAuth.auth()?.currentUser?.uid
+    } */
+    
     init(dictionary: [String: Any]) {
         
         //self.uid = uid
         //self.user = user
+        self.blogId = dictionary["blogId"] as? String ?? ""
         self.imageUrl = dictionary["imageUrl"] as? String ?? ""
         self.replyId = dictionary["replyId"] as? String ?? ""
         self.rating = dictionary["rating"] as? String ?? ""

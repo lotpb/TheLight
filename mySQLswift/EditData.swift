@@ -116,7 +116,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
         
         if (status == "Edit") {
-            parseLookup()
+            loadData()
         }
         
         setupForm()
@@ -851,7 +851,7 @@ class EditData: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     // MARK: - Parse
     
-    func parseLookup() {
+    func loadData() {
         
         if (self.formController == "Leads") {
             

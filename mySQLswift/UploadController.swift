@@ -342,7 +342,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
             
             if (self.formStat == "Update") {
                 
-                if (defaults.bool(forKey: "parsedataKey"))  {
+                if (defaults.bool(forKey: "parsedataKey")) {
                     let query = PFQuery(className:"Newsios")
                     query.whereKey("objectId", equalTo:self.objectId!)
                     query.getFirstObjectInBackground {(updateNews: PFObject?, error: Error?) in
@@ -381,7 +381,7 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
                 
             } else { //save
                 
-                if (defaults.bool(forKey: "parsedataKey"))  {
+                if (defaults.bool(forKey: "parsedataKey")) {
                     file!.saveInBackground { (success: Bool, error: Error?) in
                         if success {
                             let saveNews:PFObject = PFObject(className:"Newsios")

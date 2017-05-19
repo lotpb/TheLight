@@ -17,7 +17,7 @@ import AVFoundation
 import Parse
 
 class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
-
+    
     //MARK: Properties
     
     @IBOutlet private weak var playerView: UIView!
@@ -46,7 +46,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     var selectedImage : UIImage?
     var selectedChannelPic : UIImage?
     var defaults = UserDefaults.standard
-
+    
     
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -111,7 +111,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         self.customization()
         self.setupConstraints()
         fetchPlayVCVideos()
- 
+        
         if videoURL == nil {
             videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
         }
@@ -156,7 +156,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                 self.playerView.layer.addSublayer(self.playerLayer!)
                 if self.state != .hidden {
                     self.player.play()
-
+                    
                 }
                 //self.loopVideo(videoPlayer: self.videoPlayer)
                 self.playDidEnd(videoPlayer: self.player)
@@ -171,7 +171,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         super.viewDidLayoutSubviews()
         self.playerLayer?.frame = containView.bounds
     }
-
+    
     
     // MARK: - Setup View
     
@@ -304,7 +304,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             })
         }
     }
-
+    
     private func setupTimeRanges() {
         
         self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
@@ -356,7 +356,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             Bool in
             //self.panelVisible = true
         })
-     }
+    }
     
     
     func hideControlObjects() {
@@ -367,7 +367,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             self.videoSlider.alpha = 0
             self.videoLengthLabel.alpha = 0
             self.gradientLayer.isHidden = true
-
+            
         }, completion: {
             Bool in
             //self.panelVisible = false
@@ -377,7 +377,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     // return to start Video
     func playDidEnd(videoPlayer: AVPlayer) {
         NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { notification in
-
+            
             self.player.seek(to: kCMTimeZero, completionHandler: {
                 Bool in
                 self.videoSlider.setValue(0.0, animated: true)
@@ -388,14 +388,14 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     }
     
     /*
-    // repeat Video
-    func loopVideo(videoPlayer: AVPlayer) {
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { notification in
-            
-            videoPlayer.seek(to: kCMTimeZero)
-            videoPlayer.play()
-        }
-    } */
+     // repeat Video
+     func loopVideo(videoPlayer: AVPlayer) {
+     NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { notification in
+     
+     videoPlayer.seek(to: kCMTimeZero)
+     videoPlayer.play()
+     }
+     } */
     
     
     // MARK: - Parse Subscribed
@@ -474,7 +474,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     func shareButton(_ sender: UIButton) {
         
         let image: UIImage = (self.selectedImage ?? nil)!
-
+        
         let activityViewController = UIActivityViewController (activityItems: [(image), self.titleLookup!], applicationActivities: nil)
         
         if let popover = activityViewController.popoverPresentationController {
@@ -484,7 +484,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         }
         self.present(activityViewController, animated: true)
     }
-
+    
     
     @IBAction func minimize(_ sender: UIButton) {
         self.state = .minimized
@@ -553,11 +553,11 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         /*
-        if let count = _feedItems.count {
-            return count + 1
-        } else {
-            return _feedItems.count
-        } */
+         if let count = _feedItems.count {
+         return count + 1
+         } else {
+         return _feedItems.count
+         } */
         
         return _feedItems.count + 1
     }
@@ -588,7 +588,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             
             if (defaults.bool(forKey: "parsedataKey"))  {
                 let query:PFQuery = PFUser.query()!
-                query.whereKey("username",  equalTo: self.imageLookup ?? (PFUser.current()?.username)!)
+                query.whereKey("username",  equalTo: self.imageLookup ?? PFUser.current()?.username as Any)
                 query.cachePolicy = .cacheThenNetwork
                 query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
                     if error == nil {
@@ -611,7 +611,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             cell.channelPic.image = self.selectedChannelPic
             
             if (defaults.bool(forKey: "parsedataKey"))  {
-                cell.channelTitle.text = self.imageLookup ?? (PFUser.current()?.username)!
+                cell.channelTitle.text = self.imageLookup ?? PFUser.current()?.username
             } else {
                 //firebase
             }
@@ -636,7 +636,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
             
             let NewText = (self._feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "newsDetail") as? String
             cell.name.text =  String(format: "%@%@", "\(NewText!)", " \(newsView!) views")
-
+            
             imageObject = _feedItems.object(at: ((indexPath as NSIndexPath).row) - 1) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile.getDataInBackground { imageData, error in
@@ -663,6 +663,8 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if (defaults.bool(forKey: "parsedataKey"))  {
         // fix added - 1 to (indexPath).row - 1
         self.titleLookup = (self._feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "newsTitle") as? String
         
@@ -677,7 +679,7 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
         var Disliked:Int? = (_feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "Dislikes")as? Int
         if Disliked == nil { Disliked = 0 }
         self.dislikesLookup = "\(Disliked!)"
-
+        
         self.imageLookup = (self._feedItems[(indexPath).row - 1] as AnyObject).value(forKey: "username") as? String
         
         //update View Count
@@ -699,6 +701,10 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
                 self.playVideo(videoURL: self.imageFile.url!)
             }
         }
+        } else {
+            //firebase
+        }
+        
         scrollToFirstRow()
     }
     
@@ -731,21 +737,21 @@ class PlayVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGe
     
 }
 /*
-extension PlayVC: UrlLookupDelegate {
-    func urlController(passedData: String) {
-        self.videoURL = passedData
-    }
-    func titleController(passedData: String) {
-        self.titleLookup = passedData
-    }
-    func likesController(passedData: String) {
-        //self.likeLookuo = passedData as String
-    }
-    /*
-    func playVideo(videoURL: String) {
-        self.playVideo(videoURL)
-    } */
-} */
+ extension PlayVC: UrlLookupDelegate {
+ func urlController(passedData: String) {
+ self.videoURL = passedData
+ }
+ func titleController(passedData: String) {
+ self.titleLookup = passedData
+ }
+ func likesController(passedData: String) {
+ //self.likeLookuo = passedData as String
+ }
+ /*
+ func playVideo(videoURL: String) {
+ self.playVideo(videoURL)
+ } */
+ } */
 
 
 class headerCell: UITableViewCell {

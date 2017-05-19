@@ -106,7 +106,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // MARK: - refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -272,7 +272,7 @@ class Employee: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Employee")
         query.limit = 100

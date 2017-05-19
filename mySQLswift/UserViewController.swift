@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Firebase
 import MapKit
 import CoreLocation
 
@@ -18,13 +19,20 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var mainView: UIView!
     
+    var defaults = UserDefaults.standard
+    
     var formController: String?
     var isFormStat = false
     var selectedImage: UIImage?
-    var user: PFUser?
-    
+    let cellId = "Cell"
+
+    //parse
     var _feedItems = NSMutableArray()
     var filteredString = NSMutableArray()
+    var user: PFUser?
+    
+    //firebase
+    var userlist = [UserModel]()
 
     var objects = [AnyObject]()
     var pasteBoard = UIPasteboard.general
@@ -60,7 +68,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         setupNavigationButtons()
         setupTableView()
-        parseData()
+        loadData()
         self.navigationItem.titleView = self.titleButton
         self.mapView!.addSubview(refreshControl)
     }
@@ -115,6 +123,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         self.tableView!.backgroundColor = .clear
         self.tableView!.tableFooterView = UIView(frame: .zero)
         
+        self.collectionView.register(UserViewCell.self, forCellWithReuseIdentifier: cellId)
         self.collectionView!.dataSource = self
         self.collectionView!.delegate = self
         self.collectionView!.backgroundColor = .white
@@ -123,7 +132,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -192,38 +201,38 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return _feedItems.count 
+        if (defaults.bool(forKey: "parsedataKey")) {
+            return self._feedItems.count
+        } else {
+            return self.userlist.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
-
-        let title:UILabel = UILabel(frame: CGRect(x: 0, y: 100, width: cell.bounds.size.width, height: 20))
-        title.backgroundColor = .white
-        title.textColor = .black
-        title.textAlignment = .center
-        title.layer.masksToBounds = true
-        title.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
-        title.font = Font.celltitle14m
-        title.adjustsFontSizeToFitWidth = true
-        title.clipsToBounds = true
-        cell.addSubview(title)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UserViewCell
         
-        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        
-        cell.loadingSpinner!.isHidden = true
-        cell.loadingSpinner!.startAnimating()
-        
-        imageFile!.getDataInBackground { imageData, error in
+        if (defaults.bool(forKey: "parsedataKey")) {
+            cell.usertitleLabel.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
             
-            UIView.transition(with: cell.user2ImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                cell.user2ImageView?.image = UIImage(data: imageData!)
-            }, completion: nil)
+            let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+            let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             
-            cell.loadingSpinner!.stopAnimating()
-            cell.loadingSpinner!.isHidden = true
+            cell.loadingSpinner.isHidden = true
+            cell.loadingSpinner.startAnimating()
+            
+            imageFile!.getDataInBackground { imageData, error in
+                
+                UIView.transition(with: cell.customImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    cell.customImageView.image = UIImage(data: imageData!)
+                }, completion: nil)
+                
+                cell.loadingSpinner.stopAnimating()
+                cell.loadingSpinner.isHidden = true
+            }
+        } else {
+            //firebase
+            cell.user = userlist[indexPath.item]
         }
         
         return cell
@@ -233,6 +242,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     
     func refreshMap() {
         
+        if (defaults.bool(forKey: "parsedataKey")) {
         let geoPoint = PFGeoPoint(latitude: self.mapView!.centerCoordinate.latitude, longitude:self.mapView!.centerCoordinate.longitude)
         
         let query = PFUser.query()
@@ -247,26 +257,52 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
                 self.mapView!.addAnnotation(annotation)
             }
         }
+        } else {
+            //firebase
+        }
     }
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
-        let query = PFUser.query()
-        query!.order(byDescending: "createdAt")
-        query!.cachePolicy = .cacheThenNetwork
-        query!.findObjectsInBackground { objects, error in
-            if error == nil {
-                let temp: NSArray = objects! as NSArray
-                self._feedItems = temp.mutableCopy() as! NSMutableArray
-                self.collectionView!.reloadData()
-                self.tableView.reloadData()
-            } else {
-                print("Error")
+        if (defaults.bool(forKey: "parsedataKey")) {
+            
+            let query = PFUser.query()
+            query!.order(byDescending: "createdAt")
+            query!.cachePolicy = .cacheThenNetwork
+            query!.findObjectsInBackground { objects, error in
+                if error == nil {
+                    let temp: NSArray = objects! as NSArray
+                    self._feedItems = temp.mutableCopy() as! NSMutableArray
+                    self.collectionView!.reloadData()
+                    self.tableView.reloadData()
+                } else {
+                    print("Crap Error")
+                }
             }
+        } else {
+            
+            //firebase
+            /*
+            let ref = FIRDatabase.database().reference().child("users")
+            ref.observe(.childAdded , with:{ (snapshot) in
+                
+                guard let dictionary = snapshot.value as? [String: Any] else {return}
+                let post = UserModel(uid: <#String#>, dictionary: dictionary)
+                self.userlist.append(post)
+                print(post)
+                
+                self.userlist.sort(by: { (u1, u2) -> Bool in
+                    return u1.username.compare(u2.username) == .orderedAscending
+                })
+                DispatchQueue.main.async(execute: {
+                    self.collectionView?.reloadData()
+                })
+            }) { (err) in
+                print("Failed to fetch users for search:", err)
+            } */
         }
-        
         //self.timer?.invalidate()
         //self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
@@ -293,12 +329,17 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
         
         self.formController = "CollectionView"
         isFormStat = false
-        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
         
-        imageFile!.getDataInBackground { imageData, error in
-            self.selectedImage = UIImage(data: imageData!)
-            self.performSegue(withIdentifier: "userdetailSegue", sender: self.collectionView)
+        if (defaults.bool(forKey: "parsedataKey")) {
+            let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+            let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            
+            imageFile!.getDataInBackground { imageData, error in
+                self.selectedImage = UIImage(data: imageData!)
+                self.performSegue(withIdentifier: "userdetailSegue", sender: self.collectionView)
+            }
+        } else {
+            //firebase
         }
     }
     
@@ -312,17 +353,22 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
                     VC!.status = "New"
                 } else {
                     VC!.status = "Edit"
-                    let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
-                    let updated:Date = ((self._feedItems[indexPath] as AnyObject).value(forKey: "createdAt") as? Date)!
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "MMM dd, yyyy"
-                    let createString = dateFormatter.string(from: updated)
                     
-                    VC!.objectId = (self._feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
-                    VC!.username = (self._feedItems[indexPath] as AnyObject).value(forKey: "username") as? String
-                    VC!.create = createString
-                    VC!.email = (self._feedItems[indexPath] as AnyObject).value(forKey: "email") as? String
-                    VC!.phone = (self._feedItems[indexPath] as AnyObject).value(forKey: "phone") as? String
+                    if (defaults.bool(forKey: "parsedataKey")) {
+                        let indexPath = (self.tableView!.indexPathForSelectedRow! as NSIndexPath).row
+                        let updated:Date = ((self._feedItems[indexPath] as AnyObject).value(forKey: "createdAt") as? Date)!
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "MMM dd, yyyy"
+                        let createString = dateFormatter.string(from: updated)
+                        
+                        VC!.objectId = (self._feedItems[indexPath] as AnyObject).value(forKey: "objectId") as? String
+                        VC!.username = (self._feedItems[indexPath] as AnyObject).value(forKey: "username") as? String
+                        VC!.create = createString
+                        VC!.email = (self._feedItems[indexPath] as AnyObject).value(forKey: "email") as? String
+                        VC!.phone = (self._feedItems[indexPath] as AnyObject).value(forKey: "phone") as? String
+                    } else {
+                        //firebase
+                    }
                     VC!.userimage = self.selectedImage
                 }
                 
@@ -333,17 +379,22 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
                     VC!.status = "Edit"
                     let indexPaths = self.collectionView!.indexPathsForSelectedItems!
                     let indexPath = indexPaths[0] as IndexPath
-                    let updated:Date = ((self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "createdAt") as? Date)!
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "MMM dd, yyyy"
-                    let createString = dateFormatter.string(from: updated)
-
-                    VC!.objectId = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "objectId") as? String
-                    VC!.username = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "username") as? String
-                    VC!.create = createString
-                    VC!.email = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "email") as? String
-                    VC!.phone = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "phone") as? String
-                    VC!.userimage = self.selectedImage
+                    
+                    if (defaults.bool(forKey: "parsedataKey")) {
+                        let updated:Date = ((self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "createdAt") as? Date)!
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "MMM dd, yyyy"
+                        let createString = dateFormatter.string(from: updated)
+                        
+                        VC!.objectId = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "objectId") as? String
+                        VC!.username = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "username") as? String
+                        VC!.create = createString
+                        VC!.email = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "email") as? String
+                        VC!.phone = (self._feedItems[(indexPath.row)] as AnyObject).value(forKey: "phone") as? String
+                        VC!.userimage = self.selectedImage
+                    } else {
+                        //firebase
+                    }
                 }
             }
         }
@@ -356,7 +407,12 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return _feedItems.count
+        
+        if (defaults.bool(forKey: "parsedataKey")) {
+            return self._feedItems.count
+        } else {
+            return self.userlist.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -374,21 +430,27 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
             cell.usersubtitleLabel!.font = Font.celltitle12r
         }
         
-        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile!.getDataInBackground { imageData, error in
+        if (defaults.bool(forKey: "parsedataKey")) {
             
-            UIView.transition(with: cell.userImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                cell.userImageView.image = UIImage(data: imageData!)
-            }, completion: nil)
+            let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+            let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile!.getDataInBackground { imageData, error in
+                
+                UIView.transition(with: cell.userImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    cell.userImageView.image = UIImage(data: imageData!)
+                }, completion: nil)
+            }
+            
+            let dateUpdated = (_feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
+            let dateFormat = DateFormatter()
+            dateFormat.dateFormat = "EEE, MMM d, h:mm a"
+            
+            cell.usertitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
+            cell.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
+            
+        } else {
+            //firebase
         }
-        
-        let dateUpdated = (_feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as! Date
-        let dateFormat = DateFormatter()
-        dateFormat.dateFormat = "EEE, MMM d, h:mm a"
-        
-        cell.usertitleLabel!.text = (_feedItems[indexPath.row] as AnyObject).value(forKey: "username") as? String
-        cell.usersubtitleLabel!.text = String(format: "%@", dateFormat.string(from: dateUpdated)) as String
         
         return cell
     }
@@ -399,11 +461,15 @@ class UserViewController: UIViewController, UICollectionViewDelegate,  UICollect
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.formController = "TableView"
         isFormStat = false
-        let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-        let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile!.getDataInBackground { imageData, error in
-            self.selectedImage = UIImage(data: imageData!)
-            self.performSegue(withIdentifier: "userdetailSegue", sender: self.tableView)
+        if (defaults.bool(forKey: "parsedataKey")) {
+            let imageObject = _feedItems.object(at: indexPath.row) as! PFObject
+            let imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile!.getDataInBackground { imageData, error in
+                self.selectedImage = UIImage(data: imageData!)
+                self.performSegue(withIdentifier: "userdetailSegue", sender: self.tableView)
+            }
+        } else {
+            //firebase
         }
     }
  }

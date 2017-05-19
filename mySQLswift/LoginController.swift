@@ -12,7 +12,7 @@ import MapKit
 import LocalAuthentication
 import FBSDKLoginKit
 import GoogleSignIn
-import SwiftKeychainWrapper
+//import SwiftKeychainWrapper
 import Firebase
 import TwitterKit
 
@@ -56,52 +56,6 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     //Twitter
     var twitterButton : TWTRLogInButton = TWTRLogInButton()
     
-    //var userimage : UIImage?
-    /*
-    let userImageView: CustomImageView = {
-        let imageView = CustomImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.masksToBounds = true
-        return imageView
-    }() */
-    
-    let plusPhotoButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handlePhotoButton), for: .touchUpInside)
-        
-        return button
-    }()
-    
-    func handlePhotoButton () {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
-        
-        present(imagePickerController, animated:true, completion: nil)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        
-        if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
-        }
-            
-        else if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-            
-        }
-        
-        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
-        plusPhotoButton.layer.masksToBounds = true
-        plusPhotoButton.layer.borderColor = UIColor.black.cgColor
-        plusPhotoButton.layer.borderWidth = 3
-        
-        dismiss(animated: true, completion: nil)
-    }
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,6 +83,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         //Twitter
         setupTwitterButton()
         
+        setupDefaults()
         setupView()
         setupFont()
         setupConstraints()
@@ -165,8 +120,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             self.plusPhotoButton.isHidden = false
         } else {
             //Keychain
-            self.usernameField!.text = KeychainWrapper.standard.string(forKey: "usernameKey")
-            self.passwordField!.text = KeychainWrapper.standard.string(forKey: "passwordKey")
+            //self.usernameField!.text = KeychainWrapper.standard.string(forKey: "usernameKey")
+            //self.passwordField!.text = KeychainWrapper.standard.string(forKey: "passwordKey")
             self.reEnterPasswordField!.isHidden = true
             self.registerBtn!.isHidden = false
             self.forgotPassword!.isHidden = false
@@ -198,6 +153,17 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             mapView?.heightAnchor.constraint(equalToConstant: 380).isActive = true
         } else {
             mapView?.heightAnchor.constraint(equalToConstant: 175).isActive = true
+        }
+    }
+    
+    func setupDefaults() {
+        
+        if (defaults.bool(forKey: "parsedataKey")) {
+            self.usernameField!.text = "Peter Balsamo"
+            
+        } else {
+            //firebase
+            self.usernameField!.text = "eunited@optonline.net"
         }
     }
     
@@ -240,18 +206,18 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     // MARK: - LoginUser
     
     @IBAction func LoginUser(_ sender:AnyObject) {
-        // MARK: - Parse
-        if (defaults.bool(forKey: "parsedataKey"))  {
+ 
+        if (defaults.bool(forKey: "parsedataKey")) {
             
             PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
                 if user != nil {
-                    
+                    self.saveDefaults()
                     self.refreshLocation()
                     
                 } else {
                     
                     self.simpleAlert(title: "Oooops", message: "Your username and password does not match")
-                    
+                
                     PFUser.current()?.fetchInBackground(block: { (object, error)  in
                         
                         let isEmailVerified = (PFUser.current()?.object(forKey: "emailVerified") as AnyObject).boolValue
@@ -277,7 +243,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
                 }
                 
                 print("Succesfully logged back in with user:", user?.uid ?? "")
-                
+                self.saveDefaults()
                 self.refreshLocation()
             })
         }
@@ -350,7 +316,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     
     func registerNewUser() {
         // MARK: - Parse
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             
             if (self.self.plusPhotoButton.imageView?.image == nil) {
                 self.self.plusPhotoButton.imageView?.image = UIImage(named:"profile-rabbit-toy.png")
@@ -366,7 +332,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             user.setObject(file!, forKey:"imageFile")
             user.signUpInBackground { succeeded, error in
                 if (succeeded) {
-                    
+                    self.saveDefaults()
                     self.refreshLocation()
                     self.usernameField!.text = nil
                     self.passwordField!.text = nil
@@ -422,18 +388,13 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
                             }
                             else {
                                 print("Succefully saved user info to db")
+                                self.saveDefaults()
                                 self.refreshLocation()
                                 self.usernameField!.text = nil
                                 self.passwordField!.text = nil
                                 self.emailField!.text = nil
                                 self.phoneField!.text = nil
                                 self.simpleAlert(title: "Success", message: "You have registered a new user")
-                                /*
-                                 guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else {return}
-                                 
-                                 mainTabBarController.setupViewController()
-                                 
-                                 self.dismiss(animated: true, completion: nil) */
                             }
                         })
                     })
@@ -584,7 +545,9 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
                     self.passwordField!.text = "\(useId)" //"3911"
                     
                     self.registerNewUser()
+                    self.saveDefaults()
                     self.redirectToHome()
+                    
                     
                 } else {
                     print("Failed to start graph request:", error ?? "")
@@ -636,7 +599,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         let email = self.emailField!.text
         let finalEmail = email!.removeWhiteSpace()
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             PFUser.requestPasswordResetForEmail(inBackground: finalEmail) { (success, error)  in
                 if success {
                     self.simpleAlert(title: "Alert", message: "Link to reset the password has been send to specified email")
@@ -695,12 +658,13 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         self.emailField!.text = "eunited@optonline.net"
         self.phoneField!.text = "(516)241-4786"
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             self.usernameField!.text = "Peter Balsamo"
             self.passwordField!.text = "3911"
             
             PFUser.logInWithUsername(inBackground: usernameField!.text!, password: passwordField!.text!) { user, error in
                 if user != nil {
+                    self.saveDefaults()
                     self.refreshLocation()
                 }
             }
@@ -709,6 +673,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             self.passwordField!.text = "united"
             FIRAuth.auth()?.signIn(withEmail: usernameField!.text!, password: passwordField!.text!, completion: { (user, err) in
                 if user != nil {
+                    self.saveDefaults()
                     self.refreshLocation()
                 }
             })
@@ -731,6 +696,11 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         } else {
             //firebase
         }
+    }
+    
+    // MARK: - saveDefaults
+    
+    func saveDefaults() {
         
         self.defaults.set(self.usernameField!.text, forKey: "usernameKey")
         self.defaults.set(self.passwordField!.text, forKey: "passwordKey")
@@ -739,9 +709,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         if (self.emailField!.text != nil) {
             self.defaults.set(self.emailField!.text, forKey: "emailKey")
         }
-        self.redirectToHome()
         self.defaults.set(true, forKey: "registerKey")
-        
+        self.redirectToHome()
     }
     
     // MARK: - RedirectToHome
@@ -774,6 +743,44 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             self.view.frame = CGRect(x: 0, y: -140, width: self.view.frame.width, height: self.view.frame.height)
             
             }, completion: nil)
+    }
+    
+    // MARK: - AvatarImage
+    
+    let plusPhotoButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(handlePhotoButton), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    func handlePhotoButton () {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        
+        present(imagePickerController, animated:true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        
+        if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+            
+        else if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
+            
+        }
+        
+        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
+        plusPhotoButton.layer.masksToBounds = true
+        plusPhotoButton.layer.borderColor = UIColor.black.cgColor
+        plusPhotoButton.layer.borderWidth = 3
+        
+        dismiss(animated: true, completion: nil)
     }
     
 }

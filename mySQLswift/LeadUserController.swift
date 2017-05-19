@@ -60,7 +60,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
         emptyLabel!.textColor = .lightGray
         emptyLabel!.text = "You have no customer data :)"
         
-        parseData()
+        loadData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -395,7 +395,7 @@ class LeadUserController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         if (self.formController == "Leads") {
             let query = PFQuery(className:"Customer")

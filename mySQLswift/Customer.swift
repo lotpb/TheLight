@@ -104,7 +104,7 @@ class Customer: UIViewController {
     // MARK: - refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -117,7 +117,7 @@ class Customer: UIViewController {
 
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Customer")
         query.limit = 1000

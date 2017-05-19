@@ -52,7 +52,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         setupNavigationButtons()
-        parseData()
+        loadData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -100,7 +100,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -246,7 +246,7 @@ class ProductController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Product")
         //query.limit = 1000

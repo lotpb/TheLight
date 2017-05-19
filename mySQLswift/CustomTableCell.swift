@@ -7,19 +7,32 @@
 //
 
 import UIKit
+import Firebase
 
 class CustomTableCell: UITableViewCell {
     //firebase
     var post: BlogModel? {
         didSet {
+            
+            setupNameAndProfileImage()
+            
+            /*
+            self.checkUserNameAlreadyExist(newUserName: "Peter Balsamo") { isExist in
+                if isExist {
+                    print("Username exist")
+                }
+                else {
+                    print("create new user")
+                }
+            } */
 
-            guard let postImageUrl = post?.imageUrl else {return}
-            customImageView.loadImage(urlString: postImageUrl)
-            //customImageView.image = #imageLiteral(resourceName: "profile-rabbit-toy")
+            //guard let postImageUrl = post?.profileImageUrl else {return}
+            //customImageView.loadImage(urlString: postImageUrl)
+            customImageView.image = #imageLiteral(resourceName: "profile-rabbit-toy")
             
             //usernameLabel.text = post?.user.username
             //print(post?.user.username)
-            //guard let profileImageUrl = post?.user.profileImageUrl else {return}
+            //guard let profileImageUrl = profileImageUrl else {return}
             //customImageView.loadImage(urlString: profileImageUrl)
             
             blogtitleLabel.text = post?.postBy
@@ -38,18 +51,61 @@ class CustomTableCell: UITableViewCell {
         }
     }
     
+    func checkUserNameAlreadyExist(newUserName: String, completion: @escaping(Bool) -> Void) {
+        
+        let ref = FIRDatabase.database().reference()
+        ref.child("users").queryOrdered(byChild: "profileImageUrl").queryEqual(toValue: newUserName)
+            .observeSingleEvent(of: .value, with: {(snapshot: FIRDataSnapshot) in
+                
+                if snapshot.exists() {
+                    completion(true)
+                }
+                else {
+                    completion(false)
+                }
+            })
+    }
+    
+    private func setupNameAndProfileImage() {
+        
+        let uid = FIRAuth.auth()?.currentUser?.uid
+        let ref = FIRDatabase.database().reference()
+        ref.child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
+            // Get user value
+            let value = snapshot.value as? NSDictionary
+            let username = value?["username"] as? String ?? ""
+            let user = UserModel(uid: username, dictionary: value as! [String : Any])
+            print("Crap", user)
+            
+            // ...
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+
+        
+        /*
+        if let id = user?.chatPartnerId() {
+            let ref = FIRDatabase.database().reference().child("users").child(id)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: Any] {
+                    //self.textLabel?.text = dictionary["username"] as? String
+                    if let profileImageUrl = dictionary["profileImageUrl"] as? String {
+                        self.profileImageView.loadImage(urlString: profileImageUrl)
+                    }
+                }
+            }, withCancel: nil)
+        } */
+    }
+    
     let customImageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.frame = CGRect(x: 15, y: 11, width: 50, height: 50)
         imageView.isUserInteractionEnabled = true
-        //imageView.image = UIImage(named: "")
         imageView.contentMode = .scaleAspectFill
-        //imageView.clipsToBounds = true
         imageView.layer.cornerRadius = (imageView.frame.size.width) / 2
         imageView.layer.borderColor = UIColor.lightGray.cgColor
         imageView.layer.borderWidth = 0.5
         imageView.layer.masksToBounds = true
-        //imageView.tag = indexPath.row
         return imageView
     }()
 

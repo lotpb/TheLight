@@ -336,7 +336,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 myLabel15.numberOfLines = 1
                 myLabel15.textAlignment = .center
                 myLabel15.textColor = .green
-                if (defaults.bool(forKey: "parsedataKey"))  {
+                if (defaults.bool(forKey: "parsedataKey")) {
                     myLabel15.text = "Back4app"
                 } else {
                     myLabel15.text = "Firebase"
@@ -525,12 +525,11 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     // MARK: - Logout
     
     func handleSignOut() {
+        PFUser.logOut()
+        FBSDKLoginManager().logOut()
+        GIDSignIn.sharedInstance().signOut()
         do {
             try FIRAuth.auth()?.signOut()
-            PFUser.logOut()
-            FBSDKLoginManager().logOut()
-            GIDSignIn.sharedInstance().signOut()
-            
         } catch let signOutErr {
             print(signOutErr)
         }
@@ -553,7 +552,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
         //KeychainWrapper.accessGroup = "group.TheLightGroup"
         // MARK: - Parse
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             
             PFUser.logInWithUsername(inBackground: userId, password:userpassword) { (user, error) in
                 if error != nil {
@@ -568,8 +567,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
             FIRDatabase.database().reference().child("following").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
                 guard let userIdsDictionary = snapshot.value as? [String: Any] else {return}
                 userIdsDictionary.forEach({ (key, value) in
-                    FIRDatabase.fetchUserWithUID(uid: key
-                        , completion: { (user) in
+                    FIRDatabase.fetchUserWithUID(uid: key, completion: { (user) in
                             //self.fetchPostsWithUser(user: user)
                     })
                 })
@@ -577,6 +575,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 print("Failed to fetch following user ids ", err)
             }
         }
+    
     }
 
     
@@ -688,7 +687,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         }
 
     }
-
 }
 //-----------------------end------------------------------
 

@@ -13,7 +13,7 @@ class TrendingCell: FeedCell {
     
     override func fetchVideos() {
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             let query = PFQuery(className:"Newsios")
             query.limit = 1000
             query.cachePolicy = .cacheThenNetwork

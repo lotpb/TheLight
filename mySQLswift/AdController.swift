@@ -53,7 +53,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         //self.navigationItem.leftBarButtonItem = self.editButtonItem()
         setupNavigationButtons()
-        parseData()
+        loadData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -100,8 +100,8 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     // MARK: - Refresh
     
-    func refreshData(_ sender:AnyObject) {
-        parseData()
+    func refreshData(_ sender: AnyObject) {
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -247,7 +247,7 @@ class AdController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Advertising")
         //query.limit = 1000

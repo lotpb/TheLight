@@ -94,7 +94,7 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
         super.viewDidLoad()
         
         setupNavigationButtons()
-        fetchData() //load image
+        loadData() //load image
         configureTextView()
         setupForm()
         setupDatePicker()
@@ -419,8 +419,8 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
     
     // MARK: - Parse
     
-    func fetchData() {
-        if (defaults.bool(forKey: "parsedataKey"))  {
+    func loadData() {
+        if (defaults.bool(forKey: "parsedataKey")) {
             let query:PFQuery = PFUser.query()!
             query.whereKey("username",  equalTo: self.textcontentpostby!)
             query.cachePolicy = .cacheThenNetwork
@@ -540,20 +540,21 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                     
                 } else {
                     
+                    let ref = FIRDatabase.database().reference()
                     guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
+                    let key = ref.child("blog").childByAutoId().key
                     let values = ["subject": self.subject?.text ?? "",
                                   "replyId": self.replyId ?? "",
                                   "rating": self.rating  ?? "",
                                   "postBy": self.postby ?? "",
                                   "liked": self.liked ?? 0,
                                   "CommentCount": 0,
-                                  "user": self.postby ?? "",
+                                  "blogId": key,
                                   "creationDate": Date().timeIntervalSince1970,
                                   "uid": uid] as [String: Any]
                     
-                    //guard let postId = post?.id else {return}
-                    //FIRDatabase.database().reference().child("Blog").childByAutoId().setValue(values)
-                    FIRDatabase.database().reference().child("Blog").childByAutoId().updateChildValues(values) { (err, ref) in
+                    let childUpdates = ["/Blog/\(key)": values]
+                    ref.updateChildValues(childUpdates) { (err, ref) in
                         if let err = err {
                             self.simpleAlert(title: "Upload Failure", message: err as? String)
                             return

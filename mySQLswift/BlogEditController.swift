@@ -60,7 +60,7 @@ class BlogEditController: UIViewController {
         
         setupTableView()
         setupForm()
-        parseData()
+        loadData()
         self.tableView!.addSubview(self.refreshControl)
         self.listTableView!.register(BlogReplyTableCell.self, forCellReuseIdentifier: "ReplyCell")
     }
@@ -129,7 +129,7 @@ class BlogEditController: UIViewController {
     
     func refreshData(sender:AnyObject) {
         
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
 
@@ -147,7 +147,7 @@ class BlogEditController: UIViewController {
         let hitPoint = sender.convert(CGPoint.zero, to: self.listTableView)
         let indexPath = self.listTableView!.indexPathForRow(at: hitPoint)
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             let query = PFQuery(className:"Blog")
             query.whereKey("objectId", equalTo: ((_feedItems1.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String)!)
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
@@ -280,9 +280,9 @@ class BlogEditController: UIViewController {
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             let query1 = PFQuery(className:"Blog")
             query1.whereKey("ReplyId", equalTo:self.objectId!)
             query1.cachePolicy = .cacheThenNetwork
@@ -301,7 +301,7 @@ class BlogEditController: UIViewController {
     // MARK: Deincrement Comment
     func deincrementComment() {
         if (commentNum == nil || commentNum == 0) { return }
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             let query = PFQuery(className:"Blog")
             query.whereKey("objectId", equalTo: self.objectId!)
             query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
@@ -492,7 +492,7 @@ extension BlogEditController: UITableViewDataSource {
                 cell.msgDateLabel.font = Font.Blog.celldate
             }
             
-            if (defaults.bool(forKey: "parsedataKey"))  {
+            if (defaults.bool(forKey: "parsedataKey")) {
                 let query:PFQuery = PFUser.query()!
                 query.whereKey("username",  equalTo:self.postby!)
                 query.limit = 1
@@ -556,7 +556,7 @@ extension BlogEditController: UITableViewDataSource {
             cell.selectionStyle = .none
             cell.replydateLabel.textColor = .gray
             
-            if (defaults.bool(forKey: "parsedataKey"))  {
+            if (defaults.bool(forKey: "parsedataKey")) {
                 let query:PFQuery = PFUser.query()!
                 query.whereKey("username",  equalTo: (self._feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as! String)
                 query.limit = 1
@@ -587,7 +587,7 @@ extension BlogEditController: UITableViewDataSource {
                 cell.replydateLabel.font = Font.BlogEdit.replysubtitle
             }
             
-            if (defaults.bool(forKey: "parsedataKey"))  {
+            if (defaults.bool(forKey: "parsedataKey")) {
                 cell.replytitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "PostBy") as? String
                 cell.replysubtitleLabel.text = (_feedItems1[indexPath.row] as AnyObject).value(forKey: "Subject") as? String
                 

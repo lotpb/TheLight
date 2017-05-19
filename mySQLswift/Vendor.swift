@@ -102,7 +102,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // MARK: - refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -266,7 +266,7 @@ class Vendor: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Vendors")
         query.limit = 1000

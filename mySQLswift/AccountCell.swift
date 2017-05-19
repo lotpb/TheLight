@@ -39,7 +39,7 @@ class AccountCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSou
         let imageView = CustomImageView()
         let defaults = UserDefaults.standard
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             let query:PFQuery = PFUser.query()!
             query.whereKey("username", equalTo: defaults.object(forKey: "usernameKey") as! String!)
             query.limit = 1

@@ -68,7 +68,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView!.tableFooterView = UIView(frame: .zero)
         self.present(searchController, animated: true)
         
-        parseData()
+        loadData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -105,7 +105,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // MARK: - Refresh
     
     func refreshData(sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -197,7 +197,7 @@ class LookupData: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Zip")
         query.limit = 1000

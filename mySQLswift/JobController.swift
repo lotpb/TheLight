@@ -51,7 +51,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
         // MARK: - SplitView Fix
         self.extendedLayoutIncludesOpaqueBars = true //fix - remove bottom bar
         setupNavigationButtons()
-        parseData()
+        loadData()
         setupTableView()
         self.navigationItem.titleView = self.titleButton
         self.tableView!.addSubview(self.refreshControl)
@@ -99,7 +99,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
     // MARK: - Refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -244,7 +244,7 @@ class JobController: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         let query = PFQuery(className:"Job")
         //query.limit = 1000

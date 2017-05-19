@@ -174,7 +174,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
         setupForm()
         setupFonts()
         setupSwitch()
-        parseData()
+        loadData()
         followButton()
         self.navigationItem.titleView = self.titleButton
         self.mainView!.addSubview(self.refreshControl)
@@ -309,7 +309,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func refreshData() {
-        parseData()
+        loadData()
         self.listTableView!.reloadData()
         self.listTableView2!.reloadData()
         self.newsTableView!.reloadData()
@@ -520,7 +520,7 @@ class LeadDetail: UIViewController, MFMailComposeViewControllerDelegate {
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         if (formController == "Leads" || formController == "Customer") {
             

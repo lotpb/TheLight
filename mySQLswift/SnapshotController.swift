@@ -106,7 +106,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.leftItemsSupplementBackButton = true
         
-        parseData()
+        loadData()
         setupTableView()
         setupNavBarButtons()
         self.navigationItem.titleView = self.titleButton
@@ -153,7 +153,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - refresh
     
     func refreshData(_ sender:AnyObject) {
-        parseData()
+        loadData()
         self.refreshControl.endRefreshing()
     }
     
@@ -747,7 +747,7 @@ class SnapshotController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - Parse
     
-    func parseData() {
+    func loadData() {
         
         guard ProcessInfo.processInfo.isLowPowerModeEnabled == false else { return }
         

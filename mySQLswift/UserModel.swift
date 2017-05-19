@@ -7,19 +7,21 @@
 //
 
 import Foundation
+import Firebase
 
-struct User {
+struct UserModel {
     let uid: String
     let username: String
     let profileImageUrl: String
-    //let name: String
-    //let phone: String
+    let phone: String
     //let emailVerified: String
     //let currentLocation: String
+    
     
     init(uid: String, dictionary: [String: Any]) {
         self.uid = uid
         self.username = dictionary["username"] as? String ?? ""
+        self.phone = dictionary["phone"] as? String ?? ""
         self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
     }
 }

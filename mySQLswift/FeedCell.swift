@@ -136,7 +136,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         let hitPoint = sender.convert(CGPoint.zero, to: self.collectionView)
         let indexPath = self.collectionView.indexPathForItem(at: hitPoint)
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             let query = PFQuery(className:"Newsios")
             query.whereKey("objectId", equalTo:((_feedItems.object(at: ((indexPath as NSIndexPath?)?.row)!) as AnyObject).value(forKey: "objectId") as? String!)!)
             query.getFirstObjectInBackground { object, error in
@@ -176,7 +176,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             return self._feedItems.count
         } else {
             return self.newslist.count
@@ -206,7 +206,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         cell.subtitleLabel.textColor = Color.DGrayColor
         cell.uploadbylabel.textColor = Color.DGrayColor
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             imageObject = _feedItems.object(at: (indexPath).row) as! PFObject
             imageFile = imageObject.object(forKey: "imageFile") as? PFFile
             imageFile.getDataInBackground { data, error in
@@ -283,7 +283,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
         }
         
         if UI_USER_INTERFACE_IDIOM() == .pad {
-            if (defaults.bool(forKey: "parsedataKey"))  {
+            if (defaults.bool(forKey: "parsedataKey")) {
                 cell.storyLabel.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "storyText") as? String
             } else {
                 //firebase
@@ -315,7 +315,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if (defaults.bool(forKey: "parsedataKey"))  {
+        if (defaults.bool(forKey: "parsedataKey")) {
             imageObject = _feedItems.object(at: indexPath.row) as! PFObject
         } else {
             //firebase

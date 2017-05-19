@@ -73,7 +73,6 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
 //---------------------------------
-
     
     // News
     @IBOutlet weak var imageView: UIImageView?
