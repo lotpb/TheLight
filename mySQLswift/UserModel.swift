@@ -14,6 +14,7 @@ struct UserModel {
     let username: String
     let profileImageUrl: String
     let phone: String
+    //var facebookID: String
     //let emailVerified: String
     //let currentLocation: String
     
@@ -22,6 +23,7 @@ struct UserModel {
         self.uid = uid
         self.username = dictionary["username"] as? String ?? ""
         self.phone = dictionary["phone"] as? String ?? ""
+        //self.facebookID = facebookID
         self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
     }
 }

@@ -8,21 +8,13 @@
 
 import UIKit
 import Parse
-import MapKit
+import Firebase
 import LocalAuthentication
 import FBSDKLoginKit
 import GoogleSignIn
-//import SwiftKeychainWrapper
-import Firebase
 import TwitterKit
-
-// A delay function
-/*
-func delay(_ seconds: Double, completion: @escaping ()->Void) {
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(seconds * 1000.0))) {
-        completion()
-    }
-} */
+import MapKit
+//import SwiftKeychainWrapper
 
 
 class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, FBSDKLoginButtonDelegate,  GIDSignInUIDelegate, GIDSignInDelegate {

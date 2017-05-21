@@ -12,8 +12,6 @@ import Firebase
 extension FIRDatabase {
     
     static func fetchUserWithUID(uid: String, completion: @escaping (UserModel) -> ()) {
-        
-        /*
          FIRDatabase.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
          guard let userDictionary = snapshot.value as? [String: Any]
          else{return}
@@ -24,6 +22,6 @@ extension FIRDatabase {
          
          }) { (err) in
          print("Failed to feth user for posts", err)
-         } */
+         } 
     }
 }

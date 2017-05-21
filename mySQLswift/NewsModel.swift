@@ -9,7 +9,7 @@
 import Foundation
 
 struct NewsModel {
-    var id: String?
+    var newsId: String?
     //let user: User
     let imageUrl: String
     let newsTitle: String
@@ -18,15 +18,16 @@ struct NewsModel {
     let liked: NSNumber
     let creationDate: Date
     
+    
     init(dictionary: [String: Any]) {
         
         //self.user = user
+        self.newsId = dictionary["newsId"] as? String ?? ""
         self.imageUrl = dictionary["imageUrl"] as? String ?? ""
         self.newsTitle = dictionary["newsTitle"] as? String ?? ""
         self.newsDetail = dictionary["newsDetail"] as? String ?? ""
         self.storyLabel = dictionary["storyText"] as? String ?? ""
         self.liked = dictionary["liked"] as? NSNumber ?? 0
-        //self.commentCount = dictionary["commentCount"] as? NSNumber ?? 0
         
         let secondsFrom1970 = dictionary["creationDate"] as? Double ?? 0
         self.creationDate = Date(timeIntervalSince1970: secondsFrom1970)

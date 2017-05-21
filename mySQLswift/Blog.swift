@@ -55,29 +55,6 @@ class Blog: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //let uid = FIRAuth.auth()?.currentUser?.uid
-        //print(uid!)
-        
-        /*
-        usersRef.observe(.childAdded, with: { snap in
-            guard let email = snap.value as? String else { return }
-            self.currentUsers.append(email)
-            let row = self.currentUsers.count - 1
-            let indexPath = IndexPath(row: row, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: .top)
-        })
-        
-        usersRef.observe(.childRemoved, with: { snap in
-            guard let emailToFind = snap.value as? String else { return }
-            for (index, email) in self.currentUsers.enumerated() {
-                if email == emailToFind {
-                    let indexPath = IndexPath(row: index, section: 0)
-                    self.currentUsers.remove(at: index)
-                    self.tableView.deleteRows(at: [indexPath], with: .fade)
-                }
-            }
-        }) */
 
         setupTableView()
         self.tableView!.addSubview(self.refreshControl)
@@ -240,6 +217,8 @@ class Blog: UIViewController {
             userIndex = (_feedItems.object(at: (indexPath?.row)!) as AnyObject).value(forKey: "objectId") as? String
         } else {
             //firebase
+            posttoIndex = bloglist[(indexPath?.row)!].postBy
+            userIndex = bloglist[(indexPath?.row)!].blogId
         }
         self.performSegue(withIdentifier: "blognewSegue", sender: self)
     }
@@ -372,8 +351,6 @@ class Blog: UIViewController {
                 })
             } else {
                 //firebase
-                print("SHITTTTTTT", name)
-                //let uid = FIRAuth.auth()?.currentUser?.uid
                 FIRDatabase.database().reference().child("Blog").child(name).removeValue(completionBlock: { (error, ref) in
                     if error != nil {
                         print("Failed to delete message:", error!)
@@ -504,6 +481,16 @@ class Blog: UIViewController {
                 VC!.replyId = (_feedItems[myIndexPath] as AnyObject).value(forKey: "ReplyId") as? String
             } else {
                 //firebase
+                VC!.objectId = bloglist[myIndexPath].blogId
+                VC!.msgNo = bloglist[myIndexPath].blogId
+                VC!.postby = bloglist[myIndexPath].postBy
+                VC!.subject = bloglist[myIndexPath].subject
+                VC!.msgDate = bloglist[myIndexPath].creationDate.timeAgoDisplay()
+                VC!.rating = bloglist[myIndexPath].rating
+                VC!.liked = bloglist[myIndexPath].liked as? Int
+                VC!.commentNum = bloglist[myIndexPath].commentCount as? Int
+                VC!.replyId = bloglist[myIndexPath].blogId
+
             }
         }
         if segue.identifier == "blognewSegue" {
@@ -760,11 +747,10 @@ extension Blog: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
-        let commentNum : Int?
-        let deleteStr : String?
-        
+
         if editingStyle == .delete {
+            let commentNum : Int?
+            let deleteStr : String?
             
             if (defaults.bool(forKey: "parsedataKey")) {
                 commentNum = (self._feedItems.object(at: indexPath.row) as AnyObject).value(forKey: "CommentCount") as? Int
@@ -785,11 +771,12 @@ extension Blog: UITableViewDelegate {
                 
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 self.deleteBlog(name: deleteStr!)
+                self.refreshData(self)
                 
             } else {
                 self.simpleAlert(title: "Oops!", message: "Record can't be deleted.")
             }
-            self.refreshData(self)
+            
             
         } else if editingStyle == .insert {
             

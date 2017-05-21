@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Firebase
 
 
 class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewControllerDelegate {
@@ -17,6 +18,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewCo
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var newsTextview: UITextView!
+    
+    var defaults = UserDefaults.standard
     
     var image: UIImage!
     var objectId: String?
@@ -56,16 +59,8 @@ class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewCo
         
         self.extendedLayoutIncludesOpaqueBars = true
         setupNavigationButtons()
-        
-        let query = PFQuery(className:"Newsios")
-        query.whereKey("objectId", equalTo: self.objectId!)
-        query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
-            if error == nil {
-                object!.incrementKey("newsView")
-                object!.saveInBackground()
-            }
-        }
 
+        setupViewCounter()
         setupConstraints()
         setupForm()
         setupImageView()
@@ -113,6 +108,41 @@ class NewsDetailController: UIViewController, UITextViewDelegate,  UISplitViewCo
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.newsImageview
+    }
+    
+    func setupViewCounter() {
+        
+        if (defaults.bool(forKey: "parsedataKey")) {
+            let query = PFQuery(className:"Newsios")
+            query.whereKey("objectId", equalTo: self.objectId!)
+            query.getFirstObjectInBackground {(object: PFObject?, error: Error?) in
+                if error == nil {
+                    object!.incrementKey("newsView")
+                    object!.saveInBackground()
+                }
+            }
+        } else {
+            //firebase
+            /*
+             let ref = FIRDatabase.database().reference()
+             /*
+             ref.child('newsView').once('value', function(voteCount) {
+             var updates = {};
+             updates['votes/'+auth.uid] = true;
+             updates.voteCount = voteCount.val() + 1;
+             ref.update(updates);
+             }) */
+             
+             
+             
+             ref.observeSingleEvent(of: .value, with: { snapshot in
+             let valString = snapshot.value
+             var value = valString.intValue
+             value = value + 1
+             ref.setValue("\(value)")
+             })
+             */
+        }
     }
     
     func setupImageView() {

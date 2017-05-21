@@ -500,7 +500,26 @@ class BlogNewController: UIViewController, UITextFieldDelegate, UITextViewDelega
                         }
                     }
                 } else {
+                    //firebase
+                    let ref = FIRDatabase.database().reference()
                     
+                    let userRef = ref.child("Blog").child(self.textcontentobjectId!)
+                    let values = ["subject": self.subject?.text ?? "",
+                                  "replyId": self.replyId ?? "",
+                                  "rating": self.rating  ?? "",
+                                  "postBy": self.postby ?? "",
+                                  "liked": self.liked ?? 0,
+                                  "blogId": self.objectId ?? ""] as [String: Any]
+
+                    userRef.updateChildValues(values) { (err, ref) in
+                        if let err = err {
+                            self.simpleAlert(title: "Upload Failure", message: err as? String)
+                            return
+                        }
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "blogId")
+                        self.show(vc!, sender: self)
+                        self.simpleAlert(title: "update Complete", message: "Successfully updated the data")
+                    }
                 }
                 
             } else if (self.formStatus == "New" || self.formStatus == "Reply") {

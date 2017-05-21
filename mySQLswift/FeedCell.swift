@@ -19,7 +19,8 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     var _feedItems = NSMutableArray()
     var imageObject :PFObject!
     var imageFile :PFFile!
-    var selectedImage : UIImage?
+    var newsImage: UIImage? //firebase
+    var selectedImage : UIImage? //parse
     var defaults = UserDefaults.standard
     
     let cellId = "cellId"
@@ -49,7 +50,6 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     override func setupViews() {
         super.setupViews()
-        
         
         backgroundColor = .brown
         
@@ -84,14 +84,13 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 }
             }
         } else {
-            //firebase
             
-            guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
-            let ref = FIRDatabase.database().reference().child("News").child(uid)
+            //firebase
+            //guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
+            let ref = FIRDatabase.database().reference().child("News")
             ref.observe(.childAdded , with:{ (snapshot) in
     
                 guard let dictionary = snapshot.value as? [String: Any] else {return}
-                
                 let newsTxt = NewsModel(dictionary: dictionary)
                 self.newslist.append(newsTxt)
                 print(newsTxt)
@@ -213,6 +212,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                 if error == nil {
                     UIView.transition(with: cell.customImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
                         self.selectedImage = UIImage(data: data!)
+                        //self.newsImage = UIImage(data: data!)
                         cell.customImageView.image = UIImage(data: data!) //self.selectedImage
                     }, completion: nil)
                 }
@@ -234,6 +234,7 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
                     }
                 }
             }
+            //cell.customImageView.image = self.newsImage
             
             cell.titleLabelnew.text = (self._feedItems[(indexPath).row] as AnyObject).value(forKey: "newsTitle") as? String
             cell.actionButton.addTarget(self, action: #selector(shareButton), for: .touchUpInside)
@@ -315,45 +316,52 @@ class FeedCell: CollectionViewCell, UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
+        
         if (defaults.bool(forKey: "parsedataKey")) {
             imageObject = _feedItems.object(at: indexPath.row) as! PFObject
-        } else {
-            //firebase
-        }
-        imageFile = imageObject.object(forKey: "imageFile") as? PFFile
-        imageFile.getDataInBackground { imageData, error in
-            
-            
-            let imageDetailurl = self.imageFile.url
-            let result1 = imageDetailurl!.contains("movie.mp4")
-            if (result1 == true) {
+            imageFile = imageObject.object(forKey: "imageFile") as? PFFile
+            imageFile.getDataInBackground { (imageData: Data?, error: Error?) -> Void in
                 
-                NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
-                
-            } else {
-                
-                self.selectedImage = UIImage(data: imageData! as Data)
-                
-                let storyboard:UIStoryboard = UIStoryboard(name:"Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(withIdentifier: "NewsDetailController") as! NewsDetailController
-                
-                if (self.defaults.bool(forKey: "parsedataKey"))  {
+                let imageDetailurl = self.imageFile.url
+                let result1 = imageDetailurl!.contains("movie.mp4")
+                if (result1 == true) {
+                    
+                    NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
+                    
+                } else {
+                    
+                    self.selectedImage = UIImage(data: imageData! as Data)
+
                     vc.objectId = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "objectId") as? String
                     vc.newsTitle = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsTitle") as? String
                     vc.newsDetail = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "newsDetail") as? String
                     vc.newsDate = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "createdAt") as? Date
                     vc.newsStory = (self._feedItems[indexPath.row] as AnyObject).value(forKey: "storyText") as? String
-                } else {
-                    //firebase
+                    vc.image = self.selectedImage
+                    vc.videoURL = self.imageFile.url
+                    
+                    let navigationController = UINavigationController(rootViewController: vc)
+                    UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
                 }
-                
-                vc.image = self.selectedImage
-                vc.videoURL = self.imageFile.url
-                
-                let navigationController = UINavigationController(rootViewController: vc)
-                UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
-                
             }
+        } else {
+            //firebase
+            
+            //vc.todo = newslist[indexPath.row]
+            //self.selectedImage = UIImage(data: imageData! as Data)
+  
+            vc.objectId = self.newslist[indexPath.row].newsId
+            vc.newsTitle = self.newslist[indexPath.row].newsTitle
+            vc.newsDetail = self.newslist[indexPath.row].newsDetail
+            vc.newsDate = self.newslist[indexPath.row].creationDate
+            vc.newsStory = self.newslist[indexPath.row].storyLabel
+            vc.image = self.selectedImage //self.newsImage
+            vc.videoURL = self.newslist[indexPath.row].imageUrl
+            
+            let navigationController = UINavigationController(rootViewController: vc)
+            UIApplication.shared.keyWindow?.rootViewController?.present(navigationController, animated: true)
         }
     }
 }

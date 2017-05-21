@@ -506,18 +506,18 @@ extension BlogEditController: UITableViewDataSource {
                         }
                     }
                 }
-            }
             
             let dateStr = self.msgDate
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let date:Date = dateFormatter.date(from: (dateStr)! as String)!
             dateFormatter.dateFormat = "MM/dd/yy, h:mm a"
+            cell.msgDateLabel.text = dateFormatter.string(from: (date) as Date)
+            }
             
             cell.titleLabel!.text = self.postby
             cell.subtitleLabel!.text = self.subject
-            cell.msgDateLabel.text = dateFormatter.string(from: (date) as Date)
-            
+ 
             //---------------------NSDataDetector 1 of 2-----------------------------
             
             let text = (self.subject!) as NSString

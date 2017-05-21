@@ -446,20 +446,24 @@ UIImagePickerControllerDelegate, UITextViewDelegate {
     fileprivate func saveToDatabaseWithImageUrl(imageUrl:String){
         
         //guard let postImage = newsImageView.image else {return}
-        //guard let caption = textView.text else {return}
+        guard let titleText = self.commentTitle.text else {return}
+        guard let detailText = self.commentDetail.text else {return}
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {return}
-        let userPostRef = FIRDatabase.database().reference().child("News").child(uid)
-        let ref = userPostRef.childByAutoId()
+        
+        let ref = FIRDatabase.database().reference()
+        let key = ref.child("News").child(uid).childByAutoId().key
         
         let values = ["imageUrl": imageUrl,
-                      "newsTitle": self.commentTitle.text ?? "",
+                      "newsTitle": titleText,
                       "newsDetail": self.commentSorce.text ?? "",
-                      "storyText": self.commentDetail.text ?? "",
+                      "storyText": detailText,
                       "liked": 0,
+                      "newsId": key,
                       "creationDate" : Date().timeIntervalSince1970,
                       "uid": uid] as [String : Any]
+        let childUpdates = ["/News/\(key)": values]
         
-        ref.updateChildValues(values) { (err, ref) in
+        ref.updateChildValues(childUpdates) { (err, ref) in
             if let err = err {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 self.simpleAlert(title: "Upload Failure", message: err as? String)

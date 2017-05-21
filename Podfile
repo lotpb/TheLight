@@ -1,8 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '10.0'
-use_frameworks!
 
 target 'TheLight' do
+    
+    use_frameworks!
+    
     pod 'Parse'
     pod 'Firebase'
     pod 'Firebase/Database'
@@ -20,4 +22,6 @@ target 'TheLight' do
     pod 'SwiftKeychainWrapper'
     pod 'TRON', '~> 2.0.0'
     pod 'YouTubePlayer'
+    
 end
+
